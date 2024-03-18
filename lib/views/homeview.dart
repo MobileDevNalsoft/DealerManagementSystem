@@ -31,7 +31,7 @@ class _HomeView extends State<HomeView> {
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  'assets/images/dms_bg.png',
+                  'assets/images/dms_bg.jpg',
                 ),
                 fit: BoxFit.cover),
           ),
