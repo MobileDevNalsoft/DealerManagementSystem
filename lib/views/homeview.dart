@@ -4,6 +4,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_widgets/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'dart:math' as math;
 
 class HomeView extends StatefulWidget {
   @override
@@ -11,15 +12,24 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeView extends State<HomeView> {
+  double _keyboardHeight = 0.0;
   FocusNode focus = FocusNode();
   TextEditingController txcontroller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          _keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Home'),
           centerTitle: true,
@@ -35,85 +45,284 @@ class _HomeView extends State<HomeView> {
                 ),
                 fit: BoxFit.cover),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: size.height * 0.1,
-              ),
-              Consumer<HomeProvider>(
-                builder: (context, provider, child) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SearchableDropDown(
-                          size: size,
-                          hint: 'Location',
-                          items: [
-                            'Location 1',
-                            'Location 2',
-                            'Location 3',
-                            'Location 4',
-                            'Location 5'
-                          ],
-                          focus: focus,
-                          txcontroller: txcontroller,
-                          provider: provider),
-                      CustomDataCard(
-                          size: size, hint: 'Vehicle Registration Number'),
-                      SearchableDropDown(
-                          size: size,
-                          hint: 'Customer',
-                          items: [
-                            'Customer 1',
-                            'Customer 2',
-                            'Customer 3',
-                            'Customer 4',
-                            'Customer 5'
-                          ],
-                          focus: focus,
-                          txcontroller: txcontroller,
-                          provider: provider),
-                      CustomDataCard(size: size, hint: 'Schedule Date'),
-                      CustomDataCard(size: size, hint: 'KMS'),
-                    ],
-                  );
-                },
-              ),
-              Row(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: _keyboardHeight),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: size.width * 0.583,
+                    height: size.height * 0.1,
+                  ),
+                  Consumer<HomeProvider>(
+                    builder: (context, provider, child) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SearchableDropDown(
+                              size: size,
+                              hint: 'Location',
+                              items: [
+                                'Location 1',
+                                'Location 2',
+                                'Location 3',
+                                'Location 4',
+                                'Location 5'
+                              ],
+                              focus: focus,
+                              txcontroller: txcontroller,
+                              provider: provider),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          CustomDataCard(
+                              size: size, hint: 'Vehicle Registration Number'),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          SearchableDropDown(
+                              size: size,
+                              hint: 'Customer',
+                              items: [
+                                'Customer 1',
+                                'Customer 2',
+                                'Customer 3',
+                                'Customer 4',
+                                'Customer 5'
+                              ],
+                              focus: focus,
+                              txcontroller: txcontroller,
+                              provider: provider),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          CustomDataCard(size: size, hint: 'Schedule Date'),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          CustomDataCard(size: size, hint: 'KMS'),
+                        ],
+                      );
+                    },
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: size.width * 0.583,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            CustomWidgets.CustomDialogBox(
+                              context: context,
+                              child: SizedBox(
+                                height: size.height * 0.2,
+                                width: size.width * 0.35,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Chassis no.'),
+                                                Text('Make'),
+                                                Text('Model'),
+                                                Text('Variant'),
+                                                Text('Color'),
+                                              ],
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('  :  '),
+                                                Text('  :  '),
+                                                Text('  :  '),
+                                                Text('  :  '),
+                                                Text('  :  '),
+                                              ],
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('ABCDEFG12345'),
+                                                Text('Suzuki'),
+                                                Text('Dzire'),
+                                                Text('ZXI'),
+                                                Text('Blue'),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Customer Name'),
+                                                Text('Contact Person'),
+                                                Text('Contact Person'),
+                                              ],
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('  :  '),
+                                                Text('  :  '),
+                                                Text('  :  '),
+                                              ],
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Prappan'),
+                                                Text('Jack'),
+                                                Text('1234567890'),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'view more',
+                            style: TextStyle(
+                                color: Color.fromRGBO(40, 83, 235, 1)),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: Size(80.0, 20.0),
+                              padding: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5))))
+                    ],
                   ),
                   ElevatedButton(
                       onPressed: () {},
                       child: Text(
-                        'view more',
-                        style: TextStyle(color: Color.fromRGBO(40, 83, 235, 1)),
+                        'next',
+                        style: TextStyle(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(80.0, 20.0),
+                          minimumSize: Size(70.0, 35.0),
                           padding: EdgeInsets.zero,
+                          backgroundColor: Color.fromRGBO(40, 83, 235, 1),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))))
                 ],
               ),
-              ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    'next',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: Size(70.0, 35.0),
-                      padding: EdgeInsets.zero,
-                      backgroundColor: Color.fromRGBO(40, 83, 235, 1),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))))
-            ],
+            ),
           ),
         ),
+        floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
+            ? Padding(
+                padding: const EdgeInsets.only(right: 40, bottom: 25),
+                child: CustomWidgets.CustomExpandableFAB(
+                    horizontalAlignment: -38,
+                    rotational: false,
+                    angle: 90,
+                    distance: 70,
+                    color: Color.fromRGBO(229, 255, 231, 1),
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.08,
+                        width: size.width * 0.1,
+                        child: GestureDetector(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/add_user.png',
+                                color: Color.fromRGBO(229, 255, 231, 1),
+                                fit: BoxFit.cover,
+                                scale: 15,
+                              ),
+                              Text(
+                                'Add Customer',
+                                style: TextStyle(
+                                    color: Color.fromRGBO(229, 255, 231, 1)),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.08,
+                        width: size.width * 0.1,
+                        child: GestureDetector(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/car.png',
+                                color: Color.fromRGBO(229, 255, 231, 1),
+                                fit: BoxFit.cover,
+                                scale: 15,
+                              ),
+                              Text(
+                                'Add Vehicle',
+                                style: TextStyle(
+                                    color: Color.fromRGBO(229, 255, 231, 1)),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.09,
+                        width: size.width * 0.1,
+                        child: GestureDetector(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.history,
+                                size: 40,
+                                color: Color.fromRGBO(229, 255, 231, 1),
+                              ),
+                              Text(
+                                'History',
+                                style: TextStyle(
+                                    color: Color.fromRGBO(229, 255, 231, 1)),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]),
+              )
+            : SizedBox(),
       ),
     );
   }
