@@ -77,7 +77,9 @@ class _HomeView extends State<HomeView> {
                             height: size.height * 0.03,
                           ),
                           CustomDataCard(
-                              size: size, hint: 'Vehicle Registration Number'),
+                              size: size,
+                              hint: 'Vehicle Registration Number',
+                              icon: Icon(Icons.check_circle_rounded)),
                           SizedBox(
                             height: size.height * 0.03,
                           ),
@@ -116,7 +118,7 @@ class _HomeView extends State<HomeView> {
                             CustomWidgets.CustomDialogBox(
                               context: context,
                               child: SizedBox(
-                                height: size.height * 0.2,
+                                height: size.height * 0.18,
                                 width: size.width * 0.35,
                                 child: Row(
                                   mainAxisAlignment:
@@ -135,9 +137,17 @@ class _HomeView extends State<HomeView> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text('Chassis no.'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Make'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Model'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Variant'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Color'),
                                               ],
                                             ),
@@ -148,9 +158,17 @@ class _HomeView extends State<HomeView> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text('  :  '),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('  :  '),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('  :  '),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('  :  '),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('  :  '),
                                               ],
                                             ),
@@ -161,9 +179,17 @@ class _HomeView extends State<HomeView> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text('ABCDEFG12345'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Suzuki'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Dzire'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('ZXI'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Blue'),
                                               ],
                                             )
@@ -184,7 +210,11 @@ class _HomeView extends State<HomeView> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text('Customer Name'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Contact Person'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Contact Person'),
                                               ],
                                             ),
@@ -195,7 +225,11 @@ class _HomeView extends State<HomeView> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text('  :  '),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('  :  '),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('  :  '),
                                               ],
                                             ),
@@ -206,7 +240,11 @@ class _HomeView extends State<HomeView> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text('Prappan'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('Jack'),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
                                                 Text('1234567890'),
                                               ],
                                             )
@@ -387,7 +425,8 @@ class _HomeView extends State<HomeView> {
   Widget CustomDataCard(
       {required Size size,
       required String hint,
-      TextEditingController? txcontroller}) {
+      TextEditingController? txcontroller,
+      Widget? icon}) {
     return SizedBox(
       height: size.height * 0.06,
       width: size.width * 0.3,
@@ -398,13 +437,19 @@ class _HomeView extends State<HomeView> {
               top: 15,
               left: 13,
             ),
-            child: TextFormField(
-              controller: txcontroller,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: hint,
-                  hintStyle: TextStyle(
-                      color: Colors.black54, fontWeight: FontWeight.normal)),
+            child: Row(
+              children: [
+                TextFormField(
+                  controller: txcontroller,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hint,
+                      hintStyle: TextStyle(
+                          color: Colors.black54, fontWeight: FontWeight.normal),
+                      suffixIcon: icon,
+                      suffixIconColor: Colors.green),
+                ),
+              ],
             )),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
