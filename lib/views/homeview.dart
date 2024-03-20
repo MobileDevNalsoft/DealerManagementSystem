@@ -54,7 +54,7 @@ class _HomeView extends State<HomeView> {
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  'assets/images/dms_bg2.png',
+                  'assets/images/dms_bg.png',
                 ),
                 fit: BoxFit.cover),
           ),
@@ -357,10 +357,11 @@ class _HomeView extends State<HomeView> {
                           child: Text(
                             'view more',
                             style: TextStyle(
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.black,
                                 fontSize: isMobile ? 12 : 14),
                           ),
                           style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400,
                               minimumSize:
                                   isMobile ? Size(65, 10) : Size(80.0, 20.0),
                               padding: EdgeInsets.zero,
@@ -404,7 +405,7 @@ class _HomeView extends State<HomeView> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(70.0, 35.0),
                           padding: EdgeInsets.zero,
-                          backgroundColor: Color.fromRGBO(40, 83, 235, 1),
+                          backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)))),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -426,7 +427,8 @@ class _HomeView extends State<HomeView> {
                     rotational: false,
                     angle: 90,
                     distance: isMobile ? 50 : 70,
-                    color: Color.fromRGBO(40, 83, 235, 1),
+                    color: Colors.black,
+                    iconColor: Colors.white,
                     children: [
                       SizedBox(
                         height: size.height * 0.08,
@@ -436,14 +438,14 @@ class _HomeView extends State<HomeView> {
                             children: [
                               Image.asset(
                                 'assets/images/add_user.png',
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                                 fit: BoxFit.cover,
                                 scale: isMobile ? 22 : 15,
                               ),
                               Text(
                                 'Add Customer',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -458,14 +460,14 @@ class _HomeView extends State<HomeView> {
                             children: [
                               Image.asset(
                                 'assets/images/car.png',
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                                 fit: BoxFit.cover,
                                 scale: isMobile ? 22 : 15,
                               ),
                               Text(
                                 'Add Vehicle',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -481,12 +483,12 @@ class _HomeView extends State<HomeView> {
                               Icon(
                                 Icons.history,
                                 size: isMobile ? 28 : 40,
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                               ),
                               Text(
                                 'History',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],

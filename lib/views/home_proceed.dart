@@ -57,7 +57,7 @@ class _HomeProceedView extends State<HomeProceedView> {
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  'assets/images/dms_bg2.png',
+                  'assets/images/dms_bg.png',
                 ),
                 fit: BoxFit.cover),
           ),
@@ -191,7 +191,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(140.0, 35.0),
                           padding: EdgeInsets.zero,
-                          backgroundColor: Color.fromRGBO(40, 83, 235, 1),
+                          backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)))),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -213,7 +213,8 @@ class _HomeProceedView extends State<HomeProceedView> {
                     rotational: false,
                     angle: 90,
                     distance: isMobile ? 50 : 70,
-                    color: Color.fromRGBO(40, 83, 235, 1),
+                    color: Colors.black,
+                    iconColor: Colors.white,
                     children: [
                       SizedBox(
                         height: size.height * 0.08,
