@@ -2,6 +2,7 @@ import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/home_proceed.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_widgets/src.dart';
@@ -24,6 +25,9 @@ class _HomeView extends State<HomeView> {
   TextEditingController customerController = TextEditingController();
   TextEditingController scheduleDateController = TextEditingController();
   TextEditingController kmsController = TextEditingController();
+
+  GlobalKey targetKey = GlobalKey();
+  ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +63,7 @@ class _HomeView extends State<HomeView> {
                 fit: BoxFit.cover),
           ),
           child: ListView(
+            controller: scrollController,
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -138,6 +143,7 @@ class _HomeView extends State<HomeView> {
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
                           CustomDataCard(
+                              key: targetKey,
                               size: size,
                               hint: 'KMS',
                               isMobile: isMobile,
@@ -521,6 +527,10 @@ class _HomeView extends State<HomeView> {
             return Padding(
               padding: EdgeInsets.only(left: 13, top: isMobile ? 16.5 : 1),
               child: TextFormField(
+                onTap: () {
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .setFocusNode(focusNode, scrollController, context);
+                },
                 cursorColor: Colors.black,
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
@@ -560,6 +570,7 @@ class _HomeView extends State<HomeView> {
   Widget CustomDataCard(
       {required Size size,
       required String hint,
+      GlobalKey? key,
       TextEditingController? txcontroller,
       Widget? icon,
       required bool isMobile,
@@ -570,6 +581,11 @@ class _HomeView extends State<HomeView> {
       child: Card(
         color: Colors.white.withOpacity(1),
         child: TextFormField(
+          onTap: () {
+            Provider.of<HomeProvider>(context, listen: false)
+                .setFocusNode(focusNode!, scrollController, context);
+          },
+          key: key,
           focusNode: focusNode,
           cursorColor: Colors.black,
           controller: txcontroller,
