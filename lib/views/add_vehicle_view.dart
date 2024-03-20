@@ -5,7 +5,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 void main() {
 
-  runApp(MaterialApp(
+  runApp(MaterialApp(debugShowCheckedModeBanner: false,
     theme: ThemeData(fontFamily: 'Montserrat-Regular', useMaterial3: true),
     home: AddVehicleView(),
   ));
@@ -36,7 +36,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       fieldHeight = size.height * 0.07;
       fieldDropDownwidth = size.width * 0.7;
     } else {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight,]);
+      print(contentWidth);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]);
       fieldWidth = size.width * 0.3;
       fieldHeight = size.height * 0.063;
       fieldDropDownwidth = size.width * 0.285;
@@ -113,7 +114,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                 colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.5), BlendMode.darken),
                 image: AssetImage(
-                  'assets/images/dms_bg.jpg',
+                  'assets/images/dms_bg.png',
                 ),
                 fit: BoxFit.cover),
           ),
