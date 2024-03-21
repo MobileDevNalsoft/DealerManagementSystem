@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_widgets/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -63,15 +64,13 @@ class _HomeView extends State<HomeView> {
                 fit: BoxFit.cover),
           ),
           child: ListView(
+            padding: EdgeInsets.only(top: 20),
             controller: scrollController,
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: size.height * 0.02,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -155,146 +154,26 @@ class _HomeView extends State<HomeView> {
                   ),
                   Row(
                     children: [
-                      SizedBox(
-                        width: size.width * (isMobile ? 0.7 : 0.583),
+                      Spacer(
+                        flex: isMobile
+                            ? (size.width * 0.6).round()
+                            : (size.width * 0.495).round(),
                       ),
                       ElevatedButton(
                           onPressed: () {
                             CustomWidgets.CustomDialogBox(
                               context: context,
-                              contentPadding:
-                                  EdgeInsets.only(top: 12, bottom: 12),
-                              child: SizedBox(
-                                height: size.height * (isMobile ? 0.28 : 0.18),
-                                width: size.width * (isMobile ? 1 : 0.35),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Chassis no.'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('Make'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('Model'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('Variant'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('Color'),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile)
-                                                  Text('Customer Name'),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile)
-                                                  Text('Contact Person'),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile)
-                                                  Text('Contact Person'),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text('  :  '),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('  :  '),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('  :  '),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('  :  '),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('  :  '),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile) Text('  :  '),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile) Text('  :  '),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile) Text('  :  '),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text('ABCDEFG12345'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('Suzuki'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('Dzire'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('ZXI'),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Text('Blue'),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile) Text('Prappan'),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile) Text('Jack'),
-                                                if (isMobile)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (isMobile)
-                                                  Text('1234567890'),
-                                              ],
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    if (size.width > 600)
-                                      Column(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: isMobile ? 20 : 40,
+                                  horizontal: isMobile ? 12 : 40),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
@@ -302,19 +181,92 @@ class _HomeView extends State<HomeView> {
                                             children: [
                                               Column(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text('Customer Name'),
+                                                  Text('Chassis no.',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
                                                   SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Text('Contact Person'),
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('Make',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
                                                   SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Text('Contact Person'),
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('Model',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  SizedBox(
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('Variant',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  SizedBox(
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('Color',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text('Customer Name',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text('Contact Person',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text('Contact Number',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
                                                 ],
                                               ),
                                               Column(
@@ -323,15 +275,87 @@ class _HomeView extends State<HomeView> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text('  :  '),
+                                                  Text(' : ',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
                                                   SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Text('  :  '),
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text(' : ',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
                                                   SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Text('  :  '),
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text(' : ',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  SizedBox(
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text(' : ',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  SizedBox(
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text(' : ',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text(' : ',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text(' : ',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text(' : ',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
                                                 ],
                                               ),
                                               Column(
@@ -340,23 +364,233 @@ class _HomeView extends State<HomeView> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text('Prappan'),
                                                   SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Text('Jack'),
+                                                    width: size.width *
+                                                        (isMobile
+                                                            ? 0.39
+                                                            : 0.16),
+                                                    child: Text(
+                                                        'ABCDEFG1234567890',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  ),
                                                   SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Text('1234567890'),
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('Suzuki',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  SizedBox(
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('Dzire',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  SizedBox(
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('ZXI',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  SizedBox(
+                                                      height: size.height *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.03)),
+                                                  Text('Blue',
+                                                      style: TextStyle(
+                                                          fontSize: isMobile
+                                                              ? 12
+                                                              : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                      width: size.width * 0.39,
+                                                      child: Text(
+                                                          'Prappanssssssssssssssssssssssssssssssssssssssssssss',
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                              fontSize: isMobile
+                                                                  ? 12
+                                                                  : 18)),
+                                                    ),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text('Jack',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  if (isMobile)
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                  if (isMobile)
+                                                    Text('1234567890',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
                                                 ],
                                               )
                                             ],
                                           )
                                         ],
                                       ),
-                                  ],
-                                ),
+                                    ),
+                                  ),
+                                  if (size.width > 600)
+                                    Expanded(
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('Customer Name',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                    Text('Contact Person',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                    Text('Contact Number',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(' : ',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                    Text(' : ',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                    Text(' : ',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: size.width * 0.12,
+                                                      child: Text(
+                                                          'Prappanssssssssssssssssssssssssssssssssssssssssssssssss',
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18,
+                                                          )),
+                                                    ),
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                    Text('Jack',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            (isMobile
+                                                                ? 0.01
+                                                                : 0.03)),
+                                                    Text('1234567890',
+                                                        style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 12
+                                                                : 18)),
+                                                  ],
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
                             );
                           },
@@ -372,7 +606,12 @@ class _HomeView extends State<HomeView> {
                                   isMobile ? Size(65, 10) : Size(80.0, 20.0),
                               padding: EdgeInsets.zero,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5))))
+                                  borderRadius: BorderRadius.circular(5)))),
+                      Spacer(
+                        flex: isMobile
+                            ? (size.width * 0.1).round()
+                            : (size.width * 0.3).round(),
+                      )
                     ],
                   ),
                   ElevatedButton(
