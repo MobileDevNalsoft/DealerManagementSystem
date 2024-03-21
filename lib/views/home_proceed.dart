@@ -1,4 +1,5 @@
 import 'package:dms/providers/home_provider.dart';
+import 'package:dms/views/dynamic_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,8 @@ class _HomeProceedView extends State<HomeProceedView> {
   TextEditingController custConcernsController = TextEditingController();
   TextEditingController remarksController = TextEditingController();
 
+  ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
@@ -57,11 +60,12 @@ class _HomeProceedView extends State<HomeProceedView> {
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  'assets/images/dms_bg2.png',
+                  'assets/images/dms_bg.png',
                 ),
                 fit: BoxFit.cover),
           ),
           child: ListView(
+            controller: scrollController,
             children: [
               SizedBox(
                 height: size.height * 0.01,
@@ -183,6 +187,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                         jobTypeFocus.unfocus();
                         custConcernsFocus.unfocus();
                         remarksFocus.unfocus();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DynamicWidgets()));
                       },
                       child: Text(
                         'proceed to recieve',
@@ -191,7 +199,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(140.0, 35.0),
                           padding: EdgeInsets.zero,
-                          backgroundColor: Color.fromRGBO(40, 83, 235, 1),
+                          backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)))),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -213,7 +221,8 @@ class _HomeProceedView extends State<HomeProceedView> {
                     rotational: false,
                     angle: 90,
                     distance: isMobile ? 50 : 70,
-                    color: Color.fromRGBO(40, 83, 235, 1),
+                    color: Colors.black,
+                    iconColor: Colors.white,
                     children: [
                       SizedBox(
                         height: size.height * 0.08,
@@ -223,14 +232,14 @@ class _HomeProceedView extends State<HomeProceedView> {
                             children: [
                               Image.asset(
                                 'assets/images/car.png',
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                                 fit: BoxFit.cover,
                                 scale: isMobile ? 22 : 15,
                               ),
                               Text(
                                 'Add Vehicle',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -246,12 +255,12 @@ class _HomeProceedView extends State<HomeProceedView> {
                               Icon(
                                 Icons.history,
                                 size: isMobile ? 28 : 40,
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                               ),
                               Text(
                                 'History',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -284,7 +293,6 @@ class _HomeProceedView extends State<HomeProceedView> {
               height: size.height * 0.05,
               width: size.width * 0.25,
               child: TypeAheadField(
-                focusNode: focus,
                 builder: (context, controller, focusNode) {
                   focus = focusNode;
                   return Padding(
@@ -293,6 +301,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                     child: TextFormField(
                       cursorColor: Colors.black,
                       style: TextStyle(fontSize: isMobile ? 13 : 14),
+                      onTap: () {
+                        Provider.of<HomeProvider>(context, listen: false)
+                            .setFocusNode(focusNode, scrollController, context);
+                      },
                       decoration: InputDecoration(
                         hintText: hint,
                         hintStyle: TextStyle(
@@ -342,6 +354,10 @@ class _HomeProceedView extends State<HomeProceedView> {
       child: Card(
         color: Colors.white.withOpacity(1),
         child: TextFormField(
+          onTap: () {
+            Provider.of<HomeProvider>(context, listen: false)
+                .setFocusNode(focusNode!, scrollController, context);
+          },
           style: TextStyle(fontSize: isMobile ? 13 : 14),
           cursorColor: Colors.black,
           controller: txcontroller,
@@ -378,6 +394,10 @@ class _HomeProceedView extends State<HomeProceedView> {
       child: Card(
         color: Colors.white.withOpacity(1),
         child: TextFormField(
+          onTap: () {
+            Provider.of<HomeProvider>(context, listen: false)
+                .setFocusNode(focusNode!, scrollController, context);
+          },
           cursorColor: Colors.black,
           style: TextStyle(fontSize: isMobile ? 13 : 14),
           controller: txcontroller,

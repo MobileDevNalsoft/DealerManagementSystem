@@ -3,6 +3,7 @@ import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:custom_widgets/src.dart';
@@ -25,6 +26,9 @@ class _HomeView extends State<HomeView> {
   TextEditingController customerController = TextEditingController();
   TextEditingController scheduleDateController = TextEditingController();
   TextEditingController kmsController = TextEditingController();
+
+  GlobalKey targetKey = GlobalKey();
+  ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +59,12 @@ class _HomeView extends State<HomeView> {
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
-                  'assets/images/dms_bg2.png',
+                  'assets/images/dms_bg.png',
                 ),
                 fit: BoxFit.cover),
           ),
           child: ListView(
+            controller: scrollController,
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -139,6 +144,7 @@ class _HomeView extends State<HomeView> {
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
                           CustomDataCard(
+                              key: targetKey,
                               size: size,
                               hint: 'KMS',
                               isMobile: isMobile,
@@ -358,10 +364,11 @@ class _HomeView extends State<HomeView> {
                           child: Text(
                             'view more',
                             style: TextStyle(
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.black,
                                 fontSize: isMobile ? 12 : 14),
                           ),
                           style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade400,
                               minimumSize:
                                   isMobile ? Size(65, 10) : Size(80.0, 20.0),
                               padding: EdgeInsets.zero,
@@ -405,7 +412,7 @@ class _HomeView extends State<HomeView> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(70.0, 35.0),
                           padding: EdgeInsets.zero,
-                          backgroundColor: Color.fromRGBO(40, 83, 235, 1),
+                          backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)))),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -427,7 +434,8 @@ class _HomeView extends State<HomeView> {
                     rotational: false,
                     angle: 90,
                     distance: isMobile ? 50 : 70,
-                    color: Color.fromRGBO(40, 83, 235, 1),
+                    color: Colors.black,
+                    iconColor: Colors.white,
                     children: [
                       SizedBox(
                         height: size.height * 0.08,
@@ -437,14 +445,14 @@ class _HomeView extends State<HomeView> {
                             children: [
                               Image.asset(
                                 'assets/images/add_user.png',
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                                 fit: BoxFit.cover,
                                 scale: isMobile ? 22 : 15,
                               ),
                               Text(
                                 'Add Customer',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -459,14 +467,14 @@ class _HomeView extends State<HomeView> {
                             children: [
                               Image.asset(
                                 'assets/images/car.png',
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                                 fit: BoxFit.cover,
                                 scale: isMobile ? 22 : 15,
                               ),
                               Text(
                                 'Add Vehicle',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -486,12 +494,12 @@ class _HomeView extends State<HomeView> {
                               Icon(
                                 Icons.history,
                                 size: isMobile ? 28 : 40,
-                                color: Color.fromRGBO(40, 83, 235, 1),
+                                color: Colors.white,
                               ),
                               Text(
                                 'History',
                                 style: TextStyle(
-                                    color: Color.fromRGBO(229, 255, 231, 1),
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -524,6 +532,10 @@ class _HomeView extends State<HomeView> {
             return Padding(
               padding: EdgeInsets.only(left: 13, top: isMobile ? 16.5 : 1),
               child: TextFormField(
+                onTap: () {
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .setFocusNode(focusNode, scrollController, context);
+                },
                 cursorColor: Colors.black,
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
@@ -563,6 +575,7 @@ class _HomeView extends State<HomeView> {
   Widget CustomDataCard(
       {required Size size,
       required String hint,
+      GlobalKey? key,
       TextEditingController? txcontroller,
       Widget? icon,
       required bool isMobile,
@@ -573,6 +586,11 @@ class _HomeView extends State<HomeView> {
       child: Card(
         color: Colors.white.withOpacity(1),
         child: TextFormField(
+          onTap: () {
+            Provider.of<HomeProvider>(context, listen: false)
+                .setFocusNode(focusNode!, scrollController, context);
+          },
+          key: key,
           focusNode: focusNode,
           cursorColor: Colors.black,
           controller: txcontroller,
