@@ -42,6 +42,8 @@ dependencies:
   dropdown_button2: ^2.3.9
   flutter_typeahead: ^5.2.0
   flutter_keyboard_visibility: ^6.0.0
+  syncfusion_flutter_datagrid: ^25.1.35
+  syncfusion_flutter_core: ^25.1.35
 
 dev_dependencies:
   flutter_test:
