@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:dms/providers/home_provider.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_widgets/src.dart';
@@ -72,7 +73,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     } else {
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-      fieldWidth = size.width * 0.3;
+      fieldWidth = size.width * 0.6;
       fieldHeight = size.height * 0.063;
       fieldDropDownwidth = size.width * 0.285;
       fieldFontSize = 14;
@@ -103,14 +104,14 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                             children: [
                               Image.asset(
                                 'assets/images/add_user.png',
-                                color: Colors.black,
+                                color: Colors.white,
                                 fit: BoxFit.cover,
                                 scale: isMobile ? 22 : 15,
                               ),
                               Text(
                                 'Add Customer',
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -128,13 +129,13 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                           child: Column(
                             children: [
                               Icon(
-                                Icons.history,
+                                Icons.history,color: Colors.white,
                                 size: isMobile ? 28 : 40,
                               ),
                               Text(
                                 'History',
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontSize: isMobile ? 11 : 14),
                               )
                             ],
@@ -143,7 +144,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                       ),
                     ]),
               )
-            : SizedBox(),
+            : const SizedBox(),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0.0,
@@ -162,7 +163,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
         body: Container(
           height: size.height,
           width: size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
                   'assets/images/dms_bg.png',
@@ -170,330 +171,346 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                 fit: BoxFit.cover),
           ),
           child: SafeArea(
-            child: ListView(
-              controller: scrollController,
-              children: [
-                SizedBox(
-                  height: size.height * 0.05,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      width: size.width * 0.02,
-                    ),
-                    Column(
+            child: Center(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: isMobile ? size.height * 0.05 : size.height * 0.1,
+                  ),
+                  SizedBox(
+                    height: isMobile
+                        ? MediaQuery.of(context).viewInsets.bottom == 0
+                            ? size.height * 0.62
+                            : size.height * 0.5
+                        : MediaQuery.of(context).viewInsets.bottom == 0
+                            ? size.height * 0.5
+                            : size.height * 0.2,
+                    width: fieldWidth,
+                    child: GridView(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: isMobile ? 1 : 2,
+                        mainAxisExtent: fieldHeight,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 16,
+                      ),
+                      controller: scrollController,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: SearchableDropDown(
-                              size: size,
-                              hint: "Vehicle type",
-                              items: ["sedan", "SUV", "XUV"],
-                              focus: vehicleTypeFocus,
-                              txcontroller: vehicleTypeController,
-                              height: fieldHeight,
-                              width: fieldWidth,
-                              fieldDropDownwidth: fieldDropDownwidth,
-                              fieldFontSize: fieldFontSize),
+                        DMSCustomWidgets.SearchableDropDown(
+                          size: size,
+                          hint: "Vehicle type",
+                          items: ["sedan", "SUV", "XUV"],
+                          focus: vehicleTypeFocus,
+                          txcontroller: vehicleTypeController,
+                          isMobile: isMobile,
+                          scrollController: scrollController,
+                          icon: Icon(Icons.arrow_drop_down),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: CustomDataCard(
-                              focusNode: chassisNumberFocus,
-                              size: size,
-                              hint: "Chassis. no.",
-                              maxLength: 10,
-                              width: fieldWidth,
-                              height: fieldHeight,
-                              fieldFontSize: fieldFontSize),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: chassisNumberFocus,
+                            size: size,
+                            hint: "Chassis. no.",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            txcontroller: chassisNumberController,
+                            context: context),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: modelFocus,
+                            size: size,
+                            hint: "Model",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: kmsFocus,
+                            size: size,
+                            hint: "KMS",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+                        DMSCustomWidgets.SearchableDropDown(
+                          size: size,
+                          hint: "Insurance Company",
+                          items: ["abc", "xyz", "pqr"],
+                          focus: insuranceCompanyFocus,
+                          txcontroller: vehicleTypeController,
+                          isMobile: isMobile,
+                          scrollController: scrollController,
+                          icon: Icon(Icons.arrow_drop_down),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: CustomDataCard(
-                              focusNode: modelFocus,
-                              size: size,
-                              hint: "Model",
-                              maxLength: 10,
-                              width: fieldWidth,
-                              height: fieldHeight,
-                              fieldFontSize: fieldFontSize),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: customerNumberFocus,
+                            size: size,
+                            hint: "Customer no.",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: customerPhoneNumberFocus,
+                            size: size,
+                            hint: "customer phone no.",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: vehicleRegNumberFocus,
+                            size: size,
+                            hint: "Vehicle Reg. no.",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            txcontroller: vehicleRegNumberController,
+                            context: context),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: engineNumberFocus,
+                            size: size,
+                            hint: "Engine no.",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+                        DMSCustomWidgets.SearchableDropDown(
+                          size: size,
+                          hint: "Make",
+                          items: ["1", "2", "3"],
+                          focus: makeFocus,
+                          txcontroller: vehicleTypeController,
+                          isMobile: isMobile,
+                          scrollController: scrollController,
+                          icon: Icon(Icons.arrow_drop_down),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: CustomDataCard(
-                              focusNode: kmsFocus,
-                              size: size,
-                              hint: "KMS",
-                              maxLength: 10,
-                              width: fieldWidth,
-                              height: fieldHeight,
-                              fieldFontSize: fieldFontSize),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: SearchableDropDown(
-                              size: size,
-                              hint: "Insurance Company",
-                              items: ["abc", "xyz", "pqr"],
-                              focus: insuranceCompanyFocus,
-                              txcontroller: vehicleTypeController,
-                              width: fieldWidth,
-                              height: fieldHeight,
-                              fieldDropDownwidth: fieldDropDownwidth,
-                              fieldFontSize: fieldFontSize),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: CustomDataCard(
-                              focusNode: customerNumberFocus,
-                              size: size,
-                              hint: "Customer no.",
-                              width: fieldWidth,
-                              height: fieldHeight,
-                              fieldFontSize: fieldFontSize),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: CustomDataCard(
-                              focusNode: customerPhoneNumberFocus,
-                              size: size,
-                              hint: "customer phone no.",
-                              width: fieldWidth,
-                              height: fieldHeight,
-                              fieldFontSize: fieldFontSize),
-                        ),
-                        size.width < 700
-                            ? fields(context, size, fieldHeight, fieldWidth,
-                                fieldDropDownwidth, fieldFontSize)
-                            : SizedBox()
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: mfgYearFocus,
+                            size: size,
+                            hint: "MFG Year",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: financialDetailsFocus,
+                            size: size,
+                            hint: "Financial details",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+                        DMSCustomWidgets.CustomDataCard(
+                            focusNode: customerAddressFocus,
+                            size: size,
+                            hint: "Customer address",
+                            isMobile: isMobile,
+                            scrollController: scrollController,
+                            context: context),
+
                       ],
                     ),
-                    if (size.width >= 700)
-                      fields(context, size, fieldHeight, fieldWidth,
-                          fieldDropDownwidth, fieldFontSize),
-                    SizedBox(
-                      width: size.width * 0.02,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  ),
+                  SizedBox(
+                    height: isMobile ? size.height * 0.02 : size.height * 0.05,
+                  ),
+                  if (MediaQuery.of(context).viewInsets.bottom == 0)
                     ElevatedButton(
                       onPressed: () {},
-                      child: Text("Submit"),
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          minimumSize: Size(10, 32),
+                              borderRadius: BorderRadius.circular(4)),
+                          minimumSize: const Size(10, 36),
                           backgroundColor: Colors.black,
                           foregroundColor: Colors.white),
-                    )
-                  ],
-                ),
-                MediaQuery.of(context).viewInsets.bottom == 0
-                    ? SizedBox(
-                        height: size.height * 0.1,
-                      )
-                    : SizedBox(
-                        height: size.height * 0.5,
-                      )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget fields(context, size, fieldHeight, fieldWidth, fieldDropDownwidth,
-      fieldFontSize) {
-    TextEditingController vehicleTypeController = TextEditingController();
-    return SizedBox(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: CustomDataCard(
-                focusNode: vehicleRegNumberFocus,
-                size: size,
-                hint: "Vehicle Reg. no.",
-                maxLength: 10,
-                height: fieldHeight,
-                width: fieldWidth,
-                fieldFontSize: fieldFontSize),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: CustomDataCard(
-                focusNode: engineNumberFocus,
-                size: size,
-                hint: "Engine no.",
-                height: fieldHeight,
-                width: fieldWidth,
-                fieldFontSize: fieldFontSize),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: SearchableDropDown(
-                size: size,
-                hint: "Make",
-                items: ["1", "2", "3"],
-                focus: makeFocus,
-                txcontroller: vehicleTypeController,
-                height: fieldHeight,
-                width: fieldWidth,
-                fieldDropDownwidth: fieldDropDownwidth,
-                fieldFontSize: fieldFontSize),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: CustomDataCard(
-                focusNode: mfgYearFocus,
-                size: size,
-                hint: "MFG Year",
-                maxLength: 4,
-                height: fieldHeight,
-                width: fieldWidth,
-                fieldFontSize: fieldFontSize),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: CustomDataCard(
-                focusNode: financialDetailsFocus,
-                size: size,
-                hint: "Financial details",
-                height: fieldHeight,
-                width: fieldWidth,
-                fieldFontSize: fieldFontSize),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: CustomDataCard(
-                focusNode: customerAddressFocus,
-                size: size,
-                hint: "Customer address",
-                height: fieldHeight,
-                width: fieldWidth,
-                fieldFontSize: fieldFontSize),
-          ),
-          SizedBox(
-            height: size.height * 0.06,
-            width: size.width * 0.3,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget SearchableDropDown(
-      {required size,
-      required hint,
-      required List<String> items,
-      required FocusNode focus,
-      required TextEditingController txcontroller,
-      double? height,
-      double? width,
-      double? fieldDropDownwidth,
-      double? fieldFontSize}) {
-    return SizedBox(
-      height: height ?? size.height * 0.01,
-      width: width ?? size.width * 0.75,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: Row(
-          children: [
-            SizedBox(
-              height: size.height * 0.05,
-              width: fieldDropDownwidth ?? size.width * 0.285,
-              child: TypeAheadField(
-                builder: (context, controller, focusNode) {
-                  focus = focusNode;
-                  txcontroller = controller;
-                  return TextFormField(
-                    onTap: () {
-                      Provider.of<HomeProvider>(context, listen: false)
-                          .setFocusNode(focusNode, scrollController, context);
-                    },
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.arrow_drop_down),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      hintText: hint,
-                      hintStyle: TextStyle(
-                          color: Colors.black54, fontWeight: FontWeight.normal),
-                      border: InputBorder.none, // Removes all borders
+                      child: const Text("Submit"),
                     ),
-                    controller: controller,
-                    focusNode: focusNode,
-                    style: TextStyle(fontSize: fieldFontSize),
-                  );
-                },
-                suggestionsCallback: (pattern) {
-                  return items
-                      .where((item) =>
-                          item.toLowerCase().contains(pattern.toLowerCase()))
-                      .toList();
-                },
-                itemBuilder: (context, suggestion) => ListTile(
-                  title: Text(
-                    suggestion,
-                    style: TextStyle(fontSize: fieldFontSize),
-                  ),
-                ),
-                onSelected: (suggestion) {
-                  txcontroller.text = suggestion;
-                  focus.unfocus();
-                },
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget CustomDataCard(
-      {required Size size,
-      required String hint,
-      required FocusNode focusNode,
-      int? maxLength,
-      TextEditingController? txcontroller,
-      double? width,
-      double? height,
-      double? verticalPadding,
-      double? horizontalPadding,
-      double? fieldFontSize}) {
-    return SizedBox(
-      height: height ?? size.height * 0.07,
-      width: width ?? size.width * 0.3,
-      child: Card(
-        color: Colors.white.withOpacity(1),
-        child: TextFormField(
-          focusNode: focusNode,
-          onTap: () {
-            Provider.of<HomeProvider>(context, listen: false)
-                .setFocusNode(focusNode, scrollController, context);
-          },
-          maxLength: maxLength,
-          maxLengthEnforcement: maxLength == null
-              ? MaxLengthEnforcement.none
-              : MaxLengthEnforcement.enforced,
-          controller: txcontroller,
-          decoration: InputDecoration(
-              counterText: "",
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              border: InputBorder.none,
-              hintText: hint,
-              hintStyle: TextStyle(
-                  color: Colors.black54, fontWeight: FontWeight.normal)),
-          style: TextStyle(fontSize: fieldFontSize),
-        ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-      ),
-    );
-  }
+  // Widget fields(context, size, fieldHeight, fieldWidth, fieldDropDownwidth,
+  //     fieldFontSize) {
+  //   TextEditingController vehicleTypeController = TextEditingController();
+  //   return SizedBox(
+  //     child: Column(
+  //       children: [
+  //         Padding(
+  //           padding: const EdgeInsets.only(bottom: 8),
+  //           child: CustomDataCard(
+  //               focusNode: vehicleRegNumberFocus,
+  //               size: size,
+  //               hint: "Vehicle Reg. no.",
+  //               maxLength: 10,
+  //               height: fieldHeight,
+  //               width: fieldWidth,
+  //               fieldFontSize: fieldFontSize),
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.only(bottom: 8),
+  //           child: CustomDataCard(
+  //               focusNode: engineNumberFocus,
+  //               size: size,
+  //               hint: "Engine no.",
+  //               height: fieldHeight,
+  //               width: fieldWidth,
+  //               fieldFontSize: fieldFontSize),
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.only(bottom: 8),
+  //           child: SearchableDropDown(
+  //               size: size,
+  //               hint: "Make",
+  //               items: ["1", "2", "3"],
+  //               focus: makeFocus,
+  //               txcontroller: vehicleTypeController,
+  //               height: fieldHeight,
+  //               width: fieldWidth,
+  //               fieldDropDownwidth: fieldDropDownwidth,
+  //               fieldFontSize: fieldFontSize),
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.only(bottom: 8),
+  //           child: CustomDataCard(
+  //               focusNode: mfgYearFocus,
+  //               size: size,
+  //               hint: "MFG Year",
+  //               maxLength: 4,
+  //               height: fieldHeight,
+  //               width: fieldWidth,
+  //               fieldFontSize: fieldFontSize),
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.only(bottom: 8),
+  //           child: CustomDataCard(
+  //               focusNode: financialDetailsFocus,
+  //               size: size,
+  //               hint: "Financial details",
+  //               height: fieldHeight,
+  //               width: fieldWidth,
+  //               fieldFontSize: fieldFontSize),
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.only(bottom: 8),
+  //           child: CustomDataCard(
+  //               focusNode: customerAddressFocus,
+  //               size: size,
+  //               hint: "Customer address",
+  //               height: fieldHeight,
+  //               width: fieldWidth,
+  //               fieldFontSize: fieldFontSize),
+  //         ),
+  //         SizedBox(
+  //           height: size.height * 0.06,
+  //           width: size.width * 0.3,
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // Widget SearchableDropDown(
+  //     {required size,
+  //     required hint,
+  //     required List<String> items,
+  //     required FocusNode focus,
+  //     required TextEditingController txcontroller,
+  //     double? height,
+  //     double? width,
+  //     double? fieldDropDownwidth,
+  //     double? fieldFontSize}) {
+  //   return SizedBox(
+  //     height: height ?? size.height * 0.01,
+  //     width: width ?? size.width * 0.75,
+  //     child: Card(
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+  //       child: Row(
+  //         children: [
+  //           SizedBox(
+  //             height: size.height * 0.05,
+  //             width: fieldDropDownwidth ?? size.width * 0.285,
+  //             child: TypeAheadField(
+  //               builder: (context, controller, focusNode) {
+  //                 focus = focusNode;
+  //                 txcontroller = controller;
+  //                 return TextFormField(
+  //                   onTap: () {
+  //                     Provider.of<HomeProvider>(context, listen: false)
+  //                         .setFocusNode(focusNode, scrollController, context);
+  //                   },
+  //                   decoration: InputDecoration(
+  //                     suffixIcon: Icon(Icons.arrow_drop_down),
+  //                     contentPadding: const EdgeInsets.symmetric(
+  //                         horizontal: 16, vertical: 12),
+  //                     hintText: hint,
+  //                     hintStyle: TextStyle(
+  //                         color: Colors.black54, fontWeight: FontWeight.normal),
+  //                     border: InputBorder.none, // Removes all borders
+  //                   ),
+  //                   controller: controller,
+  //                   focusNode: focusNode,
+  //                   style: TextStyle(fontSize: fieldFontSize),
+  //                 );
+  //               },
+  //               suggestionsCallback: (pattern) {
+  //                 return items
+  //                     .where((item) =>
+  //                         item.toLowerCase().contains(pattern.toLowerCase()))
+  //                     .toList();
+  //               },
+  //               itemBuilder: (context, suggestion) => ListTile(
+  //                 title: Text(
+  //                   suggestion,
+  //                   style: TextStyle(fontSize: fieldFontSize),
+  //                 ),
+  //               ),
+  //               onSelected: (suggestion) {
+  //                 txcontroller.text = suggestion;
+  //                 focus.unfocus();
+  //               },
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // Widget CustomDataCard(
+  //     {required Size size,
+  //     required String hint,
+  //     required FocusNode focusNode,
+  //     int? maxLength,
+  //     TextEditingController? txcontroller,
+  //     double? width,
+  //     double? height,
+  //     double? verticalPadding,
+  //     double? horizontalPadding,
+  //     double? fieldFontSize}) {
+  //   return SizedBox(
+  //     height: height ?? size.height * 0.07,
+  //     width: width ?? size.width * 0.3,
+  //     child: Card(
+  //       color: Colors.white.withOpacity(1),
+  //       child: TextFormField(
+  //         focusNode: focusNode,
+  //         onTap: () {
+  //           Provider.of<HomeProvider>(context, listen: false)
+  //               .setFocusNode(focusNode, scrollController, context);
+  //         },
+  //         maxLength: maxLength,
+  //         maxLengthEnforcement: maxLength == null
+  //             ? MaxLengthEnforcement.none
+  //             : MaxLengthEnforcement.enforced,
+  //         controller: txcontroller,
+  //         decoration: InputDecoration(
+  //             counterText: "",
+  //             contentPadding:
+  //                 EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  //             border: InputBorder.none,
+  //             hintText: hint,
+  //             hintStyle: TextStyle(
+  //                 color: Colors.black54, fontWeight: FontWeight.normal)),
+  //         style: TextStyle(fontSize: fieldFontSize),
+  //       ),
+  //       shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.all(Radius.circular(5))),
+  //     ),
+  //   );
+  // }
 }
