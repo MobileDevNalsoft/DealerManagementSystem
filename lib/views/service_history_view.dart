@@ -4,9 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 
-void main() {
-  runApp(ServiceHistoryView());
-}
+
 
 class ServiceHistoryView extends StatefulWidget {
   const ServiceHistoryView({super.key});
