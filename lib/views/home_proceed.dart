@@ -6,7 +6,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:custom_widgets/src.dart';
+import 'package:customs/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:math' as math;
 

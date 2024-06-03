@@ -9,7 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:custom_widgets/src.dart';
+import 'package:customs/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:math' as math;
 
@@ -854,6 +854,7 @@ class _HomeView extends State<HomeView> {
               hintStyle: TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.normal,
+                fontFamily: 'euclid-circular-a'
               ),
               suffixIcon: icon,
               suffixIconColor: Colors.green),

@@ -85,7 +85,6 @@ static Widget CustomDataCard(
       child: Card(
         color: Colors.white.withOpacity(1),
         child: TextFormField(
-          
           onTap: () {
             Provider.of<HomeProvider>(context! , listen: false)
                 .setFocusNode(focusNode!, scrollController, context );
@@ -94,7 +93,8 @@ static Widget CustomDataCard(
           focusNode: focusNode,
           cursorColor: Colors.black,
           controller: txcontroller,
-          style: TextStyle(fontSize: isMobile ? 13 : 14),
+          style: TextStyle(fontSize: isMobile ? 13 : 14, fontFamily: 'euclid-circular-a'),
+
           maxLength: 25,
           maxLengthEnforcement: MaxLengthEnforcement.enforced,
           decoration: InputDecoration(
