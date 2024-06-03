@@ -405,8 +405,11 @@ class _HomeProceedView extends State<HomeProceedView> {
           style: TextStyle(fontSize: isMobile ? 13 : 14),
           controller: txcontroller,
           focusNode: focusNode,
-          maxLines: 8,
+          minLines: 1,
+          maxLines: 5,
+          maxLength: 200,
           decoration: InputDecoration(
+            counterText: "",
             contentPadding: EdgeInsets.only(left: 12, top: 8),
             border: InputBorder.none,
             hintText: hint,
