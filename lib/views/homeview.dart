@@ -1,5 +1,7 @@
 import 'package:dms/providers/home_provider.dart';
+import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/home_proceed.dart';
+import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/services.dart';
@@ -456,6 +458,9 @@ class _HomeView extends State<HomeView> {
                         height: size.height * 0.08,
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddVehicleView()));
+                          },
                           child: Column(
                             children: [
                               Image.asset(
@@ -478,6 +483,9 @@ class _HomeView extends State<HomeView> {
                         height: size.height * 0.085,
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => ServiceHistoryView()));
+                          },
                           child: Column(
                             children: [
                               Icon(

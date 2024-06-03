@@ -1,10 +1,8 @@
-import 'dart:js_util';
+
 
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(ServiceHistoryView());
-}
+
 
 class ServiceHistoryView extends StatefulWidget {
   const ServiceHistoryView({super.key});
