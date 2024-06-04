@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:dms/logger/logger.dart';
 import 'package:network_calls/src.dart';
@@ -7,12 +9,20 @@ class Repository {
 
   Repository({required NetworkCalls api}) : _api = api;
 
-  Future<void> addCustomer(Map<String, dynamic> payload) async {
+  Future<int> addCustomer(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addCustomer', data: payload);
     if (apiResponse.response!.statusCode == 200) {
-      Log.d(apiResponse.response);
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
     } else {
       Log.e(apiResponse.error);
+      throw Error();
     }
   }
 

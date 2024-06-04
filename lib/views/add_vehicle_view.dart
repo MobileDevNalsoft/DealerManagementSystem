@@ -7,14 +7,6 @@ import 'package:customs/src.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(fontFamily: 'Montserrat-Regular', useMaterial3: true),
-    home: AddVehicleView(),
-  ));
-}
-
 class AddVehicleView extends StatelessWidget {
   AddVehicleView({super.key});
 
@@ -83,7 +75,7 @@ class AddVehicleView extends StatelessWidget {
                       rotational: false,
                       angle: 90,
                       distance: isMobile ? 50 : 70,
-                      color: Colors.black,
+                      color: const Color.fromARGB(255, 145, 19, 19),
                       iconColor: Colors.white,
                       children: [
                         SizedBox(
@@ -154,8 +146,9 @@ class AddVehicleView extends StatelessWidget {
           body: BlocListener<VehicleBloc, VehicleState>(
             listener: (context, state) {
               print("listening");
-              if( state.isVehicleAdded ==true)
-                  CustomWidgets.CustomSnackBar(context, "Vehicle Successfully added", Colors.green);
+              if (state.isVehicleAdded == true)
+                CustomWidgets.CustomSnackBar(
+                    context, "Vehicle Successfully added", Colors.green);
             },
             child: BlocBuilder<VehicleBloc, VehicleState>(
               builder: (context, state) {
@@ -237,7 +230,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "KMS",
                                         isMobile: isMobile,
-                                        txcontroller: kmsController ,
+                                        txcontroller: kmsController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.SearchableDropDown(
@@ -263,7 +256,8 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "customer phone no.",
                                         isMobile: isMobile,
-                                        txcontroller: customerPhoneNumberController,
+                                        txcontroller:
+                                            customerPhoneNumberController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -306,7 +300,8 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Financial details",
                                         isMobile: isMobile,
-                                        txcontroller: financialDetailsController,
+                                        txcontroller:
+                                            financialDetailsController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -336,29 +331,32 @@ class AddVehicleView extends StatelessWidget {
                                             customerAddressController.text,
                                         customerNumber:
                                             customerNumberController.text,
-                                       engineNumber :engineNumberController.text,
+                                        engineNumber:
+                                            engineNumberController.text,
                                         // customerPhoneNumber:
                                         //     customerPhoneNumberController.text,
                                         kms: int.parse(kmsController.text),
-                                        mfgYear: int.parse(mfgYearController.text),
+                                        mfgYear:
+                                            int.parse(mfgYearController.text),
                                         financialDetails:
                                             financialDetailsController.text,
                                         model: modelController.text,
                                         vehicleRegNumber:
                                             vehicleRegNumberController.text,
-                                        vehicleType:
-                                            vehicleTypeController.text,
-                                            insuranceCompany: insuranceCompanyController.text
-                                            );
+                                        vehicleType: vehicleTypeController.text,
+                                        insuranceCompany:
+                                            insuranceCompanyController.text);
                                     context
-                                        .read<VehicleBloc>().add(AddVehicleEvent(vehicle: vehicle));
+                                        .read<VehicleBloc>()
+                                        .add(AddVehicleEvent(vehicle: vehicle));
                                   },
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(4)),
                                       minimumSize: const Size(10, 36),
-                                      backgroundColor: Colors.black,
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 145, 19, 19),
                                       foregroundColor: Colors.white),
                                   child: const Text("Submit"),
                                 ),

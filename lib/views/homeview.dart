@@ -1,5 +1,6 @@
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
+import 'package:dms/views/add_customer_view.dart';
 import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/service_history_view.dart';
@@ -97,7 +98,7 @@ class _HomeView extends State<HomeView> {
                                 'Location 4',
                                 'Location 5'
                               ],
-                              icon:Icon(Icons.arrow_drop_down),
+                              icon: Icon(Icons.arrow_drop_down),
                               focus: locFocus,
                               txcontroller: locController,
                               scrollController: scrollController,
@@ -111,7 +112,8 @@ class _HomeView extends State<HomeView> {
                               icon: Icon(Icons.check_circle_rounded),
                               isMobile: isMobile,
                               txcontroller: vehRegNumController,
-                              focusNode: vehRegNumFocus, scrollController: scrollController),
+                              focusNode: vehRegNumFocus,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
@@ -125,11 +127,12 @@ class _HomeView extends State<HomeView> {
                                 'Customer 4',
                                 'Customer 5'
                               ],
-                              icon:Icon(Icons.arrow_drop_down),
+                              icon: Icon(Icons.arrow_drop_down),
                               focus: customerFocus,
                               txcontroller: customerController,
                               // provider: provider,
-                              isMobile: isMobile, scrollController: scrollController),
+                              isMobile: isMobile,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
@@ -653,7 +656,8 @@ class _HomeView extends State<HomeView> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(70.0, 35.0),
                           padding: EdgeInsets.zero,
-                          backgroundColor: Colors.black,
+                          backgroundColor:
+                              const Color.fromARGB(255, 145, 19, 19),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)))),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -675,13 +679,17 @@ class _HomeView extends State<HomeView> {
                     rotational: false,
                     angle: 90,
                     distance: isMobile ? 50 : 70,
-                    color: Colors.black,
+                    color: const Color.fromARGB(255, 145, 19, 19),
                     iconColor: Colors.white,
                     children: [
                       SizedBox(
                         height: size.height * 0.08,
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => AddCustomerView()));
+                          },
                           child: Column(
                             children: [
                               Image.asset(
@@ -852,10 +860,9 @@ class _HomeView extends State<HomeView> {
               border: InputBorder.none,
               hintText: hint,
               hintStyle: TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.normal,
-                fontFamily: 'euclid-circular-a'
-              ),
+                  color: Colors.black54,
+                  fontWeight: FontWeight.normal,
+                  fontFamily: 'euclid-circular-a'),
               suffixIcon: icon,
               suffixIconColor: Colors.green),
         ),

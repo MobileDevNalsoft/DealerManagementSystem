@@ -94,10 +94,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: euclid-circular-a
-      fonts:
-        - asset: assets/fonts/euclid-circular-a/Euclid_Circular_A_Bold.ttf
+  # fonts:
+  #   - family: euclid-circular-a
+  #     fonts:
+  #       - asset: assets/fonts/euclid-circular-a/Euclid_Circular_A_Bold.ttf
        
   #   - family: Trajan Pro
   #     fonts:
