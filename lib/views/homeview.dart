@@ -99,7 +99,7 @@ class _HomeView extends State<HomeView> {
                               ],
                               icon:Icon(Icons.arrow_drop_down),
                               focus: locFocus,
-                              txcontroller: locController,
+                              textcontroller: locController,
                               scrollController: scrollController,
                               isMobile: isMobile),
                           SizedBox(
@@ -110,7 +110,7 @@ class _HomeView extends State<HomeView> {
                               hint: 'Vehicle Registration Number',
                               icon: Icon(Icons.check_circle_rounded),
                               isMobile: isMobile,
-                              txcontroller: vehRegNumController,
+                              textcontroller: vehRegNumController,
                               focusNode: vehRegNumFocus, scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.01 : 0.03),
@@ -127,7 +127,7 @@ class _HomeView extends State<HomeView> {
                               ],
                               icon:Icon(Icons.arrow_drop_down),
                               focus: customerFocus,
-                              txcontroller: customerController,
+                              textcontroller: customerController,
                               // provider: provider,
                               isMobile: isMobile, scrollController: scrollController),
                           SizedBox(
@@ -137,7 +137,7 @@ class _HomeView extends State<HomeView> {
                               size: size,
                               hint: 'Schedule Date',
                               isMobile: isMobile,
-                              txcontroller: scheduleDateController,
+                              textcontroller: scheduleDateController,
                               focusNode: scheduleDateFocus,
                               scrollController: scrollController),
                           SizedBox(
@@ -148,7 +148,7 @@ class _HomeView extends State<HomeView> {
                               size: size,
                               hint: 'KMS',
                               isMobile: isMobile,
-                              txcontroller: kmsController,
+                              textcontroller: kmsController,
                               focusNode: kmsFocus,
                               scrollController: scrollController),
                         ],
@@ -763,7 +763,7 @@ class _HomeView extends State<HomeView> {
       required hint,
       required List<String> items,
       required FocusNode focus,
-      required TextEditingController txcontroller,
+      required TextEditingController textcontroller,
       required HomeProvider provider,
       required bool isMobile}) {
     return SizedBox(
@@ -791,7 +791,7 @@ class _HomeView extends State<HomeView> {
                   ),
                   border: InputBorder.none, // Removes all borders
                 ),
-                controller: txcontroller,
+                controller: textcontroller,
                 focusNode: focus,
               ),
             );
@@ -812,7 +812,7 @@ class _HomeView extends State<HomeView> {
             ),
           ),
           onSelected: (suggestion) {
-            txcontroller.text = suggestion;
+            textcontroller.text = suggestion;
             focus.unfocus();
           },
         ),
@@ -824,7 +824,7 @@ class _HomeView extends State<HomeView> {
       {required Size size,
       required String hint,
       GlobalKey? key,
-      TextEditingController? txcontroller,
+      TextEditingController? textcontroller,
       Widget? icon,
       required bool isMobile,
       FocusNode? focusNode}) {
@@ -841,7 +841,7 @@ class _HomeView extends State<HomeView> {
           key: key,
           focusNode: focusNode,
           cursorColor: Colors.black,
-          controller: txcontroller,
+          controller: textcontroller,
           style: TextStyle(fontSize: isMobile ? 13 : 14),
           maxLength: 25,
           maxLengthEnforcement: MaxLengthEnforcement.enforced,

@@ -12,7 +12,7 @@ static Widget SearchableDropDown(
       required hint,
       required List<String> items,
       required FocusNode focus,
-      required TextEditingController txcontroller,
+      required TextEditingController textcontroller,
       required bool isMobile,
       required ScrollController scrollController,
       Icon? icon 
@@ -38,14 +38,14 @@ static Widget SearchableDropDown(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: size.height*0.016),
                 suffixIcon: icon,
                 hintText: hint,
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                 ),
                 border: InputBorder.none, // Removes all borders
               ),
-              controller: txcontroller,
-              focusNode: focus,
+              controller: textcontroller,
+              focusNode: focusNode,
             );
           },
           suggestionsCallback: (pattern) {
@@ -61,7 +61,7 @@ static Widget SearchableDropDown(
             ),
           ),
           onSelected: (suggestion) {
-            txcontroller.text = suggestion;
+            textcontroller.text = suggestion;
             focus.unfocus();
           },
         ),
@@ -75,7 +75,7 @@ static Widget CustomDataCard(
       required bool isMobile,
       required ScrollController scrollController,
       GlobalKey? key,
-      TextEditingController? txcontroller,
+      TextEditingController? textcontroller,
       Widget? icon,
       BuildContext? context,
       FocusNode? focusNode}) {
@@ -92,7 +92,7 @@ static Widget CustomDataCard(
           key: key,
           focusNode: focusNode,
           cursorColor: Colors.black,
-          controller: txcontroller,
+          controller: textcontroller,
           style: TextStyle(fontSize: isMobile ? 13 : 14, fontFamily: 'euclid-circular-a'),
 
           maxLength: 25,

@@ -6,7 +6,7 @@ class VehicleState {
   final bool? isLoading;
   final bool? isVehicleAdded;
   final String? error;
-  VehicleState({this.vehicle, this.isLoading, this.isVehicleAdded, this.error});
+  VehicleState({this.vehicle, this.isLoading=false, this.isVehicleAdded=false, this.error});
 
   VehicleState copyWith({Vehicle? vehicle, bool? isLoading,bool? isVehicleAdded ,String? error}) {
     return VehicleState(
