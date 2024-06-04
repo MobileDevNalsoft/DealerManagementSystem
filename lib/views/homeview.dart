@@ -1,4 +1,5 @@
 import 'package:dms/providers/home_provider.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/service_history_view.dart';
@@ -90,7 +91,7 @@ class _HomeView extends State<HomeView> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SearchableDropDown(
+                          DMSCustomWidgets.SearchableDropDown(
                               size: size,
                               hint: 'Location',
                               items: [
@@ -100,24 +101,25 @@ class _HomeView extends State<HomeView> {
                                 'Location 4',
                                 'Location 5'
                               ],
+                              icon:Icon(Icons.arrow_drop_down),
                               focus: locFocus,
                               txcontroller: locController,
-                              provider: provider,
+                              scrollController: scrollController,
                               isMobile: isMobile),
                           SizedBox(
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
-                          CustomDataCard(
+                          DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Vehicle Registration Number',
                               icon: Icon(Icons.check_circle_rounded),
                               isMobile: isMobile,
                               txcontroller: vehRegNumController,
-                              focusNode: vehRegNumFocus),
+                              focusNode: vehRegNumFocus, scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
-                          SearchableDropDown(
+                          DMSCustomWidgets.SearchableDropDown(
                               size: size,
                               hint: 'Customer',
                               items: [
@@ -127,29 +129,32 @@ class _HomeView extends State<HomeView> {
                                 'Customer 4',
                                 'Customer 5'
                               ],
+                              icon:Icon(Icons.arrow_drop_down),
                               focus: customerFocus,
                               txcontroller: customerController,
-                              provider: provider,
-                              isMobile: isMobile),
+                              // provider: provider,
+                              isMobile: isMobile, scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
-                          CustomDataCard(
+                          DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Schedule Date',
                               isMobile: isMobile,
                               txcontroller: scheduleDateController,
-                              focusNode: scheduleDateFocus),
+                              focusNode: scheduleDateFocus,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.01 : 0.03),
                           ),
-                          CustomDataCard(
+                          DMSCustomWidgets.CustomDataCard(
                               key: targetKey,
                               size: size,
                               hint: 'KMS',
                               isMobile: isMobile,
                               txcontroller: kmsController,
-                              focusNode: kmsFocus),
+                              focusNode: kmsFocus,
+                              scrollController: scrollController),
                         ],
                       );
                     },
@@ -603,7 +608,7 @@ class _HomeView extends State<HomeView> {
                                 fontSize: isMobile ? 12 : 14),
                           ),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey.shade400,
+                              backgroundColor: Colors.white,
                               minimumSize:
                                   isMobile ? Size(65, 10) : Size(80.0, 20.0),
                               padding: EdgeInsets.zero,
@@ -853,6 +858,7 @@ class _HomeView extends State<HomeView> {
               hintStyle: TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.normal,
+                fontFamily: 'euclid-circular-a'
               ),
               suffixIcon: icon,
               suffixIconColor: Colors.green),

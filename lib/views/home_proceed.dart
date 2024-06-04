@@ -1,4 +1,5 @@
 import 'package:dms/providers/home_provider.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/dynamic_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -106,43 +107,47 @@ class _HomeProceedView extends State<HomeProceedView> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CustomDataCard(
+                          DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Booking Source',
                               isMobile: isMobile,
                               focusNode: bookingFocus,
-                              txcontroller: bookingController),
+                              txcontroller: bookingController,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          CustomDataCard(
+                          DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Alternate Contact Person',
                               isMobile: isMobile,
                               focusNode: altContFocus,
-                              txcontroller: altContController),
+                              txcontroller: altContController,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          CustomDataCard(
+                          DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Sales Person',
                               isMobile: isMobile,
                               focusNode: spFocus,
-                              txcontroller: spController),
+                              txcontroller: spController,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          CustomDataCard(
+                          DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Bay',
                               isMobile: isMobile,
                               focusNode: bayFocus,
-                              txcontroller: bayController),
+                              txcontroller: bayController,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          SearchableDropDown(
+                          DMSCustomWidgets.SearchableDropDown(
                               size: size,
                               hint: 'Job Type',
                               items: [
@@ -152,10 +157,12 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 'Type 4',
                                 'Type 5'
                               ],
+                              icon:Icon(Icons.arrow_drop_down),
                               focus: jobTypeFocus,
                               txcontroller: jobTypeController,
-                              provider: provider,
-                              isMobile: isMobile),
+                              
+                              // provider: provider,
+                              isMobile: isMobile, scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
@@ -273,113 +280,6 @@ class _HomeProceedView extends State<HomeProceedView> {
                     ]),
               )
             : SizedBox(),
-      ),
-    );
-  }
-
-  Widget SearchableDropDown(
-      {required size,
-      required hint,
-      required List<String> items,
-      required FocusNode focus,
-      required TextEditingController txcontroller,
-      required HomeProvider provider,
-      required bool isMobile}) {
-    return SizedBox(
-      height: isMobile ? size.height * 0.06 : size.height * 0.063,
-      width: isMobile ? size.width * 0.8 : size.width * 0.3,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        child: Row(
-          children: [
-            SizedBox(
-              height: size.height * 0.05,
-              width: size.width * 0.25,
-              child: TypeAheadField(
-                builder: (context, controller, focusNode) {
-                  focus = focusNode;
-                  return Padding(
-                    padding:
-                        EdgeInsets.only(left: 11, top: isMobile ? 16.5 : 1),
-                    child: TextFormField(
-                      cursorColor: Colors.black,
-                      style: TextStyle(fontSize: isMobile ? 13 : 14),
-                      onTap: () {
-                        Provider.of<HomeProvider>(context, listen: false)
-                            .setFocusNode(focusNode, scrollController, context);
-                      },
-                      decoration: InputDecoration(
-                        hintText: hint,
-                        hintStyle: TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.normal),
-                        border: InputBorder.none, // Removes all borders
-                      ),
-                      controller: txcontroller,
-                      focusNode: focus,
-                    ),
-                  );
-                },
-                suggestionsCallback: (pattern) {
-                  return items
-                      .where((item) =>
-                          item.toLowerCase().contains(pattern.toLowerCase()))
-                      .toList();
-                },
-                itemBuilder: (context, suggestion) => ListTile(
-                  title: Text(
-                    suggestion,
-                    style: TextStyle(fontSize: isMobile ? 13 : 14),
-                  ),
-                ),
-                onSelected: (suggestion) {
-                  txcontroller.text = suggestion;
-                  focus.unfocus();
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget CustomDataCard(
-      {required Size size,
-      required String hint,
-      TextEditingController? txcontroller,
-      FocusNode? focusNode,
-      Widget? icon,
-      required bool isMobile}) {
-    return SizedBox(
-      height: isMobile ? size.height * 0.06 : size.height * 0.063,
-      width: isMobile ? size.width * 0.8 : size.width * 0.3,
-      child: Card(
-        color: Colors.white.withOpacity(1),
-        child: TextFormField(
-          onTap: () {
-            Provider.of<HomeProvider>(context, listen: false)
-                .setFocusNode(focusNode!, scrollController, context);
-          },
-          style: TextStyle(fontSize: isMobile ? 13 : 14),
-          cursorColor: Colors.black,
-          controller: txcontroller,
-          focusNode: focusNode,
-          maxLength: 25,
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.only(left: 12, bottom: isMobile ? 10 : 12),
-              counterText: "",
-              border: InputBorder.none,
-              hintText: hint,
-              hintStyle: TextStyle(
-                  color: Colors.black54, fontWeight: FontWeight.normal),
-              suffixIcon: icon,
-              suffixIconColor: Colors.green),
-        ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
       ),
     );
   }
