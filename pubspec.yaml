@@ -30,9 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  custom_widgets:
+  customs:
     git:
-      url: https://github.com/MobileDevNalsoft/CustomWidgets
+      url: https://github.com/MobileDevNalsoft/Customs
       ref: master
 
   # The following adds the Cupertino Icons font to your application.
