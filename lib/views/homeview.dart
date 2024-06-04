@@ -4,14 +4,10 @@ import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'dart:math' as math;
 
 class HomeView extends StatefulWidget {
   @override
