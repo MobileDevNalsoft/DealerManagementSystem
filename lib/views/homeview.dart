@@ -704,8 +704,9 @@ class _HomeView extends State<HomeView> {
                         height: size.height * 0.08,
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
-                          onTap: (){
-                               Navigator.of(context).push(MaterialPageRoute(builder: (_)=> AddVehicleView()));
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => AddVehicleView()));
                           },
                           child: Column(
                             children: [
@@ -730,9 +731,9 @@ class _HomeView extends State<HomeView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ServiceHistoryView()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ServiceHistoryView()));
                           },
-
                           child: Column(
                             children: [
                               Icon(
@@ -801,10 +802,13 @@ class _HomeView extends State<HomeView> {
                     item.toLowerCase().contains(pattern.toLowerCase()))
                 .toList();
           },
-          itemBuilder: (context, suggestion) => ListTile(
-            title: Text(
-              suggestion,
-              style: TextStyle(fontSize: isMobile ? 13 : 14),
+          itemBuilder: (context, suggestion) => SizedBox(
+            width: size.width * 0.5,
+            child: ListTile(
+              title: Text(
+                suggestion,
+                style: TextStyle(fontSize: isMobile ? 13 : 14),
+              ),
             ),
           ),
           onSelected: (suggestion) {

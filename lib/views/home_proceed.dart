@@ -74,8 +74,8 @@ class _HomeProceedView extends State<HomeProceedView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: 0,
+                  Spacer(
+                    flex: (size.width * 0.01).round(),
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
@@ -83,13 +83,16 @@ class _HomeProceedView extends State<HomeProceedView> {
                         Icons.arrow_back_rounded,
                         color: Colors.white,
                       )),
-                  SizedBox(
-                    width: size.width * (isMobile ? 0.27 : 0.435),
+                  Spacer(
+                    flex: (size.width * (isMobile ? 0.6 : 0.88)).round(),
                   ),
                   Text(
                     "Home",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
+                  Spacer(
+                    flex: size.width.round(),
+                  )
                 ],
               ),
               Column(
