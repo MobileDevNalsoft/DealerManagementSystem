@@ -6,7 +6,7 @@ part 'vehicle_event.dart';
 part 'vehicle_state.dart';
 
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
-  VehicleBloc() : super(VehicleInitialState()) {
+  VehicleBloc() : super(VehicleState()) {
     on<VehicleEvent>((event, emit) {
       // TODO: implement event handler
     });
@@ -15,8 +15,8 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   }
 
   void _onAddVehicle(VehicleEvent event, emit) async {
-    if (event is AddVehicleEvent) emit(VehicleAddingState());
+    if (event is AddVehicleEvent) emit(state.copyWith(isLoading: true,vehicle: event.vehicle));
     await Future.delayed(Duration(seconds: 2));
-    emit(VehicleAddedState());
+    emit(VehicleState());
   }
 }

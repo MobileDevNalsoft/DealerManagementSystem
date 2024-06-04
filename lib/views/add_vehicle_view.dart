@@ -1,5 +1,5 @@
 import 'package:dms/models/vehicle_model.dart';
-import 'package:dms/vehicle_bloc/vehicle_bloc.dart';
+import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +29,7 @@ class AddVehicleView extends StatelessWidget {
   TextEditingController financialDetailsController = TextEditingController();
   TextEditingController customerAddressController = TextEditingController();
   TextEditingController insuranceCompanyController = TextEditingController();
+  TextEditingController engineNumberController = TextEditingController();
   TextEditingController makeController = TextEditingController();
   ScrollController scrollController = ScrollController();
 
@@ -153,7 +154,7 @@ class AddVehicleView extends StatelessWidget {
           body: BlocListener<VehicleBloc, VehicleState>(
             listener: (context, state) {
               print("listening");
-              if( state is VehicleAddedState)
+              if( state.isVehicleAdded ==true)
                   CustomWidgets.CustomSnackBar(context, "Vehicle Successfully added", Colors.green);
             },
             child: BlocBuilder<VehicleBloc, VehicleState>(
@@ -228,6 +229,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Model",
                                         isMobile: isMobile,
+                                        txcontroller: modelController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -235,6 +237,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "KMS",
                                         isMobile: isMobile,
+                                        txcontroller: kmsController ,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.SearchableDropDown(
@@ -252,6 +255,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Customer no.",
                                         isMobile: isMobile,
+                                        txcontroller: customerNumberController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -259,6 +263,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "customer phone no.",
                                         isMobile: isMobile,
+                                        txcontroller: customerPhoneNumberController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -275,6 +280,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Engine no.",
                                         isMobile: isMobile,
+                                        txcontroller: engineNumberController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.SearchableDropDown(
@@ -292,6 +298,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "MFG Year",
                                         isMobile: isMobile,
+                                        txcontroller: mfgYearController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -299,6 +306,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Financial details",
                                         isMobile: isMobile,
+                                        txcontroller: financialDetailsController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -306,6 +314,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Customer address",
                                         isMobile: isMobile,
+                                        txcontroller: customerAddressController,
                                         scrollController: scrollController,
                                         context: context),
                                   ],
@@ -319,6 +328,7 @@ class AddVehicleView extends StatelessWidget {
                               if (MediaQuery.of(context).viewInsets.bottom == 0)
                                 ElevatedButton(
                                   onPressed: () {
+                                    print(engineNumberController.text);
                                     Vehicle vehicle = Vehicle(
                                         chassisNumber:
                                             chassisNumberController.text,
@@ -326,20 +336,22 @@ class AddVehicleView extends StatelessWidget {
                                             customerAddressController.text,
                                         customerNumber:
                                             customerNumberController.text,
-                                        customerPhoneNumber:
-                                            customerPhoneNumberController.text,
-                                        kms: kmsController.text,
-                                        mfgYear: mfgYearController.text,
+                                       engineNumber :engineNumberController.text,
+                                        // customerPhoneNumber:
+                                        //     customerPhoneNumberController.text,
+                                        kms: int.parse(kmsController.text),
+                                        mfgYear: int.parse(mfgYearController.text),
                                         financialDetails:
                                             financialDetailsController.text,
                                         model: modelController.text,
                                         vehicleRegNumber:
                                             vehicleRegNumberController.text,
                                         vehicleType:
-                                            vehicleTypeController.text);
+                                            vehicleTypeController.text,
+                                            insuranceCompany: insuranceCompanyController.text
+                                            );
                                     context
-                                        .read<VehicleBloc>()
-                                        .add(AddVehicleEvent(vehicle: vehicle));
+                                        .read<VehicleBloc>().add(AddVehicleEvent(vehicle: vehicle));
                                   },
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
@@ -353,7 +365,7 @@ class AddVehicleView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        if (state is VehicleAddingState)
+                        if (state.isLoading == true)
                           Center(child: CircularProgressIndicator())
                       ],
                     ),
