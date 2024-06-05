@@ -64,7 +64,7 @@ class HomeProvider extends ChangeNotifier {
         // scrollController.jumpTo(scrollOffset);
         scrollController.animateTo(
           math.max(0, scrollController.offset + scrollOffset),
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 350),
           curve: Curves.easeInOut,
         );
         notifyListeners();

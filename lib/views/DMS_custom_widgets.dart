@@ -10,7 +10,7 @@ class DMSCustomWidgets {
       required hint,
       required List<String> items,
       required FocusNode focus,
-      required TextEditingController txcontroller,
+      required TextEditingController textcontroller,
       required bool isMobile,
       required ScrollController scrollController,
       Icon? icon}) {
@@ -42,7 +42,7 @@ class DMSCustomWidgets {
                   ),
                   border: InputBorder.none, // Removes all borders
                 ),
-                controller: txcontroller,
+                controller: textcontroller,
                 focusNode: focus,
               ),
             );
@@ -60,7 +60,7 @@ class DMSCustomWidgets {
             ),
           ),
           onSelected: (suggestion) {
-            txcontroller.text = suggestion;
+            textcontroller.text = suggestion;
             focus.unfocus();
           },
         ),
@@ -74,7 +74,7 @@ class DMSCustomWidgets {
       required bool isMobile,
       required ScrollController scrollController,
       GlobalKey? key,
-      TextEditingController? txcontroller,
+      TextEditingController? textcontroller,
       Widget? icon,
       BuildContext? context,
       FocusNode? focusNode}) {
@@ -95,7 +95,7 @@ class DMSCustomWidgets {
             key: key,
             focusNode: focusNode,
             cursorColor: Colors.black,
-            controller: txcontroller,
+            controller: textcontroller,
             style: TextStyle(
                 fontSize: isMobile ? 13 : 14, fontFamily: 'euclid-circular-a'),
             maxLength: 25,
