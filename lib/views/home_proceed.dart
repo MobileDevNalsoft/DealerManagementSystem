@@ -157,12 +157,13 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 'Type 4',
                                 'Type 5'
                               ],
-                              icon:Icon(Icons.arrow_drop_down),
+                              icon: Icon(Icons.arrow_drop_down),
                               focus: jobTypeFocus,
                               textcontroller: jobTypeController,
                               
                               // provider: provider,
-                              isMobile: isMobile, scrollController: scrollController),
+                              isMobile: isMobile,
+                              scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
@@ -209,7 +210,8 @@ class _HomeProceedView extends State<HomeProceedView> {
                       style: ElevatedButton.styleFrom(
                           minimumSize: Size(140.0, 35.0),
                           padding: EdgeInsets.zero,
-                          backgroundColor: Colors.black,
+                          backgroundColor:
+                              const Color.fromARGB(255, 145, 19, 19),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)))),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -231,7 +233,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                     rotational: false,
                     angle: 90,
                     distance: isMobile ? 50 : 70,
-                    color: Colors.black,
+                    color: const Color.fromARGB(255, 145, 19, 19),
                     iconColor: Colors.white,
                     children: [
                       SizedBox(

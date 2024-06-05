@@ -7,14 +7,6 @@ import 'package:customs/src.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(fontFamily: 'Montserrat-Regular', useMaterial3: true),
-    home: AddVehicleView(),
-  ));
-}
-
 class AddVehicleView extends StatelessWidget {
   AddVehicleView({super.key});
 
@@ -350,13 +342,15 @@ class AddVehicleView extends StatelessWidget {
                                       .read<VehicleBloc>()
                                       .add(AddVehicleEvent(vehicle: vehicle));
                                 },
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4)),
-                                    minimumSize: const Size(10, 36),
-                                    backgroundColor: Colors.black,
-                                    foregroundColor: Colors.white),
-                                child: const Text("Submit"),
+                                 style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(4)),
+                                      minimumSize: const Size(10, 36),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 145, 19, 19),
+                                      foregroundColor: Colors.white),
+                                      
+                                  child: const Text("Submit"),
                               ):CircularProgressIndicator(),
                           ],
                         ),

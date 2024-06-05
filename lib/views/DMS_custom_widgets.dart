@@ -4,10 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 
-
-class DMSCustomWidgets{
-
-static Widget SearchableDropDown(
+class DMSCustomWidgets {
+  static Widget SearchableDropDown(
       {required size,
       required hint,
       required List<String> items,
@@ -15,13 +13,11 @@ static Widget SearchableDropDown(
       required TextEditingController textcontroller,
       required bool isMobile,
       required ScrollController scrollController,
-      Icon? icon 
-      }) {
+      Icon? icon}) {
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
-
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
           builder: (context, controller, focusNode) {
@@ -35,7 +31,8 @@ static Widget SearchableDropDown(
               cursorColor: Colors.black,
               style: TextStyle(fontSize: isMobile ? 13 : 14),
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: size.height*0.016),
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16, vertical: size.height * 0.016),
                 suffixIcon: icon,
                 hintText: hint,
                 hintStyle: const TextStyle(
@@ -69,7 +66,7 @@ static Widget SearchableDropDown(
     );
   }
 
-static Widget CustomDataCard(
+  static Widget CustomDataCard(
       {required Size size,
       required String hint,
       required bool isMobile,
@@ -115,5 +112,4 @@ static Widget CustomDataCard(
       ),
     );
   }
-
 }
