@@ -355,7 +355,6 @@ class AddVehicleView extends StatelessWidget {
                           ],
                         ),
                       ),
-                    
                     ],
                   ),
                 ),

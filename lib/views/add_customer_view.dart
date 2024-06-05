@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// ignore: must_be_immutable
 class AddCustomerView extends StatelessWidget {
   AddCustomerView({super.key});
 
@@ -16,31 +17,26 @@ class AddCustomerView extends StatelessWidget {
   TextEditingController customerNameController = TextEditingController();
   TextEditingController customerContactNoController = TextEditingController();
   TextEditingController customerAddressController = TextEditingController();
-  ScrollController scrollController = ScrollController();
 
   FocusNode customerNoFocus = FocusNode();
   FocusNode customerNameFocus = FocusNode();
   FocusNode customerContactNoFocus = FocusNode();
   FocusNode customerAddressFocus = FocusNode();
 
+  ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
 
     var size = MediaQuery.of(context).size;
-    double fieldWidth;
-    double fieldHeight;
 
     bool isMobile = size.width < 650;
     if (isMobile) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-      fieldWidth = size.width * 0.8;
-      fieldHeight = size.height * 0.06;
     } else {
       SystemChrome.setPreferredOrientations(
           [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-      fieldWidth = size.width * 0.6;
-      fieldHeight = size.height * 0.063;
     }
 
     return SafeArea(
@@ -154,11 +150,11 @@ class AddCustomerView extends StatelessWidget {
                           : MediaQuery.of(context).viewInsets.bottom == 0
                               ? size.height * 0.5
                               : size.height * 0.2,
-                      width: fieldWidth,
+                      width: size.width * 0.8,
                       child: GridView(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: isMobile ? 1 : 2,
-                          mainAxisExtent: fieldHeight,
+                          mainAxisExtent: size.height * 0.06,
                           mainAxisSpacing: 8,
                           crossAxisSpacing: 16,
                         ),
@@ -191,7 +187,7 @@ class AddCustomerView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    CustomTextFieldCard(
+                    DMSCustomWidgets.CustomTextFieldCard(
                         size: size,
                         hint: 'Address',
                         isMobile: isMobile,
@@ -208,7 +204,7 @@ class AddCustomerView extends StatelessWidget {
                             ..hideCurrentSnackBar()
                             ..showSnackBar(const SnackBar(
                                 content: Text(
-                                    'Customer with this Id already exists.')));
+                                    'Customer with this Id already exists')));
                         } else if (state.status == CustomerStatus.success) {
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
@@ -261,41 +257,6 @@ class AddCustomerView extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget CustomTextFieldCard(
-      {required Size size,
-      required String hint,
-      TextEditingController? txcontroller,
-      FocusNode? focusNode,
-      Widget? icon,
-      required bool isMobile}) {
-    return SizedBox(
-      height: isMobile ? size.height * 0.1 : size.height * 0.13,
-      width: isMobile ? size.width * 0.8 : size.width * 0.3,
-      child: Card(
-        color: Colors.white.withOpacity(1),
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-        child: TextFormField(
-          cursorColor: Colors.black,
-          style: TextStyle(fontSize: isMobile ? 13 : 14),
-          controller: txcontroller,
-          focusNode: focusNode,
-          minLines: 1,
-          maxLines: 5,
-          maxLength: 200,
-          decoration: InputDecoration(
-            counterText: "",
-            contentPadding: const EdgeInsets.only(left: 15, top: 0),
-            border: InputBorder.none,
-            hintText: hint,
-            hintStyle: const TextStyle(
-                color: Colors.black45, fontWeight: FontWeight.normal),
           ),
         ),
       ),

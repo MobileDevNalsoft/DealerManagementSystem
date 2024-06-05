@@ -161,13 +161,14 @@ class _HomeProceedView extends State<HomeProceedView> {
                               focus: jobTypeFocus,
                               textcontroller: jobTypeController,
                               
+
                               // provider: provider,
                               isMobile: isMobile,
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          CustomTextFieldCard(
+                          DMSCustomWidgets.CustomTextFieldCard(
                               size: size,
                               hint: 'Customer Concerns',
                               isMobile: isMobile,
@@ -176,7 +177,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          CustomTextFieldCard(
+                          DMSCustomWidgets.CustomTextFieldCard(
                               size: size,
                               hint: 'Remarks',
                               isMobile: isMobile,
@@ -282,45 +283,6 @@ class _HomeProceedView extends State<HomeProceedView> {
                     ]),
               )
             : SizedBox(),
-      ),
-    );
-  }
-
-  Widget CustomTextFieldCard(
-      {required Size size,
-      required String hint,
-      TextEditingController? textcontroller,
-      FocusNode? focusNode,
-      Widget? icon,
-      required bool isMobile}) {
-    return SizedBox(
-      height: isMobile ? size.height * 0.1 : size.height * 0.13,
-      width: isMobile ? size.width * 0.8 : size.width * 0.3,
-      child: Card(
-        color: Colors.white.withOpacity(1),
-        child: TextFormField(
-          onTap: () {
-            Provider.of<HomeProvider>(context, listen: false)
-                .setFocusNode(focusNode!, scrollController, context);
-          },
-          cursorColor: Colors.black,
-          style: TextStyle(fontSize: isMobile ? 13 : 14),
-          controller: textcontroller,
-          focusNode: focusNode,
-          minLines: 1,
-          maxLines: 5,
-          maxLength: 200,
-          decoration: InputDecoration(
-            counterText: "",
-            contentPadding: EdgeInsets.only(left: 12, top: 8),
-            border: InputBorder.none,
-            hintText: hint,
-            hintStyle:
-                TextStyle(color: Colors.black45, fontWeight: FontWeight.normal),
-          ),
-        ),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
       ),
     );
   }
