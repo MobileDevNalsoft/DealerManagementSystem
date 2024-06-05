@@ -174,193 +174,191 @@ class AddVehicleView extends StatelessWidget {
                   child: Stack(
                     children: [
                       Center(
-                        child: FocusScope(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: size.height * 0.05,
-                              ),
-                              SizedBox(
-                                height: isMobile
-                                    ? MediaQuery.of(context).viewInsets.bottom ==
-                                            0
-                                        ? size.height * 0.62
-                                        : size.height * 0.5
-                                    : MediaQuery.of(context).viewInsets.bottom ==
-                                            0
-                                        ? size.height * 0.5
-                                        : size.height * 0.4,
-                                width: fieldWidth,
-                                child: GridView(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: isMobile ? 1 : 2,
-                                    mainAxisExtent: fieldHeight,
-                                    mainAxisSpacing: 8,
-                                    crossAxisSpacing: 16,
-                                  ),
-                                  controller: scrollController,
-                                  children: [
-                                    DMSCustomWidgets.SearchableDropDown(
-                                      size: size,
-                                      hint: "Vehicle type",
-                                      items: ["sedan", "SUV", "XUV"],
-                                      focus: vehicleTypeFocus,
-                                      textcontroller: vehicleTypeController,
-                                      isMobile: isMobile,
-                                      scrollController: scrollController,
-                                      icon: Icon(Icons.arrow_drop_down),
-                                    ),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: chassisNumberFocus,
-                                        size: size,
-                                        hint: "Chassis. no.",
-                                        isMobile: isMobile,
-                                        scrollController: scrollController,
-                                        textcontroller: chassisNumberController,
-                                        context: context),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: modelFocus,
-                                        size: size,
-                                        hint: "Model",
-                                        isMobile: isMobile,
-                                        textcontroller: modelController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: kmsFocus,
-                                        size: size,
-                                        hint: "KMS",
-                                        isMobile: isMobile,
-                                        textcontroller: kmsController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                    DMSCustomWidgets.SearchableDropDown(
-                                      size: size,
-                                      hint: "Insurance Company",
-                                      items: ["abc", "xyz", "pqr"],
-                                      focus: insuranceCompanyFocus,
-                                      textcontroller: insuranceCompanyController,
-                                      isMobile: isMobile,
-                                      scrollController: scrollController,
-                                      icon: Icon(Icons.arrow_drop_down),
-                                    ),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: customerNumberFocus,
-                                        size: size,
-                                        hint: "Customer no.",
-                                        isMobile: isMobile,
-                                        textcontroller: customerNumberController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: customerPhoneNumberFocus,
-                                        size: size,
-                                        hint: "customer phone no.",
-                                        isMobile: isMobile,
-                                        textcontroller:
-                                            customerPhoneNumberController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: vehicleRegNumberFocus,
-                                        size: size,
-                                        hint: "Vehicle Reg. no.",
-                                        isMobile: isMobile,
-                                        scrollController: scrollController,
-                                        textcontroller:
-                                            vehicleRegNumberController,
-                                        context: context),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: engineNumberFocus,
-                                        size: size,
-                                        hint: "Engine no.",
-                                        isMobile: isMobile,
-                                        textcontroller: engineNumberController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                    DMSCustomWidgets.SearchableDropDown(
-                                      size: size,
-                                      hint: "Make",
-                                      items: ["1", "2", "3", "4", "5", "6"],
-                                      focus: makeFocus,
-                                      textcontroller: makeController,
-                                      isMobile: isMobile,
-                                      scrollController: scrollController,
-                                      icon: Icon(Icons.arrow_drop_down),
-                                    ),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: mfgYearFocus,
-                                        size: size,
-                                        hint: "MFG Year",
-                                        isMobile: isMobile,
-                                        textcontroller: mfgYearController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: financialDetailsFocus,
-                                        size: size,
-                                        hint: "Financial details",
-                                        isMobile: isMobile,
-                                        textcontroller:
-                                            financialDetailsController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                    DMSCustomWidgets.CustomDataCard(
-                                        focusNode: customerAddressFocus,
-                                        size: size,
-                                        hint: "Customer address",
-                                        isMobile: isMobile,
-                                        textcontroller: customerAddressController,
-                                        scrollController: scrollController,
-                                        context: context),
-                                  ],
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: size.height * 0.05,
+                            ),
+                            SizedBox(
+                              height: isMobile
+                                  ? MediaQuery.of(context).viewInsets.bottom ==
+                                          0
+                                      ? size.height * 0.62
+                                      : size.height * 0.5
+                                  : MediaQuery.of(context).viewInsets.bottom ==
+                                          0
+                                      ? size.height * 0.5
+                                      : size.height * 0.4,
+                              width: fieldWidth,
+                              child: GridView(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: isMobile ? 1 : 2,
+                                  mainAxisExtent: fieldHeight,
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 16,
                                 ),
+                                controller: scrollController,
+                                children: [
+                                  DMSCustomWidgets.SearchableDropDown(
+                                    size: size,
+                                    hint: "Vehicle type",
+                                    items: ["sedan", "SUV", "XUV"],
+                                    focus: vehicleTypeFocus,
+                                    textcontroller: vehicleTypeController,
+                                    isMobile: isMobile,
+                                    scrollController: scrollController,
+                                    icon: Icon(Icons.arrow_drop_down),
+                                  ),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: chassisNumberFocus,
+                                      size: size,
+                                      hint: "Chassis. no.",
+                                      isMobile: isMobile,
+                                      scrollController: scrollController,
+                                      textcontroller: chassisNumberController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: modelFocus,
+                                      size: size,
+                                      hint: "Model",
+                                      isMobile: isMobile,
+                                      textcontroller: modelController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: kmsFocus,
+                                      size: size,
+                                      hint: "KMS",
+                                      isMobile: isMobile,
+                                      textcontroller: kmsController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.SearchableDropDown(
+                                    size: size,
+                                    hint: "Insurance Company",
+                                    items: ["abc", "xyz", "pqr"],
+                                    focus: insuranceCompanyFocus,
+                                    textcontroller: insuranceCompanyController,
+                                    isMobile: isMobile,
+                                    scrollController: scrollController,
+                                    icon: Icon(Icons.arrow_drop_down),
+                                  ),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: customerNumberFocus,
+                                      size: size,
+                                      hint: "Customer no.",
+                                      isMobile: isMobile,
+                                      textcontroller: customerNumberController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: customerPhoneNumberFocus,
+                                      size: size,
+                                      hint: "customer phone no.",
+                                      isMobile: isMobile,
+                                      textcontroller:
+                                          customerPhoneNumberController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: vehicleRegNumberFocus,
+                                      size: size,
+                                      hint: "Vehicle Reg. no.",
+                                      isMobile: isMobile,
+                                      scrollController: scrollController,
+                                      textcontroller:
+                                          vehicleRegNumberController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: engineNumberFocus,
+                                      size: size,
+                                      hint: "Engine no.",
+                                      isMobile: isMobile,
+                                      textcontroller: engineNumberController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.SearchableDropDown(
+                                    size: size,
+                                    hint: "Make",
+                                    items: ["1", "2", "3", "4", "5", "6"],
+                                    focus: makeFocus,
+                                    textcontroller: makeController,
+                                    isMobile: isMobile,
+                                    scrollController: scrollController,
+                                    icon: Icon(Icons.arrow_drop_down),
+                                  ),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: mfgYearFocus,
+                                      size: size,
+                                      hint: "MFG Year",
+                                      isMobile: isMobile,
+                                      textcontroller: mfgYearController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: financialDetailsFocus,
+                                      size: size,
+                                      hint: "Financial details",
+                                      isMobile: isMobile,
+                                      textcontroller:
+                                          financialDetailsController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: customerAddressFocus,
+                                      size: size,
+                                      hint: "Customer address",
+                                      isMobile: isMobile,
+                                      textcontroller: customerAddressController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                ],
                               ),
-                              SizedBox(
-                                height: isMobile
-                                    ? size.height * 0.02
-                                    : size.height * 0.05,
-                              ),
-                              if (MediaQuery.of(context).viewInsets.bottom == 0)
-                                (state.isLoading==false)?ElevatedButton(
-                                  onPressed: () {
-                                    print(engineNumberController.text);
-                                    Vehicle vehicle = Vehicle(
-                                        chassisNumber:
-                                            chassisNumberController.text,
-                                        customerAddress:
-                                            customerAddressController.text,
-                                        customerNumber:
-                                            customerNumberController.text,
-                                        engineNumber: engineNumberController.text,
-                                        // customerPhoneNumber:
-                                        //     customerPhoneNumberController.text,
-                                        kms: int.parse(kmsController.text),
-                                        mfgYear:
-                                            int.parse(mfgYearController.text),
-                                        financialDetails:
-                                            financialDetailsController.text,
-                                        model: modelController.text,
-                                        vehicleRegNumber:
-                                            vehicleRegNumberController.text,
-                                        vehicleType: vehicleTypeController.text,
-                                        insuranceCompany:
-                                            insuranceCompanyController.text);
-                                    context
-                                        .read<VehicleBloc>()
-                                        .add(AddVehicleEvent(vehicle: vehicle));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(4)),
-                                      minimumSize: const Size(10, 36),
-                                      backgroundColor: Colors.black,
-                                      foregroundColor: Colors.white),
-                                  child: const Text("Submit"),
-                                ):CircularProgressIndicator(),
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                              height: isMobile
+                                  ? size.height * 0.02
+                                  : size.height * 0.05,
+                            ),
+                            if (MediaQuery.of(context).viewInsets.bottom == 0)
+                              (state.isLoading==false)?ElevatedButton(
+                                onPressed: () {
+                                  print(engineNumberController.text);
+                                  Vehicle vehicle = Vehicle(
+                                      chassisNumber:
+                                          chassisNumberController.text,
+                                      customerAddress:
+                                          customerAddressController.text,
+                                      customerNumber:
+                                          customerNumberController.text,
+                                      engineNumber: engineNumberController.text,
+                                      // customerPhoneNumber:
+                                      //     customerPhoneNumberController.text,
+                                      kms: int.parse(kmsController.text),
+                                      mfgYear:
+                                          int.parse(mfgYearController.text),
+                                      financialDetails:
+                                          financialDetailsController.text,
+                                      model: modelController.text,
+                                      vehicleRegNumber:
+                                          vehicleRegNumberController.text,
+                                      vehicleType: vehicleTypeController.text,
+                                      insuranceCompany:
+                                          insuranceCompanyController.text);
+                                  context
+                                      .read<VehicleBloc>()
+                                      .add(AddVehicleEvent(vehicle: vehicle));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4)),
+                                    minimumSize: const Size(10, 36),
+                                    backgroundColor: Colors.black,
+                                    foregroundColor: Colors.white),
+                                child: const Text("Submit"),
+                              ):CircularProgressIndicator(),
+                          ],
                         ),
                       ),
                     

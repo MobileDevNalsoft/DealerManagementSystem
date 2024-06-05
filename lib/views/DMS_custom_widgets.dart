@@ -27,7 +27,7 @@ static Widget SearchableDropDown(
           builder: (context, controller, focusNode) {
             focus = focusNode;
             return TextFormField(
-              
+              textInputAction: TextInputAction.next,
               onTap: () {
                 Provider.of<HomeProvider>(context, listen: false)
                     .setFocusNode(focusNode, scrollController, context);
@@ -62,7 +62,7 @@ static Widget SearchableDropDown(
           ),
           onSelected: (suggestion) {
             textcontroller.text = suggestion;
-            focus.unfocus();
+            // focus.unfocus();
           },
         ),
       ),
@@ -85,6 +85,7 @@ static Widget CustomDataCard(
       child: Card(
         color: Colors.white.withOpacity(1),
         child: TextFormField(
+          textInputAction: TextInputAction.next,
           onTap: () {
             Provider.of<HomeProvider>(context! , listen: false)
                 .setFocusNode(focusNode!, scrollController, context );
