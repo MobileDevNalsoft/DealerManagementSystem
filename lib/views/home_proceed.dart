@@ -112,7 +112,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               hint: 'Booking Source',
                               isMobile: isMobile,
                               focusNode: bookingFocus,
-                              txcontroller: bookingController,
+                              textcontroller: bookingController,
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
@@ -122,7 +122,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               hint: 'Alternate Contact Person',
                               isMobile: isMobile,
                               focusNode: altContFocus,
-                              txcontroller: altContController,
+                              textcontroller: altContController,
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
@@ -132,7 +132,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               hint: 'Sales Person',
                               isMobile: isMobile,
                               focusNode: spFocus,
-                              txcontroller: spController,
+                              textcontroller: spController,
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
@@ -142,7 +142,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               hint: 'Bay',
                               isMobile: isMobile,
                               focusNode: bayFocus,
-                              txcontroller: bayController,
+                              textcontroller: bayController,
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
@@ -159,8 +159,8 @@ class _HomeProceedView extends State<HomeProceedView> {
                               ],
                               icon: Icon(Icons.arrow_drop_down),
                               focus: jobTypeFocus,
-                              txcontroller: jobTypeController,
-
+                              textcontroller: jobTypeController,
+                              
                               // provider: provider,
                               isMobile: isMobile,
                               scrollController: scrollController),
@@ -172,7 +172,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               hint: 'Customer Concerns',
                               isMobile: isMobile,
                               focusNode: custConcernsFocus,
-                              txcontroller: custConcernsController),
+                              textcontroller: custConcernsController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
@@ -181,7 +181,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               hint: 'Remarks',
                               isMobile: isMobile,
                               focusNode: remarksFocus,
-                              txcontroller: remarksController),
+                              textcontroller: remarksController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.05 : 0.015),
                           ),
@@ -289,7 +289,7 @@ class _HomeProceedView extends State<HomeProceedView> {
   Widget CustomTextFieldCard(
       {required Size size,
       required String hint,
-      TextEditingController? txcontroller,
+      TextEditingController? textcontroller,
       FocusNode? focusNode,
       Widget? icon,
       required bool isMobile}) {
@@ -305,7 +305,7 @@ class _HomeProceedView extends State<HomeProceedView> {
           },
           cursorColor: Colors.black,
           style: TextStyle(fontSize: isMobile ? 13 : 14),
-          controller: txcontroller,
+          controller: textcontroller,
           focusNode: focusNode,
           minLines: 1,
           maxLines: 5,

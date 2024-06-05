@@ -59,135 +59,129 @@ class AddVehicleView extends StatelessWidget {
       fieldHeight = size.height * 0.063;
     }
 
-    return BlocProvider(
-      create: (context) => VehicleBloc(),
-      child: SafeArea(
-        child: Scaffold(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
+            ? Padding(
+                padding: EdgeInsets.only(
+                    right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
+                child: CustomWidgets.CustomExpandableFAB(
+                    horizontalAlignment: isMobile ? -17 : -40,
+                    verticalAlignment: -15,
+                    rotational: false,
+                    angle: 90,
+                    distance: isMobile ? 50 : 70,
+                    color: Colors.black,
+                    iconColor: Colors.white,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.08,
+                        width: size.width * (isMobile ? 0.24 : 0.1),
+                        child: GestureDetector(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/add_user.png',
+                                color: Colors.white,
+                                fit: BoxFit.cover,
+                                scale: isMobile ? 22 : 15,
+                              ),
+                              Text(
+                                'Add Customer',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: isMobile ? 11 : 14),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.085,
+                        width: size.width * (isMobile ? 0.24 : 0.1),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ServiceHistoryView()));
+                          },
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.history,
+                                color: Colors.white,
+                                size: isMobile ? 28 : 40,
+                              ),
+                              Text(
+                                'History',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: isMobile ? 11 : 14),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]),
+              )
+            : const SizedBox(),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          elevation: 0.0,
           backgroundColor: Colors.transparent,
-          extendBodyBehindAppBar: true,
-          floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
-              ? Padding(
-                  padding: EdgeInsets.only(
-                      right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
-                  child: CustomWidgets.CustomExpandableFAB(
-                      horizontalAlignment: isMobile ? -17 : -40,
-                      verticalAlignment: -15,
-                      rotational: false,
-                      angle: 90,
-                      distance: isMobile ? 50 : 70,
-                      color: const Color.fromARGB(255, 145, 19, 19),
-                      iconColor: Colors.white,
-                      children: [
-                        SizedBox(
-                          height: size.height * 0.08,
-                          width: size.width * (isMobile ? 0.24 : 0.1),
-                          child: GestureDetector(
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/images/add_user.png',
-                                  color: Colors.white,
-                                  fit: BoxFit.cover,
-                                  scale: isMobile ? 22 : 15,
-                                ),
-                                Text(
-                                  'Add Customer',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: isMobile ? 11 : 14),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.085,
-                          width: size.width * (isMobile ? 0.24 : 0.1),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => ServiceHistoryView()));
-                            },
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.history,
-                                  color: Colors.white,
-                                  size: isMobile ? 28 : 40,
-                                ),
-                                Text(
-                                  'History',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: isMobile ? 11 : 14),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]),
-                )
-              : const SizedBox(),
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.arrow_back_rounded, color: Colors.white)),
-            title: Text(
-              "Add Vehicle",
-              style: TextStyle(color: Colors.white),
-            ),
-            centerTitle: true,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back_rounded, color: Colors.white)),
+          title: Text(
+            "Add Vehicle",
+            style: TextStyle(color: Colors.white),
           ),
-          body: BlocListener<VehicleBloc, VehicleState>(
-            listener: (context, state) {
-              print("listening");
-              if (state.isVehicleAdded == true)
-                CustomWidgets.CustomSnackBar(
-                    context, "Vehicle Successfully added", Colors.green);
-            },
-            child: BlocBuilder<VehicleBloc, VehicleState>(
-              builder: (context, state) {
-                print("built again");
-                return Container(
-                  height: size.height,
-                  width: size.width,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/dms_bg.png',
-                        ),
-                        fit: BoxFit.cover),
-                  ),
-                  child: SafeArea(
-                    child: Stack(
-                      children: [
-                        Center(
+          centerTitle: true,
+        ),
+        body: BlocConsumer<VehicleBloc, VehicleState>(
+          listener: (context, state) {
+            print("listening");
+            if (state.isVehicleAdded == true) {
+              CustomWidgets.CustomSnackBar(
+                  context, "Vehicle Successfully added", Colors.green);
+            }
+          },
+          builder: (context, state) {
+            {
+              print("built again");
+              return Container(
+                height: size.height,
+                width: size.width,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                        'assets/images/dms_bg.png',
+                      ),
+                      fit: BoxFit.cover),
+                ),
+                child: SafeArea(
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: FocusScope(
                           child: Column(
                             children: [
                               SizedBox(
-                                height: isMobile
-                                    ? size.height * 0.05
-                                    : size.height * 0.1,
+                                height: size.height * 0.05,
                               ),
                               SizedBox(
                                 height: isMobile
-                                    ? MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom ==
+                                    ? MediaQuery.of(context).viewInsets.bottom ==
                                             0
                                         ? size.height * 0.62
                                         : size.height * 0.5
-                                    : MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom ==
+                                    : MediaQuery.of(context).viewInsets.bottom ==
                                             0
                                         ? size.height * 0.5
-                                        : size.height * 0.2,
+                                        : size.height * 0.4,
                                 width: fieldWidth,
                                 child: GridView(
                                   gridDelegate:
@@ -204,7 +198,7 @@ class AddVehicleView extends StatelessWidget {
                                       hint: "Vehicle type",
                                       items: ["sedan", "SUV", "XUV"],
                                       focus: vehicleTypeFocus,
-                                      txcontroller: vehicleTypeController,
+                                      textcontroller: vehicleTypeController,
                                       isMobile: isMobile,
                                       scrollController: scrollController,
                                       icon: Icon(Icons.arrow_drop_down),
@@ -215,14 +209,14 @@ class AddVehicleView extends StatelessWidget {
                                         hint: "Chassis. no.",
                                         isMobile: isMobile,
                                         scrollController: scrollController,
-                                        txcontroller: chassisNumberController,
+                                        textcontroller: chassisNumberController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
                                         focusNode: modelFocus,
                                         size: size,
                                         hint: "Model",
                                         isMobile: isMobile,
-                                        txcontroller: modelController,
+                                        textcontroller: modelController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -230,7 +224,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "KMS",
                                         isMobile: isMobile,
-                                        txcontroller: kmsController,
+                                        textcontroller: kmsController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.SearchableDropDown(
@@ -238,7 +232,7 @@ class AddVehicleView extends StatelessWidget {
                                       hint: "Insurance Company",
                                       items: ["abc", "xyz", "pqr"],
                                       focus: insuranceCompanyFocus,
-                                      txcontroller: insuranceCompanyController,
+                                      textcontroller: insuranceCompanyController,
                                       isMobile: isMobile,
                                       scrollController: scrollController,
                                       icon: Icon(Icons.arrow_drop_down),
@@ -248,7 +242,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Customer no.",
                                         isMobile: isMobile,
-                                        txcontroller: customerNumberController,
+                                        textcontroller: customerNumberController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -256,7 +250,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "customer phone no.",
                                         isMobile: isMobile,
-                                        txcontroller:
+                                        textcontroller:
                                             customerPhoneNumberController,
                                         scrollController: scrollController,
                                         context: context),
@@ -266,7 +260,7 @@ class AddVehicleView extends StatelessWidget {
                                         hint: "Vehicle Reg. no.",
                                         isMobile: isMobile,
                                         scrollController: scrollController,
-                                        txcontroller:
+                                        textcontroller:
                                             vehicleRegNumberController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -274,15 +268,15 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Engine no.",
                                         isMobile: isMobile,
-                                        txcontroller: engineNumberController,
+                                        textcontroller: engineNumberController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.SearchableDropDown(
                                       size: size,
                                       hint: "Make",
-                                      items: ["1", "2", "3"],
+                                      items: ["1", "2", "3", "4", "5", "6"],
                                       focus: makeFocus,
-                                      txcontroller: makeController,
+                                      textcontroller: makeController,
                                       isMobile: isMobile,
                                       scrollController: scrollController,
                                       icon: Icon(Icons.arrow_drop_down),
@@ -292,7 +286,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "MFG Year",
                                         isMobile: isMobile,
-                                        txcontroller: mfgYearController,
+                                        textcontroller: mfgYearController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -300,7 +294,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Financial details",
                                         isMobile: isMobile,
-                                        txcontroller:
+                                        textcontroller:
                                             financialDetailsController,
                                         scrollController: scrollController,
                                         context: context),
@@ -309,7 +303,7 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Customer address",
                                         isMobile: isMobile,
-                                        txcontroller: customerAddressController,
+                                        textcontroller: customerAddressController,
                                         scrollController: scrollController,
                                         context: context),
                                   ],
@@ -321,7 +315,7 @@ class AddVehicleView extends StatelessWidget {
                                     : size.height * 0.05,
                               ),
                               if (MediaQuery.of(context).viewInsets.bottom == 0)
-                                ElevatedButton(
+                                (state.isLoading==false)?ElevatedButton(
                                   onPressed: () {
                                     print(engineNumberController.text);
                                     Vehicle vehicle = Vehicle(
@@ -331,8 +325,7 @@ class AddVehicleView extends StatelessWidget {
                                             customerAddressController.text,
                                         customerNumber:
                                             customerNumberController.text,
-                                        engineNumber:
-                                            engineNumberController.text,
+                                        engineNumber: engineNumberController.text,
                                         // customerPhoneNumber:
                                         //     customerPhoneNumberController.text,
                                         kms: int.parse(kmsController.text),
@@ -352,26 +345,24 @@ class AddVehicleView extends StatelessWidget {
                                   },
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
+                                          borderRadius: BorderRadius.circular(4)),
                                       minimumSize: const Size(10, 36),
                                       backgroundColor: const Color.fromARGB(
                                           255, 145, 19, 19),
                                       foregroundColor: Colors.white),
                                   child: const Text("Submit"),
-                                ),
+                                ):CircularProgressIndicator(),
                             ],
                           ),
                         ),
-                        if (state.isLoading == true)
-                          Center(child: CircularProgressIndicator())
-                      ],
-                    ),
+                      ),
+                    
+                    ],
                   ),
-                );
-              },
-            ),
-          ),
+                ),
+              );
+            }
+          },
         ),
       ),
     );

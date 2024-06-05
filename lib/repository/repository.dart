@@ -26,12 +26,20 @@ class Repository {
     }
   }
 
-  Future<void> addVehicle(Map<String, dynamic> payload) async {
+  Future<int?> addVehicle(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addVehicle', data: payload);
-    if (apiResponse.response!.statusCode == 200) {
-      Log.d(apiResponse.response);
-    } else {
-      Log.e(apiResponse.error);
+
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        return jsonDecode(apiResponse.response!.data)["response_code"];
+      } else {
+        Log.e(apiResponse.error);
+        return apiResponse.response!.statusCode;
+      }
+    }
+    else{
+      throw Error();
     }
   }
 
