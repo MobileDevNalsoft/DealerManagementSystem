@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:gap/gap.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -33,7 +34,6 @@ class _HomeView extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-    print(MediaQuery.of(context).size.shortestSide);
 
     // Set preferred orientations based on device type
     if (!isMobile) {
@@ -56,7 +56,7 @@ class _HomeView extends State<HomeView> {
         body: Container(
           height: size.height,
           width: size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(
                   'assets/images/dms_bg.png',
@@ -64,25 +64,23 @@ class _HomeView extends State<HomeView> {
                 fit: BoxFit.cover),
           ),
           child: ListView(
-            padding: EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 20),
             controller: scrollController,
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Home",
+                        "Service",
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       )
                     ],
                   ),
-                  SizedBox(
-                    height: size.height * 0.15,
-                  ),
+                  Gap(size.height * 0.15),
                   Consumer<HomeProvider>(
                     builder: (context, provider, child) {
                       return Column(
@@ -98,25 +96,21 @@ class _HomeView extends State<HomeView> {
                                 'Location 4',
                                 'Location 5'
                               ],
-                              icon: Icon(Icons.arrow_drop_down),
+                              icon: const Icon(Icons.arrow_drop_down),
                               focus: locFocus,
                               txcontroller: locController,
                               scrollController: scrollController,
                               isMobile: isMobile),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.01 : 0.03),
-                          ),
+                          Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Vehicle Registration Number',
-                              icon: Icon(Icons.check_circle_rounded),
+                              icon: const Icon(Icons.check_circle_rounded),
                               isMobile: isMobile,
                               txcontroller: vehRegNumController,
                               focusNode: vehRegNumFocus,
                               scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.01 : 0.03),
-                          ),
+                          Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           DMSCustomWidgets.SearchableDropDown(
                               size: size,
                               hint: 'Customer',
@@ -127,15 +121,13 @@ class _HomeView extends State<HomeView> {
                                 'Customer 4',
                                 'Customer 5'
                               ],
-                              icon: Icon(Icons.arrow_drop_down),
+                              icon: const Icon(Icons.arrow_drop_down),
                               focus: customerFocus,
                               txcontroller: customerController,
                               // provider: provider,
                               isMobile: isMobile,
                               scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.01 : 0.03),
-                          ),
+                          Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           DMSCustomWidgets.CustomDataCard(
                               size: size,
                               hint: 'Schedule Date',
@@ -143,9 +135,7 @@ class _HomeView extends State<HomeView> {
                               txcontroller: scheduleDateController,
                               focusNode: scheduleDateFocus,
                               scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.01 : 0.03),
-                          ),
+                          Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           DMSCustomWidgets.CustomDataCard(
                               key: targetKey,
                               size: size,
@@ -160,11 +150,7 @@ class _HomeView extends State<HomeView> {
                   ),
                   Row(
                     children: [
-                      Spacer(
-                        flex: isMobile
-                            ? (size.width * 0.6).round()
-                            : (size.width * 0.495).round(),
-                      ),
+                      Gap(isMobile ? (size.width * 0.7) : (size.width * 0.595)),
                       ElevatedButton(
                           onPressed: () {
                             CustomWidgets.CustomDialogBox(
@@ -600,19 +586,20 @@ class _HomeView extends State<HomeView> {
                               ),
                             );
                           },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              minimumSize: isMobile
+                                  ? const Size(65, 10)
+                                  : const Size(80.0, 20.0),
+                              padding: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5))),
                           child: Text(
                             'view more',
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: isMobile ? 12 : 14),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              minimumSize:
-                                  isMobile ? Size(65, 10) : Size(80.0, 20.0),
-                              padding: EdgeInsets.zero,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)))),
+                          )),
                       Spacer(
                         flex: isMobile
                             ? (size.width * 0.1).round()
@@ -649,17 +636,17 @@ class _HomeView extends State<HomeView> {
                           ),
                         );
                       },
-                      child: Text(
-                        'next',
-                        style: TextStyle(color: Colors.white),
-                      ),
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(70.0, 35.0),
+                          minimumSize: const Size(70.0, 35.0),
                           padding: EdgeInsets.zero,
                           backgroundColor:
                               const Color.fromARGB(255, 145, 19, 19),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)))),
+                              borderRadius: BorderRadius.circular(5))),
+                      child: const Text(
+                        'next',
+                        style: TextStyle(color: Colors.white),
+                      )),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
                     SizedBox(
                       height: size.height * (isMobile ? 0.4 : 0.5),
@@ -740,7 +727,7 @@ class _HomeView extends State<HomeView> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ServiceHistoryView()));
+                                builder: (_) => const ServiceHistoryView()));
                           },
                           child: Column(
                             children: [
@@ -761,7 +748,7 @@ class _HomeView extends State<HomeView> {
                       ),
                     ]),
               )
-            : SizedBox(),
+            : const SizedBox(),
       ),
     );
   }
@@ -793,7 +780,7 @@ class _HomeView extends State<HomeView> {
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
                   hintText: hint,
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     color: Colors.black54,
                     fontWeight: FontWeight.normal,
                   ),
@@ -859,14 +846,14 @@ class _HomeView extends State<HomeView> {
               counterText: "",
               border: InputBorder.none,
               hintText: hint,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                   fontFamily: 'euclid-circular-a'),
               suffixIcon: icon,
               suffixIconColor: Colors.green),
         ),
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
       ),
     );
