@@ -1,4 +1,5 @@
 import 'package:dms/bloc/customer_bloc/customer_bloc.dart';
+import 'package:dms/bloc/multi_bloc/multi_bloc.dart';
 import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/providers/home_provider.dart';
@@ -19,6 +20,7 @@ void main() async {
       providers: [
         BlocProvider(create: (_) => VehicleBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => CustomerBloc(repo: _.read<Repository>())),
+        BlocProvider(create: (_) => MultiBloc()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
       ],

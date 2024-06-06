@@ -1,8 +1,11 @@
+import 'package:dms/bloc/multi_bloc/multi_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DMSCustomWidgets {
@@ -168,36 +171,65 @@ class DMSCustomWidgets {
   }
 
   // ignore: non_constant_identifier_names
-  static void ScheduleDateCalendar(
-      context, Size size, TextEditingController scheduleDateController) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: SizedBox(
-              height: size.height * 0.4,
-              width: size.width,
-              child: SfDateRangePicker(
-                view: DateRangePickerView.month,
-                onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
-                  scheduleDateController.text =
-                      dateRangePickerSelectionChangedArgs.value
-                          .toString()
-                          .substring(0, 10);
-                },
-                allowViewNavigation: true,
-                todayHighlightColor: const Color.fromARGB(255, 145, 19, 19),
-                selectionColor: const Color.fromARGB(255, 145, 19, 19),
-                maxDate: DateTime(2024, 12, 31),
-                showNavigationArrow: true,
-                backgroundColor: Colors.white,
-                headerStyle: DateRangePickerHeaderStyle(
-                    backgroundColor: Color.fromARGB(255, 187, 76, 76),
-                    textAlign: TextAlign.center),
-              )),
-        );
-      },
+  static Widget ScheduleDateCalendar(
+      {context, required Size size, required bool isMobile, DateTime? date}) {
+    return SizedBox(
+      height: isMobile ? size.height * 0.06 : size.height * 0.063,
+      width: isMobile ? size.width * 0.8 : size.width * 0.3,
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                content: SizedBox(
+                    height: size.height * 0.4,
+                    width: size.width,
+                    child: SfDateRangePicker(
+                      view: DateRangePickerView.month,
+                      onSelectionChanged:
+                          (dateRangePickerSelectionChangedArgs) {
+                        date = dateRangePickerSelectionChangedArgs.value;
+                        context
+                            .read<MultiBloc>()
+                            .add(DateChanged(date: date ?? DateTime.now()));
+                      },
+                      allowViewNavigation: true,
+                      todayHighlightColor:
+                          const Color.fromARGB(255, 145, 19, 19),
+                      selectionColor: const Color.fromARGB(255, 145, 19, 19),
+                      maxDate: DateTime(2024, 12, 31),
+                      showNavigationArrow: true,
+                      backgroundColor: Colors.white,
+                      headerStyle: const DateRangePickerHeaderStyle(
+                          backgroundColor: Color.fromARGB(255, 187, 76, 76),
+                          textAlign: TextAlign.center),
+                    )),
+              );
+            },
+          );
+        },
+        child: Card(
+            color: Colors.white.withOpacity(1),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5))),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
+              child: Row(
+                children: [
+                  Text(
+                    date == null
+                        ? 'Schedule Date'
+                        : DateFormat("dd MMM yyyy").format(date),
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                  MaxGap(500),
+                  Icon(Icons.calendar_month_outlined, color: Colors.black38),
+                ],
+              ),
+            )),
+      ),
     );
   }
 }

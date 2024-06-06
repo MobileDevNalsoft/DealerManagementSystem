@@ -1,3 +1,4 @@
+import 'package:dms/bloc/multi_bloc/multi_bloc.dart';
 import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -134,23 +135,16 @@ class _HomeView extends State<HomeView> {
                               focusNode: customerFocus,
                               scrollController: scrollController),
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
-                          DMSCustomWidgets.CustomDataCard(
-                              context: context,
-                              icon: IconButton(
-                                  onPressed: () {
-                                    DMSCustomWidgets.ScheduleDateCalendar(
-                                        context, size, scheduleDateController);
-                                  },
-                                  icon: const Icon(
-                                    Icons.calendar_month_outlined,
-                                    color: Colors.black45,
-                                  )),
-                              size: size,
-                              hint: 'Schedule Date',
-                              isMobile: isMobile,
-                              textcontroller: scheduleDateController,
-                              focusNode: scheduleDateFocus,
-                              scrollController: scrollController),
+                          BlocBuilder<MultiBloc, MultiBlocState>(
+                            builder: (context, state) {
+                              return DMSCustomWidgets.ScheduleDateCalendar(
+                                context: context,
+                                date: state.date,
+                                size: size,
+                                isMobile: isMobile,
+                              );
+                            },
+                          ),
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           DMSCustomWidgets.CustomDataCard(
                               context: context,
