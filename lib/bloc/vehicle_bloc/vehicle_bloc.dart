@@ -11,11 +11,8 @@ part 'vehicle_state.dart';
 
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   VehicleBloc() : super(VehicleState()) {
-    on<VehicleEvent>((event, emit) {
-      // TODO: implement event handler
-    });
-    on<AddVehicleEvent>(
-        _onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
+    on<VehicleEvent>((event, emit) {});
+    on<AddVehicleEvent>(_onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
   }
 
   void _onAddVehicle(AddVehicleEvent event, emit) async {
@@ -28,10 +25,11 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       if (value != 200) {
         emit(state.copyWith(error: "some error has occured", isLoading: false));
       } else {
-        emit(state.copyWith(isLoading: false, isVehicleAdded: true));
+        emit(state.copyWith(isLoading: false, isVehicleAdded: true,error: ""));
       }
     }).onError(
        emit(state.copyWith(error: "some error has occured", isLoading: false))
     );
   }
+
 }

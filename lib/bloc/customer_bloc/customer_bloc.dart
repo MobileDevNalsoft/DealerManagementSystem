@@ -1,8 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/customer.dart';
 import 'package:dms/repository/repository.dart';
-import 'package:meta/meta.dart';
-
+import 'package:flutter/material.dart';
 part 'customer_event.dart';
 part 'customer_state.dart';
 
@@ -11,6 +10,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       : _repo = repo,
         super(CustomerState.initial()) {
     on<CustomerDetailsSubmitted>(_onCustomerDetailsSubmitted);
+    on<CustomerIdOnChangeEvent>(_onCustomerIdChange);
   }
 
   final Repository _repo;
@@ -32,5 +32,14 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         emit(state.copyWith(status: CustomerStatus.failure));
       },
     );
+  }
+
+  
+  void _onCustomerIdChange(CustomerIdOnChangeEvent event,emit)async{
+    emit(state.copyWith(status:CustomerStatus.loading));
+    //API call to get customer info
+    await Future.delayed(Duration(seconds: 2)).then((customerDetails){
+    emit(state.copyWith(status: CustomerStatus.failure));
+    });
   }
 }

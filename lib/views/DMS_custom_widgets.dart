@@ -73,9 +73,12 @@ class DMSCustomWidgets {
       required String hint,
       required bool isMobile,
       required ScrollController scrollController,
+      Function(String?)? onChange,
+      String? Function(String?)? validator,
       GlobalKey? key,
       TextEditingController? textcontroller,
       Widget? icon,
+      Widget? suffixIcon,
       BuildContext? context,
       FocusNode? focusNode}) {
     return SizedBox(
@@ -89,11 +92,13 @@ class DMSCustomWidgets {
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
             textInputAction: TextInputAction.next,
+            onChanged: onChange,
             onTap: () {
               Provider.of<HomeProvider>(context!, listen: false)
                   .setFocusNode(focusNode!, scrollController, context);
             },
             key: key,
+            validator: validator,
             focusNode: focusNode,
             cursorColor: Colors.black,
             controller: textcontroller,
@@ -102,6 +107,7 @@ class DMSCustomWidgets {
             maxLength: 25,
             maxLengthEnforcement: MaxLengthEnforcement.enforced,
             decoration: InputDecoration(
+                suffix: suffixIcon,
                 contentPadding: EdgeInsets.symmetric(
                     horizontal: 16, vertical: size.height * 0.016),
                 counterText: "",
@@ -122,7 +128,7 @@ class DMSCustomWidgets {
   static Widget CustomTextFieldCard(
       {required Size size,
       required String hint,
-      TextEditingController? txcontroller,
+      TextEditingController? textcontroller,
       FocusNode? focusNode,
       Widget? icon,
       required bool isMobile}) {
@@ -136,7 +142,7 @@ class DMSCustomWidgets {
         child: TextFormField(
           cursorColor: Colors.black,
           style: TextStyle(fontSize: isMobile ? 13 : 14),
-          controller: txcontroller,
+          controller: textcontroller,
           focusNode: focusNode,
           minLines: 1,
           maxLines: 5,

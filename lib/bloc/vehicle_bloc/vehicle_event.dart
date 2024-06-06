@@ -4,8 +4,6 @@ part of 'vehicle_bloc.dart';
 sealed class VehicleEvent {}
 class AddVehicleEvent extends VehicleEvent{
   Vehicle? vehicle;
-  
   AddVehicleEvent({this.vehicle});
   List get props=> [vehicle];
-
 }
