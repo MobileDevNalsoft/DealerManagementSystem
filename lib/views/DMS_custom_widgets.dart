@@ -88,6 +88,8 @@ class DMSCustomWidgets {
       required BuildContext context,
       void Function(dynamic value)? func,
       Widget? suffixIcon,
+      TextInputType? keyboardType,
+      List<TextInputFormatter>? inputFormatters,
       FocusNode? focusNode}) {
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
@@ -99,11 +101,7 @@ class DMSCustomWidgets {
         child: Transform(
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
-            onChanged: (value) {
-              if (func != null) {
-                func(value);
-              }
-            },
+            onChanged: onChange,
             textInputAction: TextInputAction.next,
             onTap: () {
               Provider.of<HomeProvider>(context, listen: false)
@@ -114,6 +112,8 @@ class DMSCustomWidgets {
             focusNode: focusNode,
             cursorColor: Colors.black,
             controller: textcontroller,
+            keyboardType: keyboardType,
+            inputFormatters: inputFormatters,
             style: TextStyle(
                 fontSize: isMobile ? 13 : 14, fontFamily: 'euclid-circular-a'),
             maxLength: 25,

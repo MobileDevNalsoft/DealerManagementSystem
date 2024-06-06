@@ -3,6 +3,7 @@ import 'package:dms/bloc/customer_bloc/customer_bloc.dart';
 import 'package:dms/models/vehicle_model.dart';
 import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
+import 'package:dms/views/add_customer_view.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:customs/src.dart';
@@ -83,6 +84,10 @@ class AddVehicleView extends StatelessWidget {
                         height: size.height * 0.08,
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => AddCustomerView()));
+                          },
                           child: Column(
                             children: [
                               Image.asset(
@@ -222,6 +227,10 @@ class AddVehicleView extends StatelessWidget {
                                       size: size,
                                       hint: "KMS",
                                       isMobile: isMobile,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
                                       textcontroller: kmsController,
                                       scrollController: scrollController,
                                       context: context),
