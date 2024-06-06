@@ -1,3 +1,4 @@
+import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_customer_view.dart';
@@ -6,6 +7,7 @@ import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -101,6 +103,26 @@ class _HomeView extends State<HomeView> {
                               textcontroller: locController,
                               scrollController: scrollController,
                               isMobile: isMobile),
+                          Gap(size.height * (isMobile ? 0.01 : 0.03)),
+                          BlocBuilder<VehicleBloc, VehicleState>(
+                            builder: (context, state) {
+                              return DMSCustomWidgets.CustomDataCard(
+                                  context: context,
+                                  size: size,
+                                  hint: 'Vehicle Registration Number',
+                                  onChange: (value) {
+                                    context.read<VehicleBloc>().add(
+                                        VehicleCheck(registrationNo: value!));
+                                  },
+                                  icon: state.isVehicleAdded!
+                                      ? const Icon(Icons.check_circle_rounded)
+                                      : null,
+                                  isMobile: isMobile,
+                                  textcontroller: vehRegNumController,
+                                  focusNode: vehRegNumFocus,
+                                  scrollController: scrollController);
+                            },
+                          ),
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           DMSCustomWidgets.CustomDataCard(
                               size: size,

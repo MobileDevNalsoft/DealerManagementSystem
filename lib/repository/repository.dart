@@ -37,8 +37,7 @@ class Repository {
         Log.e(apiResponse.error);
         return apiResponse.response!.statusCode;
       }
-    }
-    else{
+    } else {
       throw Error();
     }
   }
@@ -71,6 +70,21 @@ class Repository {
       return apiResponse.response;
     } else {
       return apiResponse.error;
+    }
+  }
+
+  Future<Map<String, dynamic>> getCustomer(String customerContactNo) async {
+    ApiResponse apiResponse = await _api.get('getCustomer',
+        queryParameters: {"customerPhoneNumber": customerContactNo});
+        print(apiResponse);
+    if (apiResponse.response!.statusCode == 200) {
+      if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+        return jsonDecode(apiResponse.response!.data)["data"];
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw apiResponse.error;
     }
   }
 }

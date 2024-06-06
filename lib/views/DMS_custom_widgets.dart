@@ -78,8 +78,12 @@ class DMSCustomWidgets {
       GlobalKey? key,
       TextEditingController? textcontroller,
       Widget? icon,
-      Widget? suffixIcon,
       BuildContext? context,
+      List<TextInputFormatter>? inputFormatters,
+      TextInputType? keyboardType,
+      
+      String? initialValue,
+      Widget? suffixIcon,
       FocusNode? focusNode}) {
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
@@ -91,6 +95,10 @@ class DMSCustomWidgets {
         child: Transform(
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
+            
+            initialValue: initialValue,
+            keyboardType: keyboardType,
+            inputFormatters:inputFormatters,
             textInputAction: TextInputAction.next,
             onChanged: onChange,
             onTap: () {

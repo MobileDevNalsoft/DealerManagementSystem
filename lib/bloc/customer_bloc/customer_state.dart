@@ -13,7 +13,7 @@ final class CustomerState {
 
   CustomerState copyWith({CustomerStatus? status,Customer? customer}) {
     return CustomerState(
-      customer: customer,
+      customer: customer??this.customer,
       status: status ?? this.status,
     );
   }
