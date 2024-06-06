@@ -2,7 +2,6 @@ part of 'vehicle_bloc.dart';
 
 @immutable
 sealed class VehicleEvent {}
-
 class AddVehicleEvent extends VehicleEvent {
   Vehicle? vehicle;
 
@@ -12,6 +11,5 @@ class AddVehicleEvent extends VehicleEvent {
 
 class VehicleCheck extends VehicleEvent {
   final String registrationNo;
-
   VehicleCheck({required this.registrationNo});
 }

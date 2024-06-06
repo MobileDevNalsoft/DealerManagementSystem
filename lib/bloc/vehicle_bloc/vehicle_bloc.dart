@@ -30,7 +30,7 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       if (value != 200) {
         emit(state.copyWith(error: "some error has occured", isLoading: false));
       } else {
-        emit(state.copyWith(isLoading: false, isVehicleAdded: true));
+        emit(state.copyWith(isLoading: false, isVehicleAdded: true,error: ""));
       }
     }).onError(emit(
             state.copyWith(error: "some error has occured", isLoading: false)));
@@ -55,4 +55,5 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       },
     );
   }
+
 }
