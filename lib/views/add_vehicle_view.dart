@@ -76,7 +76,7 @@ class AddVehicleView extends StatelessWidget {
                     rotational: false,
                     angle: 90,
                     distance: isMobile ? 50 : 70,
-                    color: Colors.black,
+                    color: const Color.fromARGB(255, 145, 19, 19),
                     iconColor: Colors.white,
                     children: [
                       SizedBox(
@@ -144,14 +144,7 @@ class AddVehicleView extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: BlocConsumer<VehicleBloc, VehicleState>(
-          listener: (context, state) {
-            print("listening");
-          },
-          builder: (context, state) {
-            {
-              print("built again");
-              return Container(
+        body:Container(
                 height: size.height,
                 width: size.width,
                 decoration: const BoxDecoration(
@@ -199,7 +192,7 @@ class AddVehicleView extends StatelessWidget {
                                     textcontroller: vehicleTypeController,
                                     isMobile: isMobile,
                                     scrollController: scrollController,
-                                    icon: Icon(Icons.arrow_drop_down),
+                                    icon: const Icon(Icons.arrow_drop_down),
                                   ),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: chassisNumberFocus,
@@ -222,6 +215,10 @@ class AddVehicleView extends StatelessWidget {
                                       size: size,
                                       hint: "KMS",
                                       isMobile: isMobile,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
                                       textcontroller: kmsController,
                                       scrollController: scrollController,
                                       context: context),
@@ -236,36 +233,54 @@ class AddVehicleView extends StatelessWidget {
                                     icon: Icon(Icons.arrow_drop_down),
                                   ),
                                   DMSCustomWidgets.CustomDataCard(
-                                      focusNode: customerNumberFocus,
+                                      focusNode: customerPhoneNumberFocus,
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: true),
                                       size: size,
                                       onChange: (p0) {
-                                        if (p0!.length > 5) {
+                                        if (p0!.length > 7) {
                                           context.read<CustomerBloc>().add(
                                               CustomerIdOnChangeEvent(
-                                                  customerId: p0));
+                                                  customerPhoneNumber: p0));
                                         }
                                       },
                                       suffixIcon: BlocConsumer<CustomerBloc,
                                           CustomerState>(
                                         listener: (context, state) {
+                                          print("inside listener");
+                                          //showing error snackbar if no customer found
+
+                                          // if (state.status ==
+                                          //     CustomerStatus.failure) {
+                                          //   Flushbar(
+                                          //     backgroundColor: Colors.red,
+                                          //     message:
+                                          //         "Customer not found.\nPlease add customer",
+                                          //     flushbarPosition:
+                                          //         FlushbarPosition.TOP,
+                                          //     duration: Duration(seconds: 2),
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(12),
+                                          //     margin: EdgeInsets.only(
+                                          //         top: 24,
+                                          //         left: isMobile
+                                          //             ? 10
+                                          //             : size.width * 0.8,
+                                          //         right: 10),
+                                          //   ).show(context);
+                                          // }
+                                          // else
+                                          print(state.customer);
                                           if (state.status ==
-                                              CustomerStatus.failure) {
-                                            Flushbar(
-                                              backgroundColor: Colors.red,
-                                              message:
-                                                  "Customer not found.\nPlease add customer",
-                                              flushbarPosition:
-                                                  FlushbarPosition.TOP,
-                                              duration: Duration(seconds: 2),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              margin: EdgeInsets.only(
-                                                  top: 24,
-                                                  left: isMobile
-                                                      ? 10
-                                                      : size.width * 0.8,
-                                                  right: 10),
-                                            ).show(context);
+                                              CustomerStatus.success) {
+                                            customerNumberController.text =
+                                                state.customer!.customerId ??
+                                                    "";
+                                            customerAddressController.text =
+                                                state.customer!
+                                                        .customerAddress ??
+                                                    "";
                                           }
                                         },
                                         builder: (context, state) {
@@ -279,13 +294,16 @@ class AddVehicleView extends StatelessWidget {
                                                       CircularProgressIndicator(
                                                     strokeWidth: 3,
                                                   ));
-                                            case CustomerStatus.failure:
-                                              return Transform(
-                                                  transform:
-                                                      Matrix4.translationValues(
-                                                          0, 16, 0),
-                                                  child: Lottie.asset(
-                                                      "assets/lottie/error.json"));
+
+                                            //error lottie for no customer
+
+                                            // case CustomerStatus.failure:
+                                            //   return Transform(
+                                            //       transform:
+                                            //           Matrix4.translationValues(
+                                            //               0, 16, 0),
+                                            //       child: Lottie.asset(
+                                            //           "assets/lottie/error.json"));
                                             case CustomerStatus.success:
                                               return Transform(
                                                   transform:
@@ -299,18 +317,18 @@ class AddVehicleView extends StatelessWidget {
                                           }
                                         },
                                       ),
-                                      hint: "Customer Number",
-                                      isMobile: isMobile,
-                                      textcontroller: customerNumberController,
-                                      scrollController: scrollController,
-                                      context: context),
-                                  DMSCustomWidgets.CustomDataCard(
-                                      focusNode: customerPhoneNumberFocus,
-                                      size: size,
                                       hint: "customer phone No.",
                                       isMobile: isMobile,
                                       textcontroller:
                                           customerPhoneNumberController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: customerNumberFocus,
+                                      size: size,
+                                      hint: "Customer Number",
+                                      isMobile: isMobile,
+                                      textcontroller: customerNumberController,
                                       scrollController: scrollController,
                                       context: context),
                                   DMSCustomWidgets.CustomDataCard(
@@ -345,6 +363,10 @@ class AddVehicleView extends StatelessWidget {
                                       size: size,
                                       hint: "MFG Year",
                                       isMobile: isMobile,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
                                       textcontroller: mfgYearController,
                                       scrollController: scrollController,
                                       context: context),
@@ -552,7 +574,6 @@ class AddVehicleView extends StatelessWidget {
                                         ).show(context);
                                         return;
                                       }
-                                      print(engineNumberController.text);
                                       Vehicle vehicle = Vehicle(
                                           chassisNumber:
                                               chassisNumberController.text,
@@ -601,10 +622,8 @@ class AddVehicleView extends StatelessWidget {
                     ],
                   ),
                 ),
-              );
-            }
-          },
-        ),
+              ) 
+            
       ),
     );
   }

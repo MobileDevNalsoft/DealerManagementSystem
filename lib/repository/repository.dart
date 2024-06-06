@@ -79,17 +79,23 @@ class Repository {
     }
   }
 
-  Future<void> getCustomer(String customerNo) async {
-    ApiResponse apiResponse = await _api
-        .get('getCustomer', queryParameters: {"customerNo": customerNo});
+  Future<Map<String, dynamic>> getCustomer(String customerContactNo) async {
+    ApiResponse apiResponse = await _api.get('getCustomer',
+        queryParameters: {"customerPhoneNumber": customerContactNo});
 
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return jsonDecode(apiResponse.response!.data)["data"];
+        } else {
+          throw apiResponse.error;
+        }
       } else {
-        Log.e(apiResponse.error);
+        throw apiResponse.error;
       }
-    } else {
+    }
+    else{
       throw Error();
     }
   }

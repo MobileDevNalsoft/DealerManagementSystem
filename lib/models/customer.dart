@@ -19,11 +19,11 @@ class Customer {
     return data;
   }
 
- fromJson(Map<String, dynamic> json) {
-    customerId = json['customerId'];
-    customerName = json['customerName'];
-    customerContactNo = json['customerContactNo'];
-    customerAddress = json['customerAddress'];
+ Customer.fromJson(Map<String, dynamic> json) {
+    customerId = json['customer_id'];
+    customerName = json['customer_name'];
+    customerContactNo = json['customer_contact_no'];
+    customerAddress = json['customer_address'];
   }
 
 }

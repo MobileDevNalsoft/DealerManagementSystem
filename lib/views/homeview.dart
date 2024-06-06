@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import 'package:dms/bloc/multi_bloc/multi_bloc.dart';
+=======
+>>>>>>> origin/saisanjit
 import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -8,7 +11,10 @@ import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+<<<<<<< HEAD
 import 'package:flutter/widgets.dart';
+=======
+>>>>>>> origin/saisanjit
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
@@ -112,9 +118,15 @@ class _HomeView extends State<HomeView> {
                                   context: context,
                                   size: size,
                                   hint: 'Vehicle Registration Number',
+<<<<<<< HEAD
                                   func: (value) {
                                     context.read<VehicleBloc>().add(
                                         VehicleCheck(registrationNo: value));
+=======
+                                  onChange: (value) {
+                                    context.read<VehicleBloc>().add(
+                                        VehicleCheck(registrationNo: value!));
+>>>>>>> origin/saisanjit
                                   },
                                   icon: state.isVehicleAdded!
                                       ? const Icon(Icons.check_circle_rounded)
@@ -125,6 +137,18 @@ class _HomeView extends State<HomeView> {
                                   scrollController: scrollController);
                             },
                           ),
+<<<<<<< HEAD
+=======
+                          Gap(size.height * (isMobile ? 0.01 : 0.03)),
+                          DMSCustomWidgets.CustomDataCard(
+                              size: size,
+                              hint: 'Vehicle Registration Number',
+                              icon: const Icon(Icons.check_circle_rounded),
+                              isMobile: isMobile,
+                              textcontroller: vehRegNumController,
+                              focusNode: vehRegNumFocus,
+                              scrollController: scrollController),
+>>>>>>> origin/saisanjit
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           DMSCustomWidgets.CustomDataCard(
                               context: context,

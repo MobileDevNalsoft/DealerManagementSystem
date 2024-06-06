@@ -34,12 +34,17 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     );
   }
 
-  
-  void _onCustomerIdChange(CustomerIdOnChangeEvent event,emit)async{
-    emit(state.copyWith(status:CustomerStatus.loading));
-    //API call to get customer info
-    await Future.delayed(Duration(seconds: 2)).then((customerDetails){
-    emit(state.copyWith(status: CustomerStatus.failure));
-    });
+  void _onCustomerIdChange(CustomerIdOnChangeEvent event, emit) async {
+    emit(state.copyWith(status: CustomerStatus.loading));
+   await _repo.getCustomer(event.customerPhoneNumber).then((customerDetails) {
+
+    emit(state.copyWith(
+          customer:Customer.fromJson(customerDetails),
+          status: CustomerStatus.success));
+    }).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(status: CustomerStatus.failure));
+      },
+    );
   }
 }

@@ -85,8 +85,11 @@ class DMSCustomWidgets {
       GlobalKey? key,
       TextEditingController? textcontroller,
       Widget? icon,
-      required BuildContext context,
-      void Function(dynamic value)? func,
+      BuildContext? context,
+      List<TextInputFormatter>? inputFormatters,
+      TextInputType? keyboardType,
+      
+      String? initialValue,
       Widget? suffixIcon,
       FocusNode? focusNode}) {
     return SizedBox(
@@ -99,11 +102,11 @@ class DMSCustomWidgets {
         child: Transform(
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
-            onChanged: (value) {
-              if (func != null) {
-                func(value);
-              }
-            },
+            onChanged: onChange,
+            initialValue: initialValue,
+            keyboardType: keyboardType,
+            inputFormatters:inputFormatters,
+            
             textInputAction: TextInputAction.next,
             onTap: () {
               Provider.of<HomeProvider>(context, listen: false)
