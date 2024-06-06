@@ -174,11 +174,15 @@ class AddVehicleView extends StatelessWidget {
                               ),
                               SizedBox(
                                 height: isMobile
-                                    ? MediaQuery.of(context).viewInsets.bottom ==
+                                    ? MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom ==
                                             0
                                         ? size.height * 0.62
                                         : size.height * 0.5
-                                    : MediaQuery.of(context).viewInsets.bottom ==
+                                    : MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom ==
                                             0
                                         ? size.height * 0.5
                                         : size.height * 0.4,
@@ -232,7 +236,8 @@ class AddVehicleView extends StatelessWidget {
                                       hint: "Insurance Company",
                                       items: ["abc", "xyz", "pqr"],
                                       focus: insuranceCompanyFocus,
-                                      textcontroller: insuranceCompanyController,
+                                      textcontroller:
+                                          insuranceCompanyController,
                                       isMobile: isMobile,
                                       scrollController: scrollController,
                                       icon: Icon(Icons.arrow_drop_down),
@@ -242,7 +247,8 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Customer no.",
                                         isMobile: isMobile,
-                                        textcontroller: customerNumberController,
+                                        textcontroller:
+                                            customerNumberController,
                                         scrollController: scrollController,
                                         context: context),
                                     DMSCustomWidgets.CustomDataCard(
@@ -303,7 +309,8 @@ class AddVehicleView extends StatelessWidget {
                                         size: size,
                                         hint: "Customer address",
                                         isMobile: isMobile,
-                                        textcontroller: customerAddressController,
+                                        textcontroller:
+                                            customerAddressController,
                                         scrollController: scrollController,
                                         context: context),
                                   ],
@@ -315,48 +322,58 @@ class AddVehicleView extends StatelessWidget {
                                     : size.height * 0.05,
                               ),
                               if (MediaQuery.of(context).viewInsets.bottom == 0)
-                                (state.isLoading==false)?ElevatedButton(
-                                  onPressed: () {
-                                    print(engineNumberController.text);
-                                    Vehicle vehicle = Vehicle(
-                                        chassisNumber:
-                                            chassisNumberController.text,
-                                        customerAddress:
-                                            customerAddressController.text,
-                                        customerNumber:
-                                            customerNumberController.text,
-                                        engineNumber: engineNumberController.text,
-                                        // customerPhoneNumber:
-                                        //     customerPhoneNumberController.text,
-                                        kms: int.parse(kmsController.text),
-                                        mfgYear:
-                                            int.parse(mfgYearController.text),
-                                        financialDetails:
-                                            financialDetailsController.text,
-                                        model: modelController.text,
-                                        vehicleRegNumber:
-                                            vehicleRegNumberController.text,
-                                        vehicleType: vehicleTypeController.text,
-                                        insuranceCompany:
-                                            insuranceCompanyController.text);
-                                    context
-                                        .read<VehicleBloc>()
-                                        .add(AddVehicleEvent(vehicle: vehicle));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(4)),
-                                      minimumSize: const Size(10, 36),
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 145, 19, 19),
-                                      foregroundColor: Colors.white),
-                                  child: const Text("Submit"),
-                                ):CircularProgressIndicator(),
+                                (state.isLoading == false)
+                                    ? ElevatedButton(
+                                        onPressed: () {
+                                          print(engineNumberController.text);
+                                          Vehicle vehicle = Vehicle(
+                                              chassisNumber:
+                                                  chassisNumberController.text,
+                                              customerAddress:
+                                                  customerAddressController
+                                                      .text,
+                                              customerNumber:
+                                                  customerNumberController.text,
+                                              engineNumber:
+                                                  engineNumberController.text,
+                                              // customerPhoneNumber:
+                                              //     customerPhoneNumberController.text,
+                                              kms:
+                                                  int.parse(kmsController.text),
+                                              mfgYear: int.parse(
+                                                  mfgYearController.text),
+                                              financialDetails:
+                                                  financialDetailsController
+                                                      .text,
+                                              model: modelController.text,
+                                              vehicleRegNumber:
+                                                  vehicleRegNumberController
+                                                      .text,
+                                              vehicleType:
+                                                  vehicleTypeController.text,
+                                              insuranceCompany:
+                                                  insuranceCompanyController
+                                                      .text);
+                                          context.read<VehicleBloc>().add(
+                                              AddVehicleEvent(
+                                                  vehicle: vehicle));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(4)),
+                                            minimumSize: const Size(10, 36),
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 145, 19, 19),
+                                            foregroundColor: Colors.white),
+                                        child: const Text("Submit"),
+                                      )
+                                    : CircularProgressIndicator(),
                             ],
                           ),
                         ),
                       ),
-                    
                     ],
                   ),
                 ),

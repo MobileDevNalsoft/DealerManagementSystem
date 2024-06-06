@@ -37,8 +37,7 @@ class Repository {
         Log.e(apiResponse.error);
         return apiResponse.response!.statusCode;
       }
-    }
-    else{
+    } else {
       throw Error();
     }
   }
@@ -52,9 +51,26 @@ class Repository {
     }
   }
 
-  Future<Response<dynamic>?> getVehicle(String registrationNumber) async {
-    ApiResponse apiResponse = await _api.get('getVehicle',
-        queryParameters: {registrationNumber: registrationNumber});
+  Future<int?> getVehicle(String registrationNo) async {
+    ApiResponse apiResponse = await _api
+        .get('getVehicle', queryParameters: {"registrationNo": registrationNo});
+
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        return jsonDecode(apiResponse.response!.data)["response_code"];
+      } else {
+        Log.e(apiResponse.error);
+        return apiResponse.response!.statusCode;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future<Response<dynamic>?> getHistory(String customerNo) async {
+    ApiResponse apiResponse = await _api
+        .get('getHistory', queryParameters: {"customerNo": customerNo});
 
     if (apiResponse.response!.statusCode == 200) {
       return apiResponse.response;
@@ -63,14 +79,18 @@ class Repository {
     }
   }
 
-  Future<Response<dynamic>?> getHistory(String customerNo) async {
-    ApiResponse apiResponse =
-        await _api.get('getHistory', queryParameters: {customerNo: customerNo});
+  Future<void> getCustomer(String customerNo) async {
+    ApiResponse apiResponse = await _api
+        .get('getCustomer', queryParameters: {"customerNo": customerNo});
 
-    if (apiResponse.response!.statusCode == 200) {
-      return apiResponse.response;
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+      } else {
+        Log.e(apiResponse.error);
+      }
     } else {
-      return apiResponse.error;
+      throw Error();
     }
   }
 }

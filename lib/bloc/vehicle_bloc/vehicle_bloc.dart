@@ -10,13 +10,15 @@ part 'vehicle_event.dart';
 part 'vehicle_state.dart';
 
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
-  VehicleBloc() : super(VehicleState()) {
-    on<VehicleEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  VehicleBloc({required Repository repo})
+      : _repo = repo,
+        super(VehicleState()) {
     on<AddVehicleEvent>(
         _onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
+    on<VehicleCheck>(_onVehicleCheck);
   }
+
+  final Repository _repo;
 
   void _onAddVehicle(AddVehicleEvent event, emit) async {
     emit(state.copyWith(
@@ -30,8 +32,27 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       } else {
         emit(state.copyWith(isLoading: false, isVehicleAdded: true));
       }
-    }).onError(
-       emit(state.copyWith(error: "some error has occured", isLoading: false))
+    }).onError(emit(
+            state.copyWith(error: "some error has occured", isLoading: false)));
+  }
+
+  Future<void> _onVehicleCheck(
+      VehicleCheck event, Emitter<VehicleState> emit) async {
+    emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false));
+    await _repo.getVehicle(event.registrationNo).then(
+      (value) {
+        if (value == 200) {
+          emit(state.copyWith(
+              isLoading: false, vehicle: null, isVehicleAdded: true));
+        } else {
+          emit(state.copyWith(
+              isLoading: false, vehicle: null, isVehicleAdded: false));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(error: stackTrace.toString()));
+      },
     );
   }
 }

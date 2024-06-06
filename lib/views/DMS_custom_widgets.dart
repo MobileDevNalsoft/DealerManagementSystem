@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DMSCustomWidgets {
+  // ignore: non_constant_identifier_names
   static Widget SearchableDropDown(
       {required size,
       required hint,
@@ -22,26 +24,30 @@ class DMSCustomWidgets {
         child: TypeAheadField(
           builder: (context, controller, focusNode) {
             focus = focusNode;
-            return TextFormField(
-              onTap: () {
-                Provider.of<HomeProvider>(context, listen: false)
-                    .setFocusNode(focusNode, scrollController, context);
-              },
-              cursorColor: Colors.black,
-              style: TextStyle(fontSize: isMobile ? 13 : 14),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16, vertical: size.height * 0.016),
-                suffixIcon: icon,
-                hintText: hint,
-                hintStyle: const TextStyle(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.normal,
+            textcontroller = controller;
+            return Transform(
+              transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
+              child: TextFormField(
+                onTap: () {
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .setFocusNode(focusNode, scrollController, context);
+                },
+                cursorColor: Colors.black,
+                style: TextStyle(fontSize: isMobile ? 13 : 14),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16, vertical: size.height * 0.016),
+                  suffixIcon: icon,
+                  hintText: hint,
+                  hintStyle: const TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  border: InputBorder.none, // Removes all borders
                 ),
-                border: InputBorder.none, // Removes all borders
+                controller: controller,
+                focusNode: focus,
               ),
-              controller: textcontroller,
-              focusNode: focusNode,
             );
           },
           suggestionsCallback: (pattern) {
@@ -65,6 +71,7 @@ class DMSCustomWidgets {
     );
   }
 
+  // ignore: non_constant_identifier_names
   static Widget CustomDataCard(
       {required Size size,
       required String hint,
@@ -73,7 +80,8 @@ class DMSCustomWidgets {
       GlobalKey? key,
       TextEditingController? textcontroller,
       Widget? icon,
-      BuildContext? context,
+      required BuildContext context,
+      void Function(dynamic value)? func,
       FocusNode? focusNode}) {
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
@@ -85,14 +93,19 @@ class DMSCustomWidgets {
         child: Transform(
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
+            onChanged: (value) {
+              if (func != null) {
+                func(value);
+              }
+            },
             onTap: () {
-              Provider.of<HomeProvider>(context!, listen: false)
+              Provider.of<HomeProvider>(context, listen: false)
                   .setFocusNode(focusNode!, scrollController, context);
             },
             key: key,
             focusNode: focusNode,
             cursorColor: Colors.black,
-            controller: txcontroller,
+            controller: textcontroller,
             style: TextStyle(
                 fontSize: isMobile ? 13 : 14, fontFamily: 'euclid-circular-a'),
             maxLength: 25,
@@ -107,11 +120,84 @@ class DMSCustomWidgets {
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
                 ),
-                suffixIcon: icon,
+                suffixIcon: Transform(
+                  transform: Matrix4.translationValues(0, -2, 0),
+                  child: icon,
+                ),
                 suffixIconColor: Colors.green),
           ),
         ),
       ),
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  static Widget CustomTextFieldCard(
+      {required Size size,
+      required String hint,
+      TextEditingController? textcontroller,
+      FocusNode? focusNode,
+      Widget? icon,
+      required bool isMobile}) {
+    return SizedBox(
+      height: isMobile ? size.height * 0.1 : size.height * 0.13,
+      width: isMobile ? size.width * 0.8 : size.width * 0.3,
+      child: Card(
+        color: Colors.white.withOpacity(1),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        child: TextFormField(
+          cursorColor: Colors.black,
+          style: TextStyle(fontSize: isMobile ? 13 : 14),
+          controller: textcontroller,
+          focusNode: focusNode,
+          minLines: 1,
+          maxLines: 5,
+          maxLength: 200,
+          decoration: InputDecoration(
+            counterText: "",
+            contentPadding: const EdgeInsets.only(left: 15, top: 0),
+            border: InputBorder.none,
+            hintText: hint,
+            hintStyle: const TextStyle(
+                color: Colors.black45, fontWeight: FontWeight.normal),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  static void ScheduleDateCalendar(
+      context, Size size, TextEditingController scheduleDateController) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: SizedBox(
+              height: size.height * 0.4,
+              width: size.width,
+              child: SfDateRangePicker(
+                view: DateRangePickerView.month,
+                onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
+                  scheduleDateController.text =
+                      dateRangePickerSelectionChangedArgs.value
+                          .toString()
+                          .substring(0, 10);
+                },
+                allowViewNavigation: true,
+                todayHighlightColor: const Color.fromARGB(255, 145, 19, 19),
+                selectionColor: const Color.fromARGB(255, 145, 19, 19),
+                maxDate: DateTime(2024, 12, 31),
+                showNavigationArrow: true,
+                backgroundColor: Colors.white,
+                headerStyle: DateRangePickerHeaderStyle(
+                    backgroundColor: Color.fromARGB(255, 187, 76, 76),
+                    textAlign: TextAlign.center),
+              )),
+        );
+      },
     );
   }
 }

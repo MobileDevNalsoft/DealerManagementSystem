@@ -17,7 +17,7 @@ void main() async {
     create: (context) => Repository(api: getIt()),
     child: MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => VehicleBloc()),
+        BlocProvider(create: (_) => VehicleBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => CustomerBloc(repo: _.read<Repository>())),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
