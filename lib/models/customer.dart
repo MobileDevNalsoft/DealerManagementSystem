@@ -16,7 +16,14 @@ class Customer {
     data['customer_name'] = customerName;
     data['customer_contact_no'] = customerContactNo;
     data['customer_address'] = customerAddress;
-
     return data;
   }
+
+ fromJson(Map<String, dynamic> json) {
+    customerId = json['customerId'];
+    customerName = json['customerName'];
+    customerContactNo = json['customerContactNo'];
+    customerAddress = json['customerAddress'];
+  }
+
 }

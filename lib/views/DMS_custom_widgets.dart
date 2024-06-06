@@ -67,7 +67,7 @@ class DMSCustomWidgets {
           ),
           onSelected: (suggestion) {
             textcontroller.text = suggestion;
-            focus.unfocus();
+            // focus.unfocus();
           },
         ),
       ),
@@ -80,11 +80,14 @@ class DMSCustomWidgets {
       required String hint,
       required bool isMobile,
       required ScrollController scrollController,
+      Function(String?)? onChange,
+      String? Function(String?)? validator,
       GlobalKey? key,
       TextEditingController? textcontroller,
       Widget? icon,
       required BuildContext context,
       void Function(dynamic value)? func,
+      Widget? suffixIcon,
       FocusNode? focusNode}) {
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
@@ -101,11 +104,13 @@ class DMSCustomWidgets {
                 func(value);
               }
             },
+            textInputAction: TextInputAction.next,
             onTap: () {
               Provider.of<HomeProvider>(context, listen: false)
                   .setFocusNode(focusNode!, scrollController, context);
             },
             key: key,
+            validator: validator,
             focusNode: focusNode,
             cursorColor: Colors.black,
             controller: textcontroller,
@@ -114,6 +119,7 @@ class DMSCustomWidgets {
             maxLength: 25,
             maxLengthEnforcement: MaxLengthEnforcement.enforced,
             decoration: InputDecoration(
+                suffix: suffixIcon,
                 contentPadding: EdgeInsets.symmetric(
                     horizontal: 16, vertical: size.height * 0.016),
                 counterText: "",

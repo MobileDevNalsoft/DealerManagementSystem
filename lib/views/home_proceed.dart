@@ -177,6 +177,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               icon: Icon(Icons.arrow_drop_down),
                               focus: jobTypeFocus,
                               textcontroller: jobTypeController,
+                              
 
                               // provider: provider,
                               isMobile: isMobile,
