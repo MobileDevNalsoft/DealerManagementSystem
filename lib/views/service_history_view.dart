@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 
@@ -22,30 +23,70 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   }
 
   @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return MaterialApp(
-      home: SafeArea(
-        child: Scaffold(
+    WidgetsFlutterBinding.ensureInitialized();
+    Size size = MediaQuery.of(context).size;
+
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+      },
+      child:
+          SafeArea(child: OrientationBuilder(builder: (context, orientation) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight
+        ]);
+        return Scaffold(
+            backgroundColor: Colors.transparent,
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
-              title: Text('ServiceHistory'),
+              elevation: 0.0,
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: Colors.white)),
+              title: const Text(
+                "Service History",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              centerTitle: true,
             ),
             body: Container(
+              height: size.height,
+              width: size.width,
               decoration: BoxDecoration(
                 image: DecorationImage(
                     colorFilter: ColorFilter.mode(
                         Colors.black.withOpacity(0.5), BlendMode.darken),
-                    image: AssetImage(
+                    image: const AssetImage(
                       'assets/images/dms_bg.png',
                     ),
                     fit: BoxFit.cover),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(
+                    bottom: 16.0, left: 16.0, right: 16.0, top: 60),
                 child: SfDataGridTheme(
                   data: SfDataGridThemeData.raw(
                       headerColor: Colors.white,
-                      currentCellStyle: DataGridCurrentCellStyle(
+                      currentCellStyle: const DataGridCurrentCellStyle(
                         borderColor: Colors.red,
                         borderWidth: 2,
                       )),
@@ -70,25 +111,25 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                           width: 150,
                           columnName: 'sno',
                           label: Container(
-                              padding: EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(16.0),
                               alignment: Alignment.center,
-                              child: Text(
+                              child: const Text(
                                 'Sno',
                               ))),
                       GridColumn(
                           columnName: 'date',
                           label: Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               alignment: Alignment.center,
-                              child: Text('Date'))),
+                              child: const Text('Date'))),
                       GridColumn(
                           columnName: 'Job Card no.',
                           label: Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               alignment: Alignment.center,
                               child: InkWell(
                                 onTap: () {},
-                                child: Text(
+                                child: const Text(
                                   'Job Card no.',
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -96,21 +137,21 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                       GridColumn(
                           columnName: 'Location',
                           label: Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               alignment: Alignment.center,
-                              child: Text('Location'))),
+                              child: const Text('Location'))),
                       GridColumn(
                           columnName: 'Job Type',
                           label: Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               alignment: Alignment.center,
-                              child: Text('Job Type'))),
+                              child: const Text('Job Type'))),
                     ],
                   ),
                 ),
               ),
-            )),
-      ),
+            ));
+      })),
     );
   }
 }
@@ -133,19 +174,19 @@ class ServiceHistory {
 
 List<ServiceHistory> getServiceHistory() {
   return [
-    ServiceHistory(
+    const ServiceHistory(
         sno: 1,
         date: '2024-02-22',
         jobCardNo: '123456789',
         location: 'Main Workshop',
         jobType: 'General service'),
-    ServiceHistory(
+    const ServiceHistory(
         sno: 2,
         date: '2024-02-23',
         jobCardNo: '123456789',
         location: 'Main Workshop',
         jobType: 'General service'),
-    ServiceHistory(
+    const ServiceHistory(
         sno: 3,
         date: '2024-02-24',
         jobCardNo: '123456789',
@@ -191,12 +232,12 @@ class ServiceHistoryDataSource extends DataGridSource {
                   child: Center(
                       child: Text(
                     e.value.toString(),
-                    style: TextStyle(color: Colors.blue),
+                    style: const TextStyle(color: Colors.blue),
                   )),
                 )
               : Container(
                   alignment: Alignment.center,
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(e.value.toString()),
                 );
         }).toList());

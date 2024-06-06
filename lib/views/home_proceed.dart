@@ -1,6 +1,8 @@
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
+import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/dynamic_widgets.dart';
+import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/services.dart';
@@ -87,7 +89,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                     flex: (size.width * (isMobile ? 0.6 : 0.88)).round(),
                   ),
                   Text(
-                    "Home",
+                    "Service",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   Spacer(
@@ -108,6 +110,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           DMSCustomWidgets.CustomDataCard(
+                              context: context,
                               size: size,
                               hint: 'Booking Source',
                               isMobile: isMobile,
@@ -118,6 +121,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
                           DMSCustomWidgets.CustomDataCard(
+                              context: context,
                               size: size,
                               hint: 'Alternate Contact Person',
                               isMobile: isMobile,
@@ -128,6 +132,18 @@ class _HomeProceedView extends State<HomeProceedView> {
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
                           DMSCustomWidgets.CustomDataCard(
+                              context: context,
+                              size: size,
+                              hint: 'Alternate Person Contact No.',
+                              isMobile: isMobile,
+                              focusNode: altContFocus,
+                              textcontroller: altContController,
+                              scrollController: scrollController),
+                          SizedBox(
+                            height: size.height * (isMobile ? 0.005 : 0.015),
+                          ),
+                          DMSCustomWidgets.CustomDataCard(
+                              context: context,
                               size: size,
                               hint: 'Sales Person',
                               isMobile: isMobile,
@@ -138,6 +154,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
                           DMSCustomWidgets.CustomDataCard(
+                              context: context,
                               size: size,
                               hint: 'Bay',
                               isMobile: isMobile,
@@ -160,7 +177,6 @@ class _HomeProceedView extends State<HomeProceedView> {
                               icon: Icon(Icons.arrow_drop_down),
                               focus: jobTypeFocus,
                               textcontroller: jobTypeController,
-
                               // provider: provider,
                               isMobile: isMobile,
                               scrollController: scrollController),
@@ -240,6 +256,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                         height: size.height * 0.08,
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => AddVehicleView()));
+                          },
                           child: Column(
                             children: [
                               Image.asset(
@@ -262,6 +282,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                         height: size.height * 0.09,
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => const ServiceHistoryView()));
+                          },
                           child: Column(
                             children: [
                               Icon(

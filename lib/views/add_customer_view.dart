@@ -121,7 +121,7 @@ class AddCustomerView extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           title: const Text(
             "Add Customer",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           centerTitle: true,
         ),
@@ -166,14 +166,14 @@ class AddCustomerView extends StatelessWidget {
                               hint: "Id",
                               isMobile: isMobile,
                               scrollController: scrollController,
-                              txcontroller: customerIdController,
+                              textcontroller: customerIdController,
                               context: context),
                           DMSCustomWidgets.CustomDataCard(
                               focusNode: customerNameFocus,
                               size: size,
                               hint: "Name",
                               isMobile: isMobile,
-                              txcontroller: customerNameController,
+                              textcontroller: customerNameController,
                               scrollController: scrollController,
                               context: context),
                           DMSCustomWidgets.CustomDataCard(
@@ -181,7 +181,7 @@ class AddCustomerView extends StatelessWidget {
                               size: size,
                               hint: "Contact Number",
                               isMobile: isMobile,
-                              txcontroller: customerContactNoController,
+                              textcontroller: customerContactNoController,
                               scrollController: scrollController,
                               context: context),
                         ],
@@ -192,7 +192,7 @@ class AddCustomerView extends StatelessWidget {
                         hint: 'Address',
                         isMobile: isMobile,
                         focusNode: customerAddressFocus,
-                        txcontroller: customerAddressController),
+                        textcontroller: customerAddressController),
                     SizedBox(
                       height:
                           isMobile ? size.height * 0.02 : size.height * 0.05,

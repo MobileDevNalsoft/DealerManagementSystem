@@ -55,6 +55,8 @@ dependencies:
   dio: ^5.4.3+1
   logger: ^2.3.0
   gap: ^3.0.1
+  flutter_spinkit: ^5.2.1
+  syncfusion_flutter_datepicker: ^25.2.7
   
 dev_dependencies:
   flutter_test:
