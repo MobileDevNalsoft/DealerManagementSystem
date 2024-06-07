@@ -85,10 +85,9 @@ class DMSCustomWidgets {
       GlobalKey? key,
       TextEditingController? textcontroller,
       Widget? icon,
-      BuildContext? context,
+      required BuildContext context,
       List<TextInputFormatter>? inputFormatters,
       TextInputType? keyboardType,
-      
       String? initialValue,
       Widget? suffixIcon,
       FocusNode? focusNode}) {
@@ -105,8 +104,7 @@ class DMSCustomWidgets {
             onChanged: onChange,
             initialValue: initialValue,
             keyboardType: keyboardType,
-            inputFormatters:inputFormatters,
-            
+            inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
             onTap: () {
               Provider.of<HomeProvider>(context, listen: false)
