@@ -775,8 +775,9 @@ class _HomeView extends State<HomeView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                                RotationRoute(page: ServiceHistoryView()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ServiceHistoryView(),
+                            ));
                           },
                           child: Column(
                             children: [
