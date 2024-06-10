@@ -18,6 +18,7 @@ class DMSCustomWidgets {
       required TextEditingController textcontroller,
       required bool isMobile,
       required ScrollController scrollController,
+      Function(String?)? onChange,
       Icon? icon}) {
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
@@ -27,10 +28,15 @@ class DMSCustomWidgets {
         child: TypeAheadField(
           builder: (context, controller, focusNode) {
             focus = focusNode;
-            textcontroller = controller;
+            // textcontroller = controller;
+            // textcontroller.text = controller.text;
+
             return Transform(
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
               child: TextFormField(
+                onChanged:(value) {
+                  controller.text=value;
+                },
                 onTap: () {
                   Provider.of<HomeProvider>(context, listen: false)
                       .setFocusNode(focusNode, scrollController, context);
@@ -48,7 +54,7 @@ class DMSCustomWidgets {
                   ),
                   border: InputBorder.none, // Removes all borders
                 ),
-                controller: controller,
+                controller: textcontroller,
                 focusNode: focus,
               ),
             );
@@ -66,7 +72,9 @@ class DMSCustomWidgets {
             ),
           ),
           onSelected: (suggestion) {
+            // print(suggestion);
             textcontroller.text = suggestion;
+            print(textcontroller.text);
             // focus.unfocus();
           },
         ),

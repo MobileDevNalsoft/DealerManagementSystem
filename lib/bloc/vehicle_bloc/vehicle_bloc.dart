@@ -38,15 +38,15 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
 
   Future<void> _onVehicleCheck(
       VehicleCheck event, Emitter<VehicleState> emit) async {
-    emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false));
+    emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false,error: ""));
     await _repo.getVehicle(event.registrationNo).then(
       (value) {
         if (value == 200) {
           emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: true));
+              isLoading: false, vehicle: null, isVehicleAdded: true,error: "Vehicle already registered"));
         } else {
           emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: false));
+              isLoading: false, vehicle: null, isVehicleAdded: false,error: ""));
         }
       },
     ).onError(
