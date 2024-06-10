@@ -199,10 +199,24 @@ class AddVehicleView extends StatelessWidget {
                                   scrollController: scrollController,
                                   textcontroller: vehicleRegNumberController,
                                   context: context),
+                              DMSCustomWidgets.SearchableDropDown(
+                                size: size,
+                                hint: "Vehicle type",
+                                items: ["sedan", "SUV", "XUV"],
+                                focus: vehicleTypeFocus,
+                                textcontroller: vehicleTypeController,
+                                isMobile: isMobile,
+                                onChange: (p0) {
+                                  print(p0);
+                                },
+                                scrollController: scrollController,
+                                icon: const Icon(Icons.arrow_drop_down),
+                              ),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: customerPhoneNumberFocus,
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      signed: true),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true),
                                   size: size,
                                   onChange: (p0) {
                                     if (p0!.length > 7) {
@@ -236,7 +250,6 @@ class AddVehicleView extends StatelessWidget {
                                       //   ).show(context);
                                       // }
                                       // else
-                                      print(state.customer);
                                       if (state.status ==
                                           CustomerStatus.success) {
                                         // customerNumberController.text =
@@ -253,7 +266,8 @@ class AddVehicleView extends StatelessWidget {
                                               transform:
                                                   Matrix4.translationValues(
                                                       0, 16, 0),
-                                              child: CircularProgressIndicator(
+                                              child:
+                                                  const CircularProgressIndicator(
                                                 strokeWidth: 3,
                                               ));
 
@@ -413,14 +427,15 @@ class AddVehicleView extends StatelessWidget {
                         ),
                         BlocConsumer<VehicleBloc, VehicleState>(
                             listener: (context, state) {
-                          if (state.isVehicleAdded == true) {
+                          if (state.isVehicleAdded == true &&
+                              state.error == "") {
                             CustomWidgets.CustomSnackBar(context,
                                 "Vehicle Successfully added", Colors.green);
                           }
                           if (state.error != "") {
                             Flushbar(
                               backgroundColor: Colors.red,
-                              message: "Some error has occured",
+                              message: state.error,
                               flushbarPosition: FlushbarPosition.TOP,
                               duration: Duration(seconds: 2),
                               borderRadius: BorderRadius.circular(12),
@@ -438,6 +453,7 @@ class AddVehicleView extends StatelessWidget {
                                   if (vehicleRegNumberController.text.isEmpty) {
                                     Flushbar(
                                       backgroundColor: Colors.red,
+                                      blockBackgroundInteraction: true,
                                       message:
                                           "Vehicle Registration number cannot be empty",
                                       flushbarPosition: FlushbarPosition.TOP,
@@ -484,6 +500,8 @@ class AddVehicleView extends StatelessWidget {
                                     return;
                                   }
                                   if (vehicleTypeController.text.isEmpty) {
+                                    print(
+                                        " vehicle type${vehicleTypeController.text}");
                                     Flushbar(
                                       backgroundColor: Colors.red,
                                       message: "Vehicle type cannot be empty",
@@ -498,21 +516,21 @@ class AddVehicleView extends StatelessWidget {
                                     ).show(context);
                                     return;
                                   }
-                                  if (kmsController.text.isEmpty) {
-                                    Flushbar(
-                                      backgroundColor: Colors.red,
-                                      message: "KMS number cannot be empty",
-                                      flushbarPosition: FlushbarPosition.TOP,
-                                      duration: Duration(seconds: 2),
-                                      borderRadius: BorderRadius.circular(12),
-                                      margin: EdgeInsets.only(
-                                          top: 24,
-                                          left:
-                                              isMobile ? 10 : size.width * 0.8,
-                                          right: 10),
-                                    ).show(context);
-                                    return;
-                                  }
+                                  // if (kmsController.text.isEmpty) {
+                                  //   Flushbar(
+                                  //     backgroundColor: Colors.red,
+                                  //     message: "KMS number cannot be empty",
+                                  //     flushbarPosition: FlushbarPosition.TOP,
+                                  //     duration: Duration(seconds: 2),
+                                  //     borderRadius: BorderRadius.circular(12),
+                                  //     margin: EdgeInsets.only(
+                                  //         top: 24,
+                                  //         left:
+                                  //             isMobile ? 10 : size.width * 0.8,
+                                  //         right: 10),
+                                  //   ).show(context);
+                                  //   return;
+                                  // }
                                   if (insuranceCompanyController.text.isEmpty) {
                                     Flushbar(
                                       backgroundColor: Colors.red,
@@ -570,7 +588,7 @@ class AddVehicleView extends StatelessWidget {
                                       engineNumber: engineNumberController.text,
                                       // customerPhoneNumber:
                                       //     customerPhoneNumberController.text,
-                                      kms: int.parse(kmsController.text),
+                                      // kms: int.parse(kmsController.text),
                                       mfgYear:
                                           int.parse(mfgYearController.text),
                                       financialDetails:
