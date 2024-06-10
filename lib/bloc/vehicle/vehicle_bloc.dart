@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:dms/models/vehicle_model.dart';
+import 'package:dms/models/vehicle.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
@@ -30,7 +30,7 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       if (value != 200) {
         emit(state.copyWith(error: "some error has occured", isLoading: false));
       } else {
-        emit(state.copyWith(isLoading: false, isVehicleAdded: true,error: ""));
+        emit(state.copyWith(isLoading: false, isVehicleAdded: true, error: ""));
       }
     }).onError(emit(
             state.copyWith(error: "some error has occured", isLoading: false)));
@@ -55,5 +55,4 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       },
     );
   }
-
 }

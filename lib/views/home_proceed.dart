@@ -1,3 +1,6 @@
+import 'package:another_flushbar/flushbar.dart';
+import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/models/service.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
@@ -7,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -177,7 +181,6 @@ class _HomeProceedView extends State<HomeProceedView> {
                               icon: Icon(Icons.arrow_drop_down),
                               focus: jobTypeFocus,
                               textcontroller: jobTypeController,
-                              
 
                               // provider: provider,
                               isMobile: isMobile,
@@ -207,31 +210,47 @@ class _HomeProceedView extends State<HomeProceedView> {
                       );
                     },
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        bookingFocus.unfocus();
-                        altContFocus.unfocus();
-                        spFocus.unfocus();
-                        bayFocus.unfocus();
-                        jobTypeFocus.unfocus();
-                        custConcernsFocus.unfocus();
-                        remarksFocus.unfocus();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => DynamicWidgets()));
-                      },
-                      child: Text(
-                        'proceed to recieve',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(140.0, 35.0),
-                          padding: EdgeInsets.zero,
-                          backgroundColor:
-                              const Color.fromARGB(255, 145, 19, 19),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)))),
+                  BlocConsumer<ServiceBloc, ServiceState>(
+                    listener: (context, state) {
+                      Flushbar(
+                              flushbarPosition: FlushbarPosition.TOP,
+                              backgroundColor: Colors.green,
+                              message: 'Service Added Successfully')
+                          .show(context);
+                    },
+                    builder: (context, state) {
+                      return state.status == ServiceStatus.loading
+                          ? CircularProgressIndicator()
+                          : ElevatedButton(
+                              onPressed: () {
+                                bookingFocus.unfocus();
+                                altContFocus.unfocus();
+                                spFocus.unfocus();
+                                bayFocus.unfocus();
+                                jobTypeFocus.unfocus();
+                                custConcernsFocus.unfocus();
+                                remarksFocus.unfocus();
+                                context
+                                    .read<ServiceBloc>()
+                                    .add(ServiceAdded(service: Service()));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (_) => DynamicWidgets()));
+                              },
+                              child: Text(
+                                'proceed to recieve',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(140.0, 35.0),
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 145, 19, 19),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5))));
+                    },
+                  ),
                   if (MediaQuery.of(context).viewInsets.bottom != 0)
                     SizedBox(
                       height: size.height * (isMobile ? 0.4 : 0.5),

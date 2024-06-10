@@ -1,7 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
-import 'package:dms/bloc/customer_bloc/customer_bloc.dart';
-import 'package:dms/models/vehicle_model.dart';
-import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
+import 'package:dms/bloc/customer/customer_bloc.dart';
+import 'package:dms/models/vehicle.dart';
+import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_customer_view.dart';
 import 'package:dms/views/service_history_view.dart';

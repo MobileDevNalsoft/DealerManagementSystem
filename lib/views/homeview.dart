@@ -1,5 +1,5 @@
-import 'package:dms/bloc/multi_bloc/multi_bloc.dart';
-import 'package:dms/bloc/vehicle_bloc/vehicle_bloc.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
+import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_customer_view.dart';
@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:customs/src.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
@@ -94,11 +95,11 @@ class _HomeView extends State<HomeView> {
                               size: size,
                               hint: 'Location',
                               items: [
-                                'Location 1',
-                                'Location 2',
-                                'Location 3',
-                                'Location 4',
-                                'Location 5'
+                                'Madhapur',
+                                'Hitech city',
+                                'Durgam Cheruvu',
+                                'Jubilee Hills',
+                                'Raidurg'
                               ],
                               icon: const Icon(Icons.arrow_drop_down),
                               focus: locFocus,
@@ -106,7 +107,17 @@ class _HomeView extends State<HomeView> {
                               scrollController: scrollController,
                               isMobile: isMobile),
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
-                          BlocBuilder<VehicleBloc, VehicleState>(
+                          BlocConsumer<VehicleBloc, VehicleState>(
+                            listener: (context, state) {
+                              if (!state.isVehicleAdded!) {
+                                Flushbar(
+                                        flushbarPosition: FlushbarPosition.TOP,
+                                        backgroundColor: Colors.red,
+                                        message:
+                                            'Please Register Vehicle Before Service')
+                                    .show(context);
+                              }
+                            },
                             builder: (context, state) {
                               return DMSCustomWidgets.CustomDataCard(
                                   context: context,
@@ -660,6 +671,7 @@ class _HomeView extends State<HomeView> {
                   ),
                   ElevatedButton(
                       onPressed: () {
+                        print(locController.text);
                         locFocus.unfocus();
                         vehRegNumFocus.unfocus();
                         customerFocus.unfocus();

@@ -1,4 +1,4 @@
-import 'package:dms/bloc/multi_bloc/multi_bloc.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,13 +27,15 @@ class DMSCustomWidgets {
         child: TypeAheadField(
           builder: (context, controller, focusNode) {
             focus = focusNode;
-            textcontroller = controller;
             return Transform(
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
               child: TextFormField(
                 onTap: () {
                   Provider.of<HomeProvider>(context, listen: false)
                       .setFocusNode(focusNode, scrollController, context);
+                },
+                onChanged: (value) {
+                  controller.text = value;
                 },
                 cursorColor: Colors.black,
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
@@ -48,7 +50,7 @@ class DMSCustomWidgets {
                   ),
                   border: InputBorder.none, // Removes all borders
                 ),
-                controller: controller,
+                controller: textcontroller,
                 focusNode: focus,
               ),
             );
