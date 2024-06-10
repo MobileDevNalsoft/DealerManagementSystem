@@ -14,19 +14,23 @@ import 'package:lottie/lottie.dart';
 class AddVehicleView extends StatelessWidget {
   AddVehicleView({super.key});
 
-  TextEditingController vehicleTypeController = TextEditingController();
-  TextEditingController chassisNumberController = TextEditingController();
-  TextEditingController modelController = TextEditingController();
-  TextEditingController kmsController = TextEditingController();
-  TextEditingController customerNumberController = TextEditingController();
-  TextEditingController customerPhoneNumberController = TextEditingController();
   TextEditingController vehicleRegNumberController = TextEditingController();
-  TextEditingController mfgYearController = TextEditingController();
-  TextEditingController financialDetailsController = TextEditingController();
+  TextEditingController customerContactNumberController =
+      TextEditingController();
+  TextEditingController customerNameController = TextEditingController();
   TextEditingController customerAddressController = TextEditingController();
-  TextEditingController insuranceCompanyController = TextEditingController();
+  TextEditingController chassisNumberController = TextEditingController();
   TextEditingController engineNumberController = TextEditingController();
+  TextEditingController vehicleTypeController = TextEditingController();
   TextEditingController makeController = TextEditingController();
+  TextEditingController modelController = TextEditingController();
+  TextEditingController variantController = TextEditingController();
+  TextEditingController colorController = TextEditingController();
+  TextEditingController kmsController = TextEditingController();
+  TextEditingController mfgYearController = TextEditingController();
+  TextEditingController insuranceCompanyController = TextEditingController();
+  TextEditingController financialDetailsController = TextEditingController();
+
   ScrollController scrollController = ScrollController();
 
   FocusNode vehicleTypeFocus = FocusNode();
@@ -80,32 +84,32 @@ class AddVehicleView extends StatelessWidget {
                       color: const Color.fromARGB(255, 145, 19, 19),
                       iconColor: Colors.white,
                       children: [
-                        SizedBox(
-                          height: size.height * 0.08,
-                          width: size.width * (isMobile ? 0.24 : 0.1),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => AddCustomerView()));
-                            },
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/images/add_user.png',
-                                  color: Colors.white,
-                                  fit: BoxFit.cover,
-                                  scale: isMobile ? 22 : 15,
-                                ),
-                                Text(
-                                  'Add Customer',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: isMobile ? 11 : 14),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: size.height * 0.08,
+                        //   width: size.width * (isMobile ? 0.24 : 0.1),
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       Navigator.of(context).push(MaterialPageRoute(
+                        //           builder: (_) => AddCustomerView()));
+                        //     },
+                        //     child: Column(
+                        //       children: [
+                        //         Image.asset(
+                        //           'assets/images/add_user.png',
+                        //           color: Colors.white,
+                        //           fit: BoxFit.cover,
+                        //           scale: isMobile ? 22 : 15,
+                        //         ),
+                        //         Text(
+                        //           'Add Customer',
+                        //           style: TextStyle(
+                        //               color: Colors.white,
+                        //               fontSize: isMobile ? 11 : 14),
+                        //         )
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(
                           height: size.height * 0.085,
                           width: size.width * (isMobile ? 0.24 : 0.1),
@@ -187,54 +191,14 @@ class AddVehicleView extends StatelessWidget {
                             ),
                             controller: scrollController,
                             children: [
-                              DMSCustomWidgets.SearchableDropDown(
-                                size: size,
-                                hint: "Vehicle type",
-                                items: ["sedan", "SUV", "XUV"],
-                                focus: vehicleTypeFocus,
-                                textcontroller: vehicleTypeController,
-                                isMobile: isMobile,
-                                scrollController: scrollController,
-                                icon: const Icon(Icons.arrow_drop_down),
-                              ),
                               DMSCustomWidgets.CustomDataCard(
-                                  focusNode: chassisNumberFocus,
+                                  focusNode: vehicleRegNumberFocus,
                                   size: size,
-                                  hint: "Chassis. no.",
+                                  hint: "Vehicle Reg. No.",
                                   isMobile: isMobile,
                                   scrollController: scrollController,
-                                  textcontroller: chassisNumberController,
+                                  textcontroller: vehicleRegNumberController,
                                   context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: modelFocus,
-                                  size: size,
-                                  hint: "Model",
-                                  isMobile: isMobile,
-                                  textcontroller: modelController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: kmsFocus,
-                                  size: size,
-                                  hint: "KMS",
-                                  isMobile: isMobile,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  textcontroller: kmsController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.SearchableDropDown(
-                                size: size,
-                                hint: "Insurance Company",
-                                items: ["abc", "xyz", "pqr"],
-                                focus: insuranceCompanyFocus,
-                                textcontroller: insuranceCompanyController,
-                                isMobile: isMobile,
-                                scrollController: scrollController,
-                                icon: Icon(Icons.arrow_drop_down),
-                              ),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: customerPhoneNumberFocus,
                                   keyboardType: TextInputType.numberWithOptions(
@@ -250,7 +214,6 @@ class AddVehicleView extends StatelessWidget {
                                   suffixIcon:
                                       BlocConsumer<CustomerBloc, CustomerState>(
                                     listener: (context, state) {
-                                      print("inside listener");
                                       //showing error snackbar if no customer found
 
                                       // if (state.status ==
@@ -276,8 +239,8 @@ class AddVehicleView extends StatelessWidget {
                                       print(state.customer);
                                       if (state.status ==
                                           CustomerStatus.success) {
-                                        customerNumberController.text =
-                                            state.customer!.customerId ?? "";
+                                        // customerNumberController.text =
+                                        //     state.customer!.customerId ?? "";
                                         customerAddressController.text =
                                             state.customer!.customerAddress ??
                                                 "";
@@ -316,26 +279,35 @@ class AddVehicleView extends StatelessWidget {
                                       }
                                     },
                                   ),
-                                  hint: "customer phone No.",
+                                  hint: "Customer Contact No.",
                                   isMobile: isMobile,
-                                  textcontroller: customerPhoneNumberController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: customerNumberFocus,
-                                  size: size,
-                                  hint: "Customer Number",
-                                  isMobile: isMobile,
-                                  textcontroller: customerNumberController,
+                                  textcontroller:
+                                      customerContactNumberController,
                                   scrollController: scrollController,
                                   context: context),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: vehicleRegNumberFocus,
                                   size: size,
-                                  hint: "Vehicle Reg. No.",
+                                  hint: "Customer Name",
                                   isMobile: isMobile,
                                   scrollController: scrollController,
                                   textcontroller: vehicleRegNumberController,
+                                  context: context),
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: vehicleRegNumberFocus,
+                                  size: size,
+                                  hint: "Customer Address",
+                                  isMobile: isMobile,
+                                  scrollController: scrollController,
+                                  textcontroller: vehicleRegNumberController,
+                                  context: context),
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: chassisNumberFocus,
+                                  size: size,
+                                  hint: "Chassis no.",
+                                  isMobile: isMobile,
+                                  scrollController: scrollController,
+                                  textcontroller: chassisNumberController,
                                   context: context),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: engineNumberFocus,
@@ -347,6 +319,16 @@ class AddVehicleView extends StatelessWidget {
                                   context: context),
                               DMSCustomWidgets.SearchableDropDown(
                                 size: size,
+                                hint: "Vehicle type",
+                                items: ["sedan", "SUV", "XUV"],
+                                focus: vehicleTypeFocus,
+                                textcontroller: vehicleTypeController,
+                                isMobile: isMobile,
+                                scrollController: scrollController,
+                                icon: const Icon(Icons.arrow_drop_down),
+                              ),
+                              DMSCustomWidgets.SearchableDropDown(
+                                size: size,
                                 hint: "Make",
                                 items: ["1", "2", "3", "4", "5", "6"],
                                 focus: makeFocus,
@@ -355,6 +337,42 @@ class AddVehicleView extends StatelessWidget {
                                 scrollController: scrollController,
                                 icon: Icon(Icons.arrow_drop_down),
                               ),
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: modelFocus,
+                                  size: size,
+                                  hint: "Model",
+                                  isMobile: isMobile,
+                                  textcontroller: modelController,
+                                  scrollController: scrollController,
+                                  context: context),
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: modelFocus,
+                                  size: size,
+                                  hint: "Variant",
+                                  isMobile: isMobile,
+                                  textcontroller: variantController,
+                                  scrollController: scrollController,
+                                  context: context),
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: modelFocus,
+                                  size: size,
+                                  hint: "Color",
+                                  isMobile: isMobile,
+                                  textcontroller: colorController,
+                                  scrollController: scrollController,
+                                  context: context),
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: kmsFocus,
+                                  size: size,
+                                  hint: "KMS",
+                                  isMobile: isMobile,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  textcontroller: kmsController,
+                                  scrollController: scrollController,
+                                  context: context),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: mfgYearFocus,
                                   size: size,
@@ -367,6 +385,16 @@ class AddVehicleView extends StatelessWidget {
                                   textcontroller: mfgYearController,
                                   scrollController: scrollController,
                                   context: context),
+                              DMSCustomWidgets.SearchableDropDown(
+                                size: size,
+                                hint: "Insurance Company",
+                                items: ["abc", "xyz", "pqr"],
+                                focus: insuranceCompanyFocus,
+                                textcontroller: insuranceCompanyController,
+                                isMobile: isMobile,
+                                scrollController: scrollController,
+                                icon: Icon(Icons.arrow_drop_down),
+                              ),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: financialDetailsFocus,
                                   size: size,
@@ -374,15 +402,7 @@ class AddVehicleView extends StatelessWidget {
                                   isMobile: isMobile,
                                   textcontroller: financialDetailsController,
                                   scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: customerAddressFocus,
-                                  size: size,
-                                  hint: "Customer address",
-                                  isMobile: isMobile,
-                                  textcontroller: customerAddressController,
-                                  scrollController: scrollController,
-                                  context: context),
+                                  context: context)
                             ],
                           ),
                         ),
@@ -446,7 +466,8 @@ class AddVehicleView extends StatelessWidget {
                                     ).show(context);
                                     return;
                                   }
-                                  if (customerNumberController.text.isEmpty) {
+                                  if (customerContactNumberController
+                                      .text.isEmpty) {
                                     Flushbar(
                                       backgroundColor: Colors.red,
                                       message:
@@ -545,7 +566,7 @@ class AddVehicleView extends StatelessWidget {
                                       customerAddress:
                                           customerAddressController.text,
                                       customerNumber:
-                                          customerNumberController.text,
+                                          customerContactNumberController.text,
                                       engineNumber: engineNumberController.text,
                                       // customerPhoneNumber:
                                       //     customerPhoneNumberController.text,

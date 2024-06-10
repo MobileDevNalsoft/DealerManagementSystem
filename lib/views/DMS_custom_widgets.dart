@@ -129,7 +129,7 @@ class DMSCustomWidgets {
                 border: InputBorder.none,
                 hintText: hint,
                 hintStyle: const TextStyle(
-                  color: Colors.black54,
+                  color: Colors.black38,
                   fontWeight: FontWeight.normal,
                 ),
                 suffixIcon: Transform(

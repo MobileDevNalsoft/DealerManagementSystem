@@ -730,32 +730,32 @@ class _HomeView extends State<HomeView> {
                     color: const Color.fromARGB(255, 145, 19, 19),
                     iconColor: Colors.white,
                     children: [
-                      SizedBox(
-                        height: size.height * 0.08,
-                        width: size.width * (isMobile ? 0.24 : 0.1),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => AddCustomerView()));
-                          },
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/images/add_user.png',
-                                color: Colors.white,
-                                fit: BoxFit.cover,
-                                scale: isMobile ? 22 : 15,
-                              ),
-                              Text(
-                                'Add Customer',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isMobile ? 11 : 14),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      // SizedBox(
+                      //   height: size.height * 0.08,
+                      //   width: size.width * (isMobile ? 0.24 : 0.1),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.of(context).push(MaterialPageRoute(
+                      //           builder: (_) => AddCustomerView()));
+                      //     },
+                      //     child: Column(
+                      //       children: [
+                      //         Image.asset(
+                      //           'assets/images/add_user.png',
+                      //           color: Colors.white,
+                      //           fit: BoxFit.cover,
+                      //           scale: isMobile ? 22 : 15,
+                      //         ),
+                      //         Text(
+                      //           'Add Customer',
+                      //           style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontSize: isMobile ? 11 : 14),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: size.height * 0.08,
                         width: size.width * (isMobile ? 0.24 : 0.1),
