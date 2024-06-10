@@ -42,6 +42,9 @@ class DMSCustomWidgets {
                       .setFocusNode(focusNode, scrollController, context);
                 },
                 cursorColor: Colors.black,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\d')),
+                ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(

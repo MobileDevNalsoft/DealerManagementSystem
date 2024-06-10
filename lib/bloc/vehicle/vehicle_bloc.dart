@@ -12,7 +12,7 @@ part 'vehicle_state.dart';
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   VehicleBloc({required Repository repo})
       : _repo = repo,
-        super(VehicleState()) {
+        super(VehicleState(status: VehicleStatus.initial)) {
     on<AddVehicleEvent>(
         _onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
     on<VehicleCheck>(_onVehicleCheck);
@@ -23,30 +23,34 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   void _onAddVehicle(AddVehicleEvent event, emit) async {
     emit(state.copyWith(
         isLoading: true, vehicle: event.vehicle, isVehicleAdded: false));
-    await GetIt.instance
-        .get<Repository>()
-        .addVehicle((state.vehicle!.toJson()))
-        .then((value) {
+    await _repo.addVehicle((state.vehicle!.toJson())).then((value) {
       if (value != 200) {
         emit(state.copyWith(error: "some error has occured", isLoading: false));
       } else {
         emit(state.copyWith(isLoading: false, isVehicleAdded: true, error: ""));
       }
     }).onError(emit(
-            state.copyWith(error: "some error has occured", isLoading: false)));
+        state.copyWith(error: "some error has occured", isLoading: false)));
   }
 
   Future<void> _onVehicleCheck(
       VehicleCheck event, Emitter<VehicleState> emit) async {
-    emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false,error: ""));
+    emit(state.copyWith(
+        isLoading: true, vehicle: null, isVehicleAdded: false, error: ""));
     await _repo.getVehicle(event.registrationNo).then(
       (value) {
         if (value == 200) {
           emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: true,error: "Vehicle already registered"));
+              isLoading: false,
+              vehicle: null,
+              isVehicleAdded: true,
+              error: "Vehicle already registered"));
         } else {
           emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: false,error: ""));
+              isLoading: false,
+              vehicle: null,
+              isVehicleAdded: false,
+              error: ""));
         }
       },
     ).onError(
