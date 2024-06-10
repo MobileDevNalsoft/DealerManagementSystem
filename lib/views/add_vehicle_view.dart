@@ -187,16 +187,19 @@ class AddVehicleView extends StatelessWidget {
                             ),
                             controller: scrollController,
                             children: [
-                              DMSCustomWidgets.SearchableDropDown(
-                                size: size,
-                                hint: "Vehicle type",
-                                items: ["sedan", "SUV", "XUV"],
-                                focus: vehicleTypeFocus,
-                                textcontroller: vehicleTypeController,
-                                isMobile: isMobile,
-                                scrollController: scrollController,
-                                icon: const Icon(Icons.arrow_drop_down),
-                              ),
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: vehicleRegNumberFocus,
+                                  size: size,
+                                  hint: "Vehicle Reg. No.",
+                                  isMobile: isMobile,
+                                  onChange: (p0) {
+                                    if(p0!.length>=5){
+                                    context.read<VehicleBloc>().add(VehicleCheck(registrationNo: p0));
+                                    }
+                                  },
+                                  scrollController: scrollController,
+                                  textcontroller: vehicleRegNumberController,
+                                  context: context),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: chassisNumberFocus,
                                   size: size,
@@ -205,6 +208,19 @@ class AddVehicleView extends StatelessWidget {
                                   scrollController: scrollController,
                                   textcontroller: chassisNumberController,
                                   context: context),
+                              DMSCustomWidgets.SearchableDropDown(
+                                size: size,
+                                hint: "Vehicle type",
+                                items: ["sedan", "SUV", "XUV"],
+                                focus: vehicleTypeFocus,
+                                textcontroller: vehicleTypeController,
+                                isMobile: isMobile,
+                                onChange: (p0) {
+                                  print(p0);
+                                },
+                                scrollController: scrollController,
+                                icon: const Icon(Icons.arrow_drop_down),
+                              ),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: modelFocus,
                                   size: size,
@@ -213,16 +229,48 @@ class AddVehicleView extends StatelessWidget {
                                   textcontroller: modelController,
                                   scrollController: scrollController,
                                   context: context),
+                              // DMSCustomWidgets.CustomDataCard(
+                              //     focusNode: kmsFocus,
+                              //     size: size,
+                              //     hint: "KMS",
+                              //     isMobile: isMobile,
+                              //     keyboardType: TextInputType.number,
+                              //     inputFormatters: [
+                              //       FilteringTextInputFormatter.digitsOnly,
+                              //     ],
+                              //     textcontroller: kmsController,
+                              //     scrollController: scrollController,
+                              //     context: context),
+                              DMSCustomWidgets.SearchableDropDown(
+                                size: size,
+                                hint: "Make",
+                                items: ["Maruthi Suzuki", "VW", "Toyota", "Honda", "Hyndai", "Tata","Nissan","Mitsbushi","Porsche","Audi","Volvo"],
+                                focus: makeFocus,
+                                textcontroller: makeController,
+                                isMobile: isMobile,
+                                scrollController: scrollController,
+                                icon: Icon(Icons.arrow_drop_down),
+                              ),
+
                               DMSCustomWidgets.CustomDataCard(
-                                  focusNode: kmsFocus,
+                                  focusNode: engineNumberFocus,
                                   size: size,
-                                  hint: "KMS",
+                                  hint: "Engine No.",
+                                  isMobile: isMobile,
+                                  textcontroller: engineNumberController,
+                                  scrollController: scrollController,
+                                  context: context),
+
+                              DMSCustomWidgets.CustomDataCard(
+                                  focusNode: mfgYearFocus,
+                                  size: size,
+                                  hint: "MFG Year",
                                   isMobile: isMobile,
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
+                                    FilteringTextInputFormatter.digitsOnly
                                   ],
-                                  textcontroller: kmsController,
+                                  textcontroller: mfgYearController,
                                   scrollController: scrollController,
                                   context: context),
                               DMSCustomWidgets.SearchableDropDown(
@@ -236,9 +284,18 @@ class AddVehicleView extends StatelessWidget {
                                 icon: Icon(Icons.arrow_drop_down),
                               ),
                               DMSCustomWidgets.CustomDataCard(
+                                  focusNode: financialDetailsFocus,
+                                  size: size,
+                                  hint: "Financial details",
+                                  isMobile: isMobile,
+                                  textcontroller: financialDetailsController,
+                                  scrollController: scrollController,
+                                  context: context),
+                              DMSCustomWidgets.CustomDataCard(
                                   focusNode: customerPhoneNumberFocus,
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      signed: true),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true),
                                   size: size,
                                   onChange: (p0) {
                                     if (p0!.length > 7) {
@@ -250,7 +307,6 @@ class AddVehicleView extends StatelessWidget {
                                   suffixIcon:
                                       BlocConsumer<CustomerBloc, CustomerState>(
                                     listener: (context, state) {
-                                      print("inside listener");
                                       //showing error snackbar if no customer found
 
                                       // if (state.status ==
@@ -273,7 +329,6 @@ class AddVehicleView extends StatelessWidget {
                                       //   ).show(context);
                                       // }
                                       // else
-                                      print(state.customer);
                                       if (state.status ==
                                           CustomerStatus.success) {
                                         customerNumberController.text =
@@ -290,7 +345,8 @@ class AddVehicleView extends StatelessWidget {
                                               transform:
                                                   Matrix4.translationValues(
                                                       0, 16, 0),
-                                              child: CircularProgressIndicator(
+                                              child:
+                                                  const CircularProgressIndicator(
                                                 strokeWidth: 3,
                                               ));
 
@@ -316,7 +372,7 @@ class AddVehicleView extends StatelessWidget {
                                       }
                                     },
                                   ),
-                                  hint: "customer phone No.",
+                                  hint: "Customer phone No.",
                                   isMobile: isMobile,
                                   textcontroller: customerPhoneNumberController,
                                   scrollController: scrollController,
@@ -324,55 +380,9 @@ class AddVehicleView extends StatelessWidget {
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: customerNumberFocus,
                                   size: size,
-                                  hint: "Customer Number",
+                                  hint: "Customer Id",
                                   isMobile: isMobile,
                                   textcontroller: customerNumberController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: vehicleRegNumberFocus,
-                                  size: size,
-                                  hint: "Vehicle Reg. No.",
-                                  isMobile: isMobile,
-                                  scrollController: scrollController,
-                                  textcontroller: vehicleRegNumberController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: engineNumberFocus,
-                                  size: size,
-                                  hint: "Engine No.",
-                                  isMobile: isMobile,
-                                  textcontroller: engineNumberController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.SearchableDropDown(
-                                size: size,
-                                hint: "Make",
-                                items: ["1", "2", "3", "4", "5", "6"],
-                                focus: makeFocus,
-                                textcontroller: makeController,
-                                isMobile: isMobile,
-                                scrollController: scrollController,
-                                icon: Icon(Icons.arrow_drop_down),
-                              ),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: mfgYearFocus,
-                                  size: size,
-                                  hint: "MFG Year",
-                                  isMobile: isMobile,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  textcontroller: mfgYearController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: financialDetailsFocus,
-                                  size: size,
-                                  hint: "Financial details",
-                                  isMobile: isMobile,
-                                  textcontroller: financialDetailsController,
                                   scrollController: scrollController,
                                   context: context),
                               DMSCustomWidgets.CustomDataCard(
@@ -393,14 +403,14 @@ class AddVehicleView extends StatelessWidget {
                         ),
                         BlocConsumer<VehicleBloc, VehicleState>(
                             listener: (context, state) {
-                          if (state.isVehicleAdded == true) {
+                          if (state.isVehicleAdded == true && state.error=="") {
                             CustomWidgets.CustomSnackBar(context,
                                 "Vehicle Successfully added", Colors.green);
                           }
                           if (state.error != "") {
                             Flushbar(
                               backgroundColor: Colors.red,
-                              message: "Some error has occured",
+                              message: state.error,
                               flushbarPosition: FlushbarPosition.TOP,
                               duration: Duration(seconds: 2),
                               borderRadius: BorderRadius.circular(12),
@@ -415,9 +425,11 @@ class AddVehicleView extends StatelessWidget {
                             case false:
                               return ElevatedButton(
                                 onPressed: () {
+                                  
                                   if (vehicleRegNumberController.text.isEmpty) {
                                     Flushbar(
                                       backgroundColor: Colors.red,
+                                      blockBackgroundInteraction: true,
                                       message:
                                           "Vehicle Registration number cannot be empty",
                                       flushbarPosition: FlushbarPosition.TOP,
@@ -435,6 +447,7 @@ class AddVehicleView extends StatelessWidget {
                                     Flushbar(
                                       backgroundColor: Colors.red,
                                       message: "Chassis number cannot be empty",
+                                     
                                       flushbarPosition: FlushbarPosition.TOP,
                                       duration: Duration(seconds: 2),
                                       borderRadius: BorderRadius.circular(12),
@@ -463,6 +476,7 @@ class AddVehicleView extends StatelessWidget {
                                     return;
                                   }
                                   if (vehicleTypeController.text.isEmpty) {
+                                    print(" vehicle type${vehicleTypeController.text}");
                                     Flushbar(
                                       backgroundColor: Colors.red,
                                       message: "Vehicle type cannot be empty",
@@ -477,21 +491,21 @@ class AddVehicleView extends StatelessWidget {
                                     ).show(context);
                                     return;
                                   }
-                                  if (kmsController.text.isEmpty) {
-                                    Flushbar(
-                                      backgroundColor: Colors.red,
-                                      message: "KMS number cannot be empty",
-                                      flushbarPosition: FlushbarPosition.TOP,
-                                      duration: Duration(seconds: 2),
-                                      borderRadius: BorderRadius.circular(12),
-                                      margin: EdgeInsets.only(
-                                          top: 24,
-                                          left:
-                                              isMobile ? 10 : size.width * 0.8,
-                                          right: 10),
-                                    ).show(context);
-                                    return;
-                                  }
+                                  // if (kmsController.text.isEmpty) {
+                                  //   Flushbar(
+                                  //     backgroundColor: Colors.red,
+                                  //     message: "KMS number cannot be empty",
+                                  //     flushbarPosition: FlushbarPosition.TOP,
+                                  //     duration: Duration(seconds: 2),
+                                  //     borderRadius: BorderRadius.circular(12),
+                                  //     margin: EdgeInsets.only(
+                                  //         top: 24,
+                                  //         left:
+                                  //             isMobile ? 10 : size.width * 0.8,
+                                  //         right: 10),
+                                  //   ).show(context);
+                                  //   return;
+                                  // }
                                   if (insuranceCompanyController.text.isEmpty) {
                                     Flushbar(
                                       backgroundColor: Colors.red,
@@ -549,7 +563,7 @@ class AddVehicleView extends StatelessWidget {
                                       engineNumber: engineNumberController.text,
                                       // customerPhoneNumber:
                                       //     customerPhoneNumberController.text,
-                                      kms: int.parse(kmsController.text),
+                                      // kms: int.parse(kmsController.text),
                                       mfgYear:
                                           int.parse(mfgYearController.text),
                                       financialDetails:
