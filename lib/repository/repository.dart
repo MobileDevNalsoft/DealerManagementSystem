@@ -42,12 +42,20 @@ class Repository {
     }
   }
 
-  Future<void> addService(Map<String, dynamic> payload) async {
+  Future<int> addService(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addService', data: payload);
     if (apiResponse.response!.statusCode == 200) {
-      Log.d(apiResponse.response);
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
     } else {
       Log.e(apiResponse.error);
+      throw Error();
     }
   }
 
@@ -94,8 +102,7 @@ class Repository {
       } else {
         throw apiResponse.error;
       }
-    }
-    else{
+    } else {
       throw Error();
     }
   }

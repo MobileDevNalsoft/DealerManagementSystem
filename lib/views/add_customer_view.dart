@@ -1,5 +1,6 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:customs/src.dart';
-import 'package:dms/bloc/customer_bloc/customer_bloc.dart';
+import 'package:dms/bloc/customer/customer_bloc.dart';
 import 'package:dms/custom_methods/methods.dart';
 import 'package:dms/models/customer.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -200,16 +201,20 @@ class AddCustomerView extends StatelessWidget {
                     BlocConsumer<CustomerBloc, CustomerState>(
                       listener: (context, state) {
                         if (state.status == CustomerStatus.failure) {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(const SnackBar(
-                                content: Text(
-                                    'Customer with this Id already exists')));
+                          Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: Colors.red,
+                                  message:
+                                      'Customer with this Id already exists',
+                                  duration: Duration(seconds: 2))
+                              .show(context);
                         } else if (state.status == CustomerStatus.success) {
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(const SnackBar(
-                                content: Text('Customer added Successfully')));
+                          Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: Colors.red,
+                                  message: 'Customer added Successfully',
+                                  duration: Duration(seconds: 2))
+                              .show(context);
                         }
                       },
                       builder: (context, state) {

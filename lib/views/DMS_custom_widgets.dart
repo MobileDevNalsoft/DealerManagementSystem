@@ -1,4 +1,4 @@
-import 'package:dms/bloc/multi_bloc/multi_bloc.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +40,9 @@ class DMSCustomWidgets {
                 onTap: () {
                   Provider.of<HomeProvider>(context, listen: false)
                       .setFocusNode(focusNode, scrollController, context);
+                },
+                onChanged: (value) {
+                  controller.text = value;
                 },
                 cursorColor: Colors.black,
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
