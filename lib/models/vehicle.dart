@@ -10,7 +10,7 @@ class Vehicle {
   int? mfgYear;
   String? financialDetails;
   String? insuranceCompany;
-  int? customerContactNo;
+  String? customerContactNo;
   String? customerName;
   String? customerAddress;
 

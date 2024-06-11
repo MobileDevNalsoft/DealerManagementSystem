@@ -8,8 +8,8 @@ class CustomerDetailsSubmitted extends CustomerEvent {
   CustomerDetailsSubmitted({required this.customer});
 }
 
-class CustomerIdOnChangeEvent extends CustomerEvent{
- final String customerPhoneNumber;
+class CustomerIdOnChangeEvent extends CustomerEvent {
+  final String customerPhoneNumber;
   CustomerIdOnChangeEvent({required this.customerPhoneNumber});
-  List get props=>[customerPhoneNumber];
+  List get props => [customerPhoneNumber];
 }

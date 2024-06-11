@@ -5,6 +5,8 @@ enum VehicleStatus {
   loading,
   vehicleAlreadyAdded,
   newVehicle,
+  customerExists,
+  newCustomer,
   success,
   failure
 }
@@ -13,19 +15,10 @@ enum VehicleStatus {
 class VehicleState {
   final Vehicle? vehicle;
   final VehicleStatus status;
-  final String? error;
-  VehicleState({this.vehicle, required this.status, this.error});
+  VehicleState({this.vehicle, required this.status});
 
-  VehicleState copyWith(
-      {Vehicle? vehicle,
-      VehicleStatus? status,
-      bool? isLoading,
-      bool? isVehicleAdded,
-      bool? isvehiclePresent,
-      String? error}) {
+  VehicleState copyWith({Vehicle? vehicle, VehicleStatus? status}) {
     return VehicleState(
-        vehicle: vehicle ?? this.vehicle,
-        status: status ?? this.status,
-        error: error ?? this.error);
+        vehicle: vehicle ?? this.vehicle, status: status ?? this.status);
   }
 }

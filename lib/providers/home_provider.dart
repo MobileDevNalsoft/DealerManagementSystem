@@ -15,9 +15,9 @@ class HomeProvider extends ChangeNotifier {
       checkColor: Colors.white,
     ),
     'DropDown': DropdownButton2(
-        hint: Text('select'),
-        dropdownStyleData: DropdownStyleData(width: 300),
-        items: [
+        hint: const Text('select'),
+        dropdownStyleData: const DropdownStyleData(width: 300),
+        items: const [
           DropdownMenuItem(child: Text('1')),
         ])
   };
@@ -32,46 +32,39 @@ class HomeProvider extends ChangeNotifier {
 
   void setFocusNode(FocusNode focusNode, ScrollController scrollController,
       BuildContext context) {
-    Future.delayed(Duration(milliseconds: 500), () {
-      // setState(() {
-      print('in');
-      // Scroll to the position of the focused text field
+    Future.delayed(const Duration(milliseconds: 500), () {
       final RenderBox renderBox =
           focusNode.context!.findRenderObject() as RenderBox;
       final offset = renderBox.localToGlobal(Offset.zero);
       final textFieldTopPosition = offset.dy;
       final textFieldBottomPosition = offset.dy + renderBox.size.height;
 
+      print('text field top position $textFieldTopPosition');
+      print('text field bottom position $textFieldBottomPosition');
+
       // Calculate the amount to scroll
       final screenHeight = MediaQuery.of(context).size.height;
       final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-      final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
-      final visibleScreenHeight = screenHeight - keyboardHeight - bottomPadding;
-      print(textFieldTopPosition);
-      print(visibleScreenHeight);
-      print(textFieldBottomPosition);
-      print(keyboardHeight);
+      final visibleScreenHeight = screenHeight - keyboardHeight;
+
+      print('visible screen height $visibleScreenHeight');
 
       // Check if the text field is already visible
-      if (textFieldTopPosition < visibleScreenHeight &&
-          textFieldBottomPosition + 30 < keyboardHeight) {
+      if (textFieldTopPosition > visibleScreenHeight &&
+          textFieldBottomPosition + 30 > keyboardHeight) {
         return;
       } else {
         // Calculate the amount to scroll
-        final scrollOffset = textFieldTopPosition -
-            (visibleScreenHeight - renderBox.size.height) / 2;
-        print('got it');
-        // scrollController.jumpTo(scrollOffset);
-        scrollController.animateTo(
-          math.max(0, scrollController.offset + scrollOffset),
-          duration: Duration(milliseconds: 350),
-          curve: Curves.easeInOut,
-        );
-        notifyListeners();
+        // final scrollOffset = textFieldTopPosition -
+        //     (visibleScreenHeight - renderBox.size.height) / 2;
+        // scrollController.animateTo(
+        //   math.max(0, scrollController.offset + scrollOffset),
+        //   duration: const Duration(milliseconds: 350),
+        //   curve: Curves.easeInOut,
+        // );
+        // notifyListeners();
       }
     });
-    // },
-    // );
   }
 
   set location(value) {

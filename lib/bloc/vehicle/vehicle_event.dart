@@ -4,13 +4,17 @@ part of 'vehicle_bloc.dart';
 sealed class VehicleEvent {}
 
 class AddVehicleEvent extends VehicleEvent {
-  Vehicle? vehicle;
+  final Vehicle vehicle;
 
-  AddVehicleEvent({this.vehicle});
-  List get props => [vehicle];
+  AddVehicleEvent({required this.vehicle});
 }
 
 class VehicleCheck extends VehicleEvent {
   final String registrationNo;
   VehicleCheck({required this.registrationNo});
+}
+
+class CustomerCheck extends VehicleEvent {
+  final String customerContactNo;
+  CustomerCheck({required this.customerContactNo});
 }

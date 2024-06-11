@@ -1,6 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/customer/customer_bloc.dart';
-import 'package:dms/models/customer.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -92,59 +91,23 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   void initState() {
     super.initState();
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
+    customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
   }
 
   void _onRegNoFocusChange() {
-    Size size = MediaQuery.of(context).size;
+    if (!vehicleRegNumberFocus.hasFocus &&
+        vehicleRegNumberController.text.isNotEmpty) {
+      context
+          .read<VehicleBloc>()
+          .add(VehicleCheck(registrationNo: vehicleRegNumberController.text));
+    }
+  }
 
-    context
-        .read<VehicleBloc>()
-        .add(VehicleCheck(registrationNo: vehicleRegNumberController.text));
-
-    if (!vehicleRegNumberFocus.hasFocus) {
-      BlocListener<VehicleBloc, VehicleState>(
-        listener: (context, state) {
-          if (state.status! == VehicleStatus.vehicleAlreadyAdded) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => PopScope(
-                canPop: false,
-                child: AlertDialog(
-                  contentPadding: EdgeInsets.all(8),
-                  backgroundColor: Colors.white,
-                  content: Container(
-                    padding: EdgeInsets.only(
-                        left: size.width * 0.03, top: size.height * 0.01),
-                    height: size.height * 0.1,
-                    width: size.width * 0.8,
-                    decoration: BoxDecoration(color: Colors.white),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Vehicle Already Registered'),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Back')),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }
-        },
-      );
+  void _onCustomerContactNoFocusChange() {
+    if (!customerContactNumberFocus.hasFocus &&
+        customerContactNumberController.text.isNotEmpty) {
+      context.read<VehicleBloc>().add(CustomerCheck(
+          customerContactNo: customerContactNumberController.text));
     }
   }
 
@@ -288,6 +251,14 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                     : size.height * 0.4,
                             width: fieldWidth,
                             child: GridView(
+                              padding: EdgeInsets.only(
+                                  bottom: size.height *
+                                      (MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom !=
+                                              0
+                                          ? 0.08
+                                          : 0)),
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: isMobile ? 1 : 2,
@@ -324,13 +295,13 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                         const TextInputType.numberWithOptions(
                                             signed: true),
                                     size: size,
-                                    onChange: (p0) {
-                                      if (p0!.length > 7) {
-                                        context.read<CustomerBloc>().add(
-                                            CustomerIdOnChangeEvent(
-                                                customerPhoneNumber: p0));
-                                      }
-                                    },
+                                    // onChange: (p0) {
+                                    //   if (p0!.length > 7) {
+                                    //     context.read<CustomerBloc>().add(
+                                    //         CustomerIdOnChangeEvent(
+                                    //             customerPhoneNumber: p0));
+                                    //   }
+                                    // },
                                     suffixIcon: BlocConsumer<CustomerBloc,
                                         CustomerState>(
                                       listener: (context, state) {
@@ -406,25 +377,9 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                     scrollController: scrollController,
                                     context: context),
                                 DMSCustomWidgets.CustomDataCard(
-                                    focusNode: customerNameFocus,
-                                    size: size,
-                                    hint: "Customer Name",
-                                    isMobile: isMobile,
-                                    scrollController: scrollController,
-                                    textcontroller: customerNameController,
-                                    context: context),
-                                DMSCustomWidgets.CustomDataCard(
-                                    focusNode: customerAddressFocus,
-                                    size: size,
-                                    hint: "Customer Address",
-                                    isMobile: isMobile,
-                                    scrollController: scrollController,
-                                    textcontroller: customerAddressController,
-                                    context: context),
-                                DMSCustomWidgets.CustomDataCard(
                                     focusNode: chassisNumberFocus,
                                     size: size,
-                                    hint: "Chassis no.",
+                                    hint: "Chassis No.",
                                     isMobile: isMobile,
                                     scrollController: scrollController,
                                     textcontroller: chassisNumberController,
@@ -437,6 +392,45 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                     textcontroller: engineNumberController,
                                     scrollController: scrollController,
                                     context: context),
+                                BlocConsumer<VehicleBloc, VehicleState>(
+                                  listener: (context, state) {
+                                    if (state.status ==
+                                        VehicleStatus.customerExists) {
+                                      customerNameController.text =
+                                          state.vehicle!.customerName!;
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    return DMSCustomWidgets.CustomDataCard(
+                                        focusNode: customerNameFocus,
+                                        size: size,
+                                        hint: "Customer Name",
+                                        isMobile: isMobile,
+                                        scrollController: scrollController,
+                                        textcontroller: customerNameController,
+                                        context: context);
+                                  },
+                                ),
+                                BlocConsumer<VehicleBloc, VehicleState>(
+                                  listener: (context, state) {
+                                    if (state.status ==
+                                        VehicleStatus.customerExists) {
+                                      customerAddressController.text =
+                                          state.vehicle!.customerAddress!;
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    return DMSCustomWidgets.CustomDataCard(
+                                        focusNode: customerAddressFocus,
+                                        size: size,
+                                        hint: "Customer Address",
+                                        isMobile: isMobile,
+                                        scrollController: scrollController,
+                                        textcontroller:
+                                            customerAddressController,
+                                        context: context);
+                                  },
+                                ),
                                 DMSCustomWidgets.SearchableDropDown(
                                   size: size,
                                   hint: "Make",
@@ -525,18 +519,98 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               listener: (context, state) {
                             switch (state.status) {
                               case VehicleStatus.success:
+                                vehicleRegNumberController.clear();
+                                vehicleTypeController.clear();
+                                customerContactNumberController.clear();
+                                chassisNumberController.clear();
+                                engineNumberController.clear();
+                                customerNameController.clear();
+                                customerAddressController.clear();
+                                makeController.clear();
+                                modelController.clear();
+                                variantController.clear();
+                                colorController.clear();
+                                kmsController.clear();
+                                mfgYearController.clear();
+                                insuranceCompanyController.clear();
+                                financialDetailsController.clear();
                                 Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
                                   backgroundColor: Colors.green,
+                                  blockBackgroundInteraction: true,
                                   message: "Vehicle Added Successfully",
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  duration: const Duration(seconds: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                  margin: EdgeInsets.only(
+                                      top: 24,
+                                      left: isMobile ? 10 : size.width * 0.8,
+                                      right: 10),
                                 ).show(context);
                                 break;
                               case VehicleStatus.failure:
                                 Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
                                   backgroundColor: Colors.red,
+                                  blockBackgroundInteraction: true,
                                   message: "Some Error has occured",
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  duration: const Duration(seconds: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                  margin: EdgeInsets.only(
+                                      top: 24,
+                                      left: isMobile ? 10 : size.width * 0.8,
+                                      right: 10),
                                 ).show(context);
+                              case VehicleStatus.vehicleAlreadyAdded:
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => PopScope(
+                                    canPop: false,
+                                    child: AlertDialog(
+                                      contentPadding: EdgeInsets.all(8),
+                                      backgroundColor: Colors.white,
+                                      content: Container(
+                                        padding: EdgeInsets.only(
+                                            left: size.width * 0.03,
+                                            top: size.height * 0.01),
+                                        height: size.height * 0.1,
+                                        width: size.width * 0.8,
+                                        decoration:
+                                            BoxDecoration(color: Colors.white),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Vehicle Already Registered'),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('Back')),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      vehicleRegNumberFocus
+                                                          .requestFocus();
+                                                    },
+                                                    child: Text('Retry')),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
                                 break;
                               default:
                                 break;
@@ -547,15 +621,57 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                     VehicleStatus.initial:
                                 return ElevatedButton(
                                   onPressed: () {
-                                    if (vehicleRegNumberController
-                                        .text.isEmpty) {
+                                    String? message = vehicleRegNumberController
+                                            .text.isEmpty
+                                        ? "Vehicle Registration number cannot be empty"
+                                        : vehicleTypeController.text.isEmpty
+                                            ? "Vehicle Type cannot be empty"
+                                            : customerContactNumberController
+                                                    .text.isEmpty
+                                                ? "Customer Contact No. cannot be empty"
+                                                : customerNameController
+                                                        .text.isEmpty
+                                                    ? chassisNumberController
+                                                            .text.isEmpty
+                                                        ? "Chassis No. cannot be empty"
+                                                        : engineNumberController
+                                                                .text.isEmpty
+                                                            ? "Engine No. cannot be empty"
+                                                            : "Customer Name cannot be empty"
+                                                    : customerAddressController
+                                                            .text.isEmpty
+                                                        ? "Customer Address cannot be empty"
+                                                        : makeController
+                                                                .text.isEmpty
+                                                            ? "Make cannot be empty"
+                                                            : modelController
+                                                                    .text
+                                                                    .isEmpty
+                                                                ? "Model cannot be empty"
+                                                                : variantController
+                                                                        .text
+                                                                        .isEmpty
+                                                                    ? "Variant cannot be empty"
+                                                                    : colorController
+                                                                            .text
+                                                                            .isEmpty
+                                                                        ? "Color cannot be empty"
+                                                                        : kmsController.text.isEmpty
+                                                                            ? "KMS cannot be empty"
+                                                                            : mfgYearController.text.isEmpty
+                                                                                ? "Mfg Year cannot be empty"
+                                                                                : insuranceCompanyController.text.isEmpty
+                                                                                    ? "Insurance Company cannot be empty"
+                                                                                    : financialDetailsController.text.isEmpty
+                                                                                        ? "Finacial Details cannot be empty"
+                                                                                        : null;
+                                    if (message != null) {
                                       Flushbar(
                                         backgroundColor: Colors.red,
                                         blockBackgroundInteraction: true,
-                                        message:
-                                            "Vehicle Registration number cannot be empty",
+                                        message: message,
                                         flushbarPosition: FlushbarPosition.TOP,
-                                        duration: Duration(seconds: 2),
+                                        duration: const Duration(seconds: 2),
                                         borderRadius: BorderRadius.circular(12),
                                         margin: EdgeInsets.only(
                                             top: 24,
@@ -564,154 +680,39 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                                 : size.width * 0.8,
                                             right: 10),
                                       ).show(context);
-                                      return;
+                                    } else {
+                                      Vehicle vehicle = Vehicle(
+                                          vehicleRegNumber:
+                                              vehicleRegNumberController.text,
+                                          vehicleType:
+                                              vehicleTypeController.text,
+                                          chassisNumber:
+                                              chassisNumberController.text,
+                                          engineNumber:
+                                              engineNumberController.text,
+                                          mfgYear: mfgYearController
+                                                  .text.isNotEmpty
+                                              ? int.parse(
+                                                  mfgYearController.text)
+                                              : 0,
+                                          kms: kmsController.text.isNotEmpty
+                                              ? int.parse(kmsController.text)
+                                              : 0,
+                                          financialDetails:
+                                              financialDetailsController.text,
+                                          model: modelController.text,
+                                          insuranceCompany:
+                                              insuranceCompanyController.text,
+                                          customerContactNo:
+                                              customerContactNumberController
+                                                  .text,
+                                          customerName:
+                                              customerNameController.text,
+                                          customerAddress:
+                                              customerAddressController.text);
+                                      context.read<VehicleBloc>().add(
+                                          AddVehicleEvent(vehicle: vehicle));
                                     }
-                                    if (chassisNumberController.text.isEmpty) {
-                                      Flushbar(
-                                        backgroundColor: Colors.red,
-                                        message:
-                                            "Chassis number cannot be empty",
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        duration: Duration(seconds: 2),
-                                        borderRadius: BorderRadius.circular(12),
-                                        margin: EdgeInsets.only(
-                                            top: 24,
-                                            left: isMobile
-                                                ? 10
-                                                : size.width * 0.8,
-                                            right: 10),
-                                      ).show(context);
-                                      return;
-                                    }
-                                    if (customerContactNumberController
-                                        .text.isEmpty) {
-                                      Flushbar(
-                                        backgroundColor: Colors.red,
-                                        message:
-                                            "Customer number cannot be empty",
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        duration: Duration(seconds: 2),
-                                        borderRadius: BorderRadius.circular(12),
-                                        margin: EdgeInsets.only(
-                                            top: 24,
-                                            left: isMobile
-                                                ? 10
-                                                : size.width * 0.8,
-                                            right: 10),
-                                      ).show(context);
-                                      return;
-                                    }
-                                    if (vehicleTypeController.text.isEmpty) {
-                                      print(
-                                          " vehicle type${vehicleTypeController.text}");
-                                      Flushbar(
-                                        backgroundColor: Colors.red,
-                                        message: "Vehicle type cannot be empty",
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        duration: Duration(seconds: 2),
-                                        borderRadius: BorderRadius.circular(12),
-                                        margin: EdgeInsets.only(
-                                            top: 24,
-                                            left: isMobile
-                                                ? 10
-                                                : size.width * 0.8,
-                                            right: 10),
-                                      ).show(context);
-                                      return;
-                                    }
-                                    // if (kmsController.text.isEmpty) {
-                                    //   Flushbar(
-                                    //     backgroundColor: Colors.red,
-                                    //     message: "KMS number cannot be empty",
-                                    //     flushbarPosition: FlushbarPosition.TOP,
-                                    //     duration: Duration(seconds: 2),
-                                    //     borderRadius: BorderRadius.circular(12),
-                                    //     margin: EdgeInsets.only(
-                                    //         top: 24,
-                                    //         left:
-                                    //             isMobile ? 10 : size.width * 0.8,
-                                    //         right: 10),
-                                    //   ).show(context);
-                                    //   return;
-                                    // }
-                                    // if (insuranceCompanyController
-                                    //     .text.isEmpty) {
-                                    //   Flushbar(
-                                    //     backgroundColor: Colors.red,
-                                    //     message:
-                                    //         "insurance company cannot be empty",
-                                    //     flushbarPosition: FlushbarPosition.TOP,
-                                    //     duration: Duration(seconds: 2),
-                                    //     borderRadius: BorderRadius.circular(12),
-                                    //     margin: EdgeInsets.only(
-                                    //         top: 24,
-                                    //         left: isMobile
-                                    //             ? 10
-                                    //             : size.width * 0.8,
-                                    //         right: 10),
-                                    //   ).show(context);
-                                    //   return;
-                                    // }
-                                    if (engineNumberController.text.isEmpty) {
-                                      Flushbar(
-                                        backgroundColor: Colors.red,
-                                        message:
-                                            "Engine number cannot be empty",
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        duration: Duration(seconds: 2),
-                                        borderRadius: BorderRadius.circular(12),
-                                        margin: EdgeInsets.only(
-                                            top: 24,
-                                            left: isMobile
-                                                ? 10
-                                                : size.width * 0.8,
-                                            right: 10),
-                                      ).show(context);
-                                      return;
-                                    }
-                                    if (mfgYearController.text.isEmpty) {
-                                      Flushbar(
-                                        backgroundColor: Colors.red,
-                                        message:
-                                            "Manufactured year cannot be empty",
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        duration: Duration(seconds: 2),
-                                        borderRadius: BorderRadius.circular(12),
-                                        margin: EdgeInsets.only(
-                                            top: 24,
-                                            left: isMobile
-                                                ? 10
-                                                : size.width * 0.8,
-                                            right: 10),
-                                      ).show(context);
-                                      return;
-                                    }
-                                    Vehicle vehicle = Vehicle(
-                                        vehicleRegNumber:
-                                            vehicleRegNumberController.text,
-                                        vehicleType: vehicleTypeController.text,
-                                        chassisNumber:
-                                            chassisNumberController.text,
-                                        engineNumber:
-                                            engineNumberController.text,
-                                        mfgYear:
-                                            int.parse(mfgYearController.text),
-                                        kms: int.parse(kmsController.text),
-                                        financialDetails:
-                                            financialDetailsController.text,
-                                        model: modelController.text,
-                                        insuranceCompany:
-                                            insuranceCompanyController.text,
-                                        customerContactNo: int.parse(
-                                            customerContactNumberController
-                                                .text),
-                                        customerName:
-                                            customerNameController.text,
-                                        customerAddress:
-                                            customerAddressController.text);
-                                    context
-                                        .read<VehicleBloc>()
-                                        .add(AddVehicleEvent(vehicle: vehicle));
                                   },
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
