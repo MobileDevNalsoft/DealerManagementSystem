@@ -50,19 +50,18 @@ class HomeProvider extends ChangeNotifier {
       print('visible screen height $visibleScreenHeight');
 
       // Check if the text field is already visible
-      if (textFieldTopPosition > visibleScreenHeight &&
-          textFieldBottomPosition + 30 > keyboardHeight) {
+      if (textFieldBottomPosition + 30 < visibleScreenHeight) {
         return;
       } else {
         // Calculate the amount to scroll
-        // final scrollOffset = textFieldTopPosition -
-        //     (visibleScreenHeight - renderBox.size.height) / 2;
-        // scrollController.animateTo(
-        //   math.max(0, scrollController.offset + scrollOffset),
-        //   duration: const Duration(milliseconds: 350),
-        //   curve: Curves.easeInOut,
-        // );
-        // notifyListeners();
+        final scrollOffset = textFieldTopPosition -
+            (visibleScreenHeight - renderBox.size.height) / 2;
+        scrollController.animateTo(
+          math.max(0, scrollController.offset + scrollOffset),
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeInOut,
+        );
+        notifyListeners();
       }
     });
   }

@@ -1,5 +1,7 @@
 class Service {
+  int? sNo;
   String? registrationNo;
+  String? jobCardNo;
   String? location;
   String? customerName;
   String? scheduleDate;
@@ -14,7 +16,9 @@ class Service {
   String? remarks;
 
   Service(
-      {this.registrationNo,
+      {this.sNo,
+      this.registrationNo,
+      this.jobCardNo,
       this.location,
       this.customerName,
       this.scheduleDate,

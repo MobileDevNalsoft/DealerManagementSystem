@@ -67,14 +67,17 @@ class Repository {
     }
   }
 
-  Future<Response<dynamic>?> getHistory(String customerNo) async {
-    ApiResponse apiResponse = await _api
-        .get('getHistory', queryParameters: {"customerNo": customerNo});
+  Future<Map<String, dynamic>> getHistory(String year) async {
+    ApiResponse apiResponse =
+        await _api.get('getHistory', queryParameters: {"year": year});
 
-    if (apiResponse.response!.statusCode == 200) {
-      return apiResponse.response;
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
     } else {
-      return apiResponse.error;
+      Log.e(apiResponse.error);
+      throw Error();
     }
   }
 }

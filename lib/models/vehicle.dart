@@ -5,6 +5,7 @@ class Vehicle {
   int? kms;
   String? vehicleRegNumber;
   String? engineNumber;
+  String? make;
   String? varient;
   String? color;
   int? mfgYear;
@@ -18,6 +19,8 @@ class Vehicle {
       {this.vehicleType,
       this.chassisNumber,
       this.model,
+      this.make,
+      this.varient,
       this.color,
       this.kms,
       this.vehicleRegNumber,
@@ -35,6 +38,7 @@ class Vehicle {
     model = json['model'];
     kms = json['kms'];
     engineNumber = json["engine_no"];
+    make = json['make'];
     varient = json['varient'];
     color = json['color'];
     vehicleRegNumber = json['vehicle_registration_no'];
@@ -53,6 +57,7 @@ class Vehicle {
     data['model'] = model;
     data['kms'] = kms;
     data['engine_no'] = engineNumber;
+    data['make'] = make;
     data['varient'] = varient;
     data['color'] = color;
     data['vehicle_registration_no'] = vehicleRegNumber;

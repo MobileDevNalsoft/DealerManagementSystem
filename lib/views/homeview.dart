@@ -58,6 +58,22 @@ class _HomeView extends State<HomeView> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+          title: const Text(
+            "Service",
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+        ),
         body: Container(
           height: size.height,
           width: size.width,
@@ -76,15 +92,6 @@ class _HomeView extends State<HomeView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Service",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      )
-                    ],
-                  ),
                   Gap(size.height * 0.15),
                   Consumer<HomeProvider>(
                     builder: (context, provider, child) {
