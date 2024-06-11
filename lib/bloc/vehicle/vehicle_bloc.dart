@@ -19,8 +19,8 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
     on<VehicleCheck>(_onVehicleCheck);
     on<CustomerCheck>(_onCustomerCheck);
     // on<VehicleCheck>(_onVehicleCheck);
-    on<FetchVehicleCustomer>(_onFetchVehicleCustomer as EventHandler<FetchVehicleCustomer, VehicleState>);
-  
+    on<FetchVehicleCustomer>(_onFetchVehicleCustomer
+        as EventHandler<FetchVehicleCustomer, VehicleState>);
   }
 
   final Repository _repo;
@@ -47,30 +47,43 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   Future<void> _onVehicleCheck(
       VehicleCheck event, Emitter<VehicleState> emit) async {
     emit(state.copyWith(status: VehicleStatus.loading));
-    await _repo.getVehicle(event.registrationNo).then(
-      (json) {
-        if (json['response_code'] == 200) {
-          emit(state.copyWith(status: VehicleStatus.vehicleAlreadyAdded));
-          emit(state.copyWith(status: VehicleStatus.initial));
-        } else {
-          emit(state.copyWith(status: VehicleStatus.newVehicle));
-          emit(state.copyWith(status: VehicleStatus.initial));
-       
-       Future<void> _onFetchVehicleCustomer(
+    await _repo.getVehicle(event.registrationNo).then((json) {
+      if (json['response_code'] == 200) {
+        emit(state.copyWith(status: VehicleStatus.vehicleAlreadyAdded));
+        emit(state.copyWith(status: VehicleStatus.initial));
+      } else {
+        emit(state.copyWith(status: VehicleStatus.newVehicle));
+        emit(state.copyWith(status: VehicleStatus.initial));
+      }
+    }).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(status: VehicleStatus.failure));
+        emit(state.copyWith(status: VehicleStatus.initial));
+      },
+    );
+  }
+
+  Future<void> _onFetchVehicleCustomer(
       FetchVehicleCustomer event, Emitter<VehicleState> emit) async {
-    emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false,error: ""));
+    emit(state.copyWith(status: VehicleStatus.loading));
     await _repo.getVehicleCustomer(event.registrationNo).then(
       (value) {
         if (value["response_code"] == 200) {
           emit(state.copyWith(
-              isLoading: false, vehicle: Vehicle.fromJson(value["data"]),isvehiclePresent: true));
+              status: VehicleStatus.vehicleAlreadyAdded,
+              vehicle: Vehicle.fromJson(value["data"])));
+
+          // emit(state.copyWith(status: VehicleStatus.initial));
         } else {
-          emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: false,error: "",isvehiclePresent: false)); }
+          emit(state.copyWith(status: VehicleStatus.failure));
+
+          emit(state.copyWith(status: VehicleStatus.initial));
+        }
       },
     ).onError(
       (error, stackTrace) {
         emit(state.copyWith(status: VehicleStatus.failure));
+
         emit(state.copyWith(status: VehicleStatus.initial));
       },
     );
@@ -99,7 +112,4 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       },
     );
   }
-
-  
-
 }

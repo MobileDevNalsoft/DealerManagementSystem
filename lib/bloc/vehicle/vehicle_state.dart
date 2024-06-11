@@ -14,7 +14,7 @@ enum VehicleStatus {
 @immutable
 class VehicleState {
   final Vehicle? vehicle;
-  final VehicleStatus status;
+   VehicleStatus status;
   VehicleState({this.vehicle, required this.status});
 
   VehicleState copyWith({Vehicle? vehicle, VehicleStatus? status}) {
