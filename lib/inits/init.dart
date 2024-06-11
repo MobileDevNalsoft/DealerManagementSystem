@@ -14,6 +14,11 @@ Future<void> init() async {
   getIt.registerLazySingleton<NetworkCalls>(
       () => NetworkCalls(AppConstants.BaseURL, getIt()));
 
+  //Repo
+  getIt.registerLazySingleton<Repository>(
+    () => Repository(api: getIt()),
+  );
+
   //Initializations
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);

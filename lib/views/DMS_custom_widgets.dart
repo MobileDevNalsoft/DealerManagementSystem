@@ -34,17 +34,17 @@ class DMSCustomWidgets {
             return Transform(
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
               child: TextFormField(
-                onChanged:(value) {
-                  controller.text=value;
+                onChanged: (value) {
+                  controller.text = value;
                 },
                 onTap: () {
                   Provider.of<HomeProvider>(context, listen: false)
                       .setFocusNode(focusNode, scrollController, context);
                 },
-                onChanged: (value) {
-                  controller.text = value;
-                },
                 cursorColor: Colors.black,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\d')),
+                ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(
@@ -138,7 +138,7 @@ class DMSCustomWidgets {
                 border: InputBorder.none,
                 hintText: hint,
                 hintStyle: const TextStyle(
-                  color: Colors.black54,
+                  color: Colors.black38,
                   fontWeight: FontWeight.normal,
                 ),
                 suffixIcon: Transform(

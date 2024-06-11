@@ -3,7 +3,7 @@ part of 'customer_bloc.dart';
 enum CustomerStatus { initial, loading, success, failure }
 
 final class CustomerState {
-  CustomerState({required this.status,this.customer});
+  CustomerState({required this.status, this.customer});
   final Customer? customer;
   final CustomerStatus status;
 
@@ -11,9 +11,9 @@ final class CustomerState {
     return CustomerState(status: CustomerStatus.initial);
   }
 
-  CustomerState copyWith({CustomerStatus? status,Customer? customer}) {
+  CustomerState copyWith({CustomerStatus? status, Customer? customer}) {
     return CustomerState(
-      customer: customer??this.customer,
+      customer: customer ?? this.customer,
       status: status ?? this.status,
     );
   }

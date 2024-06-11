@@ -109,13 +109,13 @@ class _HomeView extends State<HomeView> {
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           BlocConsumer<VehicleBloc, VehicleState>(
                             listener: (context, state) {
-                              if (!state.isVehicleAdded!) {
-                                Flushbar(
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        backgroundColor: Colors.red,
-                                        message:
-                                            'Please Register Vehicle Before Service')
-                                    .show(context);
+                              if (state.status == VehicleStatus.newVehicle) {
+                                // Flushbar(
+                                //         flushbarPosition: FlushbarPosition.TOP,
+                                //         backgroundColor: Colors.red,
+                                //         message:
+                                //             'Please Register Vehicle Before Service')
+                                //     .show(context);
                               }
                             },
                             builder: (context, state) {
@@ -127,7 +127,8 @@ class _HomeView extends State<HomeView> {
                                     context.read<VehicleBloc>().add(
                                         VehicleCheck(registrationNo: value!));
                                   },
-                                  icon: state.isVehicleAdded!
+                                  icon: state.status ==
+                                          VehicleStatus.vehicleAlreadyAdded
                                       ? const Icon(Icons.check_circle_rounded)
                                       : null,
                                   isMobile: isMobile,
@@ -179,7 +180,8 @@ class _HomeView extends State<HomeView> {
                       Gap(isMobile ? (size.width * 0.7) : (size.width * 0.595)),
                       BlocBuilder<VehicleBloc, VehicleState>(
                         builder: (context, state) {
-                          if (state.isVehicleAdded!) {
+                          if (state.status == VehicleStatus.initial ||
+                              state.status == VehicleStatus.success) {
                             return ElevatedButton(
                                 onPressed: () {
                                   CustomWidgets.CustomDialogBox(
@@ -730,32 +732,32 @@ class _HomeView extends State<HomeView> {
                     color: const Color.fromARGB(255, 145, 19, 19),
                     iconColor: Colors.white,
                     children: [
-                      SizedBox(
-                        height: size.height * 0.08,
-                        width: size.width * (isMobile ? 0.24 : 0.1),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => AddCustomerView()));
-                          },
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'assets/images/add_user.png',
-                                color: Colors.white,
-                                fit: BoxFit.cover,
-                                scale: isMobile ? 22 : 15,
-                              ),
-                              Text(
-                                'Add Customer',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isMobile ? 11 : 14),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      // SizedBox(
+                      //   height: size.height * 0.08,
+                      //   width: size.width * (isMobile ? 0.24 : 0.1),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.of(context).push(MaterialPageRoute(
+                      //           builder: (_) => AddCustomerView()));
+                      //     },
+                      //     child: Column(
+                      //       children: [
+                      //         Image.asset(
+                      //           'assets/images/add_user.png',
+                      //           color: Colors.white,
+                      //           fit: BoxFit.cover,
+                      //           scale: isMobile ? 22 : 15,
+                      //         ),
+                      //         Text(
+                      //           'Add Customer',
+                      //           style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontSize: isMobile ? 11 : 14),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: size.height * 0.08,
                         width: size.width * (isMobile ? 0.24 : 0.1),

@@ -9,42 +9,42 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   CustomerBloc({required Repository repo})
       : _repo = repo,
         super(CustomerState.initial()) {
-    on<CustomerDetailsSubmitted>(_onCustomerDetailsSubmitted);
-    on<CustomerIdOnChangeEvent>(_onCustomerIdChange);
+    // on<CustomerDetailsSubmitted>(_onCustomerDetailsSubmitted);
+    // on<CustomerIdOnChangeEvent>(_onCustomerIdChange);
   }
 
   final Repository _repo;
 
-  Future<void> _onCustomerDetailsSubmitted(
-      CustomerDetailsSubmitted event, Emitter<CustomerState> emit) async {
-    emit(state.copyWith(status: CustomerStatus.loading));
-    await _repo.addCustomer(event.customer.toJson()).then(
-      (value) {
-        if (value == 200) {
-          emit(state.copyWith(status: CustomerStatus.success));
-          emit(state.copyWith(status: CustomerStatus.initial));
-        } else {
-          emit(state.copyWith(status: CustomerStatus.failure));
-        }
-      },
-    ).onError(
-      (error, stackTrace) {
-        emit(state.copyWith(status: CustomerStatus.failure));
-      },
-    );
-  }
+  // Future<void> _onCustomerDetailsSubmitted(
+  //     CustomerDetailsSubmitted event, Emitter<CustomerState> emit) async {
+  //   emit(state.copyWith(status: CustomerStatus.loading));
+  //   await _repo.addCustomer(event.customer.toJson()).then(
+  //     (value) {
+  //       if (value == 200) {
+  //         emit(state.copyWith(status: CustomerStatus.success));
+  //         emit(state.copyWith(status: CustomerStatus.initial));
+  //       } else {
+  //         emit(state.copyWith(status: CustomerStatus.failure));
+  //       }
+  //     },
+  //   ).onError(
+  //     (error, stackTrace) {
+  //       emit(state.copyWith(status: CustomerStatus.failure));
+  //     },
+  //   );
+  // }
 
-  void _onCustomerIdChange(CustomerIdOnChangeEvent event, emit) async {
-    emit(state.copyWith(status: CustomerStatus.loading));
-   await _repo.getCustomer(event.customerPhoneNumber).then((customerDetails) {
+  // void _onCustomerIdChange(CustomerIdOnChangeEvent event, emit) async {
+  //   emit(state.copyWith(status: CustomerStatus.loading));
+  //  await _repo.getCustomer(event.customerPhoneNumber).then((customerDetails) {
 
-    emit(state.copyWith(
-          customer:Customer.fromJson(customerDetails),
-          status: CustomerStatus.success));
-    }).onError(
-      (error, stackTrace) {
-        emit(state.copyWith(status: CustomerStatus.failure));
-      },
-    );
-  }
+  //   emit(state.copyWith(
+  //         customer:Customer.fromJson(customerDetails),
+  //         status: CustomerStatus.success));
+  //   }).onError(
+  //     (error, stackTrace) {
+  //       emit(state.copyWith(status: CustomerStatus.failure));
+  //     },
+  //   );
+  // }
 }

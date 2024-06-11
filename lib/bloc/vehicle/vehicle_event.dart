@@ -2,14 +2,19 @@ part of 'vehicle_bloc.dart';
 
 @immutable
 sealed class VehicleEvent {}
-class AddVehicleEvent extends VehicleEvent {
-  Vehicle? vehicle;
 
-  AddVehicleEvent({this.vehicle});
-  List get props => [vehicle];
+class AddVehicleEvent extends VehicleEvent {
+  final Vehicle vehicle;
+
+  AddVehicleEvent({required this.vehicle});
 }
 
 class VehicleCheck extends VehicleEvent {
   final String registrationNo;
   VehicleCheck({required this.registrationNo});
+}
+
+class CustomerCheck extends VehicleEvent {
+  final String customerContactNo;
+  CustomerCheck({required this.customerContactNo});
 }

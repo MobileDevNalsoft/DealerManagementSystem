@@ -232,10 +232,10 @@ class AddCustomerView extends StatelessWidget {
                                   context.read<CustomerBloc>().add(
                                       CustomerDetailsSubmitted(
                                           customer: Customer(
-                                              customerId:
-                                                  customerIdController
-                                                      .text
-                                                      .toUpperCase(),
+                                              // customerId:
+                                              //     customerIdController
+                                              //         .text
+                                              //         .toUpperCase(),
                                               customerName: capitalizeEachWord(
                                                   customerNameController.text),
                                               customerContactNo: int.parse(
