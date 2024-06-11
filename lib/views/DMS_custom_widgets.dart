@@ -1,3 +1,4 @@
+import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,8 @@ class DMSCustomWidgets {
             cursorColor: Colors.black,
             controller: textcontroller,
             style: TextStyle(
-                fontSize: isMobile ? 13 : 14, fontFamily: 'euclid-circular-a'),
+              fontSize: isMobile ? 13 : 14,
+            ),
             maxLength: 25,
             maxLengthEnforcement: MaxLengthEnforcement.enforced,
             decoration: InputDecoration(
@@ -191,6 +193,7 @@ class DMSCustomWidgets {
   // ignore: non_constant_identifier_names
   static Widget ScheduleDateCalendar(
       {context, required Size size, required bool isMobile, DateTime? date}) {
+    DateTime? initialDate = date;
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
@@ -220,6 +223,20 @@ class DMSCustomWidgets {
                       maxDate: DateTime(2024, 12, 31),
                       showNavigationArrow: true,
                       backgroundColor: Colors.white,
+                      initialSelectedDate: date ?? DateTime.now(),
+                      showActionButtons: true,
+                      onCancel: () {
+                        print("initialdate $initialDate");
+                        date = initialDate;
+                        context
+                            .read<MultiBloc>()
+                            .add(DateChanged(date: date ?? DateTime.now()));
+                        Navigator.pop(context);
+                      },
+                      onSubmit: (p0) {
+                        print("scheduled data $p0");
+                        Navigator.pop(context);
+                      },
                       headerStyle: const DateRangePickerHeaderStyle(
                           backgroundColor: Color.fromARGB(255, 187, 76, 76),
                           textAlign: TextAlign.center),
@@ -249,5 +266,61 @@ class DMSCustomWidgets {
             )),
       ),
     );
+  }
+
+  static Widget CustomDataFields(
+      {required BuildContext context,
+      contentPadding,
+      double? propertyFontSize,
+      double? valueFontSize,
+      double? spaceBetweenFields,
+      TextStyle? propertyFontStyle,
+      TextStyle? valueFontStyle,
+      String? propertyFontFamily,
+      String? valueFontFamily,
+      required List<String> propertyList,
+      required List<String> valueList}) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: propertyList
+                .expand((element) => [
+                      Text(
+                        element,
+                        style: propertyFontStyle,
+                      ),
+                      Gap(spaceBetweenFields??0)
+                    ])
+                .toList(),
+          ),
+          Gap(20),
+          Column(
+            children: propertyList
+                .expand((element) => [
+                      Text(
+                        ":",
+                        style: propertyFontStyle,
+                      ),
+                      Gap(spaceBetweenFields??0)
+                    ])
+                .toList(),
+          ),
+          Gap(20),
+          Column(
+            children: valueList
+                .expand((element) => [
+                      Text(
+                        element,
+                        style: valueFontStyle,
+                      ),
+                      Gap(spaceBetweenFields??0)
+                    ])
+                .toList(),
+          )
+        ]);
   }
 }

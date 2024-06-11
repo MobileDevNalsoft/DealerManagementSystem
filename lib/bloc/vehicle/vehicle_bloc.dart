@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 
@@ -17,6 +18,9 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
         _onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
     on<VehicleCheck>(_onVehicleCheck);
     on<CustomerCheck>(_onCustomerCheck);
+    // on<VehicleCheck>(_onVehicleCheck);
+    on<FetchVehicleCustomer>(_onFetchVehicleCustomer as EventHandler<FetchVehicleCustomer, VehicleState>);
+  
   }
 
   final Repository _repo;
@@ -51,7 +55,18 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
         } else {
           emit(state.copyWith(status: VehicleStatus.newVehicle));
           emit(state.copyWith(status: VehicleStatus.initial));
-        }
+       
+       Future<void> _onFetchVehicleCustomer(
+      FetchVehicleCustomer event, Emitter<VehicleState> emit) async {
+    emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false,error: ""));
+    await _repo.getVehicleCustomer(event.registrationNo).then(
+      (value) {
+        if (value["response_code"] == 200) {
+          emit(state.copyWith(
+              isLoading: false, vehicle: Vehicle.fromJson(value["data"]),isvehiclePresent: true));
+        } else {
+          emit(state.copyWith(
+              isLoading: false, vehicle: null, isVehicleAdded: false,error: "",isvehiclePresent: false)); }
       },
     ).onError(
       (error, stackTrace) {
@@ -84,4 +99,7 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       },
     );
   }
+
+  
+
 }

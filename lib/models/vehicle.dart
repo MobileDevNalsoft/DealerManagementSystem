@@ -3,6 +3,9 @@ class Vehicle {
   String? chassisNumber;
   String? model;
   int? kms;
+  String? customerNumber;
+  String? cusotmerName;
+  int? customerPhoneNumber;
   String? vehicleRegNumber;
   String? engineNumber;
   String? make;
@@ -23,6 +26,9 @@ class Vehicle {
       this.varient,
       this.color,
       this.kms,
+      this.customerNumber,
+      this.cusotmerName,
+      this.customerPhoneNumber,
       this.vehicleRegNumber,
       this.mfgYear,
       this.financialDetails,
@@ -37,8 +43,10 @@ class Vehicle {
     chassisNumber = json['chassisNumber'];
     model = json['model'];
     kms = json['kms'];
-    engineNumber = json["engine_no"];
     make = json['make'];
+    engineNumber= json["engine_no"];
+    customerNumber = json['customerNumber'];
+    cusotmerName = json['customer_name'];
     varient = json['varient'];
     color = json['color'];
     vehicleRegNumber = json['vehicle_registration_no'];
@@ -56,10 +64,14 @@ class Vehicle {
     data['chassis_no'] = chassisNumber;
     data['model'] = model;
     data['kms'] = kms;
+    data['make'] = make;
     data['engine_no'] = engineNumber;
     data['make'] = make;
     data['varient'] = varient;
     data['color'] = color;
+    data['customer_no'] = customerNumber;
+    data['customer_name'] = cusotmerName;
+    // data['customerPhoneNumber'] = customerPhoneNumber;
     data['vehicle_registration_no'] = vehicleRegNumber;
     data['mfg_year'] = mfgYear;
     data['financial_details'] = financialDetails;

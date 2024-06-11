@@ -49,20 +49,53 @@ class Service {
   }
 
   Map<String, dynamic> toJson() {
+    print("jobType $jobType");
     final Map<String, dynamic> data = <String, dynamic>{};
     data['vehicle_registration_no'] = registrationNo;
     data['location'] = location;
-    data['customer_name'] = registrationNo;
-    data['schedule_date'] = registrationNo;
-    data['kms'] = registrationNo;
-    data['booking_source'] = registrationNo;
-    data['alternate_contact_person'] = registrationNo;
-    data['alternate_contact_person_contact_no'] = registrationNo;
-    data['sales_person'] = registrationNo;
-    data['bay'] = registrationNo;
-    data['job_type'] = registrationNo;
-    data['customer_concerns'] = registrationNo;
-    data['remarks'] = registrationNo;
+    data['customer_name'] = customerName;
+    data['schedule_date'] = scheduleDate;
+    data['kms'] = kms;
+    data['booking_source'] = bookingSource;
+    data['alternate_contact_person'] = alternateContactPerson;
+    data['alternate_person_contact_no'] = alternatePersonContactNo;
+    data['sales_person'] = salesPerson;
+    data['bay'] = bay;
+    data['job_type'] = jobType;
+    data['customer_concerns'] = customerConcerns;
+    data['remarks'] = remarks;
     return data;
+  }
+
+  copyWith(
+      {String? registrationNo,
+      String? location,
+      String? customerName,
+      String? scheduleDate,
+      int? kms,
+      String? bookingSource,
+      String? alternateContactPerson,
+      int? alternatePersonContactNo,
+      String? salesPerson,
+      String? bay,
+      String? jobType,
+      String? customerConcerns,
+      String? remarks}) {
+    return Service(
+        registrationNo: registrationNo ?? this.registrationNo,
+        location: location ?? this.location,
+        customerName: customerName ?? this.customerName,
+        scheduleDate: scheduleDate ?? this.scheduleDate,
+        kms: kms ?? this.kms,
+        bookingSource: bookingSource ?? this.bookingSource,
+        alternateContactPerson:
+            alternateContactPerson ?? this.alternateContactPerson,
+        alternatePersonContactNo:
+            alternatePersonContactNo ?? this.alternatePersonContactNo,
+        salesPerson: salesPerson ?? this.salesPerson,
+        bay: bay ?? this.bay,
+        jobType: jobType??this.jobType,
+        customerConcerns: customerConcerns ?? this.customerConcerns,
+        remarks: remarks??this.remarks);
   }
 }

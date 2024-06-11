@@ -80,4 +80,25 @@ class Repository {
       throw Error();
     }
   }
+
+    Future<Map<String, dynamic>> getVehicleCustomer(String registrationNo) async {
+    ApiResponse apiResponse = await _api.get('getVehicleCustomer',
+        queryParameters: {"registrationNo": registrationNo});
+
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return jsonDecode(apiResponse.response!.data);
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
 }

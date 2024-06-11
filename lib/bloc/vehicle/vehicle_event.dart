@@ -18,3 +18,12 @@ class CustomerCheck extends VehicleEvent {
   final String customerContactNo;
   CustomerCheck({required this.customerContactNo});
 }
+// class VehicleCheck extends VehicleEvent {
+//   final String registrationNo;
+//   VehicleCheck({required this.registrationNo});
+// }
+
+class FetchVehicleCustomer extends VehicleEvent{
+   final String registrationNo;
+  FetchVehicleCustomer({required this.registrationNo});
+}
