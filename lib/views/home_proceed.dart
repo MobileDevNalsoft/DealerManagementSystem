@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/service.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -18,12 +19,16 @@ import 'dart:math' as math;
 
 class HomeProceedView extends StatefulWidget {
   @override
+  Service service;
+
+  HomeProceedView({super.key, required this.service});
   State<HomeProceedView> createState() => _HomeProceedView();
 }
 
 class _HomeProceedView extends State<HomeProceedView> {
   FocusNode bookingFocus = FocusNode();
   FocusNode altContFocus = FocusNode();
+  FocusNode altContPhoneNoFocus = FocusNode();
   FocusNode spFocus = FocusNode();
   FocusNode bayFocus = FocusNode();
   FocusNode jobTypeFocus = FocusNode();
@@ -31,6 +36,7 @@ class _HomeProceedView extends State<HomeProceedView> {
   FocusNode remarksFocus = FocusNode();
   TextEditingController bookingController = TextEditingController();
   TextEditingController altContController = TextEditingController();
+  TextEditingController altContPhoneNoController = TextEditingController();
   TextEditingController spController = TextEditingController();
   TextEditingController bayController = TextEditingController();
   TextEditingController jobTypeController = TextEditingController();
@@ -113,13 +119,14 @@ class _HomeProceedView extends State<HomeProceedView> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          DMSCustomWidgets.CustomDataCard(
-                              context: context,
+                          DMSCustomWidgets.SearchableDropDown(
+                              items: ["Online", "Walk-in"],
                               size: size,
                               hint: 'Booking Source',
                               isMobile: isMobile,
-                              focusNode: bookingFocus,
+                              focus: bookingFocus,
                               textcontroller: bookingController,
+                              icon: Icon(Icons.arrow_drop_down),
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
@@ -131,6 +138,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               isMobile: isMobile,
                               focusNode: altContFocus,
                               textcontroller: altContController,
+
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
@@ -140,18 +148,23 @@ class _HomeProceedView extends State<HomeProceedView> {
                               size: size,
                               hint: 'Alternate Person Contact No.',
                               isMobile: isMobile,
-                              focusNode: altContFocus,
-                              textcontroller: altContController,
+                              focusNode: altContPhoneNoFocus,
+                              textcontroller: altContPhoneNoController,
+                              keyboardType: TextInputType.number, 
+                              inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                               scrollController: scrollController),
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          DMSCustomWidgets.CustomDataCard(
-                              context: context,
+                          DMSCustomWidgets.SearchableDropDown(
                               size: size,
+                              items: ["1", "2", "3", "4", "5"],
                               hint: 'Sales Person',
+                              icon: Icon(Icons.arrow_drop_down),
                               isMobile: isMobile,
-                              focusNode: spFocus,
+                              focus: spFocus,
                               textcontroller: spController,
                               scrollController: scrollController),
                           SizedBox(
@@ -212,11 +225,34 @@ class _HomeProceedView extends State<HomeProceedView> {
                   ),
                   BlocConsumer<ServiceBloc, ServiceState>(
                     listener: (context, state) {
+                      switch(state.status){
+                      case ServiceStatus.success:
                       Flushbar(
                               flushbarPosition: FlushbarPosition.TOP,
                               backgroundColor: Colors.green,
-                              message: 'Service Added Successfully')
+                              message: 'Service Added Successfully',
+                              duration: Duration(seconds: 2),
+                              borderRadius: BorderRadius.circular(12),
+                            margin: EdgeInsets.only(
+                                top: 24,
+                                left: isMobile ? 10 : size.width * 0.8,
+                                right: 10))
                           .show(context);
+                       case ServiceStatus.failure:
+                          Flushbar(
+                              flushbarPosition: FlushbarPosition.TOP,
+                              backgroundColor: Colors.red,
+                              message: 'Some error occured',
+                              duration: Duration(seconds: 2),
+                              borderRadius: BorderRadius.circular(12),
+                            margin: EdgeInsets.only(
+                                top: 24,
+                                left: isMobile ? 10 : size.width * 0.8,
+                                right: 10))
+                          .show(context);
+
+                        default: null;
+                          }
                     },
                     builder: (context, state) {
                       return state.status == ServiceStatus.loading
@@ -230,13 +266,18 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 jobTypeFocus.unfocus();
                                 custConcernsFocus.unfocus();
                                 remarksFocus.unfocus();
-                                context
-                                    .read<ServiceBloc>()
-                                    .add(ServiceAdded(service: Service()));
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (_) => DynamicWidgets()));
+                                print( jobTypeController.text);
+                                context.read<ServiceBloc>().add(
+                                  ServiceAdded(
+                                    service: widget.service.copyWith(
+                                        bookingSource: bookingController.text,
+                                        alternateContactPerson: altContController.text,
+                                        alternatePersonContactNo: int.parse( altContPhoneNoController.text),
+                                        salesPerson: spController.text,
+                                        bay: bayController.text,
+                                        jobType: jobTypeController.text,
+                                        customerConcerns: custConcernsController.text,
+                                        remarks: remarksController.text)));
                               },
                               child: Text(
                                 'proceed to recieve',

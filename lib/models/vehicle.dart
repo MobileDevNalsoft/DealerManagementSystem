@@ -5,12 +5,14 @@ class Vehicle {
   String? model;
   int? kms;
   String? customerNumber;
+  String? cusotmerName;
   int? customerPhoneNumber;
   String? vehicleRegNumber;
   String? engineNumber;
   String? varient;
   String? color;
   int? mfgYear;
+  String? make;
   String? financialDetails;
   String? insuranceCompany;
   String? customerAddress;
@@ -22,9 +24,11 @@ class Vehicle {
       this.model,
       this.kms,
       this.customerNumber,
+      this.cusotmerName,
       this.customerPhoneNumber,
       this.vehicleRegNumber,
       this.mfgYear,
+      this.make,
       this.financialDetails,
       this.insuranceCompany,
       this.customerAddress, 
@@ -35,8 +39,10 @@ Vehicle.fromJson(Map<String, dynamic> json) {
     chassisNumber = json['chassisNumber'];
     model = json['model'];
     kms = json['kms'];
+    make = json['make'];
     engineNumber= json["engine_no"];
     customerNumber = json['customerNumber'];
+    cusotmerName = json['customer_name'];
     varient = json['varient'];
     color = json['color'];
     // customerPhoneNumber = json['customerPhoneNumber'];
@@ -53,10 +59,12 @@ Vehicle.fromJson(Map<String, dynamic> json) {
     data['chassis_no'] = chassisNumber;
     data['model'] = model;
     data['kms'] = kms;
+    data['make'] = make;
     data['engine_no'] = engineNumber;
     data['varient'] = varient;
     data['color'] = color;
     data['customer_no'] = customerNumber;
+    data['customer_name'] = cusotmerName;
     // data['customerPhoneNumber'] = customerPhoneNumber;
     data['vehicle_registration_no'] = vehicleRegNumber;
     data['mfg_year'] = mfgYear;

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 
@@ -15,7 +16,9 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
         super(VehicleState()) {
     on<AddVehicleEvent>(
         _onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
-    on<VehicleCheck>(_onVehicleCheck);
+    // on<VehicleCheck>(_onVehicleCheck);
+    on<FetchVehicleCustomer>(_onFetchVehicleCustomer as EventHandler<FetchVehicleCustomer, VehicleState>);
+  
   }
 
   final Repository _repo;
@@ -36,17 +39,37 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
             state.copyWith(error: "some error has occured", isLoading: false)));
   }
 
-  Future<void> _onVehicleCheck(
-      VehicleCheck event, Emitter<VehicleState> emit) async {
+  // Future<void> _onVehicleCheck(
+  //     VehicleCheck event, Emitter<VehicleState> emit) async {
+  //   emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false,error: ""));
+  //   await _repo.getVehicle(event.registrationNo).then(
+  //     (value) {
+  //       if (value == 200) {
+  //         emit(state.copyWith(
+  //             isLoading: false, vehicle: Vehicle(vehicleRegNumber: event.registrationNo), isVehicleAdded: true,error: "Vehicle already registered",isvehiclePresent: true));
+  //       } else {
+  //         emit(state.copyWith(
+  //             isLoading: false, vehicle: null, isVehicleAdded: false,error: "",isvehiclePresent: false));
+  //       }
+  //     },
+  //   ).onError(
+  //     (error, stackTrace) {
+  //       emit(state.copyWith(error: stackTrace.toString()));
+  //     },
+  //   );
+  // }
+
+Future<void> _onFetchVehicleCustomer(
+      FetchVehicleCustomer event, Emitter<VehicleState> emit) async {
     emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false,error: ""));
-    await _repo.getVehicle(event.registrationNo).then(
+    await _repo.getVehicleCustomer(event.registrationNo).then(
       (value) {
-        if (value == 200) {
+        if (value["response_code"] == 200) {
           emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: true,error: "Vehicle already registered"));
+              isLoading: false, vehicle: Vehicle.fromJson(value["data"]),isvehiclePresent: true));
         } else {
           emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: false,error: ""));
+              isLoading: false, vehicle: null, isVehicleAdded: false,error: "",isvehiclePresent: false));
         }
       },
     ).onError(
@@ -55,4 +78,7 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
       },
     );
   }
+
+  
+
 }

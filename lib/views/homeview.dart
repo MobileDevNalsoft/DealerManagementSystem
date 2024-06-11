@@ -1,5 +1,6 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/models/service.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_customer_view.dart';
@@ -8,12 +9,10 @@ import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:customs/src.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 
 class HomeView extends StatefulWidget {
@@ -109,13 +108,9 @@ class _HomeView extends State<HomeView> {
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           BlocConsumer<VehicleBloc, VehicleState>(
                             listener: (context, state) {
-                              if (!state.isVehicleAdded!) {
-                                Flushbar(
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        backgroundColor: Colors.red,
-                                        message:
-                                            'Please Register Vehicle Before Service')
-                                    .show(context);
+                              if (state.isvehiclePresent!) {
+                                customerController.text =
+                                    state.vehicle!.cusotmerName!;
                               }
                             },
                             builder: (context, state) {
@@ -124,10 +119,12 @@ class _HomeView extends State<HomeView> {
                                   size: size,
                                   hint: 'Vehicle Registration Number',
                                   onChange: (value) {
-                                    context.read<VehicleBloc>().add(
-                                        VehicleCheck(registrationNo: value!));
+                                    if (value!.length > 5)
+                                      context.read<VehicleBloc>().add(
+                                          FetchVehicleCustomer(
+                                              registrationNo: value));
                                   },
-                                  icon: state.isVehicleAdded!
+                                  icon: state.isvehiclePresent!
                                       ? const Icon(Icons.check_circle_rounded)
                                       : null,
                                   isMobile: isMobile,
@@ -179,466 +176,42 @@ class _HomeView extends State<HomeView> {
                       Gap(isMobile ? (size.width * 0.7) : (size.width * 0.595)),
                       BlocBuilder<VehicleBloc, VehicleState>(
                         builder: (context, state) {
-                          if (state.isVehicleAdded!) {
+                          if (state.isvehiclePresent!) {
                             return ElevatedButton(
                                 onPressed: () {
+                                  locFocus.unfocus();
+                                  vehRegNumFocus.unfocus();
+                                  customerFocus.unfocus();
+                                  kmsFocus.unfocus();
                                   CustomWidgets.CustomDialogBox(
-                                    context: context,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: isMobile ? 20 : 40,
-                                        horizontal: isMobile ? 12 : 40),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text('Chassis no.',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('Make',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('Model',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('Variant',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('Color',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text('Customer Name',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text('Contact Person',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text('Contact Number',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                      ],
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(' : ',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text(' : ',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text(' : ',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text(' : ',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text(' : ',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text(' : ',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text(' : ',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text(' : ',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                      ],
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: size.width *
-                                                              (isMobile
-                                                                  ? 0.39
-                                                                  : 0.16),
-                                                          child: Text(
-                                                              'ABCDEFG1234567890',
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        ),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('Suzuki',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('Dzire',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('ZXI',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        Gap(size.height *
-                                                            (isMobile
-                                                                ? 0.01
-                                                                : 0.03)),
-                                                        Text('Blue',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          SizedBox(
-                                                            width: size.width *
-                                                                0.39,
-                                                            child: Text(
-                                                                'Prappanssssssssssssssssssssssssssssssssssssssssssss',
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        isMobile
-                                                                            ? 12
-                                                                            : 18)),
-                                                          ),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text('Jack',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        if (isMobile)
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                        if (isMobile)
-                                                          Text('1234567890',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                      ],
-                                                    )
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        if (size.width > 600)
-                                          Expanded(
-                                            child: Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text('Customer Name',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                          Text('Contact Person',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                          Text('Contact Number',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        ],
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(' : ',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                          Text(' : ',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                          Text(' : ',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        ],
-                                                      ),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: size.width *
-                                                                0.12,
-                                                            child: Text(
-                                                                'Prappanssssssssssssssssssssssssssssssssssssssssssssssss',
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18,
-                                                                )),
-                                                          ),
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                          Text('Jack',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                          Gap(size.height *
-                                                              (isMobile
-                                                                  ? 0.01
-                                                                  : 0.03)),
-                                                          Text('1234567890',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 12
-                                                                          : 18)),
-                                                        ],
-                                                      )
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                  );
+                                      context: context,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: isMobile ? 20 : 40,
+                                          horizontal: isMobile ? 12 : 40),
+                                      child: DMSCustomWidgets.CustomDataFields(
+                                        context: context,
+                                        propertyList: [
+                                          "Chassis no.",
+                                          "Make",
+                                          "Model",
+                                          "Varient",
+                                          "Color"
+                                        ],
+                                        valueList: [
+                                          state.vehicle!.chassisNumber ?? "",
+                                          state.vehicle!.make ?? "",
+                                          state.vehicle!.model ?? "",
+                                          state.vehicle!.varient ?? "",
+                                          state.vehicle!.color ?? ""
+                                        ],
+                                        propertyFontStyle: TextStyle(
+                                            fontSize: isMobile ? 16 : 18,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.bold),
+                                        valueFontStyle: TextStyle(
+                                            fontSize: isMobile ? 16 : 18,
+                                            fontFamily: 'Roboto'),
+                                      ));
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
@@ -671,33 +244,110 @@ class _HomeView extends State<HomeView> {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        print(locController.text);
                         locFocus.unfocus();
                         vehRegNumFocus.unfocus();
                         customerFocus.unfocus();
                         scheduleDateFocus.unfocus();
                         kmsFocus.unfocus();
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            transitionDuration:
-                                const Duration(milliseconds: 200),
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    HomeProceedView(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              const begin = Offset(1, 0.0);
-                              const end = Offset.zero;
-                              final tween = Tween(begin: begin, end: end);
-                              final offsetAnimation = animation.drive(tween);
-                              return SlideTransition(
-                                position: offsetAnimation,
-                                child: child,
-                              );
-                            },
-                          ),
-                        );
+                        String message = "";
+                        if (locController.text.isEmpty) {
+                          message = "Location cannot be empty";
+                        } else if (vehRegNumController.text.isEmpty) {
+                          message =
+                              "Vehicle registration number cannot be empty";
+                        } else if (context.read<MultiBloc>().state.date ==
+                            null) {
+                          message = "Please select schedule date";
+                        }
+                        if (message != "") {
+                          Flushbar(
+                            backgroundColor: Colors.red,
+                            blockBackgroundInteraction: true,
+                            message: message,
+                            flushbarPosition: FlushbarPosition.TOP,
+                            duration: Duration(seconds: 2),
+                            borderRadius: BorderRadius.circular(12),
+                            margin: EdgeInsets.only(
+                                top: 24,
+                                left: isMobile ? 10 : size.width * 0.8,
+                                right: 10),
+                          ).show(context);
+                          return;
+                        }
+
+                        if (context
+                            .read<VehicleBloc>()
+                            .state
+                            .isvehiclePresent!) {
+                          print("vehicle present");
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration:
+                                  const Duration(milliseconds: 200),
+                              pageBuilder: (context, animation,
+                                      secondaryAnimation) =>
+                                  HomeProceedView(
+                                      service: Service(
+                                          registrationNo:
+                                              vehRegNumController.text,
+                                          scheduleDate: context
+                                              .read<MultiBloc>()
+                                              .state
+                                              .date!
+                                              .toString()
+                                              .substring(0, 10),
+                                          location: locController.text,
+                                          kms: int.parse(kmsController.text),
+                                          customerName:
+                                              customerController.text)),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                const begin = Offset(1, 0.0);
+                                const end = Offset.zero;
+                                final tween = Tween(begin: begin, end: end);
+                                final offsetAnimation = animation.drive(tween);
+                                return SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          print("vehicle not present");
+                          Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: Colors.red,
+                                  mainButton: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  AddVehicleView()));
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.directions_car),
+                                        Text(
+                                          "Add Vehicle",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  margin: EdgeInsets.only(
+                                      top: 24,
+                                      left: isMobile ? 10 : size.width * 0.8,
+                                      right: 10),
+                                  duration: Duration(seconds: 5),
+                                  message:
+                                      'Please register vehicle before service')
+                              .show(context);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                           minimumSize: const Size(70.0, 35.0),

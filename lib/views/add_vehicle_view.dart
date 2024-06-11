@@ -194,7 +194,7 @@ class AddVehicleView extends StatelessWidget {
                                   isMobile: isMobile,
                                   onChange: (p0) {
                                     if(p0!.length>=5){
-                                    context.read<VehicleBloc>().add(VehicleCheck(registrationNo: p0));
+                                    // context.read<VehicleBloc>().add(VehicleCheck(registrationNo: p0));
                                     }
                                   },
                                   scrollController: scrollController,
