@@ -12,46 +12,75 @@ part 'vehicle_state.dart';
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   VehicleBloc({required Repository repo})
       : _repo = repo,
-        super(VehicleState()) {
+        super(VehicleState(status: VehicleStatus.initial)) {
     on<AddVehicleEvent>(
         _onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
     on<VehicleCheck>(_onVehicleCheck);
+    on<CustomerCheck>(_onCustomerCheck);
   }
 
   final Repository _repo;
 
-  void _onAddVehicle(AddVehicleEvent event, emit) async {
-    emit(state.copyWith(
-        isLoading: true, vehicle: event.vehicle, isVehicleAdded: false));
-    await GetIt.instance
-        .get<Repository>()
-        .addVehicle((state.vehicle!.toJson()))
-        .then((value) {
-      if (value != 200) {
-        emit(state.copyWith(error: "some error has occured", isLoading: false));
+  Future<void> _onAddVehicle(
+      AddVehicleEvent event, Emitter<VehicleState> emit) async {
+    emit(state.copyWith(status: VehicleStatus.loading));
+    await _repo.addVehicle(event.vehicle.toJson()).then((json) {
+      if (json['response_code'] == 200) {
+        emit(state.copyWith(status: VehicleStatus.success));
+        emit(state.copyWith(status: VehicleStatus.initial));
       } else {
-        emit(state.copyWith(isLoading: false, isVehicleAdded: true, error: ""));
+        emit(state.copyWith(status: VehicleStatus.failure));
+        emit(state.copyWith(status: VehicleStatus.initial));
       }
-    }).onError(emit(
-            state.copyWith(error: "some error has occured", isLoading: false)));
+    }).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(status: VehicleStatus.failure));
+        emit(state.copyWith(status: VehicleStatus.initial));
+      },
+    );
   }
 
   Future<void> _onVehicleCheck(
       VehicleCheck event, Emitter<VehicleState> emit) async {
-    emit(state.copyWith(isLoading: true, vehicle: null, isVehicleAdded: false,error: ""));
+    emit(state.copyWith(status: VehicleStatus.loading));
     await _repo.getVehicle(event.registrationNo).then(
-      (value) {
-        if (value == 200) {
-          emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: true,error: "Vehicle already registered"));
+      (json) {
+        if (json['response_code'] == 200) {
+          emit(state.copyWith(status: VehicleStatus.vehicleAlreadyAdded));
+          emit(state.copyWith(status: VehicleStatus.initial));
         } else {
-          emit(state.copyWith(
-              isLoading: false, vehicle: null, isVehicleAdded: false,error: ""));
+          emit(state.copyWith(status: VehicleStatus.newVehicle));
+          emit(state.copyWith(status: VehicleStatus.initial));
         }
       },
     ).onError(
       (error, stackTrace) {
-        emit(state.copyWith(error: stackTrace.toString()));
+        emit(state.copyWith(status: VehicleStatus.failure));
+        emit(state.copyWith(status: VehicleStatus.initial));
+      },
+    );
+  }
+
+  Future<void> _onCustomerCheck(
+      CustomerCheck event, Emitter<VehicleState> emit) async {
+    await _repo.getCustomer(event.customerContactNo).then(
+      (json) {
+        if (json['response_code'] == 200) {
+          emit(state.copyWith(
+              status: VehicleStatus.customerExists,
+              vehicle: Vehicle(
+                  customerName: json['data']['customer_name'],
+                  customerAddress: json['data']['customer_address'])));
+          emit(state.copyWith(status: VehicleStatus.initial));
+        } else {
+          emit(state.copyWith(status: VehicleStatus.newCustomer));
+          emit(state.copyWith(status: VehicleStatus.initial));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(status: VehicleStatus.failure));
+        emit(state.copyWith(status: VehicleStatus.initial));
       },
     );
   }

@@ -8,3 +8,8 @@ class ServiceAdded extends ServiceEvent {
   Service service;
   ServiceAdded({required this.service});
 }
+
+class GetServiceHistory extends ServiceEvent {
+  final String year;
+  GetServiceHistory({required this.year});
+}

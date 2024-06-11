@@ -1,5 +1,10 @@
+import 'dart:developer';
+import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/models/services.dart';
+import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -12,15 +17,13 @@ class ServiceHistoryView extends StatefulWidget {
 }
 
 class _ServiceHistoryViewState extends State<ServiceHistoryView> {
-  List<ServiceHistory> serviceHistory = getServiceHistory();
-
   late ServiceHistoryDataSource serviceHistoryDataSource;
   DataGridController dataGridController = DataGridController();
   @override
   void initState() {
     super.initState();
-    serviceHistoryDataSource =
-        ServiceHistoryDataSource(serviceHistoryData: serviceHistory);
+    context.read<ServiceBloc>().add(
+        GetServiceHistory(year: DateTime.now().toString().substring(0, 4)));
   }
 
   // @override
@@ -110,71 +113,98 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                   scrollDirection: Axis.horizontal,
                   child: Column(
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: SfDataGrid(
-                          source: serviceHistoryDataSource,
-                          gridLinesVisibility: GridLinesVisibility.both,
-                          headerGridLinesVisibility: GridLinesVisibility.both,
-                          showHorizontalScrollbar: false,
-                          allowEditing: true,
-                          shrinkWrapColumns: false,
-                          shrinkWrapRows: false,
-                          allowSorting: true,
-                          allowColumnsResizing: true,
-                          allowColumnsDragging: true,
-                          columnResizeMode: ColumnResizeMode.onResize,
-                          allowFiltering: true,
-                          editingGestureType: EditingGestureType.doubleTap,
-                          onCellDoubleTap: (details) {
-                            print(details.rowColumnIndex);
-                            dataGridController
-                                .beginEdit(details.rowColumnIndex);
-                          },
-                          controller: dataGridController,
-                          columns: <GridColumn>[
-                            GridColumn(
-                                allowEditing: true,
-                                width: 150,
-                                columnName: 'sno',
-                                label: Container(
-                                    padding: const EdgeInsets.all(16.0),
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      'Sno',
-                                    ))),
-                            GridColumn(
-                                columnName: 'date',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: const Text('Date'))),
-                            GridColumn(
-                                columnName: 'Job Card no.',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: const Text(
-                                        'Job Card no.',
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ))),
-                            GridColumn(
-                                columnName: 'Location',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: const Text('Location'))),
-                            GridColumn(
-                                columnName: 'Job Type',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: const Text('Job Type'))),
-                          ],
-                        ),
+                      BlocConsumer<ServiceBloc, ServiceState>(
+                        listener: (context, state) {
+                          print(state.status);
+                          if (state.status == ServiceStatus.success) {
+                            print('services ${state.services}');
+                          }
+                        },
+                        builder: (context, state) {
+                          switch (state.status) {
+                            case ServiceStatus.loading:
+                              return Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ));
+                            case ServiceStatus.success || ServiceStatus.initial:
+                              return Expanded(
+                                flex: 1,
+                                child: SfDataGrid(
+                                  source: ServiceHistoryDataSource(
+                                      serviceHistoryData: state.services!),
+                                  gridLinesVisibility: GridLinesVisibility.both,
+                                  headerGridLinesVisibility:
+                                      GridLinesVisibility.both,
+                                  showHorizontalScrollbar: false,
+                                  allowEditing: true,
+                                  shrinkWrapColumns: false,
+                                  shrinkWrapRows: false,
+                                  allowSorting: true,
+                                  allowColumnsResizing: true,
+                                  allowColumnsDragging: true,
+                                  columnResizeMode: ColumnResizeMode.onResize,
+                                  allowFiltering: true,
+                                  editingGestureType:
+                                      EditingGestureType.doubleTap,
+                                  onCellDoubleTap: (details) {
+                                    print(details.rowColumnIndex);
+                                    dataGridController
+                                        .beginEdit(details.rowColumnIndex);
+                                  },
+                                  controller: dataGridController,
+                                  columns: <GridColumn>[
+                                    GridColumn(
+                                        allowEditing: true,
+                                        width: 150,
+                                        columnName: 'sno',
+                                        label: Container(
+                                            padding: const EdgeInsets.all(16.0),
+                                            alignment: Alignment.center,
+                                            child: const Text(
+                                              'Sno',
+                                            ))),
+                                    GridColumn(
+                                        columnName: 'date',
+                                        label: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            alignment: Alignment.center,
+                                            child: const Text('Date'))),
+                                    GridColumn(
+                                        columnName: 'Job Card no.',
+                                        label: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            alignment: Alignment.center,
+                                            child: InkWell(
+                                              onTap: () {},
+                                              child: const Text(
+                                                'Job Card no.',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ))),
+                                    GridColumn(
+                                        columnName: 'Location',
+                                        label: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            alignment: Alignment.center,
+                                            child: const Text('Location'))),
+                                    GridColumn(
+                                        columnName: 'Job Type',
+                                        label: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            alignment: Alignment.center,
+                                            child: const Text('Job Type'))),
+                                  ],
+                                ),
+                              );
+                            default:
+                              return SizedBox();
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -186,127 +216,16 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   }
 }
 
-class ServiceHistory {
-  final int sno;
-  final String date;
-  final String jobCardNo;
-  final String location;
-  final String jobType;
-
-  const ServiceHistory({
-    required this.sno,
-    required this.date,
-    required this.jobCardNo,
-    required this.location,
-    required this.jobType,
-  });
-}
-
-List<ServiceHistory> getServiceHistory() {
-  return [
-    const ServiceHistory(
-        sno: 1,
-        date: '2024-02-22',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 2,
-        date: '2024-02-23',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 3,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 4,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 5,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 6,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 7,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 8,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 9,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 10,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 11,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 12,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 13,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 14,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-    const ServiceHistory(
-        sno: 15,
-        date: '2024-02-24',
-        jobCardNo: '123456789',
-        location: 'Main Workshop',
-        jobType: 'General service'),
-  ];
-}
-
 class ServiceHistoryDataSource extends DataGridSource {
   /// Creates the serviceHistory data source class with required details.
-  ServiceHistoryDataSource({required List<ServiceHistory> serviceHistoryData}) {
+  ServiceHistoryDataSource({required List<Service> serviceHistoryData}) {
     _serviceHistoryData = serviceHistoryData
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(
                 columnName: 'sno',
-                value: e.sno,
+                value: e.sNo,
               ),
-              DataGridCell<String>(columnName: 'date', value: e.date),
+              DataGridCell<String>(columnName: 'date', value: e.scheduleDate),
               DataGridCell<String>(
                   columnName: 'Job Card no.', value: e.jobCardNo),
               DataGridCell<String>(columnName: 'Location', value: e.location),

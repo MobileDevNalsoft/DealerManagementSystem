@@ -1,50 +1,53 @@
-
 class Vehicle {
   String? vehicleType;
   String? chassisNumber;
   String? model;
   int? kms;
-  String? customerNumber;
-  int? customerPhoneNumber;
   String? vehicleRegNumber;
   String? engineNumber;
+  String? make;
   String? varient;
   String? color;
   int? mfgYear;
   String? financialDetails;
   String? insuranceCompany;
+  String? customerContactNo;
+  String? customerName;
   String? customerAddress;
-
 
   Vehicle(
       {this.vehicleType,
       this.chassisNumber,
       this.model,
+      this.make,
+      this.varient,
+      this.color,
       this.kms,
-      this.customerNumber,
-      this.customerPhoneNumber,
       this.vehicleRegNumber,
       this.mfgYear,
       this.financialDetails,
       this.insuranceCompany,
-      this.customerAddress, 
-      this.engineNumber});
+      this.engineNumber,
+      this.customerContactNo,
+      this.customerName,
+      this.customerAddress});
 
-Vehicle.fromJson(Map<String, dynamic> json) {
+  Vehicle.fromJson(Map<String, dynamic> json) {
     vehicleType = json['vehicleType'];
     chassisNumber = json['chassisNumber'];
     model = json['model'];
     kms = json['kms'];
-    engineNumber= json["engine_no"];
-    customerNumber = json['customerNumber'];
+    engineNumber = json["engine_no"];
+    make = json['make'];
     varient = json['varient'];
     color = json['color'];
-    // customerPhoneNumber = json['customerPhoneNumber'];
     vehicleRegNumber = json['vehicle_registration_no'];
     mfgYear = json['mfg_year'];
     financialDetails = json['financial_details'];
     insuranceCompany = json['insuranceCompany'];
-    // customerAddress = json['customerAddress'];
+    customerContactNo = json['customer_contact_no'];
+    customerName = json['customer_name'];
+    customerAddress = json['customer_address'];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,15 +57,16 @@ Vehicle.fromJson(Map<String, dynamic> json) {
     data['model'] = model;
     data['kms'] = kms;
     data['engine_no'] = engineNumber;
+    data['make'] = make;
     data['varient'] = varient;
     data['color'] = color;
-    data['customer_no'] = customerNumber;
-    // data['customerPhoneNumber'] = customerPhoneNumber;
     data['vehicle_registration_no'] = vehicleRegNumber;
     data['mfg_year'] = mfgYear;
     data['financial_details'] = financialDetails;
     data['insurance_company'] = insuranceCompany;
-    // data['customerAddress'] = customerAddress;
+    data['customer_contact_no'] = customerContactNo;
+    data['customer_name'] = customerName;
+    data['customer_address'] = customerAddress;
     return data;
-  } 
+  }
 }
