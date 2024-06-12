@@ -19,9 +19,12 @@ class ServiceHistoryView extends StatefulWidget {
 class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   late ServiceHistoryDataSource serviceHistoryDataSource;
   DataGridController dataGridController = DataGridController();
+  final ServiceState serviceState = ServiceState();
+  final CustomColumnSizer _customColumnSizer = CustomColumnSizer();
   @override
   void initState() {
     super.initState();
+    // serviceState.copyWith(status: ServiceStatus.initial);
     context.read<ServiceBloc>().add(
         GetServiceHistory(year: DateTime.now().toString().substring(0, 4)));
   }
@@ -91,8 +94,8 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
             body: Container(
               height: size.height,
               width: double.infinity,
-              padding: const EdgeInsets.only(
-                  bottom: 16.0, left: 16.0, right: 0, top: 60),
+              margin: EdgeInsets.zero,
+              padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
               decoration: BoxDecoration(
                 image: DecorationImage(
                     colorFilter: ColorFilter.mode(
@@ -109,110 +112,124 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                       borderColor: Colors.red,
                       borderWidth: 2,
                     )),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Column(
-                    children: [
-                      BlocConsumer<ServiceBloc, ServiceState>(
-                        listener: (context, state) {
-                          print(state.status);
-                          if (state.status == ServiceStatus.success) {
-                            print('services ${state.services}');
-                          }
-                        },
-                        builder: (context, state) {
-                          switch (state.status) {
-                            case ServiceStatus.loading:
-                              return Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    color: Colors.white,
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ));
-                            case ServiceStatus.success || ServiceStatus.initial:
-                              return Expanded(
-                                flex: 1,
-                                child: SfDataGrid(
-                                  source: ServiceHistoryDataSource(
-                                      serviceHistoryData: state.services!),
-                                  gridLinesVisibility: GridLinesVisibility.both,
-                                  headerGridLinesVisibility:
-                                      GridLinesVisibility.both,
-                                  showHorizontalScrollbar: false,
-                                  allowEditing: true,
-                                  shrinkWrapColumns: false,
-                                  shrinkWrapRows: false,
-                                  allowSorting: true,
-                                  allowColumnsResizing: true,
-                                  allowColumnsDragging: true,
-                                  columnResizeMode: ColumnResizeMode.onResize,
-                                  allowFiltering: true,
-                                  editingGestureType:
-                                      EditingGestureType.doubleTap,
-                                  onCellDoubleTap: (details) {
-                                    print(details.rowColumnIndex);
-                                    dataGridController
-                                        .beginEdit(details.rowColumnIndex);
-                                  },
-                                  controller: dataGridController,
-                                  columns: <GridColumn>[
-                                    GridColumn(
-                                        allowEditing: true,
-                                        width: 150,
-                                        columnName: 'sno',
-                                        label: Container(
-                                            padding: const EdgeInsets.all(16.0),
-                                            alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    BlocConsumer<ServiceBloc, ServiceState>(
+                      listener: (context, state) {
+                        print(state.status);
+                        if (state.status == ServiceStatus.success) {
+                          print('services ${state.services}');
+                        }
+                      },
+                      builder: (context, state) {
+                        switch (state.status) {
+                          case ServiceStatus.loading:
+                            return Container(
+                              height: size.height * 0.8,
+                              width: size.width,
+                              color: Colors.white,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          case ServiceStatus.success:
+                            return Expanded(
+                              flex: 1,
+                              child: SfDataGrid(
+                                columnSizer: _customColumnSizer,
+                                columnWidthMode:
+                                    ColumnWidthMode.fitByColumnName,
+                                source: ServiceHistoryDataSource(
+                                    serviceHistoryData: state.services!),
+                                gridLinesVisibility: GridLinesVisibility.both,
+                                headerGridLinesVisibility:
+                                    GridLinesVisibility.both,
+                                showHorizontalScrollbar: false,
+                                allowEditing: true,
+                                shrinkWrapColumns: false,
+                                shrinkWrapRows: false,
+                                allowSorting: true,
+                                allowColumnsResizing: true,
+                                allowColumnsDragging: true,
+                                columnResizeMode: ColumnResizeMode.onResize,
+                                allowFiltering: true,
+                                editingGestureType:
+                                    EditingGestureType.doubleTap,
+                                onCellDoubleTap: (details) {
+                                  print(details.rowColumnIndex);
+                                  dataGridController
+                                      .beginEdit(details.rowColumnIndex);
+                                },
+                                controller: dataGridController,
+                                columns: <GridColumn>[
+                                  GridColumn(
+                                      allowEditing: true,
+                                      width: 150,
+                                      columnName: 'sno',
+                                      label: Container(
+                                          padding: const EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: const Text(
+                                            'Sno',
+                                          ))),
+                                  GridColumn(
+                                      columnName: 'date',
+                                      label: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          alignment: Alignment.center,
+                                          child: const Text('Date'))),
+                                  GridColumn(
+                                      columnName: 'Job Card no.',
+                                      label: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          alignment: Alignment.center,
+                                          child: InkWell(
+                                            onTap: () {},
                                             child: const Text(
-                                              'Sno',
-                                            ))),
-                                    GridColumn(
-                                        columnName: 'date',
-                                        label: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            alignment: Alignment.center,
-                                            child: const Text('Date'))),
-                                    GridColumn(
-                                        columnName: 'Job Card no.',
-                                        label: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            alignment: Alignment.center,
-                                            child: InkWell(
-                                              onTap: () {},
-                                              child: const Text(
-                                                'Job Card no.',
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ))),
-                                    GridColumn(
-                                        columnName: 'Location',
-                                        label: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            alignment: Alignment.center,
-                                            child: const Text('Location'))),
-                                    GridColumn(
-                                        columnName: 'Job Type',
-                                        label: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            alignment: Alignment.center,
-                                            child: const Text('Job Type'))),
-                                  ],
-                                ),
-                              );
-                            default:
-                              return SizedBox();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                                              'Job Card no.',
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ))),
+                                  GridColumn(
+                                      columnName: 'Location',
+                                      label: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          alignment: Alignment.center,
+                                          child: const Text('Location'))),
+                                  GridColumn(
+                                      columnName: 'Job Type',
+                                      label: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          alignment: Alignment.center,
+                                          child: const Text('Job Type'))),
+                                ],
+                              ),
+                            );
+                          default:
+                            return SizedBox();
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
             ));
       })),
     );
+  }
+}
+
+class CustomColumnSizer extends ColumnSizer {
+  @override
+  double computeCellWidth(GridColumn column, DataGridRow row, Object? cellValue,
+      TextStyle textStyle) {
+    if (column.columnName == 'Sno') {
+      cellValue = cellValue;
+    } else if (column.columnName == 'Date') {
+      cellValue = cellValue;
+    }
+
+    return super.computeCellWidth(column, row, cellValue, textStyle);
   }
 }
 
