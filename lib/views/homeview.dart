@@ -35,6 +35,19 @@ class _HomeView extends State<HomeView> {
   ScrollController scrollController = ScrollController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    vehRegNumFocus.addListener(_onVehRegNumUnfocused);
+  }
+
+  void _onVehRegNumUnfocused(){
+    if(!vehRegNumFocus.hasFocus && vehRegNumController.text.isNotEmpty){
+      context.read<VehicleBloc>().add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
@@ -124,12 +137,12 @@ class _HomeView extends State<HomeView> {
                                   context: context,
                                   size: size,
                                   hint: 'Vehicle Registration Number',
-                                  onChange: (value) {
-                                    if (value!.length > 5)
-                                      context.read<VehicleBloc>().add(
-                                          FetchVehicleCustomer(
-                                              registrationNo: value));
-                                  },
+                                  // onChange: (value) {
+                                  //   if (value!.length > 5)
+                                  //     context.read<VehicleBloc>().add(
+                                  //         FetchVehicleCustomer(
+                                  //             registrationNo: value));
+                                  // },
                                   icon: state.status== VehicleStatus.vehicleAlreadyAdded
                                       ? const Icon(Icons.check_circle_rounded)
                                       : null,
