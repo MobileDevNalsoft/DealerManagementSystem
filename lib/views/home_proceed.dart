@@ -1,26 +1,23 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
+import 'package:dms/models/vehicle.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
-import 'package:dms/views/dynamic_widgets.dart';
-import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'dart:math' as math;
 
 class HomeProceedView extends StatefulWidget {
   @override
   Service service;
+  Function? clearFields;
 
-  HomeProceedView({super.key, required this.service});
+  HomeProceedView({super.key, required this.service,this.clearFields});
   State<HomeProceedView> createState() => _HomeProceedView();
 }
 
@@ -169,12 +166,12 @@ class _HomeProceedView extends State<HomeProceedView> {
                           SizedBox(
                             height: size.height * (isMobile ? 0.005 : 0.015),
                           ),
-                          DMSCustomWidgets.CustomDataCard(
-                              context: context,
+                          DMSCustomWidgets.SearchableDropDown(
+                              items: ["Bay 1","Bay 2","Bay 3","Bay 4"],
                               size: size,
                               hint: 'Bay',
                               isMobile: isMobile,
-                              focusNode: bayFocus,
+                              focus: bayFocus,
                               textcontroller: bayController,
                               scrollController: scrollController),
                           SizedBox(
@@ -226,6 +223,16 @@ class _HomeProceedView extends State<HomeProceedView> {
                     listener: (context, state) {
                       switch(state.status){
                       case ServiceStatus.success:
+                      context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial,vehicle:Vehicle()));
+                      widget.clearFields!(); 
+                      bookingController.text = "";
+                      altContController.text = "";  
+                      altContPhoneNoController.text  = "";
+                      spController.text = ""; 
+                      bayController.text = "";  
+                      jobTypeController.text = "";  
+                      custConcernsController.text =  "";
+                      remarksController .text = ""; 
                       Flushbar(
                               flushbarPosition: FlushbarPosition.TOP,
                               backgroundColor: Colors.green,
@@ -318,8 +325,9 @@ class _HomeProceedView extends State<HomeProceedView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
+                            Navigator.pushReplacement(context, MaterialPageRoute(
                                 builder: (_) => AddVehicleView()));
+                            
                           },
                           child: Column(
                             children: [
@@ -344,8 +352,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const ServiceHistoryView()));
+                            context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial,vehicle:Vehicle()));
+                              widget.clearFields!(); 
+                                  Navigator.pushReplacement(context, MaterialPageRoute(
+                                builder: (_) => AddVehicleView()));
                           },
                           child: Column(
                             children: [

@@ -21,6 +21,7 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
     // on<VehicleCheck>(_onVehicleCheck);
     on<FetchVehicleCustomer>(_onFetchVehicleCustomer
         as EventHandler<FetchVehicleCustomer, VehicleState>);
+    on<UpdateState>(_onUpdateState as EventHandler<UpdateState, VehicleState>);
   }
 
   final Repository _repo;
@@ -87,6 +88,10 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
         emit(state.copyWith(status: VehicleStatus.initial));
       },
     );
+  }
+
+  void _onUpdateState(UpdateState event, Emitter<VehicleState> emit){
+    emit(state.copyWith(vehicle: event.vehicle,status: event.status));
   }
 
   Future<void> _onCustomerCheck(

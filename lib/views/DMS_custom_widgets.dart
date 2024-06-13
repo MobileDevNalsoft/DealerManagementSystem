@@ -208,6 +208,7 @@ class DMSCustomWidgets {
                     height: size.height * 0.4,
                     width: size.width,
                     child: SfDateRangePicker(
+                      enablePastDates: false,
                       view: DateRangePickerView.month,
                       onSelectionChanged:
                           (dateRangePickerSelectionChangedArgs) {
@@ -235,6 +236,9 @@ class DMSCustomWidgets {
                       },
                       onSubmit: (p0) {
                         print("scheduled data $p0");
+                        context
+                            .read<MultiBloc>()
+                            .add(DateChanged(date: p0 as DateTime));
                         Navigator.pop(context);
                       },
                       headerStyle: const DateRangePickerHeaderStyle(

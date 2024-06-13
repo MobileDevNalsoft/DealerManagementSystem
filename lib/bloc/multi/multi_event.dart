@@ -4,6 +4,6 @@ part of 'multi_bloc.dart';
 sealed class MultiBlocEvent {}
 
 class DateChanged extends MultiBlocEvent {
-  final DateTime date;
+  final DateTime? date;
   DateChanged({required this.date});
 }

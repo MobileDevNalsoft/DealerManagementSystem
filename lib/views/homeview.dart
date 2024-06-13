@@ -1,6 +1,7 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
+import 'package:dms/models/vehicle.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
@@ -41,10 +42,20 @@ class _HomeView extends State<HomeView> {
     vehRegNumFocus.addListener(_onVehRegNumUnfocused);
   }
 
-  void _onVehRegNumUnfocused(){
-    if(!vehRegNumFocus.hasFocus && vehRegNumController.text.isNotEmpty){
-      context.read<VehicleBloc>().add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
+  void _onVehRegNumUnfocused() {
+    if (!vehRegNumFocus.hasFocus && vehRegNumController.text.isNotEmpty) {
+      context
+          .read<VehicleBloc>()
+          .add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
     }
+  }
+
+  void clearFields() {
+    vehRegNumController.text = "";
+    customerController.text = "";
+    locController.text = "";
+    kmsController.text = "";
+    context.read<MultiBloc>().add(DateChanged(date: null));
   }
 
   @override
@@ -127,9 +138,52 @@ class _HomeView extends State<HomeView> {
                           Gap(size.height * (isMobile ? 0.01 : 0.03)),
                           BlocConsumer<VehicleBloc, VehicleState>(
                             listener: (context, state) {
-                              if (state.status== VehicleStatus.vehicleAlreadyAdded) {
+                              if (state.status ==
+                                  VehicleStatus.vehicleAlreadyAdded) {
                                 customerController.text =
                                     state.vehicle!.cusotmerName!;
+                              }
+                              if (state.status == VehicleStatus.failure) {
+                                Flushbar(
+                                        flushbarPosition: FlushbarPosition.TOP,
+                                        backgroundColor: Colors.red,
+                                        mainButton: InkWell(
+                                          onTap: () {
+                                            context.read<VehicleBloc>().add(
+                                                UpdateState(
+                                                    status:
+                                                        VehicleStatus.initial,
+                                                    vehicle: Vehicle()));
+                                                    clearFields();
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        AddVehicleView()));
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Icon(Icons.directions_car),
+                                              Text(
+                                                "Add Vehicle",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                        margin: EdgeInsets.only(
+                                            top: 24,
+                                            left: isMobile
+                                                ? 10
+                                                : size.width * 0.8,
+                                            right: 10),
+                                        duration: Duration(seconds: 5),
+                                        message:
+                                            'Please register vehicle before service')
+                                    .show(context);
                               }
                             },
                             builder: (context, state) {
@@ -137,13 +191,12 @@ class _HomeView extends State<HomeView> {
                                   context: context,
                                   size: size,
                                   hint: 'Vehicle Registration Number',
-                                  // onChange: (value) {
-                                  //   if (value!.length > 5)
-                                  //     context.read<VehicleBloc>().add(
-                                  //         FetchVehicleCustomer(
-                                  //             registrationNo: value));
-                                  // },
-                                  icon: state.status== VehicleStatus.vehicleAlreadyAdded
+                                  onChange: (value) {
+                                    context.read<VehicleBloc>().add(UpdateState(
+                                        status: VehicleStatus.initial));
+                                  },
+                                  icon: state.status ==
+                                          VehicleStatus.vehicleAlreadyAdded
                                       ? const Icon(Icons.check_circle_rounded)
                                       : null,
                                   isMobile: isMobile,
@@ -195,7 +248,8 @@ class _HomeView extends State<HomeView> {
                       Gap(isMobile ? (size.width * 0.7) : (size.width * 0.595)),
                       BlocBuilder<VehicleBloc, VehicleState>(
                         builder: (context, state) {
-                          if (state.status ==  VehicleStatus.vehicleAlreadyAdded) {
+                          if (state.status ==
+                              VehicleStatus.vehicleAlreadyAdded) {
                             return ElevatedButton(
                                 onPressed: () {
                                   locFocus.unfocus();
@@ -294,12 +348,9 @@ class _HomeView extends State<HomeView> {
                           return;
                         }
 
-                        if (context
-                            .read<VehicleBloc>()
-                            .state
-                            .status == VehicleStatus.vehicleAlreadyAdded) {
+                        if (context.read<VehicleBloc>().state.status ==
+                            VehicleStatus.vehicleAlreadyAdded) {
                           print("vehicle present");
-                          context.read<VehicleBloc>().state.status=VehicleStatus.initial;
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -320,7 +371,9 @@ class _HomeView extends State<HomeView> {
                                           location: locController.text,
                                           kms: int.parse(kmsController.text),
                                           customerName:
-                                              customerController.text)),
+                                              customerController.text),
+                                      clearFields: clearFields
+                                          ),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
                                 const begin = Offset(1, 0.0);
@@ -341,7 +394,11 @@ class _HomeView extends State<HomeView> {
                                   backgroundColor: Colors.red,
                                   mainButton: InkWell(
                                     onTap: () {
-                                       context.read<VehicleBloc>().state.status=VehicleStatus.initial;
+                                      context.read<VehicleBloc>().add(
+                                          UpdateState(
+                                              status: VehicleStatus.initial,
+                                              vehicle: Vehicle()));
+                                              clearFields();
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (_) =>
@@ -432,7 +489,9 @@ class _HomeView extends State<HomeView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                             context.read<VehicleBloc>().state.status=VehicleStatus.initial;
+                            context.read<VehicleBloc>().add(
+                                UpdateState(status: VehicleStatus.initial,vehicle: Vehicle()));
+                                clearFields();
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => AddVehicleView()));
                           },
@@ -459,7 +518,10 @@ class _HomeView extends State<HomeView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                             context.read<VehicleBloc>().state.status=VehicleStatus.initial;
+                            context.read<VehicleBloc>().add(UpdateState(
+                                status: VehicleStatus.initial,
+                                vehicle: Vehicle()));
+                                clearFields();
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => ServiceHistoryView(),
                             ));
