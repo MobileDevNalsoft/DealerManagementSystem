@@ -40,7 +40,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future<void> _onGetServiceHistory(
       GetServiceHistory event, Emitter<ServiceState> emit) async {
-    emit(state.copyWith(status: ServiceStatus.loading));
+    if (state.status == ServiceStatus.initial) {
+      emit(state.copyWith(status: ServiceStatus.loading));
+    }
     await _repo.getHistory(event.year).then(
       (json) {
         List<Service> services = [];
@@ -57,18 +59,13 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         if (json['response_code'] == 200) {
           emit(state.copyWith(
               status: ServiceStatus.success, services: services));
-          print('state emitted');
-          emit(state.copyWith(status: ServiceStatus.initial));
         } else {
           emit(state.copyWith(status: ServiceStatus.failure));
-          emit(state.copyWith(status: ServiceStatus.initial));
         }
       },
     ).onError(
       (error, stackTrace) {
-        print(error);
         emit(state.copyWith(status: ServiceStatus.failure));
-        emit(state.copyWith(status: ServiceStatus.initial));
       },
     );
   }
