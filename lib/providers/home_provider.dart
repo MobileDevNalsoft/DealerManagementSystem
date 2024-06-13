@@ -50,7 +50,8 @@ class HomeProvider extends ChangeNotifier {
       print('visible screen height $visibleScreenHeight');
 
       // Check if the text field is already visible
-      if (textFieldBottomPosition + 30 < visibleScreenHeight) {
+      if (textFieldTopPosition > visibleScreenHeight &&
+          textFieldBottomPosition + 30 > keyboardHeight) {
         return;
       } else {
         // Calculate the amount to scroll
