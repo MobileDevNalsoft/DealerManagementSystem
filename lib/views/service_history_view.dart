@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 
@@ -24,9 +25,10 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   @override
   void initState() {
     super.initState();
-    // serviceState.copyWith(status: ServiceStatus.initial);
+    serviceState.copyWith(status: ServiceStatus.initial);
     context.read<ServiceBloc>().add(
         GetServiceHistory(year: DateTime.now().toString().substring(0, 4)));
+    context.read<ServiceBloc>().state.status = ServiceStatus.initial;
   }
 
   // @override
@@ -116,20 +118,18 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                   children: [
                     BlocConsumer<ServiceBloc, ServiceState>(
                       listener: (context, state) {
-                        print(state.status);
-                        if (state.status == ServiceStatus.success) {
-                          print('services ${state.services}');
-                        }
+                        if (state.status == ServiceStatus.success) {}
                       },
                       builder: (context, state) {
                         switch (state.status) {
                           case ServiceStatus.loading:
-                            return Container(
-                              height: size.height * 0.8,
-                              width: size.width,
-                              color: Colors.white,
+                            return Transform(
+                              transform: Matrix4.translationValues(0, 120, 0),
                               child: Center(
-                                child: CircularProgressIndicator(),
+                                child: Lottie.asset(
+                                    'assets/lottie/car_loading.json',
+                                    height: size.height * 0.5,
+                                    width: size.width * 0.6),
                               ),
                             );
                           case ServiceStatus.success:

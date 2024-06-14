@@ -5,7 +5,7 @@ enum ServiceStatus { initial, loading, success, failure }
 final class ServiceState {
   ServiceState({this.status, this.service, this.services});
 
-  final ServiceStatus? status;
+  ServiceStatus? status;
   final Service? service;
   final List<Service>? services;
 
