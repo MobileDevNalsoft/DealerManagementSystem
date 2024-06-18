@@ -1,5 +1,6 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -68,17 +69,18 @@ class DMSCustomWidgets {
                     item.toLowerCase().contains(pattern.toLowerCase()))
                 .toList();
           },
-          itemBuilder: (context, suggestion) => ListTile(
-            title: Text(
-              suggestion,
-              style: TextStyle(fontSize: isMobile ? 13 : 14),
+          itemBuilder: (context, suggestion) => SizedBox(
+            height: size.height * 0.038,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Text(
+                suggestion,
+                style: TextStyle(fontSize: isMobile ? 13 : 14),
+              ),
             ),
           ),
           onSelected: (suggestion) {
-            // print(suggestion);
             textcontroller.text = suggestion;
-            print(textcontroller.text);
-            // focus.unfocus();
           },
         ),
       ),
@@ -263,8 +265,9 @@ class DMSCustomWidgets {
                     style: TextStyle(
                         color: date == null ? Colors.black54 : Colors.black),
                   ),
-                  MaxGap(500),
-                  Icon(Icons.calendar_month_outlined, color: Colors.black38),
+                  const MaxGap(500),
+                  const Icon(Icons.calendar_month_outlined,
+                      color: Colors.black38),
                 ],
               ),
             )),
@@ -301,7 +304,7 @@ class DMSCustomWidgets {
                     ])
                 .toList(),
           ),
-          Gap(20),
+          const Gap(20),
           Column(
             children: propertyList
                 .expand((element) => [
@@ -313,7 +316,7 @@ class DMSCustomWidgets {
                     ])
                 .toList(),
           ),
-          Gap(20),
+          const Gap(20),
           Column(
             children: valueList
                 .expand((element) => [
@@ -326,5 +329,78 @@ class DMSCustomWidgets {
                 .toList(),
           )
         ]);
+  }
+
+  static Widget CustomYearPicker(
+      {required Size size,
+      required bool isMobile,
+      required BuildContext context,
+      required FixedExtentScrollController yearPickerController,
+      int? year}) {
+    int now = DateTime.now().year;
+    return SizedBox(
+      height: isMobile ? size.height * 0.06 : size.height * 0.063,
+      width: isMobile ? size.width * 0.8 : size.width * 0.3,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(100),
+        onTap: () {
+          print(now - (year ?? 0));
+          yearPickerController =
+              FixedExtentScrollController(initialItem: now - (year ?? 0));
+          showCupertinoModalPopup(
+            context: context,
+            builder: (context) => CupertinoActionSheet(
+              actions: [
+                SizedBox(
+                  height: size.height * 0.27,
+                  width: size.width * 0.9,
+                  child: CupertinoPicker(
+                      itemExtent: 45,
+                      looping: true,
+                      scrollController: yearPickerController,
+                      onSelectedItemChanged: (value) {
+                        context
+                            .read<MultiBloc>()
+                            .add(YearChanged(year: now - value));
+                      },
+                      useMagnifier: true,
+                      magnification: 1.2,
+                      backgroundColor: const Color.fromARGB(255, 245, 202, 202),
+                      selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                        background: const Color.fromARGB(255, 145, 19, 19)
+                            .withOpacity(0.2),
+                      ),
+                      children: List.generate(
+                        now - 1980,
+                        (index) =>
+                            Center(child: Text((now - index).toString())),
+                      )),
+                )
+              ],
+              cancelButton: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Set',
+                  style:
+                      TextStyle(color: const Color.fromARGB(255, 145, 19, 19)),
+                ),
+              ),
+            ),
+          );
+        },
+        child: Card(
+            color: Colors.white.withOpacity(1),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5))),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
+              child: Text(
+                year == null ? 'MFG Year' : year.toString(),
+                style: TextStyle(
+                    color: year == null ? Colors.black38 : Colors.black),
+              ),
+            )),
+      ),
+    );
   }
 }

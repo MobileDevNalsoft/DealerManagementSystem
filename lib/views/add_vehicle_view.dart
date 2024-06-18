@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/customer/customer_bloc.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -88,11 +89,24 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
   FocusNode financialDetailsFocus = FocusNode();
 
+  // year picker controller
+
+  late FixedExtentScrollController yearPickerController;
+
+  int index = 0;
+
   @override
   void initState() {
     super.initState();
+    yearPickerController = FixedExtentScrollController(initialItem: index);
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
     customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
+  }
+
+  @override
+  void dispose() {
+    yearPickerController.dispose();
+    super.dispose();
   }
 
   void _onRegNoFocusChange() {
@@ -452,18 +466,16 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                             textcontroller: kmsController,
                             scrollController: scrollController,
                             context: context),
-                        DMSCustomWidgets.CustomDataCard(
-                            focusNode: mfgYearFocus,
-                            size: size,
-                            hint: "MFG Year",
-                            isMobile: isMobile,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            textcontroller: mfgYearController,
-                            scrollController: scrollController,
-                            context: context),
+                        BlocBuilder<MultiBloc, MultiBlocState>(
+                          builder: (context, state) {
+                            return DMSCustomWidgets.CustomYearPicker(
+                                size: size,
+                                isMobile: isMobile,
+                                context: context,
+                                yearPickerController: yearPickerController,
+                                year: state.year);
+                          },
+                        ),
                         DMSCustomWidgets.SearchableDropDown(
                           size: size,
                           hint: "Insurance Company",
@@ -586,50 +598,56 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                       case VehicleStatus.success || VehicleStatus.initial:
                         return ElevatedButton(
                           onPressed: () {
-                            String? message = vehicleRegNumberController
-                                    .text.isEmpty
-                                ? "Vehicle Registration number cannot be empty"
+                            // ignore: prefer_if_null_operators
+                            String? message = _vehicleRegistrationNoValidator(
+                                        vehicleRegNumberController.text) !=
+                                    null
+                                ? _vehicleRegistrationNoValidator(
+                                    vehicleRegNumberController.text)
                                 : vehicleTypeController.text.isEmpty
                                     ? "Vehicle Type cannot be empty"
-                                    : customerContactNumberController
-                                            .text.isEmpty
-                                        ? "Customer Contact No. cannot be empty"
-                                        : customerNameController.text.isEmpty
-                                            ? chassisNumberController
-                                                    .text.isEmpty
-                                                ? "Chassis No. cannot be empty"
-                                                : engineNumberController
-                                                        .text.isEmpty
-                                                    ? "Engine No. cannot be empty"
-                                                    : "Customer Name cannot be empty"
-                                            : customerAddressController
-                                                    .text.isEmpty
-                                                ? "Customer Address cannot be empty"
-                                                : makeController.text.isEmpty
-                                                    ? "Make cannot be empty"
-                                                    : modelController
-                                                            .text.isEmpty
-                                                        ? "Model cannot be empty"
-                                                        : variantController
-                                                                .text.isEmpty
-                                                            ? "Variant cannot be empty"
-                                                            : colorController
-                                                                    .text
-                                                                    .isEmpty
-                                                                ? "Color cannot be empty"
-                                                                : kmsController
-                                                                        .text
-                                                                        .isEmpty
-                                                                    ? "KMS cannot be empty"
-                                                                    : mfgYearController
-                                                                            .text
-                                                                            .isEmpty
-                                                                        ? "Mfg Year cannot be empty"
-                                                                        : insuranceCompanyController.text.isEmpty
-                                                                            ? "Insurance Company cannot be empty"
-                                                                            : financialDetailsController.text.isEmpty
-                                                                                ? "Finacial Details cannot be empty"
-                                                                                : null;
+                                    // ignore: prefer_if_null_operators
+                                    : _customerContactNoValidation(
+                                                customerContactNumberController
+                                                    .text) !=
+                                            null
+                                        ? _customerContactNoValidation(
+                                            customerContactNumberController
+                                                .text)
+                                        // ignore: prefer_if_null_operators
+                                        : _chassisNoValidation(customerNameController.text) !=
+                                                null
+                                            ? _chassisNoValidation(
+                                                customerNameController.text)
+                                            // ignore: prefer_if_null_operators
+                                            : _engineNoValidation(engineNumberController.text) !=
+                                                    null
+                                                ? _engineNoValidation(
+                                                    engineNumberController.text)
+                                                // ignore: prefer_if_null_operators
+                                                : _nameValidation(customerNameController.text) !=
+                                                        null
+                                                    ? _nameValidation(
+                                                        customerNameController.text)
+                                                    : customerAddressController.text.isEmpty
+                                                        ? "Customer Address cannot be empty"
+                                                        : makeController.text.isEmpty
+                                                            ? "Make cannot be empty"
+                                                            : modelController.text.isEmpty
+                                                                ? "Model cannot be empty"
+                                                                : variantController.text.isEmpty
+                                                                    ? "Variant cannot be empty"
+                                                                    : colorController.text.isEmpty
+                                                                        ? "Color cannot be empty"
+                                                                        : kmsController.text.isEmpty
+                                                                            ? "KMS cannot be empty"
+                                                                            : mfgYearController.text.isEmpty
+                                                                                ? "Mfg Year cannot be empty"
+                                                                                : insuranceCompanyController.text.isEmpty
+                                                                                    ? "Insurance Company cannot be empty"
+                                                                                    : financialDetailsController.text.isEmpty
+                                                                                        ? "Finacial Details cannot be empty"
+                                                                                        : null;
                             if (message != null) {
                               Flushbar(
                                 backgroundColor: Colors.red,
@@ -697,7 +715,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   }
 }
 
-String? _vehicleRegistrationNoValidator(value) {
+String? _vehicleRegistrationNoValidator(String value) {
   if (value.isEmpty) {
     return "Vehicle Registration No. can't be empty!";
   } else if (value.length < 10) {
@@ -706,4 +724,42 @@ String? _vehicleRegistrationNoValidator(value) {
   return null;
 }
 
-String? _customerContactNumberValidation(value) {}
+String? _customerContactNoValidation(String value) {
+  RegExp contactNoRegex = RegExp(r'^\d{10}$');
+  if (value.isEmpty) {
+    return "Contact Number can't be empty!";
+  } else if (!contactNoRegex.hasMatch(value)) {
+    return "Invalid Contact Number";
+  }
+  return null;
+}
+
+String? _chassisNoValidation(String value) {
+  RegExp chassisNoRegex = RegExp(r'^[A-Za-z]{2}\d{4}$');
+  if (value.isEmpty) {
+    return "Chassis No. can't be empty!";
+  } else if (!chassisNoRegex.hasMatch(value)) {
+    return "Invalid Chassis No.";
+  }
+  return null;
+}
+
+String? _engineNoValidation(String value) {
+  RegExp engineNoRegex = RegExp(r'^[A-Za-z]{2}\d{4}$');
+  if (value.isEmpty) {
+    return "Chassis No. can't be empty!";
+  } else if (!engineNoRegex.hasMatch(value)) {
+    return "Invalid Chassis No.";
+  }
+  return null;
+}
+
+String? _nameValidation(String value) {
+  RegExp customerNameRegex = RegExp(r'^[A-Za-z]*$');
+  if (value.isEmpty) {
+    return "Customer Name can't be empty!";
+  } else if (!customerNameRegex.hasMatch(value)) {
+    return "Invalid Customer Name";
+  }
+  return null;
+}
