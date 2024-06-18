@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/logger/logger.dart';
+import 'package:dms/models/salesPerson.dart';
 import 'package:network_calls/src.dart';
 
 class Repository {
@@ -100,5 +102,25 @@ class Repository {
       throw Error();
     }
   }
+
+    Future<Map<String,dynamic>> getSalesPersons() async {
+    ApiResponse apiResponse = await _api.get('getVehicleCustomer');
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return jsonDecode(apiResponse.response!.data)["data"];
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+
 
 }

@@ -12,3 +12,7 @@ class YearChanged extends MultiBlocEvent {
   final int year;
   YearChanged({required this.year});
 }
+
+class GetSalesPersons extends MultiBlocEvent{
+  GetSalesPersons();
+}

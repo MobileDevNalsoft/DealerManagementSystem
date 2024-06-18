@@ -23,7 +23,7 @@ void main() async {
         BlocProvider(create: (_) => VehicleBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => CustomerBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => ServiceBloc(repo: _.read<Repository>())),
-        BlocProvider(create: (_) => MultiBloc()),
+        BlocProvider(create: (_) => MultiBloc(repo: _.read<Repository>())),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
       ],
