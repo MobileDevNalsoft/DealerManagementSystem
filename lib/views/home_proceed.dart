@@ -63,248 +63,240 @@ class _HomeProceedView extends State<HomeProceedView> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Container(
-          height: size.height,
-          width: size.width,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/dms_bg.png',
-                ),
-                fit: BoxFit.cover),
+        appBar: AppBar(  elevation: 0.0,
+          backgroundColor:  const Color.fromARGB(255, 145, 19, 19),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+          title: const Text(
+            "Service",
+            style: TextStyle(color: Colors.white),
           ),
-          child: ListView(
-            controller: scrollController,
-            children: [
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Spacer(
-                    flex: (size.width * 0.01).round(),
+          centerTitle: true,),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Container(
+            height: size.height,
+            width: size.width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                    'assets/images/dms_bg.png',
                   ),
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        Icons.arrow_back_rounded,
-                        color: Colors.white,
-                      )),
-                  Spacer(
-                    flex: (size.width * (isMobile ? 0.6 : 0.88)).round(),
-                  ),
-                  Text(
-                    "Service",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  Spacer(
-                    flex: size.width.round(),
-                  )
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: size.height * (0.05),
-                  ),
-                  Consumer<HomeProvider>(
-                    builder: (context, provider, child) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          DMSCustomWidgets.SearchableDropDown(
-                              items: ["Online", "Walk-in"],
-                              size: size,
-                              hint: 'Booking Source',
-                              isMobile: isMobile,
-                              focus: bookingFocus,
-                              textcontroller: bookingController,
-                              icon: Icon(Icons.arrow_drop_down),
-                              scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.005 : 0.015),
-                          ),
-                          DMSCustomWidgets.CustomDataCard(
-                              context: context,
-                              size: size,
-                              hint: 'Alternate Contact Person',
-                              isMobile: isMobile,
-                              focusNode: altContFocus,
-                              textcontroller: altContController,
-
-                              scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.005 : 0.015),
-                          ),
-                          DMSCustomWidgets.CustomDataCard(
-                              context: context,
-                              size: size,
-                              hint: 'Alternate Person Contact No.',
-                              isMobile: isMobile,
-                              focusNode: altContPhoneNoFocus,
-                              textcontroller: altContPhoneNoController,
-                              keyboardType: TextInputType.number, 
-                              inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                              scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.005 : 0.015),
-                          ),
-                          DMSCustomWidgets.SearchableDropDown(
-                              size: size,
-                              items: ["1", "2", "3", "4", "5"],
-                              hint: 'Sales Person',
-                              icon: Icon(Icons.arrow_drop_down),
-                              isMobile: isMobile,
-                              focus: spFocus,
-                              textcontroller: spController,
-                              scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.005 : 0.015),
-                          ),
-                          DMSCustomWidgets.SearchableDropDown(
-                              items: ["Bay 1","Bay 2","Bay 3","Bay 4"],
-                              size: size,
-                              hint: 'Bay',
-                              isMobile: isMobile,
-                              focus: bayFocus,
-                              textcontroller: bayController,
-                              scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.005 : 0.015),
-                          ),
-                          DMSCustomWidgets.SearchableDropDown(
-                              size: size,
-                              hint: 'Job Type',
-                              items: [
-                                'Type 1',
-                                'Type 2',
-                                'Type 3',
-                                'Type 4',
-                                'Type 5'
-                              ],
-                              icon: Icon(Icons.arrow_drop_down),
-                              focus: jobTypeFocus,
-                              textcontroller: jobTypeController,
-
-                              // provider: provider,
-                              isMobile: isMobile,
-                              scrollController: scrollController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.005 : 0.015),
-                          ),
-                          DMSCustomWidgets.CustomTextFieldCard(
-                              size: size,
-                              hint: 'Customer Concerns',
-                              isMobile: isMobile,
-                              focusNode: custConcernsFocus,
-                              textcontroller: custConcernsController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.005 : 0.015),
-                          ),
-                          DMSCustomWidgets.CustomTextFieldCard(
-                              size: size,
-                              hint: 'Remarks',
-                              isMobile: isMobile,
-                              focusNode: remarksFocus,
-                              textcontroller: remarksController),
-                          SizedBox(
-                            height: size.height * (isMobile ? 0.05 : 0.015),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  BlocConsumer<ServiceBloc, ServiceState>(
-                    listener: (context, state) {
-                      switch(state.status){
-                      case ServiceStatus.success:
-                      context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial,vehicle:Vehicle()));
-                      widget.clearFields!(); 
-                      bookingController.text = "";
-                      altContController.text = "";  
-                      altContPhoneNoController.text  = "";
-                      spController.text = ""; 
-                      bayController.text = "";  
-                      jobTypeController.text = "";  
-                      custConcernsController.text =  "";
-                      remarksController .text = ""; 
-                      Flushbar(
-                              flushbarPosition: FlushbarPosition.TOP,
-                              backgroundColor: Colors.green,
-                              message: 'Service Added Successfully',
-                              duration: Duration(seconds: 2),
-                              borderRadius: BorderRadius.circular(12),
-                            margin: EdgeInsets.only(
-                                top: 24,
-                                left: isMobile ? 10 : size.width * 0.8,
-                                right: 10))
-                          .show(context);
-                       case ServiceStatus.failure:
-                          Flushbar(
-                              flushbarPosition: FlushbarPosition.TOP,
-                              backgroundColor: Colors.red,
-                              message: 'Some error occured',
-                              duration: Duration(seconds: 2),
-                              borderRadius: BorderRadius.circular(12),
-                            margin: EdgeInsets.only(
-                                top: 24,
-                                left: isMobile ? 10 : size.width * 0.8,
-                                right: 10))
-                          .show(context);
-
-                        default: null;
-                          }
-                    },
-                    builder: (context, state) {
-                      return state.status == ServiceStatus.loading
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: () {
-                                bookingFocus.unfocus();
-                                altContFocus.unfocus();
-                                spFocus.unfocus();
-                                bayFocus.unfocus();
-                                jobTypeFocus.unfocus();
-                                custConcernsFocus.unfocus();
-                                remarksFocus.unfocus();
-                                print( jobTypeController.text);
-                                context.read<ServiceBloc>().add(
-                                  ServiceAdded(
-                                    service: widget.service.copyWith(
-                                        bookingSource: bookingController.text,
-                                        alternateContactPerson: altContController.text,
-                                        alternatePersonContactNo: int.parse( altContPhoneNoController.text),
-                                        salesPerson: spController.text,
-                                        bay: bayController.text,
-                                        jobType: jobTypeController.text,
-                                        customerConcerns: custConcernsController.text,
-                                        remarks: remarksController.text)));
-                              },
-                              child: Text(
-                                'proceed to recieve',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(140.0, 35.0),
-                                  padding: EdgeInsets.zero,
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 145, 19, 19),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5))));
-                    },
-                  ),
-                  if (MediaQuery.of(context).viewInsets.bottom != 0)
+                  fit: BoxFit.cover),
+            ),
+            child: ListView(
+              controller: scrollController,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
                     SizedBox(
-                      height: size.height * (isMobile ? 0.4 : 0.5),
+                      height: size.height * (0.05),
                     ),
-                ],
-              ),
-            ],
+                    Consumer<HomeProvider>(
+                      builder: (context, provider, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            DMSCustomWidgets.SearchableDropDown(
+                                items: ["Online", "Walk-in"],
+                                size: size,
+                                hint: 'Booking Source',
+                                isMobile: isMobile,
+                                focus: bookingFocus,
+                                textcontroller: bookingController,
+                                icon: Icon(Icons.arrow_drop_down),
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomDataCard(
+                                context: context,
+                                size: size,
+                                hint: 'Alternate Contact Person',
+                                isMobile: isMobile,
+                                focusNode: altContFocus,
+                                textcontroller: altContController,
+          
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomDataCard(
+                                context: context,
+                                size: size,
+                                hint: 'Alternate Person Contact No.',
+                                isMobile: isMobile,
+                               
+                                focusNode: altContPhoneNoFocus,
+                                textcontroller: altContPhoneNoController,
+                                keyboardType: TextInputType.number, 
+                                inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                       LengthLimitingTextInputFormatter(10)
+                                    ],
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.SearchableDropDown(
+                                size: size,
+                                items: ["1", "2", "3", "4", "5"],
+                                hint: 'Sales Person',
+                                icon: Icon(Icons.arrow_drop_down),
+                                isMobile: isMobile,
+                                focus: spFocus,
+                                textcontroller: spController,
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.SearchableDropDown(
+                                items: ["Bay 1","Bay 2","Bay 3","Bay 4"],
+                                size: size,
+                                hint: 'Bay',
+                                isMobile: isMobile,
+                                focus: bayFocus,
+                                textcontroller: bayController,
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.SearchableDropDown(
+                                size: size,
+                                hint: 'Job Type',
+                                items: [
+                                  'Type 1',
+                                  'Type 2',
+                                  'Type 3',
+                                  'Type 4',
+                                  'Type 5'
+                                ],
+                                icon: Icon(Icons.arrow_drop_down),
+                                focus: jobTypeFocus,
+                                textcontroller: jobTypeController,
+          
+                                // provider: provider,
+                                isMobile: isMobile,
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomTextFieldCard(
+                                size: size,
+                                hint: 'Customer Concerns',
+                                isMobile: isMobile,
+                                focusNode: custConcernsFocus,
+                                textcontroller: custConcernsController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomTextFieldCard(
+                                size: size,
+                                hint: 'Remarks',
+                                isMobile: isMobile,
+                                focusNode: remarksFocus,
+                                textcontroller: remarksController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.05 : 0.015),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    BlocConsumer<ServiceBloc, ServiceState>(
+                      listener: (context, state) {
+                        switch(state.status){
+                        case ServiceStatus.success:
+                        context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial,vehicle:Vehicle()));
+                        widget.clearFields!(); 
+                        bookingController.text = "";
+                        altContController.text = "";  
+                        altContPhoneNoController.text  = "";
+                        spController.text = ""; 
+                        bayController.text = "";  
+                        jobTypeController.text = "";  
+                        custConcernsController.text =  "";
+                        remarksController .text = ""; 
+                        Flushbar(
+                                flushbarPosition: FlushbarPosition.TOP,
+                                backgroundColor: Colors.green,
+                                message: 'Service Added Successfully',
+                                duration: Duration(seconds: 2),
+                                borderRadius: BorderRadius.circular(12),
+                              margin: EdgeInsets.only(
+                                  top: 24,
+                                  left: isMobile ? 10 : size.width * 0.8,
+                                  right: 10))
+                            .show(context);
+                         case ServiceStatus.failure:
+                            Flushbar(
+                                flushbarPosition: FlushbarPosition.TOP,
+                                backgroundColor: Colors.red,
+                                message: 'Some error occured',
+                                duration: Duration(seconds: 2),
+                                borderRadius: BorderRadius.circular(12),
+                              margin: EdgeInsets.only(
+                                  top: 24,
+                                  left: isMobile ? 10 : size.width * 0.8,
+                                  right: 10))
+                            .show(context);
+          
+                          default: null;
+                            }
+                      },
+                      builder: (context, state) {
+                        return state.status == ServiceStatus.loading
+                            ? CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  bookingFocus.unfocus();
+                                  altContFocus.unfocus();
+                                  spFocus.unfocus();
+                                  bayFocus.unfocus();
+                                  jobTypeFocus.unfocus();
+                                  custConcernsFocus.unfocus();
+                                  remarksFocus.unfocus();
+                                  print( jobTypeController.text);
+                                  context.read<ServiceBloc>().add(
+                                    ServiceAdded(
+                                      service: widget.service.copyWith(
+                                          bookingSource: bookingController.text,
+                                          alternateContactPerson: altContController.text,
+                                          alternatePersonContactNo: int.parse( altContPhoneNoController.text),
+                                          salesPerson: spController.text,
+                                          bay: bayController.text,
+                                          jobType: jobTypeController.text,
+                                          customerConcerns: custConcernsController.text,
+                                          remarks: remarksController.text)));
+                                },
+                                child: Text(
+                                  'proceed to recieve',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(140.0, 35.0),
+                                    padding: EdgeInsets.zero,
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 145, 19, 19),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5))));
+                      },
+                    ),
+                    if (MediaQuery.of(context).viewInsets.bottom != 0)
+                      SizedBox(
+                        height: size.height * (isMobile ? 0.4 : 0.5),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0

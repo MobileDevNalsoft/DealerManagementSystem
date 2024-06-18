@@ -32,7 +32,7 @@ class HomeProvider extends ChangeNotifier {
 
   void setFocusNode(FocusNode focusNode, ScrollController scrollController,
       BuildContext context) {
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () async {
       final RenderBox renderBox =
           focusNode.context!.findRenderObject() as RenderBox;
       final offset = renderBox.localToGlobal(Offset.zero);
@@ -57,7 +57,7 @@ class HomeProvider extends ChangeNotifier {
         // Calculate the amount to scroll
         final scrollOffset = textFieldTopPosition -
             (visibleScreenHeight - renderBox.size.height) / 2;
-        scrollController.animateTo(
+      await  scrollController.animateTo(
           math.max(0, scrollController.offset + scrollOffset),
           duration: const Duration(milliseconds: 350),
           curve: Curves.easeInOut,

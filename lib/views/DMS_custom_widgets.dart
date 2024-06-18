@@ -1,4 +1,3 @@
-import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DMSCustomWidgets {
-  // ignore: non_constant_identifier_names
   static Widget SearchableDropDown(
       {required size,
       required hint,
@@ -27,6 +25,7 @@ class DMSCustomWidgets {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
+          // constraints: BoxConstraints.tightForFinite(height: ),
           builder: (context, controller, focusNode) {
             focus = focusNode;
             // textcontroller = controller;
@@ -206,7 +205,7 @@ class DMSCustomWidgets {
                 contentPadding: EdgeInsets.zero,
                 content: SizedBox(
                     height: size.height * 0.4,
-                    width: size.width,
+                    width: size.width * (isMobile ? 1 : 0.35),
                     child: SfDateRangePicker(
                       enablePastDates: false,
                       view: DateRangePickerView.month,
@@ -261,7 +260,8 @@ class DMSCustomWidgets {
                     date == null
                         ? 'Schedule Date'
                         : DateFormat("dd MMM yyyy").format(date),
-                    style: TextStyle(color: Colors.black54),
+                    style: TextStyle(
+                        color: date == null ? Colors.black54 : Colors.black),
                   ),
                   MaxGap(500),
                   Icon(Icons.calendar_month_outlined, color: Colors.black38),
@@ -297,7 +297,7 @@ class DMSCustomWidgets {
                         element,
                         style: propertyFontStyle,
                       ),
-                      Gap(spaceBetweenFields??0)
+                      Gap(spaceBetweenFields ?? 0)
                     ])
                 .toList(),
           ),
@@ -309,7 +309,7 @@ class DMSCustomWidgets {
                         ":",
                         style: propertyFontStyle,
                       ),
-                      Gap(spaceBetweenFields??0)
+                      Gap(spaceBetweenFields ?? 0)
                     ])
                 .toList(),
           ),
@@ -321,7 +321,7 @@ class DMSCustomWidgets {
                         element,
                         style: valueFontStyle,
                       ),
-                      Gap(spaceBetweenFields??0)
+                      Gap(spaceBetweenFields ?? 0)
                     ])
                 .toList(),
           )
