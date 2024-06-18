@@ -12,10 +12,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import 'dynamic_ui_src/Entry/json_to_widget.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await init();
+  await JsonToWidget.initialize();
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
     child: MultiBlocProvider(
