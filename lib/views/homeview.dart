@@ -178,12 +178,10 @@ class _HomeView extends State<HomeView> {
                                             ),
                                           ),
                                           borderRadius: BorderRadius.circular(12),
+                                          maxWidth: isMobile?size.width*0.8:size.width*0.4,
                                           margin: EdgeInsets.only(
                                               top: 24,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: 10),
+                                              ),
                                           duration: Duration(seconds: 5),
                                           message:
                                               'Please register vehicle before service')
@@ -449,10 +447,10 @@ class _HomeView extends State<HomeView> {
                                       ),
                                     ),
                                     borderRadius: BorderRadius.circular(12),
-                                    margin: EdgeInsets.only(
-                                        top: 24,
-                                        left: isMobile ? 10 : size.width * 0.8,
-                                        right: 10),
+                                    maxWidth: isMobile?size.width*0.8:size.width*0.4,
+                                          margin: EdgeInsets.only(
+                                              top: 24,
+                                              ),
                                     duration: Duration(seconds: 5),
                                     message:
                                         'Please register vehicle before service')
