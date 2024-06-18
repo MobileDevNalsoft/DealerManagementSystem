@@ -103,13 +103,17 @@ class Repository {
     }
   }
 
-    Future<Map<String,dynamic>> getSalesPersons() async {
-    ApiResponse apiResponse = await _api.get('getVehicleCustomer');
+    Future<List<dynamic>> getSalesPersons(String searchText) async {
+      print(searchText);
+    ApiResponse apiResponse = await _api.get('getSalesPerson',queryParameters: {
+      "search_text":searchText
+    });
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
         if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          return jsonDecode(apiResponse.response!.data)["data"];
+          print(jsonDecode(apiResponse.response!.data)["data"].runtimeType);
+          return (jsonDecode(apiResponse.response!.data)["data"] );
         } else {
           throw apiResponse.error;
         }

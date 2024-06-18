@@ -1,5 +1,5 @@
 class SalesPerson {
-  String? empId;
+  int? empId;
   String? empName;
 
   SalesPerson({this.empId, this.empName});

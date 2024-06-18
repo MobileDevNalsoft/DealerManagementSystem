@@ -14,5 +14,6 @@ class YearChanged extends MultiBlocEvent {
 }
 
 class GetSalesPersons extends MultiBlocEvent{
-  GetSalesPersons();
+  String searchText;
+  GetSalesPersons({required this.searchText});
 }

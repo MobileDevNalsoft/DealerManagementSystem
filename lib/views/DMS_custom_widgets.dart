@@ -7,6 +7,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DMSCustomWidgets {
@@ -19,23 +20,28 @@ class DMSCustomWidgets {
       required bool isMobile,
       required ScrollController scrollController,
       Function(String?)? onChange,
+      Function(String?)? suggestionCall,
+      SuggestionsController? suggestionsController,
+      bool isLoading =false,
       Icon? icon}) {
+        if(suggestionsController!=null){
+          suggestionsController.refresh();
+        }
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
-          // constraints: BoxConstraints.tightForFinite(height: ),
+          suggestionsController: suggestionsController,
           builder: (context, controller, focusNode) {
             focus = focusNode;
-            // textcontroller = controller;
-            // textcontroller.text = controller.text;
-
             return Transform(
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
               child: TextFormField(
                 onChanged: (value) {
+                  if(onChange!=null){
+                  onChange(value);}
                   controller.text = value;
                 },
                 onTap: () {
@@ -64,18 +70,24 @@ class DMSCustomWidgets {
             );
           },
           suggestionsCallback: (pattern) {
-            return items
+            if(suggestionsController==null){
+              return items
                 .where((item) =>
                     item.toLowerCase().contains(pattern.toLowerCase()))
                 .toList();
+            }
+            return items;
           },
-          itemBuilder: (context, suggestion) => SizedBox(
-            height: size.height * 0.038,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Text(
-                suggestion,
-                style: TextStyle(fontSize: isMobile ? 13 : 14),
+          itemBuilder: (context,  suggestion) => Skeletonizer(
+            enabled:isLoading,
+            child: SizedBox(
+              height: size.height * 0.038,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                child: Text(
+                  suggestion,
+                  style: TextStyle(fontSize: isMobile ? 13 : 14),
+                ),
               ),
             ),
           ),

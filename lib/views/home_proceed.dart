@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
@@ -9,6 +10,7 @@ import 'package:dms/views/add_vehicle_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
 
@@ -17,7 +19,7 @@ class HomeProceedView extends StatefulWidget {
   Service service;
   Function? clearFields;
 
-  HomeProceedView({super.key, required this.service,this.clearFields});
+  HomeProceedView({super.key, required this.service, this.clearFields});
   State<HomeProceedView> createState() => _HomeProceedView();
 }
 
@@ -38,7 +40,7 @@ class _HomeProceedView extends State<HomeProceedView> {
   TextEditingController jobTypeController = TextEditingController();
   TextEditingController custConcernsController = TextEditingController();
   TextEditingController remarksController = TextEditingController();
-
+  SuggestionsController suggestionsController=SuggestionsController();
   ScrollController scrollController = ScrollController();
 
   @override
@@ -63,8 +65,9 @@ class _HomeProceedView extends State<HomeProceedView> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(  elevation: 0.0,
-          backgroundColor:  const Color.fromARGB(255, 145, 19, 19),
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: const Color.fromARGB(255, 145, 19, 19),
           leading: IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -74,7 +77,8 @@ class _HomeProceedView extends State<HomeProceedView> {
             "Service",
             style: TextStyle(color: Colors.white),
           ),
-          centerTitle: true,),
+          centerTitle: true,
+        ),
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -123,7 +127,6 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 isMobile: isMobile,
                                 focusNode: altContFocus,
                                 textcontroller: altContController,
-          
                                 scrollController: scrollController),
                             SizedBox(
                               height: size.height * (isMobile ? 0.005 : 0.015),
@@ -133,32 +136,54 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 size: size,
                                 hint: 'Alternate Person Contact No.',
                                 isMobile: isMobile,
-                               
                                 focusNode: altContPhoneNoFocus,
                                 textcontroller: altContPhoneNoController,
-                                keyboardType: TextInputType.number, 
+                                keyboardType: TextInputType.number,
                                 inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                       LengthLimitingTextInputFormatter(10)
-                                    ],
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10)
+                                ],
                                 scrollController: scrollController),
                             SizedBox(
                               height: size.height * (isMobile ? 0.005 : 0.015),
                             ),
-                            DMSCustomWidgets.SearchableDropDown(
-                                size: size,
-                                items: ["1", "2", "3", "4", "5"],
-                                hint: 'Sales Person',
-                                icon: Icon(Icons.arrow_drop_down),
-                                isMobile: isMobile,
-                                focus: spFocus,
-                                textcontroller: spController,
-                                scrollController: scrollController),
+                            BlocBuilder<MultiBloc, MultiBlocState>(
+                              
+                              
+                              builder: (context, state) {
+                                print("state ${state.salesPersons}");
+                                
+                                return DMSCustomWidgets.SearchableDropDown(
+                                    onChange: (p0) {
+                                      if (p0!.length >= 3) {
+                                        print(p0);
+                                        context.read<MultiBloc>().add(
+                                            GetSalesPersons(searchText: p0));
+                                      }else{
+                                        context.read<MultiBloc>().state.salesPersons=null;
+                                      }
+                                    },
+                                    size: size,
+                                    items: state.salesPersons==null?[]: state
+                                            .salesPersons!
+                                            .map((e) =>
+                                                "${e.empName}-${e.empId}")
+                                            .toList(),
+                                    hint: 'Sales Person',
+                                    icon: Icon(Icons.arrow_drop_down),
+                                    isMobile: isMobile,
+                                    isLoading: state.status == MultiStateStatus.loading? true:false,
+                                    focus: spFocus,
+                                    textcontroller: spController,
+                                    suggestionsController: suggestionsController,
+                                    scrollController: scrollController);
+                              },
+                            ),
                             SizedBox(
                               height: size.height * (isMobile ? 0.005 : 0.015),
                             ),
                             DMSCustomWidgets.SearchableDropDown(
-                                items: ["Bay 1","Bay 2","Bay 3","Bay 4"],
+                                items: ["Bay 1", "Bay 2", "Bay 3", "Bay 4"],
                                 size: size,
                                 hint: 'Bay',
                                 isMobile: isMobile,
@@ -181,7 +206,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 icon: Icon(Icons.arrow_drop_down),
                                 focus: jobTypeFocus,
                                 textcontroller: jobTypeController,
-          
+
                                 // provider: provider,
                                 isMobile: isMobile,
                                 scrollController: scrollController),
@@ -212,44 +237,47 @@ class _HomeProceedView extends State<HomeProceedView> {
                     ),
                     BlocConsumer<ServiceBloc, ServiceState>(
                       listener: (context, state) {
-                        switch(state.status){
-                        case ServiceStatus.success:
-                        context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial,vehicle:Vehicle()));
-                        widget.clearFields!(); 
-                        bookingController.text = "";
-                        altContController.text = "";  
-                        altContPhoneNoController.text  = "";
-                        spController.text = ""; 
-                        bayController.text = "";  
-                        jobTypeController.text = "";  
-                        custConcernsController.text =  "";
-                        remarksController .text = ""; 
-                        Flushbar(
-                                flushbarPosition: FlushbarPosition.TOP,
-                                backgroundColor: Colors.green,
-                                message: 'Service Added Successfully',
-                                duration: Duration(seconds: 2),
-                                borderRadius: BorderRadius.circular(12),
-                              margin: EdgeInsets.only(
-                                  top: 24,
-                                  left: isMobile ? 10 : size.width * 0.8,
-                                  right: 10))
-                            .show(context);
-                         case ServiceStatus.failure:
+                        switch (state.status) {
+                          case ServiceStatus.success:
+                            context.read<VehicleBloc>().add(UpdateState(
+                                status: VehicleStatus.initial,
+                                vehicle: Vehicle()));
+                            widget.clearFields!();
+                            bookingController.text = "";
+                            altContController.text = "";
+                            altContPhoneNoController.text = "";
+                            spController.text = "";
+                            bayController.text = "";
+                            jobTypeController.text = "";
+                            custConcernsController.text = "";
+                            remarksController.text = "";
                             Flushbar(
-                                flushbarPosition: FlushbarPosition.TOP,
-                                backgroundColor: Colors.red,
-                                message: 'Some error occured',
-                                duration: Duration(seconds: 2),
-                                borderRadius: BorderRadius.circular(12),
-                              margin: EdgeInsets.only(
-                                  top: 24,
-                                  left: isMobile ? 10 : size.width * 0.8,
-                                  right: 10))
-                            .show(context);
-          
-                          default: null;
-                            }
+                                    flushbarPosition: FlushbarPosition.TOP,
+                                    backgroundColor: Colors.green,
+                                    message: 'Service Added Successfully',
+                                    duration: Duration(seconds: 2),
+                                    borderRadius: BorderRadius.circular(12),
+                                    margin: EdgeInsets.only(
+                                        top: 24,
+                                        left: isMobile ? 10 : size.width * 0.8,
+                                        right: 10))
+                                .show(context);
+                          case ServiceStatus.failure:
+                            Flushbar(
+                                    flushbarPosition: FlushbarPosition.TOP,
+                                    backgroundColor: Colors.red,
+                                    message: 'Some error occured',
+                                    duration: Duration(seconds: 2),
+                                    borderRadius: BorderRadius.circular(12),
+                                    margin: EdgeInsets.only(
+                                        top: 24,
+                                        left: isMobile ? 10 : size.width * 0.8,
+                                        right: 10))
+                                .show(context);
+
+                          default:
+                            null;
+                        }
                       },
                       builder: (context, state) {
                         return state.status == ServiceStatus.loading
@@ -263,17 +291,19 @@ class _HomeProceedView extends State<HomeProceedView> {
                                   jobTypeFocus.unfocus();
                                   custConcernsFocus.unfocus();
                                   remarksFocus.unfocus();
-                                  print( jobTypeController.text);
-                                  context.read<ServiceBloc>().add(
-                                    ServiceAdded(
+                                  print(jobTypeController.text);
+                                  context.read<ServiceBloc>().add(ServiceAdded(
                                       service: widget.service.copyWith(
                                           bookingSource: bookingController.text,
-                                          alternateContactPerson: altContController.text,
-                                          alternatePersonContactNo: int.parse( altContPhoneNoController.text),
+                                          alternateContactPerson:
+                                              altContController.text,
+                                          alternatePersonContactNo: int.parse(
+                                              altContPhoneNoController.text),
                                           salesPerson: spController.text,
                                           bay: bayController.text,
                                           jobType: jobTypeController.text,
-                                          customerConcerns: custConcernsController.text,
+                                          customerConcerns:
+                                              custConcernsController.text,
                                           remarks: remarksController.text)));
                                 },
                                 child: Text(
@@ -286,7 +316,8 @@ class _HomeProceedView extends State<HomeProceedView> {
                                     backgroundColor:
                                         const Color.fromARGB(255, 145, 19, 19),
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5))));
+                                        borderRadius:
+                                            BorderRadius.circular(5))));
                       },
                     ),
                     if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -317,9 +348,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(
-                                builder: (_) => AddVehicleView()));
-                            
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => AddVehicleView()));
                           },
                           child: Column(
                             children: [
@@ -344,10 +376,14 @@ class _HomeProceedView extends State<HomeProceedView> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial,vehicle:Vehicle()));
-                              widget.clearFields!(); 
-                                  Navigator.pushReplacement(context, MaterialPageRoute(
-                                builder: (_) => AddVehicleView()));
+                            context.read<VehicleBloc>().add(UpdateState(
+                                status: VehicleStatus.initial,
+                                vehicle: Vehicle()));
+                            widget.clearFields!();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => AddVehicleView()));
                           },
                           child: Column(
                             children: [

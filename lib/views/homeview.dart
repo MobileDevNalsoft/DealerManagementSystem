@@ -226,6 +226,7 @@ class _HomeView extends State<HomeView> {
                               listener: (context, state) {
                                 customerFocus.unfocus();
                                 locFocus.unfocus();
+                                vehRegNumFocus.unfocus();
                               },
                               builder: (context, state) {
                                 return DMSCustomWidgets.ScheduleDateCalendar(
