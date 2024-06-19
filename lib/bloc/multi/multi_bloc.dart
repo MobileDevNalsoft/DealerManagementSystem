@@ -14,6 +14,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<DateChanged>(_onDateChanged);
     on<YearChanged>(_onYearChanged);
     on<GetJson>(_onGetJson);
+    on<CheckBoxTapped>(_onCheckBoxTapped);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -37,5 +38,10 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
         emit(state.copyWith(jsonStatus: JsonStatus.failure));
       },
     );
+  }
+
+  void _onCheckBoxTapped(CheckBoxTapped event, Emitter<MultiBlocState> emit) {
+    state.checkBoxStates![event.key] = !state.checkBoxStates![event.key]!;
+    emit(state.copyWith(checkBoxStates: state.checkBoxStates));
   }
 }

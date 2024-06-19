@@ -3,7 +3,7 @@ import 'package:dms/dynamic_ui_src/Utils/widgetType_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../Entry/json_to_widget.dart';
-import '../Widgets/widgets_barrel.dart';
+import '../Widgets/Column/dynamic_column.dart';
 
 class DynamicColumnParser extends JsonToWidgetParser<DynamicColumn> {
   const DynamicColumnParser();

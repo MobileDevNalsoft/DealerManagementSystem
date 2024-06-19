@@ -1,9 +1,11 @@
 import 'package:dms/dynamic_ui_src/Entry/JsonToWidgetParser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_center_parser.dart';
+import 'package:dms/dynamic_ui_src/Parsers/dynamic_checkBox_parser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_column_parser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_container_parser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_gap_parser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_gridView_parser.dart';
+import 'package:dms/dynamic_ui_src/Parsers/dynamic_listView_parser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_padding_parser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_row_parser.dart';
 import 'package:dms/dynamic_ui_src/Parsers/dynamic_sizedbox_parser.dart';
@@ -22,7 +24,9 @@ class JsonToWidget {
     const DynamicGridViewParser(),
     const DynamicSizedBoxParser(),
     const DynamicContainerParser(),
-    const DynamicGapParser()
+    const DynamicGapParser(),
+    const DynamicCheckBoxParser(),
+    const DynamicListViewParser()
   ];
 
   static Future<void> initialize() async {

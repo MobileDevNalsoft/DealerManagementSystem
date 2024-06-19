@@ -4,46 +4,45 @@ import 'package:flutter/material.dart';
 import '../Entry/JsonToWidgetParser.dart';
 import '../Entry/json_to_widget.dart';
 import '../Utils/widgetType_utils.dart';
-import '../Widgets/GridView/dynamic_gridView.dart';
+import '../Widgets/ListView/dynamic_listView.dart';
 
-class DynamicGridViewParser extends JsonToWidgetParser<DynamicGridView> {
-  const DynamicGridViewParser();
+class DynamicListViewParser extends JsonToWidgetParser<DynamicListView> {
+  const DynamicListViewParser({this.controller});
 
-  @override
-  String get type => WidgetType.gridView.name;
-
-  @override
-  DynamicGridView getModel(Map<String, dynamic> json) =>
-      DynamicGridView.fromJson(json);
+  final ScrollController? controller;
 
   @override
-  Widget parse(BuildContext context, DynamicGridView model,
+  String get type => WidgetType.listView.name;
+
+  @override
+  DynamicListView getModel(Map<String, dynamic> json) =>
+      DynamicListView.fromJson(json);
+
+  @override
+  Widget parse(BuildContext context, DynamicListView model,
       [Map<String, dynamic>? functions]) {
-    return GridView.builder(
+    return ListView.separated(
       scrollDirection: model.scrollDirection,
       reverse: model.reverse,
+      controller: controller,
       primary: model.primary,
       physics: model.physics?.parse,
       shrinkWrap: model.shrinkWrap,
-      padding: model.padding.parse,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: model.crossAxisCount ?? 0,
-        mainAxisSpacing: model.mainAxisSpacing,
-        crossAxisSpacing: model.crossAxisSpacing,
-        childAspectRatio: model.childAspectRatio,
-      ),
+      padding: model.padding?.parse,
       addAutomaticKeepAlives: model.addAutomaticKeepAlives,
       addRepaintBoundaries: model.addRepaintBoundaries,
       addSemanticIndexes: model.addSemanticIndexes,
       cacheExtent: model.cacheExtent,
-      itemBuilder: (context, index) =>
-          JsonToWidget.fromJson(model.children[index], context, functions),
-      itemCount: model.children.length,
-      semanticChildCount: model.semanticChildCount,
       dragStartBehavior: model.dragStartBehavior,
       keyboardDismissBehavior: model.keyboardDismissBehavior,
       restorationId: model.restorationId,
       clipBehavior: model.clipBehavior,
+      itemCount: model.children.length,
+      itemBuilder: (context, index) =>
+          JsonToWidget.fromJson(model.children[index], context, functions),
+      separatorBuilder: (context, _) =>
+          JsonToWidget.fromJson(model.separator, context, functions) ??
+          const SizedBox(),
     );
   }
 }

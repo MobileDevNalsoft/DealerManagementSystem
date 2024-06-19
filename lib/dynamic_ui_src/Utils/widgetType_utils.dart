@@ -33,5 +33,6 @@ enum WidgetType {
   safeArea,
   transform,
   floatingActionButton,
-  gap
+  gap,
+  checkBox
 }

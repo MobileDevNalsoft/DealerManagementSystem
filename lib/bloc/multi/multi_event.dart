@@ -14,3 +14,8 @@ class YearChanged extends MultiBlocEvent {
 }
 
 class GetJson extends MultiBlocEvent {}
+
+class CheckBoxTapped extends MultiBlocEvent {
+  final int key;
+  CheckBoxTapped({required this.key});
+}

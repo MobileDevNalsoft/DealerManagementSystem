@@ -454,7 +454,7 @@ class _HomeView extends State<HomeView> {
                             context.read<VehicleBloc>().state.status =
                                 VehicleStatus.initial;
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const InspectionView(),
+                              builder: (context) => const ServiceHistoryView(),
                             ));
                           },
                           child: Column(

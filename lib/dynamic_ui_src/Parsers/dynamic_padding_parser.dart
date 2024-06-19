@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../Entry/JsonToWidgetParser.dart';
 import '../Entry/json_to_widget.dart';
 import '../Utils/widgetType_utils.dart';
-import '../Widgets/widgets_barrel.dart';
+import '../Widgets/Padding/dynamic_padding.dart';
 
 class DynamicPaddingParser extends JsonToWidgetParser<DynamicPadding> {
   const DynamicPaddingParser();

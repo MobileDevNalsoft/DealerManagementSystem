@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../Entry/JsonToWidgetParser.dart';
 import '../Entry/json_to_widget.dart';
 import '../Utils/widgetType_utils.dart';
-import '../Widgets/widgets_barrel.dart';
+import '../Widgets/Row/dynamic_row.dart';
 
 class DynamicRowParser extends JsonToWidgetParser<DynamicRow> {
   const DynamicRowParser();
