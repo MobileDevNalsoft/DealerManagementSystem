@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +21,6 @@ class CommentsView extends StatefulWidget {
 }
 
 class _CommentsViewState extends State<CommentsView> {
-  late List<CameraDescription> _cameras;
-  late CameraController cameraController;
 
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
@@ -37,20 +33,13 @@ class _CommentsViewState extends State<CommentsView> {
   }
 
   void initData() async {
-    _cameras = await availableCameras();
+    // _cameras = await availableCameras();
   }
 
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
-    // Set preferred orientations based on device type
-    if (isMobile) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
-    }
     Size size = MediaQuery.sizeOf(context);
     return Center(
       child: IntrinsicHeight(
@@ -94,95 +83,12 @@ class _CommentsViewState extends State<CommentsView> {
                         child: IconButton(
                             onPressed: () async {
                               commentsFocus.unfocus();
-                              cameraController = CameraController(
-                                _cameras[0],
-                                ResolutionPreset.max,
-                              );
-                              
-                              cameraController.initialize().then((_) {
-                                
-                                if (!mounted) {
-                                  return;
-                                }
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return PopScope(
-                                        onPopInvoked: (didPop) {
-                                          cameraController.dispose();
-                                        },
-                                        child: AlertDialog(
-                                          content: SingleChildScrollView(
-                                            child: Column(children: [
-                                              SizedBox(
-                                                height: size.height * 0.4,
-                                                width: size.width * 0.5,
-                                                child: cameraController
-                                                    .buildPreview(),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  SizedBox(
-                                                    child: Stack(
-                                                      children: [
-                                                        Icon(Icons
-                                                            .image_rounded),
-                                                        Positioned(
-                                                            left: 2,
-                                                            child: Text(
-                                                              "${imagesCaptured.length}",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            )),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                      onPressed: () async {
-                                                        cameraController
-                                                            .pausePreview();
-                                                        imagesCaptured.add(
-                                                            await cameraController
-                                                                .takePicture());
-                                                        cameraController
-                                                            .resumePreview();
-                                                        setState(() {});
-                                                      },
-                                                      icon: Icon(Icons
-                                                          .camera_rounded)),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text("Done"))
-                                                ],
-                                              )
-                                            ]),
-                                          ),
-                                        ),
-                                      );
-                                    });
-                              }).catchError((Object e) {
-                                if (e is CameraException) {
-                                  switch (e.code) {
-                                    case 'CameraAccessDenied':
-                                      // Handle access errors here.
-                                      print("cannot access camera");
-                                      break;
-                                    default:
-                                      // Handle other errors here.
-                                      break;
-                                  }
-                                }
-                              });
-                              CameraPreview(cameraController);
+                              ImagePicker imagePicker = ImagePicker();
+                              XFile? image = await imagePicker.pickImage(
+                                  source: ImageSource.camera);
+                              if (image != null) {
+                                //adding to the list of images
+                              }
                             },
                             icon: Icon(Icons.add_photo_alternate_rounded))),
                     SizedBox(
