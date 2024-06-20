@@ -33,7 +33,7 @@ void main() async {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: InspectionView(),
+        home: HomeView(),
       ),
     ),
   ));

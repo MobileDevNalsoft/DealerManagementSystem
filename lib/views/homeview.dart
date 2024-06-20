@@ -321,6 +321,7 @@ class _HomeView extends State<HomeView> {
                               pageBuilder: (context, animation,
                                       secondaryAnimation) =>
                                   HomeProceedView(
+                                    clearFields: clearFields,
                                       service: Service(
                                           registrationNo:
                                               vehRegNumController.text,

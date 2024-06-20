@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 import 'package:dms/dynamic_ui_src/Entry/json_to_widget.dart';
+import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
+import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -172,7 +176,10 @@ class _InspectionViewState extends State<InspectionView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async{
+                              List<GeneralBodyPart> generalParts =await  loadSvgImage(svgImage: 'assets/images/image.svg');
+                              CustomDetector(model: BodySelectorViewModel(), generalParts: generalParts,);
+                            },
                             style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(70.0, 35.0),
                                 padding: const EdgeInsets.all(8),
