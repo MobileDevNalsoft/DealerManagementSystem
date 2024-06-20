@@ -27,7 +27,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
    void _onGetSalesPersons(GetSalesPersons event, Emitter<MultiBlocState> emit) async{
     emit(state.copyWith(status: MultiStateStatus.loading));
    List salesPersons=  await _repo.getSalesPersons(event.searchText);
-    List<SalesPerson> jsonData = await salesPersons.map((e)=>SalesPerson.fromJson(e)).toList();
+    List<SalesPerson> jsonData = salesPersons.map((e)=>SalesPerson.fromJson(e)).toList();
    emit(state.copyWith(salesPersons: jsonData,status: MultiStateStatus.success,));
    print(state.salesPersons);
   }

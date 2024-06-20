@@ -1,7 +1,8 @@
 import 'dart:io';
-
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ class CommentsView extends StatefulWidget {
 class _CommentsViewState extends State<CommentsView> {
   late List<CameraDescription> _cameras;
   late CameraController cameraController;
+
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
   var imagesCaptured = [];
@@ -40,6 +42,15 @@ class _CommentsViewState extends State<CommentsView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    // Set preferred orientations based on device type
+    if (isMobile) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    }
     Size size = MediaQuery.sizeOf(context);
     return Center(
       child: IntrinsicHeight(
@@ -84,8 +95,12 @@ class _CommentsViewState extends State<CommentsView> {
                             onPressed: () async {
                               commentsFocus.unfocus();
                               cameraController = CameraController(
-                                  _cameras[0], ResolutionPreset.max);
+                                _cameras[0],
+                                ResolutionPreset.max,
+                              );
+                              
                               cameraController.initialize().then((_) {
+                                
                                 if (!mounted) {
                                   return;
                                 }
