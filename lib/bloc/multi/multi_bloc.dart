@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/salesPerson.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
-
 import '../../logger/logger.dart';
 
 part 'multi_event.dart';
