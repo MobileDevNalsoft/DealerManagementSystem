@@ -178,7 +178,7 @@ class _InspectionViewState extends State<InspectionView> {
                         ElevatedButton(
                             onPressed: () async{
                               List<GeneralBodyPart> generalParts =await  loadSvgImage(svgImage: 'assets/images/image.svg');
-                              CustomDetector(model: BodySelectorViewModel(), generalParts: generalParts,);
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>CustomDetector(model: BodySelectorViewModel(), generalParts: generalParts,)));
                             },
                             style: ElevatedButton.styleFrom(
                                 minimumSize: const Size(70.0, 35.0),

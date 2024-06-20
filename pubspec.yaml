@@ -94,7 +94,7 @@ flutter:
   assets:
     - assets/images/
     - assets/lottie/
-    # - assets/jsons/
+    - assets/jsons/
 
   #   - images/a_dot_ham.jpeg
 

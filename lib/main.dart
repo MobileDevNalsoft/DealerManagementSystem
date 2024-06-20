@@ -6,6 +6,7 @@ import 'package:dms/inits/init.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/providers/service_history_provider.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/homeview.dart';
 import 'package:dms/views/inspection.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ void main() async {
         BlocProvider(create: (_) => MultiBloc(repo: _.read<Repository>())),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
+         ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

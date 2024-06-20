@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CommentsView extends StatefulWidget {
-  CommentsView({super.key});
+  String bodyPartName;
+  CommentsView({required this.bodyPartName, super.key});
 
   @override
   State<CommentsView> createState() => _CommentsViewState();
@@ -39,7 +40,7 @@ class _CommentsViewState extends State<CommentsView> {
           child: Column(
             children: [
               Text(
-                'Front right tire',
+                widget.bodyPartName,
                 style: TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.bold,
@@ -50,7 +51,7 @@ class _CommentsViewState extends State<CommentsView> {
                     borderRadius: BorderRadius.circular(8.0),
                     color: Colors.white),
                 padding: EdgeInsets.all(8.0),
-                width: size.width * 0.5,
+                width: size.width * 0.35,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

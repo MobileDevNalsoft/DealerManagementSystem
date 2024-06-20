@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 
@@ -13,6 +15,14 @@ class CustomDetector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+      if (isMobile) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } 
+    Size size = MediaQuery.of(context).size;
     // TODO: implement build
     return GestureDetector(
       onPanStart: (details) => print(details.globalPosition),
@@ -56,24 +66,26 @@ class CustomDetector extends StatelessWidget {
                         print(value.isTapped);
                     if (value.isTapped) {
                       return Positioned(
-                        bottom: MediaQuery.of(context).size.height * 0.5,
+                        top: 100,
+                        // bottom: MediaQuery.of(context).size.height * 0.5,
                         left: MediaQuery.of(context).size.width * 0.5,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Text(value.selectedGeneralBodyPart),
-                              TextButton(
-                                onPressed: () {
-                                  value.isTapped = false;
-                                },
-                                child: Text("back"),
-                              )
-                            ],
-                          ),
-                        ),
+                        child: CommentsView(bodyPartName: value.selectedGeneralBodyPart)
+                        // Container(
+                        //   height: MediaQuery.of(context).size.height * 0.2,
+                        //   width: MediaQuery.of(context).size.width * 0.3,
+                        //   color: Colors.white,
+                        //   child: Column(
+                        //     children: [
+                        //       Text(value.selectedGeneralBodyPart),
+                        //       TextButton(
+                        //         onPressed: () {
+                        //           value.isTapped = false;
+                        //         },
+                        //         child: Text("back"),
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
                       );
                     } else {
                       return Positioned(bottom: 0, child: SizedBox());
