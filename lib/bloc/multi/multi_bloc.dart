@@ -61,6 +61,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
 
   void _onCheckBoxTapped(CheckBoxTapped event, Emitter<MultiBlocState> emit) {
     state.checkBoxStates![event.key] = !state.checkBoxStates![event.key]!;
+    print(state.checkBoxStates);
     emit(state.copyWith(checkBoxStates: state.checkBoxStates));
   }
 }

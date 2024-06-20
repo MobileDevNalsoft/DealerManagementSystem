@@ -50,6 +50,13 @@ class _InspectionViewState extends State<InspectionView> {
             case JsonStatus.loading:
               return const CircularProgressIndicator();
             case JsonStatus.success:
+              int? key;
+
+              for (int i = 0; i < 18; i++) {
+                functions['$i'] = (value) {
+                  context.read<MultiBloc>().add(CheckBoxTapped(key: i));
+                };
+              }
 
               // container
               state.json!['width'] = size.width * 0.9;
@@ -61,46 +68,38 @@ class _InspectionViewState extends State<InspectionView> {
                     size.width * 0.036;
               }
 
-              // gaps in first column
-              state.json!['child']['children'][1]['children'][0]['children'][0]
-                  ['value'] = size.height * 0.02;
+              // gap below header
+              state.json!['child']['children'][1]['value'] = size.height * 0.01;
 
-              for (int i = 2; i < 11; i = i + 2) {
-                state.json!['child']['children'][1]['children'][0]['children']
+              // gaps in first column
+              for (int i = 0; i < 11; i = i + 2) {
+                state.json!['child']['children'][2]['children'][0]['children']
                     [i]['value'] = size.height * 0.01;
               }
 
-              state.json!['child']['children'][1]['children'][1]['value'] =
+              state.json!['child']['children'][2]['children'][1]['value'] =
                   size.width * 0.12;
-              state.json!['child']['children'][1]['children'][3]['value'] =
+              state.json!['child']['children'][2]['children'][3]['value'] =
                   size.width * 0.1;
-              state.json!['child']['children'][1]['children'][5]['value'] =
+              state.json!['child']['children'][2]['children'][5]['value'] =
                   size.width * 0.1;
 
               for (int i = 2; i < 7; i = i + 2) {
-                state.json!['child']['children'][1]['children'][i]['children'] =
+                state.json!['child']['children'][2]['children'][i]['children'] =
                     List.generate(
                   6,
                   (index) {
-                    functions = {
-                      "onTap": (value) {
-                        print(value);
-                        context.read<MultiBloc>().add(CheckBoxTapped(
-                            key: (index + (i / 2 - 1) * 6).toInt()));
-                      }
-                    };
-                    print(state.checkBoxStates);
-                    print((index + (i / 2 - 1) * 6).toInt());
+                    key = (index + (i / 2 - 1) * 6).toInt();
                     return {
                       "type": "sizedBox",
                       "width": size.width * 0.1,
                       "height": size.height * 0.052,
                       "child": {
                         "type": "checkBox",
-                        "value": state
-                            .checkBoxStates![(index + (i / 2 - 1) * 6).toInt()],
+                        "value": state.checkBoxStates![key],
                         "side": {"color": "#ffffff"},
-                        "onChanged": "onTap"
+                        "activeColor": "#911313",
+                        "onChanged": "$key"
                       }
                     };
                   },
