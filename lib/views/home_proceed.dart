@@ -7,6 +7,7 @@ import 'package:dms/models/vehicle.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
+import 'package:dms/views/inspection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -262,6 +263,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                                         left: isMobile ? 10 : size.width * 0.8,
                                         right: 10))
                                 .show(context);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => InspectionView()));
                           case ServiceStatus.failure:
                             Flushbar(
                                     flushbarPosition: FlushbarPosition.TOP,
@@ -305,6 +310,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                                           customerConcerns:
                                               custConcernsController.text,
                                           remarks: remarksController.text)));
+                                  
                                 },
                                 child: Text(
                                   'proceed to recieve',
