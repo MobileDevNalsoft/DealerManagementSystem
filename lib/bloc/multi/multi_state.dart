@@ -2,7 +2,7 @@ part of 'multi_bloc.dart';
 
 enum JsonStatus { initial, loading, success, failure }
 
-enum MultiStateStatus { initial, loading, success }
+enum MultiStateStatus { initial, loading, success, failure }
 
 class MultiBlocState {
   MultiBlocState(
