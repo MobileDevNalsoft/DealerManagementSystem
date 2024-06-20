@@ -7,15 +7,19 @@ import 'package:dms/providers/home_provider.dart';
 import 'package:dms/providers/service_history_provider.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:dms/views/homeview.dart';
+import 'package:dms/views/inspection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import 'dynamic_ui_src/Entry/json_to_widget.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await init();
+  await JsonToWidget.initialize();
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
     child: MultiBlocProvider(
@@ -29,7 +33,7 @@ void main() async {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeView(),
+        home: InspectionView(),
       ),
     ),
   ));

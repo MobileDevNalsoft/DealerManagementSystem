@@ -14,6 +14,12 @@ class YearChanged extends MultiBlocEvent {
 }
 
 class GetSalesPersons extends MultiBlocEvent{
-  String searchText;
+  final String searchText;
   GetSalesPersons({required this.searchText});
+}
+class GetJson extends MultiBlocEvent {}
+
+class CheckBoxTapped extends MultiBlocEvent {
+  final int key;
+  CheckBoxTapped({required this.key});
 }
