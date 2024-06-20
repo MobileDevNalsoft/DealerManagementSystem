@@ -2,17 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(child: CommentsView()),
-    ),
-  ));
-}
-
 class CommentsView extends StatefulWidget {
   CommentsView({super.key});
 

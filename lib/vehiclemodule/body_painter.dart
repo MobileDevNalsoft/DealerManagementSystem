@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
-
 import 'package:touchable/touchable.dart';
 
 class BodyPainter extends CustomPainter {

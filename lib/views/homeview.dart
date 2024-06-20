@@ -143,6 +143,40 @@ class _HomeView extends State<HomeView> {
                                 customerController.text =
                                     state.vehicle!.cusotmerName!;
                               }
+                              else if(state.status ==
+                                  VehicleStatus.failure){
+                                  Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: Colors.red,
+                                  mainButton: InkWell(
+                                    onTap: () {
+                                      context.read<VehicleBloc>().state.status =
+                                          VehicleStatus.initial;
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  AddVehicleView()));
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.directions_car),
+                                        Text(
+                                          "Add Vehicle",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  margin: EdgeInsets.only(top:24),
+                                  maxWidth: size.width*0.6,
+                                  duration: Duration(seconds: 5),
+                                  message:
+                                      'Please register vehicle before service')
+                              .show(context);
+                              }
                             },
                             builder: (context, state) {
                               return DMSCustomWidgets.CustomDataCard(
@@ -150,7 +184,7 @@ class _HomeView extends State<HomeView> {
                                   size: size,
                                   hint: 'Vehicle Registration Number',
                                   onChange: (value) {
-                                    if (value!.length > 5)
+                                    if (value!.length == 10)
                                       context.read<VehicleBloc>().add(
                                           FetchVehicleCustomer(
                                               registrationNo: value));
@@ -311,8 +345,8 @@ class _HomeView extends State<HomeView> {
                         if (context.read<VehicleBloc>().state.status ==
                             VehicleStatus.vehicleAlreadyAdded) {
                           print("vehicle present");
-                          context.read<VehicleBloc>().state.status =
-                              VehicleStatus.initial;
+                          // context.read<VehicleBloc>().state.status =
+                          //     VehicleStatus.initial;
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -375,10 +409,8 @@ class _HomeView extends State<HomeView> {
                                     ),
                                   ),
                                   borderRadius: BorderRadius.circular(12),
-                                  margin: EdgeInsets.only(
-                                      top: 24,
-                                      left: isMobile ? 10 : size.width * 0.8,
-                                      right: 10),
+                                  margin: EdgeInsets.only(top:24),
+                                  maxWidth: size.width*0.6,
                                   duration: Duration(seconds: 5),
                                   message:
                                       'Please register vehicle before service')
