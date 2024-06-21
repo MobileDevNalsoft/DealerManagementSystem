@@ -8,6 +8,7 @@ class MultiBlocState {
   MultiBlocState(
       {this.date,
       this.year,
+      this.index,
       this.json,
       this.jsonStatus,
       this.checkBoxStates,
@@ -15,6 +16,7 @@ class MultiBlocState {
       this.status});
 
   JsonStatus? jsonStatus;
+  int? index;
   DateTime? date;
   int? year;
   List<SalesPerson>? salesPersons;
@@ -26,6 +28,7 @@ class MultiBlocState {
     return MultiBlocState(
         date: null,
         year: null,
+        index: 0,
         json: null,
         jsonStatus: JsonStatus.initial,
         checkBoxStates: {
@@ -56,11 +59,13 @@ class MultiBlocState {
       List<SalesPerson>? salesPersons,
       MultiStateStatus? status,
       Map<String, dynamic>? json,
+      int? index,
       JsonStatus? jsonStatus,
       Map<int, bool>? checkBoxStates}) {
     return MultiBlocState(
         date: date ?? this.date,
         year: year ?? this.year,
+        index: index ?? this.index,
         json: json ?? this.json,
         jsonStatus: jsonStatus ?? this.jsonStatus,
         checkBoxStates: checkBoxStates ?? this.checkBoxStates,
