@@ -8,6 +8,7 @@ import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/inspection.dart';
+import 'package:dms/views/inspection_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,7 @@ class _HomeProceedView extends State<HomeProceedView> {
   TextEditingController jobTypeController = TextEditingController();
   TextEditingController custConcernsController = TextEditingController();
   TextEditingController remarksController = TextEditingController();
-  SuggestionsController suggestionsController=SuggestionsController();
+  SuggestionsController suggestionsController = SuggestionsController();
   ScrollController scrollController = ScrollController();
 
   @override
@@ -149,34 +150,40 @@ class _HomeProceedView extends State<HomeProceedView> {
                               height: size.height * (isMobile ? 0.005 : 0.015),
                             ),
                             BlocBuilder<MultiBloc, MultiBlocState>(
-                              
-                              
                               builder: (context, state) {
                                 print("state ${state.salesPersons}");
-                                
+
                                 return DMSCustomWidgets.SearchableDropDown(
                                     onChange: (p0) {
                                       if (p0!.length >= 3) {
                                         print(p0);
                                         context.read<MultiBloc>().add(
                                             GetSalesPersons(searchText: p0));
-                                      }else{
-                                        context.read<MultiBloc>().state.salesPersons=null;
+                                      } else {
+                                        context
+                                            .read<MultiBloc>()
+                                            .state
+                                            .salesPersons = null;
                                       }
                                     },
                                     size: size,
-                                    items: state.salesPersons==null?[]: state
-                                            .salesPersons!
+                                    items: state.salesPersons == null
+                                        ? []
+                                        : state.salesPersons!
                                             .map((e) =>
                                                 "${e.empName}-${e.empId}")
                                             .toList(),
                                     hint: 'Sales Person',
                                     icon: Icon(Icons.arrow_drop_down),
                                     isMobile: isMobile,
-                                    isLoading: state.status == MultiStateStatus.loading? true:false,
+                                    isLoading:
+                                        state.status == MultiStateStatus.loading
+                                            ? true
+                                            : false,
                                     focus: spFocus,
                                     textcontroller: spController,
-                                    suggestionsController: suggestionsController,
+                                    suggestionsController:
+                                        suggestionsController,
                                     scrollController: scrollController);
                               },
                             ),
@@ -310,7 +317,6 @@ class _HomeProceedView extends State<HomeProceedView> {
                                           customerConcerns:
                                               custConcernsController.text,
                                           remarks: remarksController.text)));
-                                  
                                 },
                                 child: Text(
                                   'proceed to recieve',
