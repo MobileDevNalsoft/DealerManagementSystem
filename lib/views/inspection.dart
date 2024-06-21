@@ -6,10 +6,8 @@ import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-
 import '../bloc/multi/multi_bloc.dart';
 
 class InspectionView extends StatefulWidget {

@@ -1,9 +1,19 @@
 part of 'vehicle_parts_interaction_bloc_bloc.dart';
 
+enum VehiclePartsInteractionStatus{initial, loading, success}
+
 @immutable
-sealed class VehiclePartsInteractionBlocState {
-  List<VehiclePartsMedia>? media;
-  VehiclePartsInteractionBlocState({this.media});
+ class VehiclePartsInteractionBlocState {
+  List<VehiclePartMedia> media;
+  VehiclePartsInteractionStatus status;
+  VehiclePartsInteractionBlocState({required this.media,this.status = VehiclePartsInteractionStatus.initial});
+
+  VehiclePartsInteractionBlocState copyWith(List<VehiclePartMedia>? media,status){
+  return VehiclePartsInteractionBlocState(
+    media: media?? this.media,
+    status: status?? this.status
+  );
+}
 }
 
-final class VehiclePartsInteractionBlocInitial extends VehiclePartsInteractionBlocState {}
+
