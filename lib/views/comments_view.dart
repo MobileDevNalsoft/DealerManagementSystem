@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc_bloc.dart';
+import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:flutter/material.dart';
@@ -75,8 +75,8 @@ class _CommentsViewState extends State<CommentsView> {
                         controller: commentsController,
                         maxLines: 10,
                         onChanged: (value) {
-                          context.read<VehiclePartsInteractionBlocBloc>().add(
-                              onAddComments(
+                          context.read<VehiclePartsInteractionBloc>().add(
+                              AddCommentsEvent(
                                   name:widget.vehiclePartMedia.name, comments: value));
                         },
                       ),
@@ -87,17 +87,17 @@ class _CommentsViewState extends State<CommentsView> {
                               commentsFocus.unfocus();
                               ImagePicker imagePicker = ImagePicker();
                               XFile? image = await imagePicker.pickImage(
-                                  source: ImageSource.camera);
+                                  source: ImageSource.camera,);
                               if (image != null) {
                                 context
-                                    .read<VehiclePartsInteractionBlocBloc>()
-                                    .add(onAddImage(
+                                    .read<VehiclePartsInteractionBloc>()
+                                    .add(AddImageEvent(
                                         name: widget.vehiclePartMedia.name,
                                         image: image));
                               }
                             },
                             icon: Icon(Icons.add_photo_alternate_rounded))),
-                    BlocConsumer<VehiclePartsInteractionBlocBloc, VehiclePartsInteractionBlocState>(
+                    BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
                       listener: (context, state) {
                         // TODO: implement listener
                       },

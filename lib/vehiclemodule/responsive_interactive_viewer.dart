@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc_bloc.dart';
+import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
@@ -19,7 +19,7 @@ class CustomDetector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-
+    
     Size size = MediaQuery.sizeOf(context);
     // TODO: implement build
     return GestureDetector(
@@ -60,29 +60,45 @@ class CustomDetector extends StatelessWidget {
                       generalParts: generalParts,
                     ),
                   ),
-                  Consumer<BodySelectorViewModel>(
-                      builder: (context, value, child) {
-                        print(value.isTapped);
-                    if (value.isTapped) {
-                      return Positioned(
-                        bottom: isMobile?100:size.height*0.25,
-                        left: size.width * 0.365,
-                        right: size.width*0.1,
-                        child: BlocConsumer<VehiclePartsInteractionBlocBloc, VehiclePartsInteractionBlocState>(
-                          listener: (context, state) {
-                            // TODO: implement listener
-                            print("listening ");
-                          },
-                          builder: (context, state) {
-                            return CommentsView(vehiclePartMedia: state.media.firstWhere((e)=>e.name==value.selectedGeneralBodyPart, orElse:()=> VehiclePartMedia(name:value.selectedGeneralBodyPart,comments: "")),);
-                          },
-                        )
-                       
-                      );
-                    } else {
-                      return Positioned(bottom: 0, child: SizedBox());
-                    }
-                  })
+                  if(Provider.of<BodySelectorViewModel>(context,listen: true).isTapped)
+                  Positioned(
+                      //  bottom: isMobile?100:size.height*0.25,
+                            left: size.width * 0.365,
+                            right: size.width*0.1,
+                            top:200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                              
+                           BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
+                              listener: (context, state) {
+                                // TODO: implement listener
+                                print("listening ");
+                              },
+                              builder: (context, state) {
+                                return CommentsView(vehiclePartMedia: state.media.firstWhere((e)=>e.name==Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart, orElse:()=> VehiclePartMedia(name:Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart,comments: "")),);
+                              },
+                            )
+                        ,
+                        ElevatedButton(
+                              onPressed: () {
+                                context.read<VehiclePartsInteractionBloc>().add(SubmitVehicleMediaEvent());
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(70.0, 35.0),
+                                  padding: const EdgeInsets.all(8),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 145, 19, 19),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5))),
+                              child: const Text(
+                                'Submit',
+                                style: TextStyle(color: Colors.white),
+                              ))
+                      ],
+                    ),
+                  )
+                
                 ],
               ),
             ),

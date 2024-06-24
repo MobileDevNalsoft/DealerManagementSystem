@@ -1,4 +1,4 @@
-part of 'vehicle_parts_interaction_bloc_bloc.dart';
+part of 'vehicle_parts_interaction_bloc.dart';
 
 enum VehiclePartsInteractionStatus{initial, loading, success}
 
