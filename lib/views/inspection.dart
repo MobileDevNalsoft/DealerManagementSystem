@@ -147,16 +147,18 @@ class _InspectionViewState extends State<InspectionView> {
           child: TextField(),
         );
       case "dropDown":
-        List<DropdownMenuItem<Object>>? dropDownList = [];
+        List<DropdownMenuItem<String>>? dropDownList = [];
 
-        for (var item in widget['properties']['items']) {
+        for (String item in widget['properties']['items']) {
           dropDownList.add(DropdownMenuItem(
             child: Text(item),
           ));
         }
 
         return DropdownButton(
-          items: dropDownList,
+          items: widget['properties']['items']
+              .map((e) => DropdownMenuItem(child: Text(e)))
+              .toList(),
           value: "Front Left Hand Side",
           onChanged: (value) {},
         );
