@@ -26,6 +26,8 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
         as EventHandler<AddImageEvent, VehiclePartsInteractionBlocState>);
     on<SubmitVehicleMediaEvent>(_onSubmitVehicleMedia as EventHandler<
         SubmitVehicleMediaEvent, VehiclePartsInteractionBlocState>);
+    on<RemoveImageEvent>(_onRemoveImage as EventHandler<
+      RemoveImageEvent, VehiclePartsInteractionBlocState>);
   }
 
   final Repository _repo;
@@ -89,4 +91,15 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     });
   }
 
+  void _onRemoveImage(RemoveImageEvent event,
+      Emitter<VehiclePartsInteractionBlocState> emit){
+        print("got into bloc event");
+         state.media.forEach((e) {
+      print("${e.name} ${event.name}");
+      if (e.name == event.name) {
+        e.images!.removeAt(event.index);
+      }
+    });
+    emit(state.copyWith(state.media, state.status));
+  }
 }

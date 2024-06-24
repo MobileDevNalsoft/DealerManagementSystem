@@ -39,7 +39,7 @@ void main() async {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeView()
+        home: CustomDetector(model: BodySelectorViewModel(),generalParts: generalParts,)
       ),
     ),
   ));

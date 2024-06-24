@@ -16,6 +16,11 @@ class AddImageEvent extends VehiclePartsInteractionBlocEvent{
   AddImageEvent({required this.name, required this.image});
 }
 
+class RemoveImageEvent extends VehiclePartsInteractionBlocEvent{
+  String name;
+  int index;
+  RemoveImageEvent({required this.name,required this.index});
+}
 class SubmitVehicleMediaEvent extends VehiclePartsInteractionBlocEvent{
   SubmitVehicleMediaEvent();
 }

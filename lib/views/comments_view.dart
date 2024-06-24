@@ -118,6 +118,7 @@ class _CommentsViewState extends State<CommentsView> {
                                 return Stack(fit: StackFit.expand, children: [
                                   Image.file(
                                     File(widget.vehiclePartMedia.images![index].path),
+                                    
                                     fit: BoxFit.fill,
                                   ),
                                   Positioned(
@@ -125,10 +126,11 @@ class _CommentsViewState extends State<CommentsView> {
                                       right: -10.0,
                                       child: IconButton(
                                           onPressed: () {
-                                            
-                                              imagesCaptured.removeAt(index);
-                                           
-                                          },
+                                            if(widget.vehiclePartMedia.images!=null){
+                                          context
+                                    .read<VehiclePartsInteractionBloc>()
+                                    .add(RemoveImageEvent(name: widget.vehiclePartMedia.name, index: index));
+                                          }},
                                           icon: Icon(
                                             Icons.cancel_rounded,
                                             color: Colors.red,
@@ -137,24 +139,6 @@ class _CommentsViewState extends State<CommentsView> {
                               },
                               itemCount:widget.vehiclePartMedia.images==null?0:widget.vehiclePartMedia.images!.length, 
                             )
-                            //  GridView (
-                            //   scrollDirection: Axis.horizontal,
-                            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            //       crossAxisCount: 1),
-                            //   children: imagesCaptured
-                            //       .map((e) => Stack(children: [
-                            //             Image.file(File(e.path)),
-                            //             Positioned(
-                            //                 right: 0.0,
-                            //                 child: IconButton(
-                            //                     onPressed: () {},
-                            //                     icon: Icon(
-                            //                       Icons.cancel_rounded,
-                            //                       color: Colors.red,
-                            //                     )))
-                            //           ]))
-                            //       .toList(),
-                            // )
                             );
                       },
                     )
