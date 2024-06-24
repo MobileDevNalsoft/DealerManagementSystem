@@ -1,7 +1,6 @@
 {
     "Front Side": [
         {
-            "id": 1,
             "widget": "checkBox",
             "properties": {
                 "label": "IsWashed",
@@ -9,7 +8,6 @@
             }
         },
         {
-            "id": 2,
             "widget": "textField",
             "properties":{
                 "label": "Remarks",
@@ -19,7 +17,6 @@
     ],
     "Rear Side": [
         {
-            "id": 3,
             "widget": "checkBox",
             "properties": {
                 "label": "Denting Required",
@@ -27,17 +24,27 @@
             }
         },
         {
-            "id": 4,
             "widget": "textField",
             "properties":{
                 "label": "Remarks",
                 "value": ""
             }
+        },
+        {
+            "widget": "radioButtons",
+            "properties": {
+                "label": "Denting Type",
+                "value": 1,
+                "options": [
+                    "Creased Dents",
+                    "Round Dents",
+                    "Sharp Dents"
+                ]
+            }
         }
     ],
     "Interior Condition": [
         {
-            "id": 5,
             "widget": "dropDown",
             "properties": {
                 "label": "Ac Vent",
@@ -51,15 +58,13 @@
             }
         },
         {
-            "id": 6,
             "widget": "textField",
             "properties": {
-                "label": "No. of Seat Covers Required",
+                "label": "No. of Seat Covers\nRequired",
                 "value": ""
             }
         },
         {
-            "id": 7,
             "widget": "textField",
             "properties":{
                 "label": "Remarks",
@@ -69,7 +74,6 @@
     ],
     "Paint Condition": [
         {
-            "id": 8,
             "widget": "checkBox",
             "properties": {
                 "label": "Repair Scratches",
@@ -77,9 +81,8 @@
             }
         },
         {
-            "id": 9,
             "widget": "textField",
-            "properties":{
+            "properties": {
                 "label": "Remarks",
                 "value": ""
             }

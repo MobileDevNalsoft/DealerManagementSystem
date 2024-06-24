@@ -25,7 +25,17 @@ class CheckBoxTapped extends MultiBlocEvent {
   CheckBoxTapped({required this.key});
 }
 
+class RadioOptionChanged extends MultiBlocEvent {
+  final int selectedRadioOption;
+  RadioOptionChanged({required this.selectedRadioOption});
+}
+
 class PageChange extends MultiBlocEvent {
   final int index;
   PageChange({required this.index});
+}
+
+class InspectionJsonUpdated extends MultiBlocEvent {
+  final Map<String, dynamic> json;
+  InspectionJsonUpdated({required this.json});
 }

@@ -1,4 +1,3 @@
-import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -14,6 +13,8 @@ class InspectionView extends StatefulWidget {
 }
 
 class _InspectionViewState extends State<InspectionView> {
+  final PageController _pageController = PageController();
+
   @override
   void initState() {
     super.initState();
@@ -53,45 +54,54 @@ class _InspectionViewState extends State<InspectionView> {
           case JsonStatus.success:
             List<String> buttonsText = [];
 
+            for (var entry in state.json!.entries) {
+              buttonsText.add(entry.key);
+            }
+
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Gap(size.height * 0.01),
+                Gap(size.height * 0.005),
                 Center(
                   child: SizedBox(
-                    height: size.height * 0.04,
-                    width: size.width * 0.95,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          Gap(size.width * 0.01),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.json!.length,
-                      itemBuilder: (context, index) {
-                        for (var entry in state.json!.entries) {
-                          buttonsText.add(entry.key);
-                        }
-
-                        return TextButton(
-                            style: TextButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                backgroundColor: state.index == index
-                                    ? const Color.fromARGB(255, 145, 19, 19)
-                                    : const Color.fromARGB(255, 238, 203, 203),
-                                foregroundColor: state.index == index
-                                    ? Colors.white
-                                    : const Color.fromARGB(255, 145, 19, 19),
-                                side: const BorderSide(
-                                    color: Color.fromARGB(255, 145, 19, 19))),
-                            onPressed: () {},
-                            child: Text(buttonsText[index]));
-                      },
-                    ),
-                  ),
+                      width: size.width * 0.95,
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        spacing: size.width * 0.01,
+                        runSpacing: size.width * 0.01,
+                        children: buttonsText
+                            .map((e) => SizedBox(
+                                  height: size.height * 0.035,
+                                  child: TextButton(
+                                      style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          backgroundColor: state.index ==
+                                                  buttonsText.indexOf(e)
+                                              ? const Color.fromARGB(
+                                                  255, 145, 19, 19)
+                                              : const Color.fromARGB(
+                                                  255, 238, 203, 203),
+                                          foregroundColor: state.index ==
+                                                  buttonsText.indexOf(e)
+                                              ? Colors.white
+                                              : Color.fromARGB(255, 29, 22, 22),
+                                          side: const BorderSide(
+                                              color: Color.fromARGB(
+                                                  255, 145, 19, 19))),
+                                      onPressed: () {
+                                        _pageController
+                                            .jumpToPage(buttonsText.indexOf(e));
+                                      },
+                                      child: Text(e)),
+                                ))
+                            .toList(),
+                      )),
                 ),
                 Divider(
-                  height: size.height * 0.025,
+                  height: size.height * 0.015,
                   thickness: 2,
                   color: Colors.grey.shade300,
                 ),
@@ -101,22 +111,54 @@ class _InspectionViewState extends State<InspectionView> {
                     width: size.width * 0.95,
                     child: PageView.builder(
                       itemCount: state.json!.length,
+                      controller: _pageController,
                       onPageChanged: (value) {
                         context.read<MultiBloc>().add(PageChange(index: value));
                       },
                       itemBuilder: (context, pageIndex) => ListView.builder(
                         itemCount: state.json![buttonsText[pageIndex]].length,
                         itemBuilder: (context, index) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          return Column(
                             children: [
-                              Text(state.json![buttonsText[pageIndex]][index]
-                                  ['properties']['label']),
-                              getWidget(
-                                  widget: state.json![buttonsText[pageIndex]]
-                                      [index],
-                                  size: size)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(state.json![buttonsText[pageIndex]]
+                                      [index]['properties']['label']),
+                                  getWidget(
+                                      context: context,
+                                      index: index,
+                                      page: buttonsText[pageIndex],
+                                      json: state.json!,
+                                      size: size)
+                                ],
+                              ),
+                              if (pageIndex == buttonsText.length - 1 &&
+                                  index ==
+                                      state.json![buttonsText[pageIndex]]
+                                              .length -
+                                          1)
+                                Gap(size.height * 0.05),
+                              if (pageIndex == buttonsText.length - 1 &&
+                                  index ==
+                                      state.json![buttonsText[pageIndex]]
+                                              .length -
+                                          1)
+                                ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                        minimumSize: const Size(70.0, 35.0),
+                                        padding: EdgeInsets.zero,
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 145, 19, 19),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5))),
+                                    child: const Text(
+                                      'Submit',
+                                      style: TextStyle(color: Colors.white),
+                                    ))
                             ],
                           );
                         },
@@ -133,37 +175,102 @@ class _InspectionViewState extends State<InspectionView> {
     ));
   }
 
-  Widget getWidget({required Map<String, dynamic> widget, required Size size}) {
-    switch (widget['widget']) {
+  Widget getWidget(
+      {required Size size,
+      required String page,
+      required int index,
+      required Map<String, dynamic> json,
+      required BuildContext context}) {
+    switch (json[page][index]['widget']) {
       case "checkBox":
         return Checkbox(
-          value: widget['properties']['value'],
-          onChanged: (value) {},
+          value: json[page][index]['properties']['value'],
+          onChanged: (value) {
+            json[page][index]['properties']['value'] = value;
+            context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+            print(context.read<MultiBloc>().state.json);
+          },
         );
       case "textField":
         return SizedBox(
           height: size.height * 0.1,
           width: size.width * 0.5,
-          child: TextField(),
+          child: TextField(
+            onChanged: (value) {
+              json[page][index]['properties']['value'] = value;
+              context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+              print(context.read<MultiBloc>().state.json);
+            },
+          ),
         );
       case "dropDown":
-        List<DropdownMenuItem<String>>? dropDownList = [];
+        List<String> items = [];
 
-        for (String item in widget['properties']['items']) {
-          dropDownList.add(DropdownMenuItem(
-            child: Text(item),
-          ));
+        for (String s in json[page][index]['properties']['items']) {
+          items.add(s);
         }
 
-        return DropdownButton(
-          items: widget['properties']['items']
-              .map((e) => DropdownMenuItem(child: Text(e)))
-              .toList(),
-          value: "Front Left Hand Side",
-          onChanged: (value) {},
+        return Row(
+          children: [
+            Gap(size.width * 0.05),
+            DropdownButton(
+              items: items
+                  .map((e) => DropdownMenuItem(
+                        child: Text(e),
+                        value: e,
+                      ))
+                  .toList(),
+              value: json[page][index]['properties']['items'][0],
+              onChanged: (value) {
+                json[page][index]['properties']['value'] = value;
+                context
+                    .read<MultiBloc>()
+                    .add(InspectionJsonUpdated(json: json));
+                print(context.read<MultiBloc>().state.json);
+              },
+            ),
+          ],
+        );
+      case "radioButtons":
+        List<String> options = [];
+
+        for (String s in json[page][index]['properties']['options']) {
+          options.add(s);
+        }
+
+        return SizedBox(
+          height: size.height * 0.3,
+          width: size.width * 0.6,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: options
+                .map(
+                  (e) => ListTile(
+                    title: Text(json[page][index]['properties']['options']
+                        [options.indexOf(e)]),
+                    leading: Radio<int>(
+                      value: options.indexOf(e) + 1,
+                      groupValue: json[page][index]['properties']['value'],
+                      activeColor: Colors
+                          .red, // Change the active radio button color here
+                      fillColor: WidgetStateProperty.all(
+                          Colors.red), // Change the fill color when selected
+                      splashRadius: 20, // Change the splash radius when clicked
+                      onChanged: (value) {
+                        json[page][index]['properties']['value'] = value;
+                        context.read<MultiBloc>().add(
+                            RadioOptionChanged(selectedRadioOption: value!));
+                        print(context.read<MultiBloc>().state.json);
+                      },
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
         );
     }
 
-    return SizedBox();
+    return const SizedBox();
   }
 }
