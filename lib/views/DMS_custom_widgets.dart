@@ -60,7 +60,7 @@ class DMSCustomWidgets {
                   suffixIcon: icon,
                   hintText: hint,
                   hintStyle: const TextStyle(
-                    color: Colors.black54,
+                    color: Colors.black38,
                     fontWeight: FontWeight.normal,
                   ),
                   border: InputBorder.none, // Removes all borders
@@ -277,7 +277,7 @@ class DMSCustomWidgets {
                         ? 'Schedule Date'
                         : DateFormat("dd MMM yyyy").format(date),
                     style: TextStyle(
-                        color: date == null ? Colors.black54 : Colors.black),
+                        color: date == null ? Colors.black38 : Colors.black),
                   ),
                   const MaxGap(500),
                   const Icon(Icons.calendar_month_outlined,

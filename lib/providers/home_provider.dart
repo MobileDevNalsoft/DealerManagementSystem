@@ -1,34 +1,9 @@
-import 'package:customs/src.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class HomeProvider extends ChangeNotifier {
   String? _location;
   bool _isOpen = false;
-  Map<String, Widget> localWidgets = {
-    'TextFormField': CustomWidgets.CustomTextField(width: 300),
-    'CheckBox': Checkbox(
-      value: true,
-      onChanged: (value) {},
-      activeColor: Colors.green,
-      checkColor: Colors.white,
-    ),
-    'DropDown': DropdownButton2(
-        hint: const Text('select'),
-        dropdownStyleData: const DropdownStyleData(width: 300),
-        items: const [
-          DropdownMenuItem(child: Text('1')),
-        ])
-  };
-
-  List<String> apiWidgets = [
-    'TextFormField',
-    'DropDown',
-    'TextFormField',
-    'CheckBox',
-    'DropDown'
-  ];
 
   void setFocusNode(FocusNode focusNode, ScrollController scrollController,
       BuildContext context) {
@@ -57,7 +32,7 @@ class HomeProvider extends ChangeNotifier {
         // Calculate the amount to scroll
         final scrollOffset = textFieldTopPosition -
             (visibleScreenHeight - renderBox.size.height) / 2;
-      await  scrollController.animateTo(
+        await scrollController.animateTo(
           math.max(0, scrollController.offset + scrollOffset),
           duration: const Duration(milliseconds: 350),
           curve: Curves.easeInOut,

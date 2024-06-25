@@ -20,6 +20,8 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<GetJson>(_onGetJson);
     on<CheckBoxTapped>(_onCheckBoxTapped);
     on<PageChange>(_onPageChange);
+    on<InspectionJsonUpdated>(_onInspectionJsonUpdated);
+    on<RadioOptionChanged>(_onRadioOptionChanged);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -66,5 +68,15 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
 
   void _onPageChange(PageChange event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(index: event.index));
+  }
+
+  void _onInspectionJsonUpdated(
+      InspectionJsonUpdated event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(json: event.json));
+  }
+
+  void _onRadioOptionChanged(
+      RadioOptionChanged event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(selectedRadioOption: event.selectedRadioOption));
   }
 }
