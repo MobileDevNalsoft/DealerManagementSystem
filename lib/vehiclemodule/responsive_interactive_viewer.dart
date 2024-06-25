@@ -63,9 +63,9 @@ class CustomDetector extends StatelessWidget {
                   if(Provider.of<BodySelectorViewModel>(context,listen: true).isTapped)
                   Positioned(
                       //  bottom: isMobile?100:size.height*0.25,
-                            left: size.width * 0.365,
+                            left:  size.width * 0.365,
                             right: size.width*0.1,
-                            top:200,
+                            top:isMobile?100:200,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
