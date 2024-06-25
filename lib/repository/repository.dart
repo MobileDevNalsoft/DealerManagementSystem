@@ -136,4 +136,28 @@ class Repository {
       throw Error();
     }
   }
+
+  
+   Future<List<dynamic>> addVehicleMedia(String image) async {
+    print(image);
+    ApiResponse apiResponse = await _api.post('addImage',data: {
+      "image": image,
+    });
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          print(jsonDecode(apiResponse.response!.data)["data"].runtimeType);
+          return (jsonDecode(apiResponse.response!.data)["data"] );
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
 }
