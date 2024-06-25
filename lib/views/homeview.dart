@@ -80,10 +80,7 @@ class _HomeView extends State<HomeView> {
     return SafeArea(
       child: GestureDetector(
         onTap: () {
-          locFocus.unfocus();
-          vehRegNumFocus.unfocus();
-          customerFocus.unfocus();
-          kmsFocus.unfocus();
+          FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -169,6 +166,9 @@ class _HomeView extends State<HomeView> {
                                                   registrationNo: value));
                                         }
                                       },
+                                      inputFormatters: [
+                                        UpperCaseTextFormatter()
+                                      ],
                                       icon: state.status ==
                                               VehicleStatus.vehicleAlreadyAdded
                                           ? const Icon(

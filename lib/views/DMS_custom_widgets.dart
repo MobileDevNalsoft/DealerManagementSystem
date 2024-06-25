@@ -51,7 +51,7 @@ class DMSCustomWidgets {
                 },
                 cursorColor: Colors.black,
                 inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'\d')),
+                  FilteringTextInputFormatter.deny(RegExp(r'\d'))
                 ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
@@ -415,6 +415,28 @@ class DMSCustomWidgets {
               ),
             )),
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+}
+
+class InitCapCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text[0].toUpperCase() + newValue.text.substring(1),
+      selection: newValue.selection,
     );
   }
 }
