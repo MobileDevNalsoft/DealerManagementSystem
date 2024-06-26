@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
@@ -7,6 +8,7 @@ import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +74,13 @@ class CustomDetector extends StatelessWidget {
                               
                            BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
                               listener: (context, state) {
-                                // TODO: implement listener
+                                  Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: const Color.fromARGB(255, 218, 212, 212),
+                                  message: 'image',
+                                  messageText: state.image!=null? Image.memory(state.image!):null,
+                                  duration: Duration(seconds: 2))
+                              .show(context);
                                 print("listening ");
                               },
                               builder: (context, state) {
@@ -94,7 +102,12 @@ class CustomDetector extends StatelessWidget {
                               child: const Text(
                                 'Submit',
                                 style: TextStyle(color: Colors.white),
-                              ))
+                              )),
+                              
+                          if(context.watch<VehiclePartsInteractionBloc>().state.image!=null)
+                              SizedBox(
+                                width: size.width*0.3,
+                                child: Image.memory(context.read<VehiclePartsInteractionBloc>().state.image!))
                       ],
                     ),
                   )

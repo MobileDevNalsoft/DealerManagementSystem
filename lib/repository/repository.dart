@@ -156,8 +156,8 @@ class Repository {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
         // if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          print((apiResponse.response!.data.runtimeType));
-          return apiResponse.response!.data["items"][0]["image"];
+          print(jsonDecode(apiResponse.response!.data).runtimeType);
+          return jsonDecode(apiResponse.response!.data)["data"];
         // } else {
         //   throw apiResponse.error;
         // }
