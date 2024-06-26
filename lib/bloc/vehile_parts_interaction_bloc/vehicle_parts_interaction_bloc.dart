@@ -81,26 +81,33 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
   void _onSubmitVehicleMedia(SubmitVehicleMediaEvent event,
       Emitter<VehiclePartsInteractionBlocState> emit) async {
         late Uint8List bytes;
-    // state.media.forEach((element) async {
-    //   print("images from bloc${element.images}");
-    //   // final compressedImage = await FlutterImageCompress.compressAndGetFile(
-    //   //   element.images!.first.path,
-    //   //   "${element.images!.first.path}_compressed.jpg",
-    //   //   quality: 100,
-    //   // );
-    //   bytes = await element.images!.first.readAsBytes();
-    //   // File bytesListFile = File('bytesListdta.txt');
-    //   // bytesListFile.writeAsString(bytes.toString());
-    //   print("bytes while sending $bytes");
-    //   String base64String = base64Encode(bytes);
-    //   Log.d(base64String);
-    //   await _repo.addVehicleMedia(bytes.toString());
-    // }
-    // );
-      var imageblob = await  _repo.getImage();
-      print("imagedata from repo $imageblob");
+    state.media.forEach((element) async {
       
-      Uint8List image=  Base64Codec().decode(imageblob);
+  
+      print("images from bloc${element.images}");
+      // final compressedImage = await FlutterImageCompress.compressAndGetFile(
+      //   element.images!.first.path,
+      //   "${element.images!.first.path}_compressed.jpg",
+      //   quality: 100,
+      // );
+      bytes = await element.images!.first.readAsBytes();
+      // File bytesListFile = File('bytesListdta.txt');
+      // bytesListFile.writeAsString(bytes.toString());
+      
+      print("bytes while sending $bytes");
+      File file = File('test_img.txt');
+      file.writeAsBytes(bytes);
+      String base64String = base64Encode(bytes);
+      Log.d(base64String);
+      await _repo.addVehicleMedia(bytes.toString());
+    }
+    );
+      var imageblob = await  _repo.getImage();
+      print("imagedata from repo ${imageblob.length}");
+
+      
+      Uint8List image=  base64.decode(imageblob);
+      print(image);
       state.image =image;
       emit(state.copyWith(state.media, state.status,image:state.image));
       
