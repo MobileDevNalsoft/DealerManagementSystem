@@ -1,3 +1,5 @@
+import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -19,6 +21,7 @@ class _InspectionViewState extends State<InspectionView> {
   void initState() {
     super.initState();
     context.read<MultiBloc>().add(GetJson());
+    context.read<MultiBloc>().state.index = 0;
   }
 
   @override
@@ -118,6 +121,13 @@ class _InspectionViewState extends State<InspectionView> {
                       itemBuilder: (context, pageIndex) => ListView.builder(
                         itemCount: state.json![buttonsText[pageIndex]].length,
                         itemBuilder: (context, index) {
+                          // if (state.json![buttonsText[pageIndex]][index]
+                          //         ['widget'] ==
+                          //     'textField') {
+                          //   textEditingController.text =
+                          //       state.json![buttonsText[pageIndex]][index]
+                          //           ['properties']['value'];
+                          // }
                           return Column(
                             children: [
                               Row(
@@ -146,7 +156,17 @@ class _InspectionViewState extends State<InspectionView> {
                                               .length -
                                           1)
                                 ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CustomDetector(
+                                              model: BodySelectorViewModel(),
+                                              generalParts: [],
+                                            ),
+                                          ));
+                                    },
                                     style: ElevatedButton.styleFrom(
                                         minimumSize: const Size(70.0, 35.0),
                                         padding: EdgeInsets.zero,
@@ -192,14 +212,29 @@ class _InspectionViewState extends State<InspectionView> {
           },
         );
       case "textField":
+        // focusNode.addListener(() {
+        //   print('focus changed');
+        //   if (!focusNode.hasFocus) {
+        //     json[page][index]['properties']['value'] =
+        //         textEditingController.text;
+        // context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+        //   }
+        // });
+
+        print(json);
+        TextEditingController textEditingController = TextEditingController();
+
+        textEditingController.text = json[page][index]['properties']['value'];
+
         return SizedBox(
           height: size.height * 0.1,
           width: size.width * 0.5,
           child: TextField(
-            onChanged: (value) {
+            textInputAction: TextInputAction.done,
+            controller: textEditingController,
+            onSubmitted: (value) {
               json[page][index]['properties']['value'] = value;
               context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
-              print(context.read<MultiBloc>().state.json);
             },
           ),
         );
@@ -210,17 +245,25 @@ class _InspectionViewState extends State<InspectionView> {
           items.add(s);
         }
 
+        if (json[page][index]['properties']['value'] == '') {
+          json[page][index]['properties']['value'] = items[0];
+        }
+
+        print(items);
+        print(json[page][index]['properties']['value']);
+
         return Row(
           children: [
             Gap(size.width * 0.05),
             DropdownButton(
               items: items
                   .map((e) => DropdownMenuItem(
-                        child: Text(e),
                         value: e,
+                        child: Text(e),
                       ))
                   .toList(),
-              value: json[page][index]['properties']['items'][0],
+              value: json[page][index]['properties']['value'],
+              alignment: AlignmentDirectional.bottomStart,
               onChanged: (value) {
                 json[page][index]['properties']['value'] = value;
                 context
@@ -273,4 +316,6 @@ class _InspectionViewState extends State<InspectionView> {
 
     return const SizedBox();
   }
+
+  void onFocusChange() {}
 }
