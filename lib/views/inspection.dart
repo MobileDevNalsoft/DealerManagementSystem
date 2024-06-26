@@ -1,6 +1,5 @@
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
-import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -17,23 +16,12 @@ class InspectionView extends StatefulWidget {
 
 class _InspectionViewState extends State<InspectionView> {
   final PageController _pageController = PageController();
-  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     context.read<MultiBloc>().add(GetJson());
     context.read<MultiBloc>().state.index = 0;
-    _focusNode.addListener(_onFocusChange);
-  }
-
-  void _onFocusChange() {
-    if (_focusNode.hasFocus) {
-      // TextField has focus, do nothing
-    } else {
-      // TextField lost focus, you can perform any actions here
-      _focusNode.requestFocus();
-    }
   }
 
   @override
@@ -133,13 +121,13 @@ class _InspectionViewState extends State<InspectionView> {
                       itemBuilder: (context, pageIndex) => ListView.builder(
                         itemCount: state.json![buttonsText[pageIndex]].length,
                         itemBuilder: (context, index) {
-                          TextEditingController textEditingController =
-                              TextEditingController(
-                                  text: state.json![buttonsText[pageIndex]]
-                                          [index]['properties']['value']
-                                      .toString());
-                          _focusNode.requestFocus();
-
+                          // if (state.json![buttonsText[pageIndex]][index]
+                          //         ['widget'] ==
+                          //     'textField') {
+                          //   textEditingController.text =
+                          //       state.json![buttonsText[pageIndex]][index]
+                          //           ['properties']['value'];
+                          // }
                           return Column(
                             children: [
                               Row(
@@ -151,9 +139,6 @@ class _InspectionViewState extends State<InspectionView> {
                                   getWidget(
                                       context: context,
                                       index: index,
-                                      focusNode: _focusNode,
-                                      textEditingController:
-                                          textEditingController,
                                       page: buttonsText[pageIndex],
                                       json: state.json!,
                                       size: size)
@@ -214,8 +199,6 @@ class _InspectionViewState extends State<InspectionView> {
       {required Size size,
       required String page,
       required int index,
-      required TextEditingController textEditingController,
-      required FocusNode focusNode,
       required Map<String, dynamic> json,
       required BuildContext context}) {
     switch (json[page][index]['widget']) {
@@ -229,16 +212,29 @@ class _InspectionViewState extends State<InspectionView> {
           },
         );
       case "textField":
-        focusNode.requestFocus();
+        // focusNode.addListener(() {
+        //   print('focus changed');
+        //   if (!focusNode.hasFocus) {
+        //     json[page][index]['properties']['value'] =
+        //         textEditingController.text;
+        // context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+        //   }
+        // });
+
+        print(json);
+        TextEditingController textEditingController = TextEditingController();
+
+        textEditingController.text = json[page][index]['properties']['value'];
+
         return SizedBox(
           height: size.height * 0.1,
           width: size.width * 0.5,
           child: TextField(
+            textInputAction: TextInputAction.done,
             controller: textEditingController,
-            onChanged: (value) {
+            onSubmitted: (value) {
               json[page][index]['properties']['value'] = value;
               context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
-              print(context.read<MultiBloc>().state.json);
             },
           ),
         );
@@ -249,17 +245,25 @@ class _InspectionViewState extends State<InspectionView> {
           items.add(s);
         }
 
+        if (json[page][index]['properties']['value'] == '') {
+          json[page][index]['properties']['value'] = items[0];
+        }
+
+        print(items);
+        print(json[page][index]['properties']['value']);
+
         return Row(
           children: [
             Gap(size.width * 0.05),
             DropdownButton(
               items: items
                   .map((e) => DropdownMenuItem(
-                        child: Text(e),
                         value: e,
+                        child: Text(e),
                       ))
                   .toList(),
               value: json[page][index]['properties']['value'],
+              alignment: AlignmentDirectional.bottomStart,
               onChanged: (value) {
                 json[page][index]['properties']['value'] = value;
                 context
@@ -312,4 +316,6 @@ class _InspectionViewState extends State<InspectionView> {
 
     return const SizedBox();
   }
+
+  void onFocusChange() {}
 }
