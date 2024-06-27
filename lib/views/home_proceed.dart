@@ -11,6 +11,7 @@ import 'package:dms/views/inspection.dart';
 import 'package:dms/views/inspection_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
@@ -35,11 +36,17 @@ class _HomeProceedView extends State<HomeProceedView> {
   FocusNode custConcernsFocus = FocusNode();
   FocusNode remarksFocus = FocusNode();
   TextEditingController bookingController = TextEditingController();
+  TextEditingController bookingTypeAheadController = TextEditingController();
   TextEditingController altContController = TextEditingController();
   TextEditingController altContPhoneNoController = TextEditingController();
   TextEditingController spController = TextEditingController();
+  TextEditingController spTypeAheadController = TextEditingController();
   TextEditingController bayController = TextEditingController();
+  TextEditingController bayTypeAheadController = TextEditingController();
+
   TextEditingController jobTypeController = TextEditingController();
+  TextEditingController jobTypeAheadController = TextEditingController();
+
   TextEditingController custConcernsController = TextEditingController();
   TextEditingController remarksController = TextEditingController();
   SuggestionsController suggestionsController = SuggestionsController();
@@ -141,9 +148,15 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 items: ["Online", "Walk-in"],
                                 size: size,
                                 hint: 'Booking Source',
+                                onChanged: (p0) {
+                                  if (p0 != null) {
+                                    bookingTypeAheadController.text = p0;
+                                  }
+                                },
                                 isMobile: isMobile,
                                 focus: bookingFocus,
                                 textcontroller: bookingController,
+                                typeAheadController: bookingTypeAheadController,
                                 icon: const Icon(Icons.arrow_drop_down),
                                 scrollController: scrollController),
                             SizedBox(
@@ -182,7 +195,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 print("state ${state.salesPersons}");
 
                                 return DMSCustomWidgets.SearchableDropDown(
-                                    onChange: (p0) {
+                                    onChanged: (p0) {
+                                      if (p0 != null) {
+                                        spTypeAheadController.text = p0;
+                                      }
                                       if (p0!.length >= 3) {
                                         print(p0);
                                         context.read<MultiBloc>().add(
@@ -210,6 +226,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                                             : false,
                                     focus: spFocus,
                                     textcontroller: spController,
+                                    typeAheadController: spTypeAheadController,
                                     suggestionsController:
                                         suggestionsController,
                                     scrollController: scrollController);
@@ -223,8 +240,14 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 size: size,
                                 hint: 'Bay',
                                 isMobile: isMobile,
+                                onChanged: (p0) {
+                                  if (p0 != null) {
+                                    bayTypeAheadController.text = p0;
+                                  }
+                                },
                                 focus: bayFocus,
                                 textcontroller: bayController,
+                                typeAheadController: bayTypeAheadController,
                                 scrollController: scrollController),
                             SizedBox(
                               height: size.height * (isMobile ? 0.005 : 0.015),
@@ -233,9 +256,15 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 size: size,
                                 hint: 'Job Type',
                                 items: jobTypeList,
+                                onChanged: (p0) {
+                                  if (p0 != null) {
+                                    jobTypeAheadController.text = p0;
+                                  }
+                                },
                                 // icon: const Icon(Icons.arrow_drop_down),
                                 focus: jobTypeFocus,
                                 textcontroller: jobTypeController,
+                                typeAheadController: jobTypeAheadController,
                                 // provider: provider,
                                 isMobile: isMobile,
                                 scrollController: scrollController),

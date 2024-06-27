@@ -17,9 +17,10 @@ class DMSCustomWidgets {
       required List<dynamic> items,
       required FocusNode focus,
       required TextEditingController textcontroller,
+      required TextEditingController typeAheadController,
       required bool isMobile,
       required ScrollController scrollController,
-      Function(String?)? onChange,
+      Function(String?)? onChanged,
       Function(String?)? suggestionCall,
       SuggestionsController? suggestionsController,
       bool isLoading = false,
@@ -36,15 +37,11 @@ class DMSCustomWidgets {
           suggestionsController: suggestionsController,
           builder: (context, controller, focusNode) {
             focus = focusNode;
+            typeAheadController = controller;
             return Transform(
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
               child: TextFormField(
-                onChanged: (value) {
-                  if (onChange != null) {
-                    onChange(value);
-                  }
-                  controller.text = value;
-                },
+                onChanged: onChanged,
                 onTap: () {
                   Provider.of<HomeProvider>(context, listen: false)
                       .setFocusNode(focusNode, scrollController, context);

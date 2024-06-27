@@ -9,6 +9,7 @@ import 'package:dms/views/inspection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -27,6 +28,7 @@ class _HomeView extends State<HomeView> {
   FocusNode scheduleDateFocus = FocusNode();
   FocusNode kmsFocus = FocusNode();
   TextEditingController locController = TextEditingController();
+  TextEditingController locTypeAheadController = TextEditingController();
   TextEditingController vehRegNumController = TextEditingController();
   TextEditingController customerController = TextEditingController();
   TextEditingController scheduleDateController = TextEditingController();
@@ -138,11 +140,23 @@ class _HomeView extends State<HomeView> {
                                   size: size,
                                   hint: 'Location',
                                   items: state.locations!,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      locTypeAheadController.text = value;
+                                      context
+                                          .read<ServiceBloc>()
+                                          .state
+                                          .copyWith(
+                                              service: Service()
+                                                  .copyWith(location: value));
+                                    }
+                                  },
                                   icon: locFocus.hasFocus
                                       ? const Icon(Icons.arrow_drop_up)
                                       : const Icon(Icons.arrow_drop_down),
                                   focus: locFocus,
                                   textcontroller: locController,
+                                  typeAheadController: locTypeAheadController,
                                   scrollController: scrollController,
                                   isMobile: isMobile),
                               Gap(size.height * (isMobile ? 0.01 : 0.03)),
