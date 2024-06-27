@@ -1,5 +1,6 @@
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -30,11 +31,11 @@ class _InspectionViewState extends State<InspectionView> {
 
     return SafeArea(
         child: GestureDetector(
-          onTap: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-          },
-          child: Scaffold(
-                appBar: AppBar(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
           elevation: 0.0,
           backgroundColor: const Color.fromARGB(255, 145, 19, 19),
           leading: IconButton(
@@ -47,8 +48,8 @@ class _InspectionViewState extends State<InspectionView> {
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
-                ),
-                body: BlocBuilder<MultiBloc, MultiBlocState>(builder: (context, state) {
+        ),
+        body: BlocBuilder<MultiBloc, MultiBlocState>(builder: (context, state) {
           switch (state.jsonStatus) {
             case JsonStatus.loading:
               return Transform(
@@ -60,52 +61,52 @@ class _InspectionViewState extends State<InspectionView> {
               );
             case JsonStatus.success:
               List<String> buttonsText = [];
-          
+
               for (var entry in state.json!.entries) {
                 buttonsText.add(entry.key);
               }
-          
+
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Gap(size.height * 0.005),
-                  Center(
-                    child: SizedBox(
-                        width: size.width * 0.95,
-                        child: Wrap(
-                          direction: Axis.horizontal,
-                          crossAxisAlignment: WrapCrossAlignment.start,
-                          spacing: size.width * 0.01,
-                          runSpacing: size.width * 0.01,
-                          children: buttonsText
-                              .map((e) => SizedBox(
-                                    height: size.height * 0.035,
-                                    child: TextButton(
-                                        style: TextButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            backgroundColor: state.index ==
-                                                    buttonsText.indexOf(e)
-                                                ? const Color.fromARGB(
-                                                    255, 145, 19, 19)
-                                                : const Color.fromARGB(
-                                                    255, 238, 203, 203),
-                                            foregroundColor: state.index ==
-                                                    buttonsText.indexOf(e)
-                                                ? Colors.white
-                                                : Color.fromARGB(255, 29, 22, 22),
-                                            side: const BorderSide(
-                                                color: Color.fromARGB(
-                                                    255, 145, 19, 19))),
-                                        onPressed: () {
-                                          _pageController
-                                              .jumpToPage(buttonsText.indexOf(e));
-                                        },
-                                        child: Text(e)),
-                                  ))
-                              .toList(),
-                        )),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Wrap(
+                      direction: Axis.horizontal,
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      spacing: size.width * 0.01,
+                      runSpacing: size.width * 0.01,
+                      children: buttonsText
+                          .map((e) => SizedBox(
+                                height: size.height * 0.035,
+                                child: TextButton(
+                                    style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        backgroundColor: state.index ==
+                                                buttonsText.indexOf(e)
+                                            ? const Color.fromARGB(
+                                                255, 145, 19, 19)
+                                            : const Color.fromARGB(
+                                                255, 238, 203, 203),
+                                        foregroundColor: state.index ==
+                                                buttonsText.indexOf(e)
+                                            ? Colors.white
+                                            : const Color.fromARGB(
+                                                255, 29, 22, 22),
+                                        side: const BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 145, 19, 19))),
+                                    onPressed: () {
+                                      _pageController
+                                          .jumpToPage(buttonsText.indexOf(e));
+                                    },
+                                    child: Text(e)),
+                              ))
+                          .toList(),
+                    ),
                   ),
                   Divider(
                     height: size.height * 0.015,
@@ -120,7 +121,9 @@ class _InspectionViewState extends State<InspectionView> {
                         itemCount: state.json!.length,
                         controller: _pageController,
                         onPageChanged: (value) {
-                          context.read<MultiBloc>().add(PageChange(index: value));
+                          context
+                              .read<MultiBloc>()
+                              .add(PageChange(index: value));
                         },
                         itemBuilder: (context, pageIndex) => ListView.builder(
                           itemCount: state.json![buttonsText[pageIndex]].length,
@@ -134,20 +137,32 @@ class _InspectionViewState extends State<InspectionView> {
                             // }
                             return Column(
                               children: [
+                                Gap(size.height * 0.01),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(state.json![buttonsText[pageIndex]]
-                                        [index]['properties']['label']),
+                                    Gap(size.width * 0.05),
+                                    SizedBox(
+                                      width: size.width * 0.2,
+                                      child: Wrap(
+                                        children: [
+                                          Text(state
+                                                  .json![buttonsText[pageIndex]]
+                                              [index]['properties']['label'])
+                                        ],
+                                      ),
+                                    ),
+                                    Gap(size.width * 0.05),
                                     getWidget(
                                         context: context,
                                         index: index,
                                         page: buttonsText[pageIndex],
                                         json: state.json!,
-                                        size: size)
+                                        size: size),
                                   ],
                                 ),
+                                Gap(size.height * 0.02),
                                 if (pageIndex == buttonsText.length - 1 &&
                                     index ==
                                         state.json![buttonsText[pageIndex]]
@@ -195,9 +210,9 @@ class _InspectionViewState extends State<InspectionView> {
             default:
               return const SizedBox();
           }
-                }),
-              ),
-        ));
+        }),
+      ),
+    ));
   }
 
   Widget getWidget(
@@ -208,46 +223,55 @@ class _InspectionViewState extends State<InspectionView> {
       required BuildContext context}) {
     switch (json[page][index]['widget']) {
       case "checkBox":
-        return Checkbox(
-          value: json[page][index]['properties']['value'],
-          onChanged: (value) {
-            json[page][index]['properties']['value'] = value;
-            context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
-            print(context.read<MultiBloc>().state.json);
-          },
+        return SizedBox(
+          height: size.height * 0.03,
+          width: size.width * 0.05,
+          child: Checkbox(
+            value: json[page][index]['properties']['value'],
+            side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
+            onChanged: (value) {
+              json[page][index]['properties']['value'] = value;
+              context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+              print(context.read<MultiBloc>().state.json);
+            },
+          ),
         );
       case "textField":
-        // focusNode.addListener(() {
-        //   print('focus changed');
-        //   if (!focusNode.hasFocus) {
-        //     json[page][index]['properties']['value'] =
-        //         textEditingController.text;
-        // context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
-        //   }
-        // });
-
         print(json);
         TextEditingController textEditingController = TextEditingController();
 
         textEditingController.text = json[page][index]['properties']['value'];
 
-  
-       
-        return SizedBox(
-          height: size.height * 0.1,
-          width: size.width * 0.5,
-          child: TextField(
-            textInputAction: TextInputAction.done,
-            controller: textEditingController,
-            // autofocus: true,
-            onChanged: (value) {
-              textEditingController.text = value;
-                      textEditingController.selection = TextSelection.fromPosition( TextPosition(offset: textEditingController.text.length));
+        textEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: textEditingController.text.length));
 
-              //  json[page][index]['properties']['value'] = value;
-               context.read<MultiBloc>().state.json![page][index]['properties']['value'] = value;
-            }
-          ),
+        return Container(
+          height: size.height * 0.11,
+          width: size.width * 0.62,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              border: Border.all(color: Colors.black)),
+          child: TextField(
+              textInputAction: TextInputAction.done,
+              controller: textEditingController,
+              cursorColor: Colors.black,
+              minLines: 1,
+              maxLines: 5,
+              maxLength: 200,
+              decoration: const InputDecoration(
+                counterText: '',
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                hintStyle: TextStyle(color: Colors.black38),
+              ),
+              onChanged: (value) {
+                textEditingController.text = value;
+                context.read<MultiBloc>().state.json![page][index]['properties']
+                    ['value'] = value;
+              }),
         );
       case "dropDown":
         List<String> items = [];
@@ -263,27 +287,69 @@ class _InspectionViewState extends State<InspectionView> {
         print(items);
         print(json[page][index]['properties']['value']);
 
-        return Row(
-          children: [
-            Gap(size.width * 0.05),
-            DropdownButton(
-              items: items
-                  .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e),
-                      ))
-                  .toList(),
-              value: json[page][index]['properties']['value'],
-              alignment: AlignmentDirectional.bottomStart,
-              onChanged: (value) {
-                json[page][index]['properties']['value'] = value;
-                context
-                    .read<MultiBloc>()
-                    .add(InspectionJsonUpdated(json: json));
-                print(context.read<MultiBloc>().state.json);
-              },
+        return DropdownButtonHideUnderline(
+          child: DropdownButton2<String>(
+            onMenuStateChange: (isOpen) {},
+            isExpanded: true,
+            items: items
+                .map((String item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ))
+                .toList(),
+            value: json[page][index]['properties']['value'],
+            onChanged: (String? value) {
+              json[page][index]['properties']['value'] = value;
+              context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+              print(context.read<MultiBloc>().state.json);
+            },
+            buttonStyleData: ButtonStyleData(
+              height: size.height * 0.04,
+              width: size.width * 0.5,
+              padding: const EdgeInsets.only(left: 14, right: 14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.black,
+                ),
+                color: Colors.white,
+              ),
+              elevation: 0,
             ),
-          ],
+            iconStyleData: const IconStyleData(
+              icon: Icon(!false
+                  ? Icons.keyboard_arrow_down_rounded
+                  : Icons.keyboard_arrow_up_rounded),
+              iconSize: 14,
+              iconEnabledColor: Colors.black,
+              iconDisabledColor: Colors.black,
+            ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: size.height * 0.3,
+              width: size.width * 0.5,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              offset: const Offset(0, 0),
+              scrollbarTheme: ScrollbarThemeData(
+                radius: const Radius.circular(40),
+                thickness: WidgetStateProperty.all<double>(6),
+                thumbVisibility: WidgetStateProperty.all<bool>(true),
+              ),
+            ),
+            menuItemStyleData: const MenuItemStyleData(
+              height: 30,
+              padding: EdgeInsets.only(left: 14, right: 14),
+            ),
+          ),
         );
       case "radioButtons":
         List<String> options = [];
@@ -293,16 +359,20 @@ class _InspectionViewState extends State<InspectionView> {
         }
 
         return SizedBox(
-          height: size.height * 0.3,
+          height: size.height * 0.25,
           width: size.width * 0.6,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: options
                 .map(
                   (e) => ListTile(
-                    title: Text(json[page][index]['properties']['options']
-                        [options.indexOf(e)]),
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      json[page][index]['properties']['options']
+                          [options.indexOf(e)],
+                      style: const TextStyle(fontSize: 13),
+                    ),
                     leading: Radio<int>(
                       value: options.indexOf(e) + 1,
                       groupValue: json[page][index]['properties']['value'],
@@ -315,7 +385,6 @@ class _InspectionViewState extends State<InspectionView> {
                         json[page][index]['properties']['value'] = value;
                         context.read<MultiBloc>().add(
                             RadioOptionChanged(selectedRadioOption: value!));
-                        print(context.read<MultiBloc>().state.json);
                       },
                     ),
                   ),
@@ -327,6 +396,4 @@ class _InspectionViewState extends State<InspectionView> {
 
     return const SizedBox();
   }
-
-  void onFocusChange() {}
 }
