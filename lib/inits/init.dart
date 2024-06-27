@@ -12,7 +12,7 @@ Future<void> init() async {
 
   //Api
   getIt.registerLazySingleton<NetworkCalls>(
-      () => NetworkCalls(AppConstants.BaseURL, getIt()));
+      () => NetworkCalls(AppConstants.BaseURL, getIt(),connectTimeout: 30,receiveTimeout: 30));
 
   //Repo
   getIt.registerLazySingleton<Repository>(

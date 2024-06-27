@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/logger/logger.dart';
 import 'package:dms/models/salesPerson.dart';
+import 'package:flutter/services.dart';
 import 'package:network_calls/src.dart';
 
 class Repository {
@@ -138,16 +139,15 @@ class Repository {
   }
 
   
-   Future<List<dynamic>> addVehicleMedia(String image) async {
+   Future<List<dynamic>>  addVehicleMedia(Map<String, dynamic> image) async {
     print(image);
     ApiResponse apiResponse = await _api.post('addImage',data: {
-      "image": image,
+      "image": jsonEncode(image),
     });
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
         if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          print(jsonDecode(apiResponse.response!.data)["data"].runtimeType);
           return (jsonDecode(apiResponse.response!.data)["data"] );
         } else {
           throw apiResponse.error;
@@ -160,4 +160,23 @@ class Repository {
     }
   }
 
+    Future getImage() async {
+    
+    ApiResponse apiResponse = await _api.get('getImage');
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        // if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          // print(jsonDecode(apiResponse.response!.data).runtimeType);
+          return apiResponse.response!.data["items"][0]["image"];
+        // } else {
+        //   throw apiResponse.error;
+        // }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
 }
