@@ -13,15 +13,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 
-class CustomDetector extends StatelessWidget {
+class CustomDetector extends StatefulWidget {
   BodySelectorViewModel model;
   final List<GeneralBodyPart>? generalParts;
   CustomDetector({super.key, required this.model, this.generalParts});
 
   @override
+  State<CustomDetector> createState() => _CustomDetectorState();
+}
+
+class _CustomDetectorState extends State<CustomDetector> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.generalParts!.forEach((value){
+      if(!value.name.startsWith('text')){
+    context.read<VehiclePartsInteractionBloc>().add(AddCommentsEvent(name:value.name ));}
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-    
     Size size = MediaQuery.sizeOf(context);
     // TODO: implement build
     return GestureDetector(
@@ -29,7 +43,7 @@ class CustomDetector extends StatelessWidget {
       onTapDown: (details) => print(" on tap down${details.globalPosition}"),
       onTap: () {
         print("On tapped");
-        model.setInteraction(false);
+        widget.model.setInteraction(false);
       },
       onLongPress: () {
         print("long press");
@@ -39,10 +53,10 @@ class CustomDetector extends StatelessWidget {
         panEnabled: false,
         boundaryMargin: EdgeInsets.all(80),
         onInteractionStart: (details) {
-          model.setInteraction(true);
+          widget.model.setInteraction(true);
         },
         onInteractionEnd: (details) {
-          model.setInteraction(false);
+          widget.model.setInteraction(false);
         },
         minScale: 0.5,
         maxScale: 4,
@@ -59,7 +73,7 @@ class CustomDetector extends StatelessWidget {
                     width: MediaQuery.of(context).size.width,
                     color: Color.fromRGBO(145, 145, 145, 100),
                     child: BodyCanvas(
-                      generalParts: generalParts,
+                      generalParts: widget.generalParts,
                     ),
                   ),
                   if(Provider.of<BodySelectorViewModel>(context,listen: true).isTapped)
@@ -107,6 +121,7 @@ class CustomDetector extends StatelessWidget {
                           if(context.watch<VehiclePartsInteractionBloc>().state.image!=null)
                               SizedBox(
                                 width: size.width*0.3,
+                                height: size.height*0.2,
                                 child: Image.memory(context.read<VehiclePartsInteractionBloc>().state.image!))
                       ],
                     ),
