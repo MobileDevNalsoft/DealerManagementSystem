@@ -30,8 +30,8 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
         as EventHandler<AddImageEvent, VehiclePartsInteractionBlocState>);
     on<SubmitVehicleMediaEvent>(_onSubmitVehicleMedia as EventHandler<
         SubmitVehicleMediaEvent, VehiclePartsInteractionBlocState>);
-    on<RemoveImageEvent>(_onRemoveImage as EventHandler<
-      RemoveImageEvent, VehiclePartsInteractionBlocState>);
+    on<RemoveImageEvent>(_onRemoveImage
+        as EventHandler<RemoveImageEvent, VehiclePartsInteractionBlocState>);
   }
 
   final Repository _repo;
@@ -80,54 +80,63 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
 
   void _onSubmitVehicleMedia(SubmitVehicleMediaEvent event,
       Emitter<VehiclePartsInteractionBlocState> emit) async {
-        late Uint8List bytes;
-    state.media.forEach((element) async {
-      
-  
-      print("images from bloc${element.images}");
-      // final compressedImage = await FlutterImageCompress.compressAndGetFile(
-      //   element.images!.first.path,
-      //   "${element.images!.first.path}_compressed.jpg",
-      //   quality: 100,
-      // );
-      bytes = await element.images!.first.readAsBytes();
-      // File bytesListFile = File('bytesListdta.txt');
-      // bytesListFile.writeAsString(bytes.toString());
-      
-      print("bytes while sending $bytes");
-      File file = File('test_img.txt');
-      file.writeAsBytes(bytes);
-      String base64String = base64Encode(bytes);
-      Log.d(base64String);
-      await _repo.addVehicleMedia(bytes.toString());
-    }
-    );
-      var imageblob = await  _repo.getImage();
-      print("imagedata from repo ${imageblob.length}");
+    // late Uint8List bytes;
+    // Map<String, dynamic> allPartsJson = {};
+    // Map<String, dynamic> partJson={};
+    // for(int index=0;index<state.media.length;index++){
+    //   List<String> compressedImagesBase64List = [];
+    //   if (state.media[index].images != null && state.media[index].images!.isNotEmpty) {
+    //    for(int i=0;i<state.media[index].images!.length;i++){
+    //     final compressedImage = await FlutterImageCompress.compressAndGetFile(
+    //         state.media[index].images![i].path,
+    //         "${state.media[index].images![i].path}_compressed.jpg",
+    //         quality: 60,
+    //       );
+    //       bytes = await compressedImage!.readAsBytes();
+    //       String base64String =  base64Encode(bytes);
+    //       compressedImagesBase64List.add(base64String);
+    //    }
+    //     partJson={
+    //       "images": compressedImagesBase64List,
+    //       "comments": state.media[index].comments ?? ""
+    //     };
+    //   }
+    //   allPartsJson.addAll({state.media[index].name:partJson});
+    //   print(allPartsJson);
+    // }
+    //   await _repo.addVehicleMedia(allPartsJson);
 
-      
-      Uint8List image=  base64.decode(imageblob);
-      print(image);
-      state.image =image;
-      emit(state.copyWith(state.media, state.status,image:state.image));
-      
-      // print(image);
-      // final dir = await getApplicationDocumentsDirectory();
-      // print("path ${dir.path}");
-      // print("bytes while sending ${Uint8List.fromList(bytesData)}");
-      // state.media.add(VehiclePartMedia(name: 'roof',images: [XFile(dir.path ,bytes:Uint8List.fromList(bytesData) )]));
-      // state.media.forEach((element){
-      //   if(element.name=='roof'){
-      //     element.images!.add(XFile(dir.path ,bytes:image ));
-      //   }
-      // });
 
+    // displaying images and comments from db  
+    Map<String,dynamic> imageMedia = jsonDecode(await  _repo.getImage());
+    print(imageMedia);
+    // Directory dir =  await getTemporaryDirectory();
+    imageMedia.forEach((key, value) async{ 
+      List<XFile> images=[];
+      if(value["images"]!=null){
+      for(int i=0;i<value["images"].length;i++){
+        Directory tempDir = Directory('${(await getTemporaryDirectory()).path}/$key');
+    if (!await tempDir.exists()) {
+      await tempDir.create(recursive: true);
+    } 
+    String fileName = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg'; 
+    File imageFile = File(fileName);
+    await imageFile.writeAsBytes(Base64Codec().decode(value["images"][i]));
+    images.add(XFile(fileName));
+        print("$key $fileName");
+      }}
+        
+      
+      state.media.add(VehiclePartMedia(name: key,images: images,comments: value["comments"]));
+    },);
+    emit(state.copyWith(state.media, state.status));
+    
   }
 
-  void _onRemoveImage(RemoveImageEvent event,
-      Emitter<VehiclePartsInteractionBlocState> emit){
-        print("got into bloc event");
-         state.media.forEach((e) {
+  void _onRemoveImage(
+      RemoveImageEvent event, Emitter<VehiclePartsInteractionBlocState> emit) {
+    print("got into bloc event");
+    state.media.forEach((e) {
       print("${e.name} ${event.name}");
       if (e.name == event.name) {
         e.images!.removeAt(event.index);
@@ -137,5 +146,4 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
   }
 
   // void _getImage()
-
 }
