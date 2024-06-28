@@ -39,3 +39,8 @@ class InspectionJsonUpdated extends MultiBlocEvent {
   final Map<String, dynamic> json;
   InspectionJsonUpdated({required this.json});
 }
+
+class InspectionJsonAdded extends MultiBlocEvent {
+  final String jobCardNo;
+  InspectionJsonAdded({required this.jobCardNo});
+}

@@ -22,7 +22,8 @@ import 'dynamic_ui_src/Entry/json_to_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  List<GeneralBodyPart> generalParts =await  loadSvgImage(svgImage: 'assets/images/image.svg');
+  List<GeneralBodyPart> generalParts =
+      await loadSvgImage(svgImage: 'assets/images/image.svg');
   await init();
   await JsonToWidget.initialize();
   runApp(RepositoryProvider(
@@ -33,15 +34,14 @@ void main() async {
         BlocProvider(create: (_) => CustomerBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => ServiceBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => MultiBloc(repo: _.read<Repository>())),
-         BlocProvider(create: (_) => VehiclePartsInteractionBloc(repo: _.read<Repository>())),
+        BlocProvider(
+            create: (_) =>
+                VehiclePartsInteractionBloc(repo: _.read<Repository>())),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
         ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: CustomDetector(model: BodySelectorViewModel(),generalParts: generalParts,)
-      ),
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: HomeView()),
     ),
   ));
 }

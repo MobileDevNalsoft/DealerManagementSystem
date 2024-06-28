@@ -418,15 +418,16 @@ class _HomeProceedView extends State<HomeProceedView> {
                                               bay: bayController.text,
                                               jobType: jobTypeController.text,
                                               jobCardNo:
-                                                  'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 3)}',
+                                                  'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
                                               customerConcerns:
                                                   custConcernsController.text,
                                               remarks: remarksController.text);
-
                                           Log.d(finalService.toJson());
                                           context.read<ServiceBloc>().add(
                                               ServiceAdded(
                                                   service: finalService));
+                                          print(
+                                              'jc no ${context.read<ServiceBloc>().state.service!.jobCardNo}');
                                         }
                                       },
                                       child: const Text(

@@ -23,16 +23,19 @@ class CustomDetector extends StatefulWidget {
 }
 
 class _CustomDetectorState extends State<CustomDetector> {
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.generalParts!.forEach((value){
-      if(!value.name.startsWith('text')){
-    context.read<VehiclePartsInteractionBloc>().add(AddCommentsEvent(name:value.name ));}
+    widget.generalParts!.forEach((value) {
+      if (!value.name.startsWith('text')) {
+        context
+            .read<VehiclePartsInteractionBloc>()
+            .add(AddCommentsEvent(name: value.name));
+      }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
@@ -69,8 +72,11 @@ class _CustomDetectorState extends State<CustomDetector> {
               child: Stack(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.only(
+                        top: isMobile ? size.height * 0.08 : 0,
+                        left: isMobile ? size.width * 0.03 : 0),
+                    height: size.height,
+                    width: size.width,
                     color: Color.fromRGBO(145, 145, 145, 100),
                     child: BodyCanvas(
                       generalParts: widget.generalParts,
@@ -80,30 +86,47 @@ class _CustomDetectorState extends State<CustomDetector> {
                       .isTapped)
                     Positioned(
                       //  bottom: isMobile?100:size.height*0.25,
-                            left:  size.width * 0.365,
-                            right: size.width*0.1,
-                            top:isMobile?100:200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                              
-                           BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
-                              listener: (context, state) {
-                                  Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
-                                  backgroundColor: const Color.fromARGB(255, 218, 212, 212),
-                                  message: 'image',
-                                  messageText: state.image!=null? Image.memory(state.image!):null,
-                                  duration: Duration(seconds: 2))
-                              .show(context);
-                                print("listening ");
-                              },
-                              builder: (context, state) {
-                                return CommentsView(vehiclePartMedia: state.media.firstWhere((e)=>e.name==Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart, orElse:()=> VehiclePartMedia(name:Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart,comments: "")),);
-                              },
-                            )
-                        ,
-                        ElevatedButton(
+                      left: size.width * (isMobile ? 0.08 : 0.365),
+                      right: size.width * 0.1,
+                      top: isMobile ? size.height * 0.3 : 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BlocConsumer<VehiclePartsInteractionBloc,
+                              VehiclePartsInteractionBlocState>(
+                            listener: (context, state) {
+                              Flushbar(
+                                      flushbarPosition: FlushbarPosition.TOP,
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 218, 212, 212),
+                                      message: 'image',
+                                      messageText: state.image != null
+                                          ? Image.memory(state.image!)
+                                          : null,
+                                      duration: Duration(seconds: 2))
+                                  .show(context);
+                              print("listening ");
+                            },
+                            builder: (context, state) {
+                              return CommentsView(
+                                vehiclePartMedia: state.media.firstWhere(
+                                    (e) =>
+                                        e.name ==
+                                        Provider.of<BodySelectorViewModel>(
+                                                context,
+                                                listen: true)
+                                            .selectedGeneralBodyPart,
+                                    orElse: () => VehiclePartMedia(
+                                        name:
+                                            Provider.of<BodySelectorViewModel>(
+                                                    context,
+                                                    listen: true)
+                                                .selectedGeneralBodyPart,
+                                        comments: "")),
+                              );
+                            },
+                          ),
+                          ElevatedButton(
                               onPressed: () {
                                 context
                                     .read<VehiclePartsInteractionBloc>()
@@ -120,16 +143,21 @@ class _CustomDetectorState extends State<CustomDetector> {
                                 'Submit',
                                 style: TextStyle(color: Colors.white),
                               )),
-                              
-                          if(context.watch<VehiclePartsInteractionBloc>().state.image!=null)
-                              SizedBox(
-                                width: size.width*0.3,
-                                height: size.height*0.2,
-                                child: Image.memory(context.read<VehiclePartsInteractionBloc>().state.image!))
-                      ],
-                    ),
-                  )
-                
+                          if (context
+                                  .watch<VehiclePartsInteractionBloc>()
+                                  .state
+                                  .image !=
+                              null)
+                            SizedBox(
+                                width: size.width * 0.3,
+                                height: size.height * 0.2,
+                                child: Image.memory(context
+                                    .read<VehiclePartsInteractionBloc>()
+                                    .state
+                                    .image!))
+                        ],
+                      ),
+                    )
                 ],
               ),
             ),

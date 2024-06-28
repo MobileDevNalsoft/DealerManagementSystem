@@ -6,6 +6,7 @@ import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/inspection.dart';
+import 'package:dms/views/service_history_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -526,7 +527,8 @@ class _HomeView extends State<HomeView> {
                               context.read<VehicleBloc>().state.status =
                                   VehicleStatus.initial;
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const InspectionView(),
+                                builder: (context) =>
+                                    const ServiceHistoryView(),
                               ));
                             },
                             child: Column(

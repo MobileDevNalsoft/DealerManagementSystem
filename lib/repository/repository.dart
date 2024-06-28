@@ -26,8 +26,25 @@ class Repository {
   }
 
   Future<int> addService(Map<String, dynamic> payload) async {
-    print('payload ${payload}');
     ApiResponse apiResponse = await _api.post('addService', data: payload);
+    if (apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<int> addinspection(Map<String, dynamic> payload) async {
+    print('payload $payload');
+    ApiResponse apiResponse = await _api.post('addInspection', data: payload);
     if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
@@ -139,17 +156,16 @@ class Repository {
     }
   }
 
-  
-   Future<List<dynamic>>  addVehicleMedia(Map<String, dynamic> image) async {
+  Future<List<dynamic>> addVehicleMedia(Map<String, dynamic> image) async {
     print(image);
-    ApiResponse apiResponse = await _api.post('addImage',data: {
+    ApiResponse apiResponse = await _api.post('addImage', data: {
       "image": jsonEncode(image),
     });
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
         if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          return (jsonDecode(apiResponse.response!.data)["data"] );
+          return (jsonDecode(apiResponse.response!.data)["data"]);
         } else {
           throw apiResponse.error;
         }
@@ -161,15 +177,14 @@ class Repository {
     }
   }
 
-    Future getImage() async {
-    
+  Future getImage() async {
     ApiResponse apiResponse = await _api.get('getImage');
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
         // if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          // print(jsonDecode(apiResponse.response!.data).runtimeType);
-          return apiResponse.response!.data["items"][0]["image"];
+        // print(jsonDecode(apiResponse.response!.data).runtimeType);
+        return apiResponse.response!.data["items"][0]["image"];
         // } else {
         //   throw apiResponse.error;
         // }

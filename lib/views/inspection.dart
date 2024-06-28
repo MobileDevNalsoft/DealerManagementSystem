@@ -1,3 +1,4 @@
+import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
@@ -25,6 +26,8 @@ class _InspectionViewState extends State<InspectionView> {
     super.initState();
     context.read<MultiBloc>().add(GetJson());
     context.read<MultiBloc>().state.index = 0;
+    print('here');
+    print('jc no ${context.read<ServiceBloc>().state.service!.jobCardNo}');
   }
 
   @override
@@ -177,19 +180,32 @@ class _InspectionViewState extends State<InspectionView> {
                                                 .length -
                                             1)
                                   ElevatedButton(
-                                      onPressed: () async{
-                                       await  loadSvgImage(svgImage: 'assets/images/image.svg').then((value) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CustomDetector(
-                                                model: BodySelectorViewModel(),
-                                                generalParts:value,
-                                              ),
-                                            ));
-                                       },);
-                                       
+                                      onPressed: () async {
+                                        context.read<MultiBloc>().add(
+                                            InspectionJsonAdded(
+                                                jobCardNo: context
+                                                    .read<ServiceBloc>()
+                                                    .state
+                                                    .service!
+                                                    .jobCardNo!));
+
+                                        await loadSvgImage(
+                                                svgImage:
+                                                    'assets/images/image.svg')
+                                            .then(
+                                          (value) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CustomDetector(
+                                                    model:
+                                                        BodySelectorViewModel(),
+                                                    generalParts: value,
+                                                  ),
+                                                ));
+                                          },
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
                                           minimumSize: const Size(70.0, 35.0),

@@ -27,7 +27,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     await _repo.addService(event.service.toJson()).then(
       (value) {
         if (value == 200) {
-          emit(state.copyWith(status: ServiceStatus.success));
+          emit(state.copyWith(
+              status: ServiceStatus.success, service: event.service));
           emit(state.copyWith(status: ServiceStatus.initial));
         } else {
           emit(state.copyWith(status: ServiceStatus.failure));
