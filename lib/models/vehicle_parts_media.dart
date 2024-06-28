@@ -1,9 +1,10 @@
+
 import 'package:image_picker/image_picker.dart';
 
-class VehiclePartsMedia{
+class VehiclePartMedia{
   String name;
   String? comments;
   List<XFile>? images;
 
-  VehiclePartsMedia({required this.name,this.comments});
+  VehiclePartMedia({required this.name,this.comments,this.images});
 }

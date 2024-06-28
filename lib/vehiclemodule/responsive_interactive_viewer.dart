@@ -1,11 +1,16 @@
 import 'dart:ui';
 
+import 'package:another_flushbar/flushbar.dart';
+import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
+import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class CustomDetector extends StatefulWidget {
@@ -18,28 +23,20 @@ class CustomDetector extends StatefulWidget {
 }
 
 class _CustomDetectorState extends State<CustomDetector> {
-  late List<GeneralBodyPart> generalParts;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    getGeneralParts();
+    widget.generalParts!.forEach((value){
+      if(!value.name.startsWith('text')){
+    context.read<VehiclePartsInteractionBloc>().add(AddCommentsEvent(name:value.name ));}
+    });
   }
-
-  Future<void> getGeneralParts() async {
-    generalParts = await loadSvgImage(svgImage: 'assets/images/image.svg');
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-    if (isMobile) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
-    }
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.sizeOf(context);
     // TODO: implement build
     return GestureDetector(
       onPanStart: (details) => print(details.globalPosition),
@@ -66,6 +63,7 @@ class _CustomDetectorState extends State<CustomDetector> {
         child: Transform.scale(
           scale: 1.3,
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             // body: Viewer(),
             body: Center(
               child: Stack(
@@ -78,37 +76,60 @@ class _CustomDetectorState extends State<CustomDetector> {
                       generalParts: widget.generalParts,
                     ),
                   ),
-                  Consumer<BodySelectorViewModel>(
-                      builder: (context, value, child) {
-                    print(value.isTapped);
-                    if (value.isTapped) {
-                      return Positioned(
-                          top: 100,
-                          // bottom: MediaQuery.of(context).size.height * 0.5,
-                          left: MediaQuery.of(context).size.width * 0.5,
-                          child: CommentsView(
-                              bodyPartName: value.selectedGeneralBodyPart)
-                          // Container(
-                          //   height: MediaQuery.of(context).size.height * 0.2,
-                          //   width: MediaQuery.of(context).size.width * 0.3,
-                          //   color: Colors.white,
-                          //   child: Column(
-                          //     children: [
-                          //       Text(value.selectedGeneralBodyPart),
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           value.isTapped = false;
-                          //         },
-                          //         child: Text("back"),
-                          //       )
-                          //     ],
-                          //   ),
-                          // ),
-                          );
-                    } else {
-                      return Positioned(bottom: 0, child: SizedBox());
-                    }
-                  })
+                  if (Provider.of<BodySelectorViewModel>(context, listen: true)
+                      .isTapped)
+                    Positioned(
+                      //  bottom: isMobile?100:size.height*0.25,
+                            left:  size.width * 0.365,
+                            right: size.width*0.1,
+                            top:isMobile?100:200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                              
+                           BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
+                              listener: (context, state) {
+                                  Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: const Color.fromARGB(255, 218, 212, 212),
+                                  message: 'image',
+                                  messageText: state.image!=null? Image.memory(state.image!):null,
+                                  duration: Duration(seconds: 2))
+                              .show(context);
+                                print("listening ");
+                              },
+                              builder: (context, state) {
+                                return CommentsView(vehiclePartMedia: state.media.firstWhere((e)=>e.name==Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart, orElse:()=> VehiclePartMedia(name:Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart,comments: "")),);
+                              },
+                            )
+                        ,
+                        ElevatedButton(
+                              onPressed: () {
+                                context
+                                    .read<VehiclePartsInteractionBloc>()
+                                    .add(SubmitVehicleMediaEvent());
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(70.0, 35.0),
+                                  padding: const EdgeInsets.all(8),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 145, 19, 19),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5))),
+                              child: const Text(
+                                'Submit',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                              
+                          if(context.watch<VehiclePartsInteractionBloc>().state.image!=null)
+                              SizedBox(
+                                width: size.width*0.3,
+                                height: size.height*0.2,
+                                child: Image.memory(context.read<VehiclePartsInteractionBloc>().state.image!))
+                      ],
+                    ),
+                  )
+                
                 ],
               ),
             ),
