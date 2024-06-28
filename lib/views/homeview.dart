@@ -9,7 +9,6 @@ import 'package:dms/views/inspection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -27,6 +26,7 @@ class _HomeView extends State<HomeView> {
   FocusNode customerFocus = FocusNode();
   FocusNode scheduleDateFocus = FocusNode();
   FocusNode kmsFocus = FocusNode();
+
   TextEditingController locController = TextEditingController();
   TextEditingController locTypeAheadController = TextEditingController();
   TextEditingController vehRegNumController = TextEditingController();
@@ -42,6 +42,7 @@ class _HomeView extends State<HomeView> {
     super.initState();
     vehRegNumFocus.addListener(_onVehRegNumUnfocused);
     context.read<ServiceBloc>().add(GetServiceLocations());
+    context.read<VehicleBloc>().state.status = VehicleStatus.initial;
   }
 
   void _onVehRegNumUnfocused() {
@@ -143,12 +144,6 @@ class _HomeView extends State<HomeView> {
                                   onChanged: (value) {
                                     if (value != null) {
                                       locTypeAheadController.text = value;
-                                      context
-                                          .read<ServiceBloc>()
-                                          .state
-                                          .copyWith(
-                                              service: Service()
-                                                  .copyWith(location: value));
                                     }
                                   },
                                   icon: locFocus.hasFocus
@@ -175,9 +170,9 @@ class _HomeView extends State<HomeView> {
                                       hint: 'Vehicle Registration Number',
                                       onChange: (value) {
                                         if (value!.length > 5) {
-                                          context.read<VehicleBloc>().add(
-                                              FetchVehicleCustomer(
-                                                  registrationNo: value));
+                                          // context.read<VehicleBloc>().add(
+                                          //     FetchVehicleCustomer(
+                                          //         registrationNo: value));
                                         }
                                       },
                                       inputFormatters: [
@@ -354,9 +349,17 @@ class _HomeView extends State<HomeView> {
 
                                 if (context.read<VehicleBloc>().state.status ==
                                     VehicleStatus.vehicleAlreadyAdded) {
-                                  print("vehicle present");
-                                  context.read<VehicleBloc>().state.status =
-                                      VehicleStatus.initial;
+                                  Service service = Service(
+                                      registrationNo: vehRegNumController.text,
+                                      scheduleDate: context
+                                          .read<MultiBloc>()
+                                          .state
+                                          .date!
+                                          .toString()
+                                          .substring(0, 10),
+                                      location: locController.text,
+                                      kms: int.parse(kmsController.text),
+                                      customerName: customerController.text);
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
@@ -366,20 +369,7 @@ class _HomeView extends State<HomeView> {
                                               secondaryAnimation) =>
                                           HomeProceedView(
                                               clearFields: clearFields,
-                                              service: Service(
-                                                  registrationNo:
-                                                      vehRegNumController.text,
-                                                  scheduleDate: context
-                                                      .read<MultiBloc>()
-                                                      .state
-                                                      .date!
-                                                      .toString()
-                                                      .substring(0, 10),
-                                                  location: locController.text,
-                                                  kms: int.parse(
-                                                      kmsController.text),
-                                                  customerName:
-                                                      customerController.text)),
+                                              homeData: service.toJson()),
                                       transitionsBuilder: (context, animation,
                                           secondaryAnimation, child) {
                                         const begin = Offset(1, 0.0);
@@ -396,7 +386,6 @@ class _HomeView extends State<HomeView> {
                                     ),
                                   );
                                 } else {
-                                  print("vehicle not present");
                                   Flushbar(
                                           flushbarPosition:
                                               FlushbarPosition.TOP,

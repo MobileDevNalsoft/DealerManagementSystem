@@ -24,7 +24,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   Future<void> _onServiceAdded(
       ServiceAdded event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(status: ServiceStatus.loading));
-    print(event.service.toJson());
     await _repo.addService(event.service.toJson()).then(
       (value) {
         if (value == 200) {

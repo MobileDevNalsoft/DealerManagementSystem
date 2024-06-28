@@ -25,6 +25,7 @@ class Repository {
   }
 
   Future<int> addService(Map<String, dynamic> payload) async {
+    print('payload ${payload}');
     ApiResponse apiResponse = await _api.post('addService', data: payload);
     if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);

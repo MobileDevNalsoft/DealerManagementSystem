@@ -1,4 +1,4 @@
-class Service {
+final class Service {
   int? sNo;
   String? registrationNo;
   String? jobCardNo;
@@ -44,12 +44,12 @@ class Service {
     salesPerson = json['sales_person'];
     bay = json['bay'];
     jobType = json['job_type'];
+    jobCardNo = json['job_card_no'];
     customerConcerns = json['customer_concerns'];
     remarks = json['remarks'];
   }
 
   Map<String, dynamic> toJson() {
-    print("jobType $jobType");
     final Map<String, dynamic> data = <String, dynamic>{};
     data['vehicle_registration_no'] = registrationNo;
     data['location'] = location;
@@ -62,12 +62,13 @@ class Service {
     data['sales_person'] = salesPerson;
     data['bay'] = bay;
     data['job_type'] = jobType;
+    data['job_card_no'] = jobCardNo;
     data['customer_concerns'] = customerConcerns;
     data['remarks'] = remarks;
     return data;
   }
 
-  copyWith(
+  Service copyWith(
       {String? registrationNo,
       String? location,
       String? customerName,
@@ -79,6 +80,7 @@ class Service {
       String? salesPerson,
       String? bay,
       String? jobType,
+      String? jobCardNo,
       String? customerConcerns,
       String? remarks}) {
     return Service(
@@ -94,8 +96,9 @@ class Service {
             alternatePersonContactNo ?? this.alternatePersonContactNo,
         salesPerson: salesPerson ?? this.salesPerson,
         bay: bay ?? this.bay,
-        jobType: jobType??this.jobType,
+        jobType: jobType ?? this.jobType,
+        jobCardNo: jobCardNo ?? this.jobCardNo,
         customerConcerns: customerConcerns ?? this.customerConcerns,
-        remarks: remarks??this.remarks);
+        remarks: remarks ?? this.remarks);
   }
 }
