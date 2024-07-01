@@ -5,7 +5,6 @@ import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
-import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +12,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
 
 class CustomDetector extends StatefulWidget {
   BodySelectorViewModel model;
@@ -156,61 +156,7 @@ class _CustomDetectorState extends State<CustomDetector> {
                         )
                     ],
                   ),
-                  if (Provider.of<BodySelectorViewModel>(context, listen: true)
-                      .isTapped)
-                    Positioned(
-                      //  bottom: isMobile?100:size.height*0.25,
-                            left:  size.width * 0.365,
-                            right: size.width*0.1,
-                            top:isMobile?100:200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                              
-                           BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
-                              listener: (context, state) {
-                                  Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
-                                  backgroundColor: const Color.fromARGB(255, 218, 212, 212),
-                                  message: 'image',
-                                  messageText: state.image!=null? Image.memory(state.image!):null,
-                                  duration: Duration(seconds: 2))
-                              .show(context);
-                                print("listening ");
-                              },
-                              builder: (context, state) {
-                                return CommentsView(vehiclePartMedia: state.media.firstWhere((e)=>e.name==Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart, orElse:()=> VehiclePartMedia(name:Provider.of<BodySelectorViewModel>(context,listen: true).selectedGeneralBodyPart,comments: "")),);
-                              },
-                            )
-                        ,
-                        ElevatedButton(
-                              onPressed: () {
-                                context
-                                    .read<VehiclePartsInteractionBloc>()
-                                    .add(SubmitVehicleMediaEvent());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(70.0, 35.0),
-                                  padding: const EdgeInsets.all(8),
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 145, 19, 19),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5))),
-                              child: const Text(
-                                'Submit',
-                                style: TextStyle(color: Colors.white),
-                              )),
-                              
-                          if(context.watch<VehiclePartsInteractionBloc>().state.image!=null)
-                              SizedBox(
-                                width: size.width*0.3,
-                                height: size.height*0.2,
-                                child: Image.memory(context.read<VehiclePartsInteractionBloc>().state.image!))
-                      ],
-                    ),
-                  )
-                
-                ],
+                ),
               ),
             ),
           ),
