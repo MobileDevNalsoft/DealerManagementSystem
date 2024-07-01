@@ -75,7 +75,6 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
               vehicle: Vehicle.fromJson(value["data"])));
         } else {
           emit(state.copyWith(status: VehicleStatus.newVehicle));
-          emit(state.copyWith(status: VehicleStatus.initial));
         }
       },
     ).onError(
