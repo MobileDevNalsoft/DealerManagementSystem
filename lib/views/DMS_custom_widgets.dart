@@ -17,9 +17,10 @@ class DMSCustomWidgets {
       required List<dynamic> items,
       required FocusNode focus,
       required TextEditingController textcontroller,
+      required TextEditingController typeAheadController,
       required bool isMobile,
       required ScrollController scrollController,
-      Function(String?)? onChange,
+      Function(String?)? onChanged,
       Function(String?)? suggestionCall,
       SuggestionsController? suggestionsController,
       bool isLoading = false,
@@ -31,20 +32,17 @@ class DMSCustomWidgets {
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
+        color: Color.fromARGB(255, 250, 239, 239),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
           suggestionsController: suggestionsController,
           builder: (context, controller, focusNode) {
             focus = focusNode;
+            typeAheadController = controller;
             return Transform(
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
               child: TextFormField(
-                onChanged: (value) {
-                  if (onChange != null) {
-                    onChange(value);
-                  }
-                  controller.text = value;
-                },
+                onChanged: onChanged,
                 onTap: () {
                   Provider.of<HomeProvider>(context, listen: false)
                       .setFocusNode(focusNode, scrollController, context);
@@ -122,7 +120,7 @@ class DMSCustomWidgets {
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
-        color: Colors.white.withOpacity(1),
+        color: Color.fromARGB(255, 250, 239, 239),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Transform(
@@ -181,7 +179,7 @@ class DMSCustomWidgets {
       height: isMobile ? size.height * 0.1 : size.height * 0.13,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
-        color: Colors.white.withOpacity(1),
+        color: Color.fromARGB(255, 250, 239, 239),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: TextFormField(
@@ -265,7 +263,7 @@ class DMSCustomWidgets {
           );
         },
         child: Card(
-            color: Colors.white.withOpacity(1),
+            color: Color.fromARGB(255, 250, 239, 239),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
             child: Padding(

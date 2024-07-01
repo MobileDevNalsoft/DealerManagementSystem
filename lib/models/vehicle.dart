@@ -39,20 +39,20 @@ class Vehicle {
       this.customerAddress});
 
   Vehicle.fromJson(Map<String, dynamic> json) {
-    vehicleType = json['vehicleType'];
-    chassisNumber = json['chassisNumber'];
+    vehicleType = json['vehicle_type'];
+    chassisNumber = json['chassis_no'];
     model = json['model'];
     kms = json['kms'];
     make = json['make'];
-    engineNumber= json["engine_no"];
+    engineNumber = json["engine_no"];
     customerNumber = json['customerNumber'];
     cusotmerName = json['customer_name'];
-    varient = json['varient'];
+    varient = json['variant'];
     color = json['color'];
     vehicleRegNumber = json['vehicle_registration_no'];
     mfgYear = json['mfg_year'];
     financialDetails = json['financial_details'];
-    insuranceCompany = json['insuranceCompany'];
+    insuranceCompany = json['insurance_company'];
     customerContactNo = json['customer_contact_no'];
     customerName = json['customer_name'];
     customerAddress = json['customer_address'];
@@ -67,7 +67,7 @@ class Vehicle {
     data['make'] = make;
     data['engine_no'] = engineNumber;
     data['make'] = make;
-    data['varient'] = varient;
+    data['variant'] = varient;
     data['color'] = color;
     data['customer_no'] = customerNumber;
     data['customer_name'] = cusotmerName;

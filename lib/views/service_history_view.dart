@@ -26,8 +26,10 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   void initState() {
     super.initState();
     serviceState.copyWith(status: ServiceStatus.initial);
-    context.read<ServiceBloc>().add(
-        GetServiceHistory(year: DateTime.now().toString().substring(0, 4)));
+    context
+        .read<ServiceBloc>()
+        .add(GetServiceHistory(year: '2022', getCompleted: 'true'));
+    print('got service list');
     context.read<ServiceBloc>().state.status = ServiceStatus.initial;
   }
 
@@ -80,16 +82,16 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
             extendBodyBehindAppBar: true,
             appBar: AppBar(
               elevation: 0.0,
-              backgroundColor: Colors.transparent,
+              backgroundColor: const Color.fromARGB(255, 145, 19, 19),
               leading: IconButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   },
                   icon: const Icon(Icons.arrow_back_rounded,
                       color: Colors.white)),
               title: const Text(
                 "Service History",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               centerTitle: true,
             ),

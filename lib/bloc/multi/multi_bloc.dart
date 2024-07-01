@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
+import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/models/salesPerson.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<PageChange>(_onPageChange);
     on<InspectionJsonUpdated>(_onInspectionJsonUpdated);
     on<RadioOptionChanged>(_onRadioOptionChanged);
+    on<InspectionJsonAdded>(_onInspectionJsonAdded);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -73,6 +75,38 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
   void _onInspectionJsonUpdated(
       InspectionJsonUpdated event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(json: event.json));
+  }
+
+  Future<void> _onInspectionJsonAdded(
+      InspectionJsonAdded event, Emitter<MultiBlocState> emit) async {
+    emit(state.copyWith(
+        inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
+    print('jc no ${event.jobCardNo}');
+    await _repo.addinspection({
+      'job_card_no': event.jobCardNo,
+      'inspection_details': state.json.toString()
+    }).then(
+      (value) {
+        if (value == 200) {
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
+        } else {
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(
+            inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
+        emit(state.copyWith(
+            inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
+      },
+    );
   }
 
   void _onRadioOptionChanged(

@@ -16,12 +16,14 @@ class MultiBlocState {
       this.checkBoxStates,
       this.salesPersons,
       this.selectedRadioOption,
+      this.inspectionJsonUploadStatus,
       this.status});
 
   JsonStatus? jsonStatus;
   int? index;
   DateTime? date;
   int? selectedRadioOption;
+  InspectionJsonUploadStatus? inspectionJsonUploadStatus;
   int? year;
   List<SalesPerson>? salesPersons;
   MultiStateStatus? status;
@@ -36,6 +38,7 @@ class MultiBlocState {
         json: null,
         jsonStatus: JsonStatus.initial,
         selectedRadioOption: 1,
+        inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial,
         checkBoxStates: {
           0: false,
           1: false,
@@ -65,6 +68,7 @@ class MultiBlocState {
       MultiStateStatus? status,
       Map<String, dynamic>? json,
       int? selectedRadioOption,
+      InspectionJsonUploadStatus? inspectionJsonUploadStatus,
       int? index,
       JsonStatus? jsonStatus,
       Map<int, bool>? checkBoxStates}) {
@@ -75,6 +79,8 @@ class MultiBlocState {
         json: json ?? this.json,
         jsonStatus: jsonStatus ?? this.jsonStatus,
         selectedRadioOption: selectedRadioOption ?? this.selectedRadioOption,
+        inspectionJsonUploadStatus:
+            inspectionJsonUploadStatus ?? this.inspectionJsonUploadStatus,
         checkBoxStates: checkBoxStates ?? this.checkBoxStates,
         salesPersons: salesPersons ?? this.salesPersons,
         status: status ?? this.status);

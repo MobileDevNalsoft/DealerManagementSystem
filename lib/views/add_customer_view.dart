@@ -122,7 +122,7 @@ class AddCustomerView extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           title: const Text(
             "Add Customer",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           centerTitle: true,
         ),

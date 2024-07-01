@@ -1,7 +1,5 @@
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
-import 'package:dms/vehiclemodule/wrapper_ex.dart';
-import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +45,7 @@ class _InspectionViewState extends State<InspectionView> {
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           title: const Text(
             "Inspection",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           centerTitle: true,
         ),
@@ -177,19 +175,16 @@ class _InspectionViewState extends State<InspectionView> {
                                                 .length -
                                             1)
                                   ElevatedButton(
-                                      onPressed: () async{
-                                       await  loadSvgImage(svgImage: 'assets/images/image.svg').then((value) {
-                                          Navigator.push(
+                                      onPressed: () {
+                                        Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   CustomDetector(
                                                 model: BodySelectorViewModel(),
-                                                generalParts:value,
+                                                generalParts: [],
                                               ),
                                             ));
-                                       },);
-                                       
                                       },
                                       style: ElevatedButton.styleFrom(
                                           minimumSize: const Size(70.0, 35.0),

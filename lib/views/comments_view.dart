@@ -7,9 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CommentsView extends StatefulWidget {
-
   VehiclePartMedia vehiclePartMedia;
-  CommentsView({ super.key,required this.vehiclePartMedia});
+  CommentsView({super.key, required this.vehiclePartMedia});
 
   @override
   State<CommentsView> createState() => _CommentsViewState();
@@ -32,9 +31,8 @@ class _CommentsViewState extends State<CommentsView> {
 
   @override
   Widget build(BuildContext context) {
-    
-   print("images ${widget.vehiclePartMedia.images}");
-    commentsController.text = widget.vehiclePartMedia.comments??"";
+    print("images ${widget.vehiclePartMedia.images}");
+    commentsController.text = widget.vehiclePartMedia.comments ?? "";
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     Size size = MediaQuery.sizeOf(context);
@@ -76,7 +74,8 @@ class _CommentsViewState extends State<CommentsView> {
                       onChanged: (value) {
                         context.read<VehiclePartsInteractionBloc>().add(
                             AddCommentsEvent(
-                                name:widget.vehiclePartMedia.name, comments: value));
+                                name: widget.vehiclePartMedia.name,
+                                comments: value));
                       },
                     ),
                   ),
@@ -86,26 +85,28 @@ class _CommentsViewState extends State<CommentsView> {
                             commentsFocus.unfocus();
                             ImagePicker imagePicker = ImagePicker();
                             XFile? image = await imagePicker.pickImage(
-                                source: ImageSource.camera,);
+                              source: ImageSource.camera,
+                            );
                             if (image != null) {
-                              context
-                                  .read<VehiclePartsInteractionBloc>()
-                                  .add(AddImageEvent(
+                              context.read<VehiclePartsInteractionBloc>().add(
+                                  AddImageEvent(
                                       name: widget.vehiclePartMedia.name,
                                       image: image));
                             }
                           },
                           icon: Icon(Icons.add_photo_alternate_rounded))),
-                  BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
+                  BlocConsumer<VehiclePartsInteractionBloc,
+                      VehiclePartsInteractionBlocState>(
                     listener: (context, state) {
                       // TODO: implement listener
                     },
                     builder: (context, state) {
                       return SizedBox(
-                          height: widget.vehiclePartMedia.images==null?0:widget.vehiclePartMedia.images!.length == 0
-                              ? size.height*0
-                              : 
-                               size.height * 0.2,
+                          height: widget.vehiclePartMedia.images == null
+                              ? 0
+                              : widget.vehiclePartMedia.images!.length == 0
+                                  ? size.height * 0
+                                  : size.height * 0.2,
                           width: size.width * 0.5,
                           child: GridView.builder(
                             gridDelegate:
@@ -116,8 +117,8 @@ class _CommentsViewState extends State<CommentsView> {
                             itemBuilder: (context, index) {
                               return Stack(fit: StackFit.expand, children: [
                                 Image.file(
-                                  File(widget.vehiclePartMedia.images![index].path),
-                                  
+                                  File(widget
+                                      .vehiclePartMedia.images![index].path),
                                   fit: BoxFit.fill,
                                 ),
                                 Positioned(
@@ -125,20 +126,27 @@ class _CommentsViewState extends State<CommentsView> {
                                     right: -10.0,
                                     child: IconButton(
                                         onPressed: () {
-                                          if(widget.vehiclePartMedia.images!=null){
-                                        context
-                                  .read<VehiclePartsInteractionBloc>()
-                                  .add(RemoveImageEvent(name: widget.vehiclePartMedia.name, index: index));
-                                        }},
+                                          if (widget.vehiclePartMedia.images !=
+                                              null) {
+                                            context
+                                                .read<
+                                                    VehiclePartsInteractionBloc>()
+                                                .add(RemoveImageEvent(
+                                                    name: widget
+                                                        .vehiclePartMedia.name,
+                                                    index: index));
+                                          }
+                                        },
                                         icon: Icon(
                                           Icons.cancel_rounded,
                                           color: Colors.red,
                                         )))
                               ]);
                             },
-                            itemCount:widget.vehiclePartMedia.images==null?0:widget.vehiclePartMedia.images!.length, 
-                          )
-                          );
+                            itemCount: widget.vehiclePartMedia.images == null
+                                ? 0
+                                : widget.vehiclePartMedia.images!.length,
+                          ));
                     },
                   )
                 ],
