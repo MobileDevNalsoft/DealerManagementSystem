@@ -127,7 +127,7 @@ class Repository {
   }
 
   
-   Future<List<dynamic>>  addVehicleMedia(Map<String, dynamic> image) async {
+   Future<int>  addVehicleMedia(Map<String, dynamic> image) async {
     print(image);
     ApiResponse apiResponse = await _api.post('addImage',data: {
       "image": jsonEncode(image),
@@ -136,7 +136,7 @@ class Repository {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
         if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          return (jsonDecode(apiResponse.response!.data)["data"] );
+          return 200;
         } else {
           throw apiResponse.error;
         }

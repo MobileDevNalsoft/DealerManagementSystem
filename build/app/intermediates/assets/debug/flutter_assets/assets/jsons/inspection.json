@@ -1,185 +1,91 @@
 {
-    "type": "container",
-    "width": "dynamic",
-    "height": "dynamic",
-    "padding": 8,
-    "decoration": {
-        "color": "#000000",
-        "opacity": 0.5,
-        "borderRadius": 20,
-        "boxShadow": [
-            {
-                "color": "#000000",
-                "blurRadius": 2
+    "Front Side": [
+        {
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
             }
-        ]
-    },
-    "child": {
-        "type": "column",
-        "mainAxisAlignment": "start",
-        "crossAxisAlignment": "start",
-        "children": [
-            {
-                "type": "row",
-                "mainAxisAlignment": "start",
-                "crossAxisAlignment": "start",
-                "children": [
-                    {
-                        "type": "text",
-                        "data": "Description",
-                        "style": {
-                            "color": "#ffffffff"
-                        }
-                    },
-                    {
-                        "type": "gap",
-                        "value": "dynamic"
-                    },
-                    {
-                        "type": "text",
-                        "data": "Interior Work\n Req",
-                        "style": {
-                            "color": "#ffffffff"
-                        }
-                    },
-                    {
-                        "type": "gap",
-                        "value": "dynamic"
-                    },
-                    {
-                        "type": "text",
-                        "data": "Denting\nReq",
-                        "style": {
-                            "color": "#ffffffff"
-                        }
-                    },
-                    {
-                        "type": "gap",
-                        "value": "dynamic"
-                    },
-                    {
-                        "type": "text",
-                        "data": "Painting\nReq",
-                        "style": {
-                            "color": "#ffffffff"
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "gap",
-                "value": "dynamic"
-            },
-            {
-                "type": "row",
-                "mainAxisAlignment": "start",
-                "crossAxisAlignment": "start",
-                "children" : [
-                    {
-                        "type": "column",
-                        "mainAxisAlignment": "start",
-                        "crossAxisAlignment": "start",
-                        "children": [
-                            {
-                                "type": "gap",
-                                "value": "dynamic"
-                            },
-                            {
-                                "type": "text",
-                                "data": "Front Side",
-                                "style": {
-                                    "color": "#ffffffff"
-                                }
-                            },
-                            {
-                                "type": "gap",
-                                "value": "dynamic"
-                            },
-                            {
-                                "type": "text",
-                                "data": "Left Hand\nSide",
-                                "style": {
-                                    "color": "#ffffffff"
-                                }
-                            },
-                            {
-                                "type": "gap",
-                                "value": "dynamic"
-                            },
-                            {
-                                "type": "text",
-                                "data": "Right Hand\nSide",
-                                "style": {
-                                    "color": "#ffffffff"
-                                }
-                            },
-                            {
-                                "type": "gap",
-                                "value": "dynamic"
-                            },
-                            {
-                                "type": "text",
-                                "data": "Rear Side",
-                                "style": {
-                                    "color": "#ffffffff"
-                                }
-                            },
-                            {
-                                "type": "gap",
-                                "value": "dynamic"
-                            },
-                            {
-                                "type": "text",
-                                "data": "Interior\nCondition",
-                                "style": {
-                                    "color": "#ffffffff"
-                                }
-                            },
-                            {
-                                "type": "gap",
-                                "value": "dynamic"
-                            },
-                            {
-                                "type": "text",
-                                "data": "Paint\nCondition",
-                                "style": {
-                                    "color": "#ffffffff"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "type": "gap",
-                        "value": "dynamic"
-                    },
-                    {
-                        "type": "column",
-                        "mainAxisAlignment": "start",
-                        "crossAxisAlignment": "start",
-                        "children": "dynamic"
-                    },
-                    {
-                        "type": "gap",
-                        "value": "dynamic"
-                    },
-                    {
-                        "type": "column",
-                        "mainAxisAlignment": "start",
-                        "crossAxisAlignment": "start",
-                        "children": "dynamic"
-                    },
-                    {
-                        "type": "gap",
-                        "value": "dynamic"
-                    },
-                    {
-                        "type": "column",
-                        "mainAxisAlignment": "start",
-                        "crossAxisAlignment": "start",
-                        "children": "dynamic"
-                    }
+        },
+        {
+            "widget": "textField",
+            "properties":{
+                "label": "Remarks",
+                "value": ""
+            }
+        }
+    ],
+    "Rear Side": [
+        {
+            "widget": "checkBox",
+            "properties": {
+                "label": "Denting Required",
+                "value": false
+            }
+        },
+        {
+            "widget": "textField",
+            "properties":{
+                "label": "Remarks",
+                "value": ""
+            }
+        },
+        {
+            "widget": "radioButtons",
+            "properties": {
+                "label": "Denting Type",
+                "value": 1,
+                "options": [
+                    "Creased Dents",
+                    "Round Dents",
+                    "Sharp Dents"
                 ]
             }
-        ]
-    }
+        }
+    ],
+    "Interior Condition": [
+        {
+            "widget": "dropDown",
+            "properties": {
+                "label": "Ac Vent",
+                "items": [
+                    "Front Left Hand Side",
+                    "Rear Left Hand Side",
+                    "Front Right Hand Side",
+                    "Rear Right Hand Side"
+                ],
+                "value": ""
+            }
+        },
+        {
+            "widget": "textField",
+            "properties": {
+                "label": "No. of Seat Covers\nRequired",
+                "value": ""
+            }
+        },
+        {
+            "widget": "textField",
+            "properties":{
+                "label": "Remarks",
+                "value": ""
+            }
+        }
+    ],
+    "Paint Condition": [
+        {
+            "widget": "checkBox",
+            "properties": {
+                "label": "Repair Scratches",
+                "value": false
+            }
+        },
+        {
+            "widget": "textField",
+            "properties": {
+                "label": "Remarks",
+                "value": ""
+            }
+        }
+    ]
 }

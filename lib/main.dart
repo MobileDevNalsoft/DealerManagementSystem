@@ -7,6 +7,7 @@ import 'package:dms/inits/init.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/providers/service_history_provider.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/views/dashboard_view.dart';
 import 'package:dms/views/homeview.dart';
 import 'package:dms/views/inspection.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
@@ -39,7 +40,7 @@ void main() async {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: CustomDetector(model: BodySelectorViewModel(),generalParts: generalParts,)
+        home: DashboardView()
       ),
     ),
   ));

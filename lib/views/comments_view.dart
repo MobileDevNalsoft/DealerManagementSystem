@@ -46,7 +46,7 @@ class _CommentsViewState extends State<CommentsView> {
         child: Column(
           children: [
             Text(
-              widget.vehiclePartMedia.name,
+              widget.vehiclePartMedia.name.toUpperCase(),
               style: TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.bold,
