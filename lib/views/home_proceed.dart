@@ -8,6 +8,7 @@ import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle_view.dart';
 import 'package:dms/views/inspection.dart';
+import 'package:dms/views/inspection_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,8 +42,35 @@ class _HomeProceedView extends State<HomeProceedView> {
   TextEditingController jobTypeController = TextEditingController();
   TextEditingController custConcernsController = TextEditingController();
   TextEditingController remarksController = TextEditingController();
-  SuggestionsController suggestionsController=SuggestionsController();
+  SuggestionsController suggestionsController = SuggestionsController();
   ScrollController scrollController = ScrollController();
+
+  List<String> jobTypeList = [
+    'Oil change and oil filter replacement',
+    'Fuel filter change (diesel vehicles)',
+    'Spark plug replacement (petrol vehicles)',
+    'Air filter change',
+    'Brake inspection and maintenance',
+    'Wheel bearing and shock absorber inspection',
+    'Electrical component testing (battery, alternator, starter motor)',
+    'Air conditioning system inspection',
+    'Radiator and coolant hose inspection',
+    'Cabin air filter replacement',
+    'Brake fluid exchange',
+    'Timing belt replacement (if applicable)',
+    'Tire rotation',
+    'Wheel alignment',
+    'Wiper blade replacement'
+  ];
+
+  List<String> bayList = [
+    "Service Bay",
+    "Express Maintenance Bay",
+    "Body Repair Bay",
+    "Tire Service Bays",
+    "Diagnostic Bay",
+    "Wash Bay"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +115,7 @@ class _HomeProceedView extends State<HomeProceedView> {
           child: Container(
             height: size.height,
             width: size.width,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(
                     'assets/images/dms_bg.png',
@@ -116,7 +144,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 isMobile: isMobile,
                                 focus: bookingFocus,
                                 textcontroller: bookingController,
-                                icon: Icon(Icons.arrow_drop_down),
+                                icon: const Icon(Icons.arrow_drop_down),
                                 scrollController: scrollController),
                             SizedBox(
                               height: size.height * (isMobile ? 0.005 : 0.015),
@@ -125,6 +153,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                                 context: context,
                                 size: size,
                                 hint: 'Alternate Contact Person',
+                                inputFormatters: [InitCapCaseTextFormatter()],
                                 isMobile: isMobile,
                                 focusNode: altContFocus,
                                 textcontroller: altContController,
@@ -149,34 +178,40 @@ class _HomeProceedView extends State<HomeProceedView> {
                               height: size.height * (isMobile ? 0.005 : 0.015),
                             ),
                             BlocBuilder<MultiBloc, MultiBlocState>(
-                              
-                              
                               builder: (context, state) {
                                 print("state ${state.salesPersons}");
-                                
+
                                 return DMSCustomWidgets.SearchableDropDown(
                                     onChange: (p0) {
                                       if (p0!.length >= 3) {
                                         print(p0);
                                         context.read<MultiBloc>().add(
                                             GetSalesPersons(searchText: p0));
-                                      }else{
-                                        context.read<MultiBloc>().state.salesPersons=null;
+                                      } else {
+                                        context
+                                            .read<MultiBloc>()
+                                            .state
+                                            .salesPersons = null;
                                       }
                                     },
                                     size: size,
-                                    items: state.salesPersons==null?[]: state
-                                            .salesPersons!
+                                    items: state.salesPersons == null
+                                        ? []
+                                        : state.salesPersons!
                                             .map((e) =>
                                                 "${e.empName}-${e.empId}")
                                             .toList(),
                                     hint: 'Sales Person',
-                                    icon: Icon(Icons.arrow_drop_down),
+                                    // icon: const Icon(Icons.arrow_drop_down),
                                     isMobile: isMobile,
-                                    isLoading: state.status == MultiStateStatus.loading? true:false,
+                                    isLoading:
+                                        state.status == MultiStateStatus.loading
+                                            ? true
+                                            : false,
                                     focus: spFocus,
                                     textcontroller: spController,
-                                    suggestionsController: suggestionsController,
+                                    suggestionsController:
+                                        suggestionsController,
                                     scrollController: scrollController);
                               },
                             ),
@@ -184,7 +219,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                               height: size.height * (isMobile ? 0.005 : 0.015),
                             ),
                             DMSCustomWidgets.SearchableDropDown(
-                                items: ["Bay 1", "Bay 2", "Bay 3", "Bay 4"],
+                                items: bayList,
                                 size: size,
                                 hint: 'Bay',
                                 isMobile: isMobile,
@@ -197,17 +232,10 @@ class _HomeProceedView extends State<HomeProceedView> {
                             DMSCustomWidgets.SearchableDropDown(
                                 size: size,
                                 hint: 'Job Type',
-                                items: [
-                                  'Type 1',
-                                  'Type 2',
-                                  'Type 3',
-                                  'Type 4',
-                                  'Type 5'
-                                ],
-                                icon: Icon(Icons.arrow_drop_down),
+                                items: jobTypeList,
+                                // icon: const Icon(Icons.arrow_drop_down),
                                 focus: jobTypeFocus,
                                 textcontroller: jobTypeController,
-
                                 // provider: provider,
                                 isMobile: isMobile,
                                 scrollController: scrollController),
@@ -256,7 +284,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                                     flushbarPosition: FlushbarPosition.TOP,
                                     backgroundColor: Colors.green,
                                     message: 'Service Added Successfully',
-                                    duration: Duration(seconds: 2),
+                                    duration: const Duration(seconds: 2),
                                     borderRadius: BorderRadius.circular(12),
                                     margin: EdgeInsets.only(
                                         top: 24,
@@ -266,13 +294,13 @@ class _HomeProceedView extends State<HomeProceedView> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => InspectionView()));
+                                    builder: (_) => const InspectionView()));
                           case ServiceStatus.failure:
                             Flushbar(
                                     flushbarPosition: FlushbarPosition.TOP,
                                     backgroundColor: Colors.red,
                                     message: 'Some error occured',
-                                    duration: Duration(seconds: 2),
+                                    duration: const Duration(seconds: 2),
                                     borderRadius: BorderRadius.circular(12),
                                     margin: EdgeInsets.only(
                                         top: 24,
@@ -286,44 +314,97 @@ class _HomeProceedView extends State<HomeProceedView> {
                       },
                       builder: (context, state) {
                         return state.status == ServiceStatus.loading
-                            ? CircularProgressIndicator()
-                            : ElevatedButton(
-                                onPressed: () {
-                                  bookingFocus.unfocus();
-                                  altContFocus.unfocus();
-                                  spFocus.unfocus();
-                                  bayFocus.unfocus();
-                                  jobTypeFocus.unfocus();
-                                  custConcernsFocus.unfocus();
-                                  remarksFocus.unfocus();
-                                  print(jobTypeController.text);
-                                  context.read<ServiceBloc>().add(ServiceAdded(
-                                      service: widget.service.copyWith(
-                                          bookingSource: bookingController.text,
-                                          alternateContactPerson:
-                                              altContController.text,
-                                          alternatePersonContactNo: int.parse(
-                                              altContPhoneNoController.text),
-                                          salesPerson: spController.text,
-                                          bay: bayController.text,
-                                          jobType: jobTypeController.text,
-                                          customerConcerns:
-                                              custConcernsController.text,
-                                          remarks: remarksController.text)));
-                                  
+                            ? const CircularProgressIndicator()
+                            : BlocBuilder<MultiBloc, MultiBlocState>(
+                                builder: (context, state) {
+                                  return ElevatedButton(
+                                      onPressed: () {
+                                        bookingFocus.unfocus();
+                                        altContFocus.unfocus();
+                                        spFocus.unfocus();
+                                        bayFocus.unfocus();
+                                        jobTypeFocus.unfocus();
+                                        custConcernsFocus.unfocus();
+                                        remarksFocus.unfocus();
+                                        print(jobTypeController.text);
+
+                                        String? message = _bookingSourceValidator(
+                                                bookingController.text) ??
+                                            (altContController.text.isEmpty
+                                                ? "Alternate Contact Person cannot be empty"
+                                                : null) ??
+                                            _altPersonContactNoValidation(
+                                                altContPhoneNoController
+                                                    .text) ??
+                                            _salesPersonValidator(
+                                                spController.text,
+                                                (state.salesPersons ?? [])
+                                                    .map((e) => e.empName)
+                                                    .toList()) ??
+                                            _bayValidator(
+                                                bayController.text, bayList) ??
+                                            _jobTypeValidator(
+                                                jobTypeController.text,
+                                                jobTypeList);
+
+                                        if (message != null) {
+                                          Flushbar(
+                                            flushbarPosition:
+                                                FlushbarPosition.TOP,
+                                            backgroundColor: Colors.red,
+                                            message: message,
+                                            duration:
+                                                const Duration(seconds: 2),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            margin: EdgeInsets.only(
+                                                top: size.height * 0.01,
+                                                left: isMobile
+                                                    ? 10
+                                                    : size.width * 0.8,
+                                                right: size.width * 0.03),
+                                          ).show(context);
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InspectionView(),
+                                              ));
+                                        }
+
+                                        // context.read<ServiceBloc>().add(ServiceAdded(
+                                        //     service: widget.service.copyWith(
+                                        //         bookingSource: bookingController
+                                        //             .text,
+                                        //         alternateContactPerson:
+                                        //             altContController.text,
+                                        //         alternatePersonContactNo:
+                                        //             int.parse(
+                                        //                 altContPhoneNoController
+                                        //                     .text),
+                                        //         salesPerson: spController.text,
+                                        //         bay: bayController.text,
+                                        //         jobType: jobTypeController.text,
+                                        //         customerConcerns:
+                                        //             custConcernsController.text,
+                                        //         remarks:
+                                        //             remarksController.text)));
+                                      },
+                                      child: const Text(
+                                        'proceed to recieve',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize: const Size(140.0, 35.0),
+                                          padding: EdgeInsets.zero,
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 145, 19, 19),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5))));
                                 },
-                                child: Text(
-                                  'proceed to recieve',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(140.0, 35.0),
-                                    padding: EdgeInsets.zero,
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 145, 19, 19),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5))));
+                              );
                       },
                     ),
                     if (MediaQuery.of(context).viewInsets.bottom != 0)
@@ -357,7 +438,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => AddVehicleView()));
+                                    builder: (_) => const AddVehicleView()));
                           },
                           child: Column(
                             children: [
@@ -389,7 +470,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => AddVehicleView()));
+                                    builder: (_) => const AddVehicleView()));
                           },
                           child: Column(
                             children: [
@@ -410,8 +491,55 @@ class _HomeProceedView extends State<HomeProceedView> {
                       ),
                     ]),
               )
-            : SizedBox(),
+            : const SizedBox(),
       ),
     );
+  }
+
+  String? _bookingSourceValidator(String value) {
+    if (value.isEmpty) {
+      return "Booking Source cannot be empty";
+    } else if (!["Online", "Walk-in"].contains(value)) {
+      return "Invalid Booking Source";
+    }
+    return null;
+  }
+
+  String? _altPersonContactNoValidation(String value) {
+    RegExp contactNoRegex = RegExp(r'^\d{10}$');
+    if (value.isEmpty) {
+      return "Alternate Person Contact Number can't be empty!";
+    } else if (!contactNoRegex.hasMatch(value)) {
+      return "Invalid Contact Number";
+    }
+    return null;
+  }
+
+  String? _salesPersonValidator(String value, List<String?> salesPersons) {
+    print(salesPersons);
+    if (value.isEmpty) {
+      return "Sales Person cannot be empty";
+    } else if (!salesPersons.contains(value.split('-')[0])) {
+      return "Invalid Sales Person";
+    }
+    return null;
+  }
+
+  String? _bayValidator(String value, List<String> bayList) {
+    if (value.isEmpty) {
+      return "Bay cannot be empty";
+    } else if (!bayList.contains(value)) {
+      return "Invalid Bay";
+    }
+    return null;
+  }
+
+  String? _jobTypeValidator(String value, List<String> jobTypeList) {
+    if (value.isEmpty) {
+      return "Job Type cannot be empty";
+    } else if (!jobTypeList.contains(value)) {
+      return "Invalid Jpb Type";
+    }
+    return null;
   }
 }

@@ -14,4 +14,4 @@ class GetServiceHistory extends ServiceEvent {
   GetServiceHistory({required this.year});
 }
 
-
+class GetServiceLocations extends ServiceEvent {}

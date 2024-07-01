@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/salesPerson.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
-
 import '../../logger/logger.dart';
 
 part 'multi_event.dart';
@@ -21,6 +19,9 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<GetSalesPersons>(_onGetSalesPersons);
     on<GetJson>(_onGetJson);
     on<CheckBoxTapped>(_onCheckBoxTapped);
+    on<PageChange>(_onPageChange);
+    on<InspectionJsonUpdated>(_onInspectionJsonUpdated);
+    on<RadioOptionChanged>(_onRadioOptionChanged);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -63,5 +64,19 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     state.checkBoxStates![event.key] = !state.checkBoxStates![event.key]!;
     print(state.checkBoxStates);
     emit(state.copyWith(checkBoxStates: state.checkBoxStates));
+  }
+
+  void _onPageChange(PageChange event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(index: event.index));
+  }
+
+  void _onInspectionJsonUpdated(
+      InspectionJsonUpdated event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(json: event.json));
+  }
+
+  void _onRadioOptionChanged(
+      RadioOptionChanged event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(selectedRadioOption: event.selectedRadioOption));
   }
 }

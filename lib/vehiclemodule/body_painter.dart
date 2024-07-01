@@ -34,6 +34,7 @@ class BodyPainter extends CustomPainter {
     //   ..color = const Color.fromARGB(255, 255, 255, 255);
 
     var contextSize = MediaQuery.of(context).size;
+    
     final Matrix4 matrix4 = Matrix4.identity();
 
     if (contextSize.width > 1050) {

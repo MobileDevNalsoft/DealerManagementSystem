@@ -14,7 +14,7 @@ class DMSCustomWidgets {
   static Widget SearchableDropDown(
       {required size,
       required hint,
-      required List<String> items,
+      required List<dynamic> items,
       required FocusNode focus,
       required TextEditingController textcontroller,
       required bool isMobile,
@@ -22,11 +22,11 @@ class DMSCustomWidgets {
       Function(String?)? onChange,
       Function(String?)? suggestionCall,
       SuggestionsController? suggestionsController,
-      bool isLoading =false,
+      bool isLoading = false,
       Icon? icon}) {
-        if(suggestionsController!=null){
-          suggestionsController.refresh();
-        }
+    if (suggestionsController != null) {
+      suggestionsController.refresh();
+    }
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
@@ -40,8 +40,9 @@ class DMSCustomWidgets {
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
               child: TextFormField(
                 onChanged: (value) {
-                  if(onChange!=null){
-                  onChange(value);}
+                  if (onChange != null) {
+                    onChange(value);
+                  }
                   controller.text = value;
                 },
                 onTap: () {
@@ -50,7 +51,7 @@ class DMSCustomWidgets {
                 },
                 cursorColor: Colors.black,
                 inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'\d')),
+                  FilteringTextInputFormatter.deny(RegExp(r'\d'))
                 ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
@@ -59,7 +60,7 @@ class DMSCustomWidgets {
                   suffixIcon: icon,
                   hintText: hint,
                   hintStyle: const TextStyle(
-                    color: Colors.black54,
+                    color: Colors.black38,
                     fontWeight: FontWeight.normal,
                   ),
                   border: InputBorder.none, // Removes all borders
@@ -70,20 +71,21 @@ class DMSCustomWidgets {
             );
           },
           suggestionsCallback: (pattern) {
-            if(suggestionsController==null){
+            if (suggestionsController == null) {
               return items
-                .where((item) =>
-                    item.toLowerCase().contains(pattern.toLowerCase()))
-                .toList();
+                  .where((item) =>
+                      item.toLowerCase().contains(pattern.toLowerCase()))
+                  .toList();
             }
             return items;
           },
-          itemBuilder: (context,  suggestion) => Skeletonizer(
-            enabled:isLoading,
+          itemBuilder: (context, suggestion) => Skeletonizer(
+            enabled: isLoading,
             child: SizedBox(
               height: size.height * 0.038,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 child: Text(
                   suggestion,
                   style: TextStyle(fontSize: isMobile ? 13 : 14),
@@ -275,7 +277,7 @@ class DMSCustomWidgets {
                         ? 'Schedule Date'
                         : DateFormat("dd MMM yyyy").format(date),
                     style: TextStyle(
-                        color: date == null ? Colors.black54 : Colors.black),
+                        color: date == null ? Colors.black38 : Colors.black),
                   ),
                   const MaxGap(500),
                   const Icon(Icons.calendar_month_outlined,
@@ -413,6 +415,28 @@ class DMSCustomWidgets {
               ),
             )),
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+}
+
+class InitCapCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text[0].toUpperCase() + newValue.text.substring(1),
+      selection: newValue.selection,
     );
   }
 }
