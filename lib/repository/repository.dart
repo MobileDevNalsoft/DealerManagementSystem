@@ -137,6 +137,27 @@ class Repository {
     }
   }
 
+   Future<int>  addVehicleMedia(Map<String, dynamic> image) async {
+    print(image);
+    ApiResponse apiResponse = await _api.post('addImage',data: {
+      "image": jsonEncode(image),
+    });
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return 200;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
   Future<int> addinspection(Map<String, dynamic> payload) async {
     print('payload $payload');
     ApiResponse apiResponse = await _api.post('addInspection', data: payload);
