@@ -48,22 +48,25 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     if (state.status == ServiceStatus.initial) {
       emit(state.copyWith(status: ServiceStatus.loading));
     }
-    await _repo.getHistory(event.year).then(
+    await _repo.getHistory(event.year, event.getCompleted, 0).then(
       (json) {
-        List<Service> services = [];
-        for (Map<String, dynamic> service in json['data']) {
-          services.add(Service(
-              sNo: service['s_no'],
-              registrationNo: service['vehicle_registration_number'],
-              location: service['location'],
-              scheduleDate: service['schedule_date'],
-              jobCardNo: service['job_card_no'],
-              jobType: service['job_type']));
-        }
-
+        print('service list $json');
         if (json['response_code'] == 200) {
+          List<Service> services = [];
+          for (Map<String, dynamic> service in json['data']) {
+            print('started');
+            services.add(Service(
+                sNo: service['s_no'],
+                registrationNo: service['vehicle_registration_number'],
+                location: service['location'],
+                scheduleDate: service['schedule_date'],
+                jobCardNo: service['job_card_no'],
+                jobType: service['job_type']));
+            print('ended');
+          }
           emit(state.copyWith(
               status: ServiceStatus.success, services: services));
+          print('status emitted');
         } else {
           emit(state.copyWith(status: ServiceStatus.failure));
         }

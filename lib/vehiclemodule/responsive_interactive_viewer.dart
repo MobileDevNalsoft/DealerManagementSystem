@@ -5,7 +5,6 @@ import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
-import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,11 +71,8 @@ class _CustomDetectorState extends State<CustomDetector> {
               child: Stack(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(
-                        top: isMobile ? size.height * 0.08 : 0,
-                        left: isMobile ? size.width * 0.03 : 0),
-                    height: size.height,
-                    width: size.width,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
                     color: Color.fromRGBO(145, 145, 145, 100),
                     child: BodyCanvas(
                       generalParts: widget.generalParts,
@@ -86,9 +82,9 @@ class _CustomDetectorState extends State<CustomDetector> {
                       .isTapped)
                     Positioned(
                       //  bottom: isMobile?100:size.height*0.25,
-                      left: size.width * (isMobile ? 0.08 : 0.365),
+                      left: size.width * 0.365,
                       right: size.width * 0.1,
-                      top: isMobile ? size.height * 0.3 : 200,
+                      top: isMobile ? 100 : 200,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

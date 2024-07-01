@@ -17,14 +17,12 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
 
-import '../dynamic_ui_src/Logger/logger.dart';
-
 class HomeProceedView extends StatefulWidget {
   @override
-  Map<String, dynamic> homeData;
+  Service service;
   Function? clearFields;
 
-  HomeProceedView({super.key, required this.homeData, this.clearFields});
+  HomeProceedView({super.key, required this.service, this.clearFields});
   State<HomeProceedView> createState() => _HomeProceedView();
 }
 
@@ -113,7 +111,7 @@ class _HomeProceedView extends State<HomeProceedView> {
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           title: const Text(
             "Service",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           centerTitle: true,
         ),
@@ -194,12 +192,15 @@ class _HomeProceedView extends State<HomeProceedView> {
                             ),
                             BlocBuilder<MultiBloc, MultiBlocState>(
                               builder: (context, state) {
+                                print("state ${state.salesPersons}");
+
                                 return DMSCustomWidgets.SearchableDropDown(
                                     onChanged: (p0) {
                                       if (p0 != null) {
                                         spTypeAheadController.text = p0;
                                       }
                                       if (p0!.length >= 3) {
+                                        print(p0);
                                         context.read<MultiBloc>().add(
                                             GetSalesPersons(searchText: p0));
                                       } else {
@@ -319,7 +320,6 @@ class _HomeProceedView extends State<HomeProceedView> {
                                         left: isMobile ? 10 : size.width * 0.8,
                                         right: 10))
                                 .show(context);
-                            context.read<MultiBloc>().state.date = null;
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -355,6 +355,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                                         jobTypeFocus.unfocus();
                                         custConcernsFocus.unfocus();
                                         remarksFocus.unfocus();
+                                        print(jobTypeController.text);
 
                                         String? message = _bookingSourceValidator(
                                                 bookingController.text) ??
@@ -393,42 +394,31 @@ class _HomeProceedView extends State<HomeProceedView> {
                                                 right: size.width * 0.03),
                                           ).show(context);
                                         } else {
-                                          Service service =
-                                              Service.fromJson(widget.homeData);
-
-                                          Service finalService = Service(
-                                              registrationNo:
-                                                  service.registrationNo,
-                                              location: service.location,
-                                              customerName:
-                                                  service.customerName,
-                                              scheduleDate:
-                                                  service.scheduleDate,
-                                              kms: service.kms,
-                                              bookingSource:
-                                                  bookingController.text,
-                                              alternateContactPerson:
-                                                  altContController.text,
-                                              alternatePersonContactNo:
-                                                  int.parse(
-                                                      altContPhoneNoController
-                                                          .text),
-                                              salesPerson: spController.text
-                                                  .split('-')[0],
-                                              bay: bayController.text,
-                                              jobType: jobTypeController.text,
-                                              jobCardNo:
-                                                  'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
-                                              customerConcerns:
-                                                  custConcernsController.text,
-                                              remarks: remarksController.text);
-                                          Log.d(finalService.toJson());
-                                          context.read<ServiceBloc>().add(
-                                              ServiceAdded(
-                                                  service: finalService));
-                                          print(
-                                              'jc no ${context.read<ServiceBloc>().state.service!.jobCardNo}');
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InspectionView(),
+                                              ));
                                         }
+
+                                        // context.read<ServiceBloc>().add(ServiceAdded(
+                                        //     service: widget.service.copyWith(
+                                        //         bookingSource: bookingController
+                                        //             .text,
+                                        //         alternateContactPerson:
+                                        //             altContController.text,
+                                        //         alternatePersonContactNo:
+                                        //             int.parse(
+                                        //                 altContPhoneNoController
+                                        //                     .text),
+                                        //         salesPerson: spController.text,
+                                        //         bay: bayController.text,
+                                        //         jobType: jobTypeController.text,
+                                        //         customerConcerns:
+                                        //             custConcernsController.text,
+                                        //         remarks:
+                                        //             remarksController.text)));
                                       },
                                       child: const Text(
                                         'proceed to recieve',

@@ -11,7 +11,8 @@ class ServiceAdded extends ServiceEvent {
 
 class GetServiceHistory extends ServiceEvent {
   final String year;
-  GetServiceHistory({required this.year});
+  final String getCompleted;
+  GetServiceHistory({required this.year, required this.getCompleted});
 }
 
 class GetServiceLocations extends ServiceEvent {}

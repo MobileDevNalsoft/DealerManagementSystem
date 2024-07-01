@@ -8,7 +8,6 @@ import 'package:dms/views/home_proceed.dart';
 import 'package:dms/views/inspection.dart';
 import 'package:dms/views/login.dart';
 import 'package:dms/views/service_history_view.dart';
-import 'package:dms/views/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,12 +21,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../inits/init.dart';
 
-class HomeView extends StatefulWidget {
+class HomeViewTest extends StatefulWidget {
   @override
-  State<HomeView> createState() => _HomeView();
+  State<HomeViewTest> createState() => _HomeViewTest();
 }
 
-class _HomeView extends State<HomeView> {
+class _HomeViewTest extends State<HomeViewTest> {
   FocusNode locFocus = FocusNode();
   FocusNode vehRegNumFocus = FocusNode();
   FocusNode customerFocus = FocusNode();
@@ -50,7 +49,6 @@ class _HomeView extends State<HomeView> {
     super.initState();
     vehRegNumFocus.addListener(_onVehRegNumUnfocused);
     context.read<ServiceBloc>().add(GetServiceLocations());
-    context.read<VehicleBloc>().state.status = VehicleStatus.initial;
   }
 
   void _onVehRegNumUnfocused() {
@@ -123,21 +121,21 @@ class _HomeView extends State<HomeView> {
             height: size.height,
             width: size.width,
             decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/dms_bg.png',
-                  ),
-                  fit: BoxFit.cover),
-              // gradient: LinearGradient(
-              //     colors: [
-              //       // Color.fromARGB(255, 255, 231, 231),
-              //       Color.fromARGB(255, 241, 193, 193),
-              //       Color.fromARGB(255, 235, 136, 136),
-              //       Color.fromARGB(255, 226, 174, 174)
-              //     ],
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     stops: [0.01, 0.35, 1]),
+              // image: DecorationImage(
+              //     image: AssetImage(
+              //       'assets/images/dms_bg.png',
+              //     ),
+              //     fit: BoxFit.cover),
+              gradient: LinearGradient(
+                  colors: [
+                    // Color.fromARGB(255, 255, 231, 231),
+                    Color.fromARGB(255, 241, 193, 193),
+                    Color.fromARGB(255, 235, 136, 136),
+                    Color.fromARGB(255, 226, 174, 174)
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.01, 0.35, 1]),
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
@@ -193,23 +191,6 @@ class _HomeView extends State<HomeView> {
                                       VehicleStatus.vehicleAlreadyAdded) {
                                     customerController.text =
                                         state.vehicle!.cusotmerName!;
-                                  } else if (state.status ==
-                                      VehicleStatus.newVehicle) {
-                                  } else {
-                                    Flushbar(
-                                      backgroundColor: Colors.red,
-                                      blockBackgroundInteraction: true,
-                                      message:
-                                          "Server Failure Please check the internet connectivity",
-                                      flushbarPosition: FlushbarPosition.TOP,
-                                      duration: const Duration(seconds: 2),
-                                      borderRadius: BorderRadius.circular(12),
-                                      margin: EdgeInsets.only(
-                                          top: size.height * 0.01,
-                                          left:
-                                              isMobile ? 10 : size.width * 0.8,
-                                          right: size.width * 0.03),
-                                    ).show(context);
                                   }
                                 },
                                 builder: (context, state) {
@@ -217,6 +198,13 @@ class _HomeView extends State<HomeView> {
                                       context: context,
                                       size: size,
                                       hint: 'Vehicle Registration Number',
+                                      onChange: (value) {
+                                        if (value!.length > 5) {
+                                          context.read<VehicleBloc>().add(
+                                              FetchVehicleCustomer(
+                                                  registrationNo: value));
+                                        }
+                                      },
                                       inputFormatters: [
                                         UpperCaseTextFormatter()
                                       ],
@@ -232,18 +220,14 @@ class _HomeView extends State<HomeView> {
                                 },
                               ),
                               Gap(size.height * (isMobile ? 0.01 : 0.03)),
-                              BlocBuilder<VehicleBloc, VehicleState>(
-                                builder: (context, state) {
-                                  return DMSCustomWidgets.CustomDataCard(
-                                      context: context,
-                                      size: size,
-                                      hint: 'Customer Name',
-                                      isMobile: isMobile,
-                                      textcontroller: customerController,
-                                      focusNode: customerFocus,
-                                      scrollController: scrollController);
-                                },
-                              ),
+                              DMSCustomWidgets.CustomDataCard(
+                                  context: context,
+                                  size: size,
+                                  hint: 'Customer Name',
+                                  isMobile: isMobile,
+                                  textcontroller: customerController,
+                                  focusNode: customerFocus,
+                                  scrollController: scrollController),
                               Gap(size.height * (isMobile ? 0.01 : 0.03)),
                               BlocBuilder<MultiBloc, MultiBlocState>(
                                 builder: (context, state) {
@@ -393,93 +377,93 @@ class _HomeView extends State<HomeView> {
                                   return;
                                 }
 
-                                // if (context.read<VehicleBloc>().state.status ==
-                                //     VehicleStatus.vehicleAlreadyAdded) {
-                                //   print("vehicle present");
-                                //   context.read<VehicleBloc>().state.status =
-                                //       VehicleStatus.initial;
-                                //   Navigator.push(
-                                //     context,
-                                //     PageRouteBuilder(
-                                //       transitionDuration:
-                                //           const Duration(milliseconds: 200),
-                                //       pageBuilder: (context, animation,
-                                //               secondaryAnimation) =>
-                                //           HomeProceedView(
-                                //               clearFields: clearFields,
-                                //               service: Service(
-                                //                   registrationNo:
-                                //                       vehRegNumController.text,
-                                //                   scheduleDate: context
-                                //                       .read<MultiBloc>()
-                                //                       .state
-                                //                       .date!
-                                //                       .toString()
-                                //                       .substring(0, 10),
-                                //                   location: locController.text,
-                                //                   kms: int.parse(
-                                //                       kmsController.text),
-                                //                   customerName:
-                                //                       customerController.text)),
-                                //       transitionsBuilder: (context, animation,
-                                //           secondaryAnimation, child) {
-                                //         const begin = Offset(1, 0.0);
-                                //         const end = Offset.zero;
-                                //         final tween =
-                                //             Tween(begin: begin, end: end);
-                                //         final offsetAnimation =
-                                //             animation.drive(tween);
-                                //         return SlideTransition(
-                                //           position: offsetAnimation,
-                                //           child: child,
-                                //         );
-                                //       },
-                                //     ),
-                                //   );
-                                // } else {
-                                //   print("vehicle not present");
-                                //   Flushbar(
-                                //           flushbarPosition:
-                                //               FlushbarPosition.TOP,
-                                //           backgroundColor: Colors.red,
-                                //           mainButton: InkWell(
-                                //             onTap: () {
-                                //               context
-                                //                       .read<VehicleBloc>()
-                                //                       .state
-                                //                       .status =
-                                //                   VehicleStatus.initial;
-                                //               Navigator.of(context).push(
-                                //                   MaterialPageRoute(
-                                //                       builder: (_) =>
-                                //                           const AddVehicleView()));
-                                //             },
-                                //             child: const Column(
-                                //               children: [
-                                //                 Icon(Icons.directions_car),
-                                //                 Text(
-                                //                   "Add Vehicle",
-                                //                   style: TextStyle(
-                                //                       color: Colors.black,
-                                //                       fontWeight:
-                                //                           FontWeight.w600),
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //           borderRadius:
-                                //               BorderRadius.circular(12),
-                                //           margin: EdgeInsets.only(
-                                //               top: 24,
-                                //               left: isMobile
-                                //                   ? 10
-                                //                   : size.width * 0.8,
-                                //               right: 10),
-                                //           duration: const Duration(seconds: 5),
-                                //           message:
-                                //               'Please register vehicle before service')
-                                //       .show(context);
-                                // }
+                                if (context.read<VehicleBloc>().state.status ==
+                                    VehicleStatus.vehicleAlreadyAdded) {
+                                  print("vehicle present");
+                                  context.read<VehicleBloc>().state.status =
+                                      VehicleStatus.initial;
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      transitionDuration:
+                                          const Duration(milliseconds: 200),
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          HomeProceedView(
+                                              clearFields: clearFields,
+                                              service: Service(
+                                                  registrationNo:
+                                                      vehRegNumController.text,
+                                                  scheduleDate: context
+                                                      .read<MultiBloc>()
+                                                      .state
+                                                      .date!
+                                                      .toString()
+                                                      .substring(0, 10),
+                                                  location: locController.text,
+                                                  kms: int.parse(
+                                                      kmsController.text),
+                                                  customerName:
+                                                      customerController.text)),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = Offset(1, 0.0);
+                                        const end = Offset.zero;
+                                        final tween =
+                                            Tween(begin: begin, end: end);
+                                        final offsetAnimation =
+                                            animation.drive(tween);
+                                        return SlideTransition(
+                                          position: offsetAnimation,
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  print("vehicle not present");
+                                  Flushbar(
+                                          flushbarPosition:
+                                              FlushbarPosition.TOP,
+                                          backgroundColor: Colors.red,
+                                          mainButton: InkWell(
+                                            onTap: () {
+                                              context
+                                                      .read<VehicleBloc>()
+                                                      .state
+                                                      .status =
+                                                  VehicleStatus.initial;
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (_) =>
+                                                          const AddVehicleView()));
+                                            },
+                                            child: const Column(
+                                              children: [
+                                                Icon(Icons.directions_car),
+                                                Text(
+                                                  "Add Vehicle",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          margin: EdgeInsets.only(
+                                              top: 24,
+                                              left: isMobile
+                                                  ? 10
+                                                  : size.width * 0.8,
+                                              right: 10),
+                                          duration: const Duration(seconds: 5),
+                                          message:
+                                              'Please register vehicle before service')
+                                      .show(context);
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                   minimumSize: const Size(70.0, 35.0),
@@ -521,8 +505,8 @@ class _HomeView extends State<HomeView> {
                           width: size.width * (isMobile ? 0.24 : 0.1),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => HomeViewTest()));
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (_) => AddCustomerView()));
                             },
                             child: Column(
                               children: [

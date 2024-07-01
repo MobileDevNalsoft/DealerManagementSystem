@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/logger/logger.dart';
 import 'package:dms/models/salesPerson.dart';
-import 'package:flutter/services.dart';
 import 'package:network_calls/src.dart';
 
 class Repository {
@@ -27,24 +26,6 @@ class Repository {
 
   Future<int> addService(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addService', data: payload);
-    if (apiResponse.response!.statusCode == 200) {
-      final response = jsonDecode(apiResponse.response!.data);
-      if (response["response_code"] == 200) {
-        Log.d(apiResponse.response);
-        return response["response_code"];
-      } else {
-        Log.e(apiResponse.response);
-        return response["response_code"];
-      }
-    } else {
-      Log.e(apiResponse.error);
-      throw Error();
-    }
-  }
-
-  Future<int> addinspection(Map<String, dynamic> payload) async {
-    print('payload $payload');
-    ApiResponse apiResponse = await _api.post('addInspection', data: payload);
     if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
@@ -88,9 +69,13 @@ class Repository {
     }
   }
 
-  Future<Map<String, dynamic>> getHistory(String year) async {
-    ApiResponse apiResponse =
-        await _api.get('getHistory', queryParameters: {"year": year});
+  Future<Map<String, dynamic>> getHistory(
+      String year, String getCompleted, int pageNo) async {
+    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {
+      "year": year,
+      "getCompleted": getCompleted,
+      "pageNo": pageNo
+    });
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
@@ -156,23 +141,35 @@ class Repository {
     }
   }
 
-  Future<List<dynamic>> addVehicleMedia(Map<String, dynamic> image) async {
-    print(image);
-    ApiResponse apiResponse = await _api.post('addImage', data: {
-      "image": jsonEncode(image),
-    });
-    if (apiResponse.response != null) {
-      if (apiResponse.response!.statusCode == 200) {
+  Future<int> addinspection(Map<String, dynamic> payload) async {
+    print('payload $payload');
+    ApiResponse apiResponse = await _api.post('addInspection', data: payload);
+    if (apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
         Log.d(apiResponse.response);
-        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          return (jsonDecode(apiResponse.response!.data)["data"]);
-        } else {
-          throw apiResponse.error;
-        }
+        return response["response_code"];
       } else {
-        throw apiResponse.error;
+        Log.e(apiResponse.response);
+        return response["response_code"];
       }
     } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> authenticateUser(
+      String username, String password) async {
+    ApiResponse apiResponse = await _api.get('authenticateUser',
+        queryParameters: {"username": username, "password": password});
+
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
+    } else {
+      Log.e(apiResponse.error);
       throw Error();
     }
   }

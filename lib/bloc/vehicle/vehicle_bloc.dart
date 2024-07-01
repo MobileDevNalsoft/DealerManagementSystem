@@ -73,25 +73,21 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
           emit(state.copyWith(
               status: VehicleStatus.vehicleAlreadyAdded,
               vehicle: Vehicle.fromJson(value["data"])));
-
-          // emit(state.copyWith(status: VehicleStatus.initial));
         } else {
-          emit(state.copyWith(status: VehicleStatus.failure));
-
+          emit(state.copyWith(status: VehicleStatus.newVehicle));
           emit(state.copyWith(status: VehicleStatus.initial));
         }
       },
     ).onError(
       (error, stackTrace) {
         emit(state.copyWith(status: VehicleStatus.failure));
-
         emit(state.copyWith(status: VehicleStatus.initial));
       },
     );
   }
 
-  void _onUpdateState(UpdateState event, Emitter<VehicleState> emit){
-    emit(state.copyWith(vehicle: event.vehicle,status: event.status));
+  void _onUpdateState(UpdateState event, Emitter<VehicleState> emit) {
+    emit(state.copyWith(vehicle: event.vehicle, status: event.status));
   }
 
   Future<void> _onCustomerCheck(
