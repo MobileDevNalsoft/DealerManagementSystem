@@ -13,7 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-
 class CustomDetector extends StatefulWidget {
   BodySelectorViewModel model;
   final List<GeneralBodyPart>? generalParts;
@@ -58,7 +57,7 @@ class _CustomDetectorState extends State<CustomDetector> {
           behavior: HitTestBehavior.translucent,
           child: InteractiveViewer(
             panEnabled: false,
-            boundaryMargin: EdgeInsets.all(80),
+            boundaryMargin: const EdgeInsets.all(80),
             onInteractionStart: (details) {
               widget.model.setInteraction(true);
             },
@@ -78,7 +77,7 @@ class _CustomDetectorState extends State<CustomDetector> {
                       Container(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
-                        color: Color.fromRGBO(248, 211, 211, 0.612),
+                        color: const Color.fromRGBO(248, 211, 211, 0.612),
                         child: BodyCanvas(
                           generalParts: widget.generalParts,
                         ),
@@ -98,7 +97,8 @@ class _CustomDetectorState extends State<CustomDetector> {
                                   VehiclePartsInteractionBlocState>(
                                 listener: (context, state) {
                                   state.media.forEach((value) {
-                                    print("listening ${value.name} ${value.images}");
+                                    print(
+                                        "listening ${value.name} ${value.images}");
                                   });
                                 },
                                 builder: (context, state) {

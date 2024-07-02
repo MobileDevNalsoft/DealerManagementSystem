@@ -3,6 +3,7 @@ import 'package:dms/bloc/customer/customer_bloc.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/providers/service_history_provider.dart';
@@ -35,15 +36,17 @@ void main() async {
         BlocProvider(create: (_) => CustomerBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => ServiceBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => MultiBloc(repo: _.read<Repository>())),
-        BlocProvider(create: (_) => AuthenticationBloc(repo: _.read<Repository>())),
+        BlocProvider(
+            create: (_) => AuthenticationBloc(repo: _.read<Repository>())),
+        BlocProvider(
+            create: (_) =>
+                VehiclePartsInteractionBloc(repo: _.read<Repository>())),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
         ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: DashboardView()
-      ),
+      child:
+          MaterialApp(debugShowCheckedModeBanner: false, home: DashboardView()),
     ),
   ));
 }

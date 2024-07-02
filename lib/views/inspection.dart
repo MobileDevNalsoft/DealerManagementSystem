@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../bloc/multi/multi_bloc.dart';
+import '../vehiclemodule/xml_parser.dart';
 
 class InspectionView extends StatefulWidget {
   const InspectionView({super.key});
@@ -175,16 +176,24 @@ class _InspectionViewState extends State<InspectionView> {
                                                 .length -
                                             1)
                                   ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CustomDetector(
-                                                model: BodySelectorViewModel(),
-                                                generalParts: [],
-                                              ),
-                                            ));
+                                      onPressed: () async {
+                                        await loadSvgImage(
+                                                svgImage:
+                                                    'assets/images/image.svg')
+                                            .then(
+                                          (value) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CustomDetector(
+                                                    model:
+                                                        BodySelectorViewModel(),
+                                                    generalParts: value,
+                                                  ),
+                                                ));
+                                          },
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
                                           minimumSize: const Size(70.0, 35.0),
