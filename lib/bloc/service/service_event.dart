@@ -10,13 +10,12 @@ class ServiceAdded extends ServiceEvent {
 }
 
 class GetServiceHistory extends ServiceEvent {
-  final String? year;
-  final String getCompleted;
-  GetServiceHistory({ this.year, required this.getCompleted});
+  final String? query;
+  GetServiceHistory({this.query});
 }
 
-class GetJobCards extends ServiceEvent {
-  String getCompleted = 'false';
-  GetJobCards();
+class JobCardStatusUpdated extends ServiceEvent {
+  JobCardStatusUpdated();
 }
+
 class GetServiceLocations extends ServiceEvent {}

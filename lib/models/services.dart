@@ -14,6 +14,7 @@ final class Service {
   String? jobType;
   String? customerConcerns;
   String? remarks;
+  String? status;
 
   Service(
       {this.sNo,
@@ -29,6 +30,7 @@ final class Service {
       this.salesPerson,
       this.bay,
       this.jobType,
+      this.status,
       this.customerConcerns,
       this.remarks});
 
@@ -46,6 +48,7 @@ final class Service {
     jobType = json['job_type'];
     jobCardNo = json['job_card_no'];
     customerConcerns = json['customer_concerns'];
+    status = json['status'];
     remarks = json['remarks'];
   }
 

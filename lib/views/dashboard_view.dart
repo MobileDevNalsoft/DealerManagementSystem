@@ -1,3 +1,5 @@
+import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +15,36 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  late ServiceBloc _bloc;
+
   @override
   void initState() {
     super.initState();
+    _bloc = context.read<ServiceBloc>();
+
+    _bloc.add(GetServiceHistory(query: 'Main  Workshop'));
   }
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
         child: Scaffold(
-      body: Column(
-        children: [JobCardPage()],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [
+                // Color.fromARGB(255, 255, 231, 231),
+                Color.fromARGB(255, 238, 209, 209),
+                Color.fromARGB(255, 231, 201, 201),
+                Color.fromARGB(255, 231, 200, 200)
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.01, 0.35, 1]),
+        ),
+        child: Column(
+          children: [JobCardPage()],
+        ),
       ),
     ));
   }
@@ -43,8 +64,8 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
               colors: [
-                Color.fromARGB(255, 235, 136, 136),
-                Color.fromARGB(255, 241, 193, 193)
+                Color.fromARGB(255, 145, 19, 19),
+                Color.fromARGB(255, 201, 94, 94)
               ],
             )),
           )),
@@ -103,26 +124,133 @@ class JobCardPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return SizedBox(
-      height: size.height * 0.8,
-      child: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            delegate: SliverAppBar(),
-            // Set this param so that it won't go off the screen when scrolling
-            pinned: true,
-          ),
-          SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-            return Container(
-              margin: const EdgeInsets.all(8),
-              padding: const EdgeInsets.all(8),
-              child: const Text(
-                'Dms App',
-                style: TextStyle(fontSize: 20),
+      height: size.height * 0.96,
+      child: BlocBuilder<ServiceBloc, ServiceState>(
+        builder: (context, state) {
+          return CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                delegate: SliverAppBar(),
+                // Set this param so that it won't go off the screen when scrolling
+                pinned: true,
               ),
-            );
-          }, childCount: 20))
-        ],
+              SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                return Skeletonizer(
+                  enableSwitchAnimation: true,
+                  enabled: state.status != ServiceStatus.success,
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        height: size.height * 0.05,
+                        width: size.width * 0.3,
+                        child: Text(
+                          state.status == ServiceStatus.success
+                              ? state.jobCards![index].jobCardNo!
+                              : 'JC-MAD-633',
+                          style: TextStyle(fontSize: 13),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        height: size.height * 0.05,
+                        width: size.width * 0.3,
+                        child: Text(
+                          state.status == ServiceStatus.success
+                              ? state.jobCards![index].registrationNo!
+                              : 'TS09ED7884',
+                          style: TextStyle(fontSize: 13),
+                        ),
+                      ),
+                      Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          height: size.height * 0.05,
+                          width: size.width * 0.4,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                              onMenuStateChange: (isOpen) {},
+                              isExpanded: true,
+                              items: ['I', 'N', 'CL', 'C']
+                                  .map(
+                                      (String item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ))
+                                  .toList(),
+                              value: state.status == ServiceStatus.success
+                                  ? state.jobCards![index].status!
+                                  : 'I',
+                              onChanged: (String? value) {
+                                context
+                                    .read<ServiceBloc>()
+                                    .state
+                                    .jobCards![index]
+                                    .status = value;
+                                context
+                                    .read<ServiceBloc>()
+                                    .add(JobCardStatusUpdated());
+                              },
+                              buttonStyleData: ButtonStyleData(
+                                height: size.height * 0.04,
+                                width: size.width * 0.5,
+                                padding:
+                                    const EdgeInsets.only(left: 14, right: 14),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  ),
+                                  color: Colors.white,
+                                ),
+                                elevation: 0,
+                              ),
+                              iconStyleData: const IconStyleData(
+                                icon: Icon(!false
+                                    ? Icons.keyboard_arrow_down_rounded
+                                    : Icons.keyboard_arrow_up_rounded),
+                                iconSize: 14,
+                                iconEnabledColor: Colors.black,
+                                iconDisabledColor: Colors.black,
+                              ),
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: size.height * 0.3,
+                                width: size.width * 0.5,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                offset: const Offset(0, 0),
+                                scrollbarTheme: ScrollbarThemeData(
+                                  radius: const Radius.circular(40),
+                                  thickness: WidgetStateProperty.all<double>(6),
+                                  thumbVisibility:
+                                      WidgetStateProperty.all<bool>(true),
+                                ),
+                              ),
+                              menuItemStyleData: const MenuItemStyleData(
+                                height: 30,
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                              ),
+                            ),
+                          ))
+                    ],
+                  ),
+                );
+              },
+                      childCount: state.status != ServiceStatus.success
+                          ? 50
+                          : state.jobCards!.length)),
+            ],
+          );
+        },
       ),
     );
   }
