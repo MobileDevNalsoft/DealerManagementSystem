@@ -45,8 +45,16 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
         ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),
       ],
-      child:
-          MaterialApp(debugShowCheckedModeBanner: false, home: DashboardView()),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: !sharedPreferences.containsKey('isLogged') ||
+                sharedPreferences.getBool('isLogged') == false
+            ? LoginView()
+            : DashboardView(),
+        routes: {
+          '/home': (context) => HomeView(),
+        },
+      ),
     ),
   ));
 }

@@ -102,14 +102,15 @@ class _HomeView extends State<HomeView> {
             backgroundColor: const Color.fromARGB(255, 145, 19, 19),
             leading: IconButton(
                 onPressed: () {
-                  sharedPreferences.setBool("isLogged", false);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginView(),
-                    ),
-                    (route) => false,
-                  );
+                  // sharedPreferences.setBool("isLogged", false);
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const LoginView(),
+                  //   ),
+                  //   (route) => false,
+                  // );
+                  Navigator.pop(context);
                 },
                 icon:
                     const Icon(Icons.arrow_back_rounded, color: Colors.white)),

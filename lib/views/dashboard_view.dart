@@ -1,11 +1,21 @@
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/views/homeview.dart';
+import 'package:dms/views/service_history_view.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:circle_nav_bar/circle_nav_bar.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
+import '../inits/init.dart';
+import 'login.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -16,41 +26,103 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
   late ServiceBloc _bloc;
+  DataGridController dataGridController = DataGridController();
+  final ServiceState serviceState = ServiceState();
+  final PageController pageController =
+      PageController(initialPage: 0, viewportFraction: 1);
 
   @override
   void initState() {
     super.initState();
     _bloc = context.read<ServiceBloc>();
 
-    _bloc.add(GetServiceHistory(query: 'Main  Workshop'));
+    context.read<ServiceBloc>().state.status = ServiceStatus.initial;
+    context.read<ServiceBloc>().state.jobCardStatus = JobCardStatus.initial;
+
+    _bloc.add(GetJobCards(query: 'Main  Workshop'));
+    _bloc.add(GetServiceHistory(query: '2022'));
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return SafeArea(
         child: Scaffold(
+      extendBody: true,
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [
-                // Color.fromARGB(255, 255, 231, 231),
-                Color.fromARGB(255, 238, 209, 209),
-                Color.fromARGB(255, 231, 201, 201),
-                Color.fromARGB(255, 231, 200, 200)
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                colors: [
+                  // Color.fromARGB(255, 255, 231, 231),
+                  Color.fromARGB(255, 238, 209, 209),
+                  Color.fromARGB(255, 238, 194, 194),
+                  Color.fromARGB(255, 231, 200, 200)
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.01, 0.35, 1]),
+          ),
+          child: PageView(controller: pageController, children: [
+            const Column(
+              children: [
+                JobCardPage(),
               ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.01, 0.35, 1]),
+            ),
+            Services()
+          ])),
+      bottomNavigationBar: CircleNavBar(
+        activeIcons: const [
+          Icon(Icons.home, color: Color.fromARGB(255, 145, 19, 19)),
+          Icon(Icons.add, color: Color.fromARGB(255, 145, 19, 19)),
+          Icon(Icons.history, color: Color.fromARGB(255, 145, 19, 19)),
+        ],
+        inactiveIcons: const [
+          Icon(
+            Icons.home,
+            color: Color.fromARGB(255, 145, 19, 19),
+          ),
+          Icon(
+            Icons.add,
+            color: Color.fromARGB(255, 145, 19, 19),
+          ),
+          Icon(
+            Icons.history,
+            color: Color.fromARGB(255, 145, 19, 19),
+          ),
+        ],
+        color: const Color.fromARGB(255, 236, 232, 232),
+        height: size.height * 0.07,
+        circleWidth: size.height * 0.06,
+        activeIndex: 1,
+        onTap: (index) {
+          if (index == 0) {
+            pageController.animateToPage(0,
+                duration: const Duration(seconds: 1), curve: Curves.ease);
+          } else if (index == 1) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomeView()));
+          } else {
+            pageController.animateToPage(1,
+                duration: const Duration(seconds: 1), curve: Curves.ease);
+          }
+        },
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        cornerRadius: const BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+          bottomRight: Radius.circular(24),
+          bottomLeft: Radius.circular(24),
         ),
-        child: Column(
-          children: [JobCardPage()],
-        ),
+        shadowColor: const Color.fromARGB(255, 201, 94, 94),
+        elevation: 5,
       ),
     ));
   }
 }
 
 class SliverAppBar extends SliverPersistentHeaderDelegate {
+  final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -68,6 +140,33 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                 Color.fromARGB(255, 201, 94, 94)
               ],
             )),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
+                    'Job Cards',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontSize: 18),
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      sharedPreferences.setBool("isLogged", false);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginView(),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    icon: Icon(Icons.person_pin))
+              ],
+            ),
           )),
     );
   }
@@ -124,7 +223,8 @@ class JobCardPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return SizedBox(
-      height: size.height * 0.96,
+      height: size.height * 0.92,
+      width: size.width,
       child: BlocBuilder<ServiceBloc, ServiceState>(
         builder: (context, state) {
           return CustomScrollView(
@@ -138,33 +238,33 @@ class JobCardPage extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate((context, index) {
                 return Skeletonizer(
                   enableSwitchAnimation: true,
-                  enabled: state.status != ServiceStatus.success,
+                  enabled: state.jobCardStatus == JobCardStatus.loading,
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         height: size.height * 0.05,
                         width: size.width * 0.3,
                         child: Text(
-                          state.status == ServiceStatus.success
+                          state.jobCardStatus != JobCardStatus.loading
                               ? state.jobCards![index].jobCardNo!
                               : 'JC-MAD-633',
-                          style: TextStyle(fontSize: 13),
+                          style: const TextStyle(fontSize: 13),
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         height: size.height * 0.05,
                         width: size.width * 0.3,
                         child: Text(
-                          state.status == ServiceStatus.success
+                          state.jobCardStatus != JobCardStatus.loading
                               ? state.jobCards![index].registrationNo!
                               : 'TS09ED7884',
-                          style: TextStyle(fontSize: 13),
+                          style: const TextStyle(fontSize: 13),
                         ),
                       ),
                       Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: size.height * 0.05,
                           width: size.width * 0.4,
                           child: DropdownButtonHideUnderline(
@@ -185,9 +285,10 @@ class JobCardPage extends StatelessWidget {
                                             ),
                                           ))
                                   .toList(),
-                              value: state.status == ServiceStatus.success
-                                  ? state.jobCards![index].status!
-                                  : 'I',
+                              value:
+                                  state.jobCardStatus == JobCardStatus.success
+                                      ? state.jobCards![index].status!
+                                      : 'I',
                               onChanged: (String? value) {
                                 context
                                     .read<ServiceBloc>()
@@ -251,6 +352,159 @@ class JobCardPage extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class Services extends StatelessWidget {
+  Services({super.key});
+  final CustomColumnSizer _customColumnSizer = CustomColumnSizer();
+  DataGridController dataGridController = DataGridController();
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      height: size.height,
+      width: size.width,
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+            colors: [
+              // Color.fromARGB(255, 255, 231, 231),
+              Color.fromARGB(255, 238, 209, 209),
+              Color.fromARGB(255, 238, 194, 194),
+              Color.fromARGB(255, 231, 200, 200)
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.01, 0.35, 1]),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 201, 94, 94),
+                Color.fromARGB(255, 145, 19, 19)
+              ],
+            )),
+            child: Center(
+              child: Text(
+                'Service History',
+                style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontSize: 22),
+              ),
+            ),
+          ),
+          SfDataGridTheme(
+            data: SfDataGridThemeData.raw(
+                headerColor: Colors.white,
+                currentCellStyle: const DataGridCurrentCellStyle(
+                  borderColor: Colors.red,
+                  borderWidth: 2,
+                )),
+            child: BlocConsumer<ServiceBloc, ServiceState>(
+              listener: (context, state) {
+                if (state.status == ServiceStatus.success) {}
+              },
+              builder: (context, state) {
+                print('state ${state.status}');
+                switch (state.status) {
+                  case ServiceStatus.loading:
+                    return Transform(
+                      transform: Matrix4.translationValues(0, -40, 0),
+                      child: Center(
+                        child: Lottie.asset('assets/lottie/car_loading.json',
+                            height: size.height * 0.5, width: size.width * 0.6),
+                      ),
+                    );
+                  case ServiceStatus.success:
+                    print('services ${state.services}');
+                    return Expanded(
+                      flex: 1,
+                      child: SfDataGrid(
+                        columnSizer: _customColumnSizer,
+                        columnWidthMode: ColumnWidthMode.fitByColumnName,
+                        source: ServiceHistoryDataSource(
+                            serviceHistoryData: state.services!),
+                        gridLinesVisibility: GridLinesVisibility.both,
+                        headerGridLinesVisibility: GridLinesVisibility.both,
+                        showHorizontalScrollbar: false,
+                        allowEditing: true,
+                        shrinkWrapColumns: false,
+                        shrinkWrapRows: false,
+                        allowSorting: true,
+                        allowColumnsResizing: true,
+                        allowColumnsDragging: true,
+                        columnResizeMode: ColumnResizeMode.onResize,
+                        allowFiltering: true,
+                        editingGestureType: EditingGestureType.doubleTap,
+                        onCellDoubleTap: (details) {
+                          print(details.rowColumnIndex);
+                          dataGridController.beginEdit(details.rowColumnIndex);
+                        },
+                        controller: dataGridController,
+                        columns: <GridColumn>[
+                          GridColumn(
+                              allowEditing: true,
+                              width: 150,
+                              columnName: 'sno',
+                              label: Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    'Sno',
+                                  ))),
+                          GridColumn(
+                              columnName: 'date',
+                              label: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  alignment: Alignment.center,
+                                  child: const Text('Date'))),
+                          GridColumn(
+                              columnName: 'Job Card no.',
+                              label: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  alignment: Alignment.center,
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: const Text(
+                                      'Job Card no.',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ))),
+                          GridColumn(
+                              columnName: 'Location',
+                              label: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  alignment: Alignment.center,
+                                  child: const Text('Location'))),
+                          GridColumn(
+                              columnName: 'Job Type',
+                              label: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  alignment: Alignment.center,
+                                  child: const Text('Job Type'))),
+                        ],
+                      ),
+                    );
+                  default:
+                    return const SizedBox();
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
