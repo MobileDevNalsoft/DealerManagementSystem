@@ -47,9 +47,13 @@ void main() async {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home:
-        //  DashboardView()
-         CustomDetector(model: BodySelectorViewModel(),generalParts: generalParts,)
+        home: !sharedPreferences.containsKey('isLogged') ||
+                sharedPreferences.getBool('isLogged') == false
+            ? LoginView()
+            : DashboardView(),
+        routes: {
+          '/home': (context) => HomeView(),
+        },
       ),
     ),
   ));

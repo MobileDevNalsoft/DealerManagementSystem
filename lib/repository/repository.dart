@@ -69,13 +69,9 @@ class Repository {
     }
   }
 
-  Future<Map<String, dynamic>> getHistory(
-      String year, String getCompleted, int pageNo) async {
-    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {
-      "year": year,
-      "getCompleted": getCompleted,
-      "pageNo": pageNo
-    });
+  Future<Map<String, dynamic>> getHistory(String query, int pageNo) async {
+    ApiResponse apiResponse = await _api
+        .get('getHistory', queryParameters: {"param": query, "pageNo": pageNo});
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
@@ -107,11 +103,7 @@ class Repository {
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
-        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          return jsonDecode(apiResponse.response!.data);
-        } else {
-          throw apiResponse.error;
-        }
+        return jsonDecode(apiResponse.response!.data);
       } else {
         throw apiResponse.error;
       }
@@ -141,9 +133,9 @@ class Repository {
     }
   }
 
-   Future<int>  addVehicleMedia(Map<String, dynamic> image) async {
+  Future<int> addVehicleMedia(Map<String, dynamic> image) async {
     print(image);
-    ApiResponse apiResponse = await _api.post('addImage',data: {
+    ApiResponse apiResponse = await _api.post('addImage', data: {
       "image": jsonEncode(image),
     });
     if (apiResponse.response != null) {

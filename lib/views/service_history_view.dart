@@ -26,9 +26,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   void initState() {
     super.initState();
     serviceState.copyWith(status: ServiceStatus.initial);
-    context
-        .read<ServiceBloc>()
-        .add(GetServiceHistory(year: '2022', getCompleted: 'true'));
+    context.read<ServiceBloc>().add(GetServiceHistory(query: '2022'));
     print('got service list');
     context.read<ServiceBloc>().state.status = ServiceStatus.initial;
   }

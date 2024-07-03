@@ -32,6 +32,7 @@ class DMSCustomWidgets {
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
+        elevation: 3,
         color: Color.fromARGB(255, 250, 239, 239),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
@@ -120,6 +121,7 @@ class DMSCustomWidgets {
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
+        elevation: 3,
         color: Color.fromARGB(255, 250, 239, 239),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
@@ -179,6 +181,7 @@ class DMSCustomWidgets {
       height: isMobile ? size.height * 0.1 : size.height * 0.13,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
+        elevation: 3,
         color: Color.fromARGB(255, 250, 239, 239),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
@@ -263,6 +266,7 @@ class DMSCustomWidgets {
           );
         },
         child: Card(
+            elevation: 3,
             color: Color.fromARGB(255, 250, 239, 239),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),

@@ -17,9 +17,16 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<ServiceAdded>(_onServiceAdded);
     on<GetServiceHistory>(_onGetServiceHistory);
     on<GetServiceLocations>(_onGetServiceLocations);
+    on<GetJobCards>(_onGetJobCards);
+    on<JobCardStatusUpdated>(_onJobCardStatusUpdated);
   }
 
   final Repository _repo;
+
+  void _onJobCardStatusUpdated(
+      JobCardStatusUpdated event, Emitter<ServiceState> emit) {
+    emit(state.copyWith(jobCards: state.jobCards));
+  }
 
   Future<void> _onServiceAdded(
       ServiceAdded event, Emitter<ServiceState> emit) async {
@@ -45,16 +52,13 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future<void> _onGetServiceHistory(
       GetServiceHistory event, Emitter<ServiceState> emit) async {
-    if (state.status == ServiceStatus.initial) {
-      emit(state.copyWith(status: ServiceStatus.loading));
-    }
-    await _repo.getHistory(event.year??"", event.getCompleted, 0).then(
+    emit(state.copyWith(status: ServiceStatus.loading));
+    await _repo.getHistory(event.query!, 0).then(
       (json) {
-        print('service list $json');
+        print('json $json');
         if (json['response_code'] == 200) {
           List<Service> services = [];
           for (Map<String, dynamic> service in json['data']) {
-            print('started');
             services.add(Service(
                 sNo: service['s_no'],
                 registrationNo: service['vehicle_registration_number'],
@@ -62,18 +66,48 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 scheduleDate: service['schedule_date'],
                 jobCardNo: service['job_card_no'],
                 jobType: service['job_type']));
-            print('ended');
           }
           emit(state.copyWith(
               status: ServiceStatus.success, services: services));
-          print('status emitted');
         } else {
           emit(state.copyWith(status: ServiceStatus.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
+        Log.e(error);
         emit(state.copyWith(status: ServiceStatus.failure));
+      },
+    );
+  }
+
+  Future<void> _onGetJobCards(
+      GetJobCards event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(jobCardStatus: JobCardStatus.loading));
+    await _repo.getHistory(event.query!, 0).then(
+      (json) {
+        print('json $json');
+        if (json['response_code'] == 200) {
+          List<Service> jobCards = [];
+          for (Map<String, dynamic> service in json['data']) {
+            jobCards.add(Service(
+                sNo: int.parse(service['s_no']),
+                registrationNo: service['vehicle_registration_number'],
+                location: service['location'],
+                scheduleDate: service['schedule_date'],
+                jobCardNo: service['job_card_no'],
+                status: service['status'],
+                jobType: service['job_type']));
+          }
+          emit(state.copyWith(
+              jobCardStatus: JobCardStatus.success, jobCards: jobCards));
+        } else {
+          emit(state.copyWith(jobCardStatus: JobCardStatus.failure));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(jobCardStatus: JobCardStatus.failure));
       },
     );
   }
@@ -101,38 +135,38 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onGetJobCard(
-      GetServiceHistory event, Emitter<ServiceState> emit) async {
-    if (state.status == ServiceStatus.initial) {
-      emit(state.copyWith(status: ServiceStatus.loading));
-    }
-    await _repo.getHistory(event.year??"", event.getCompleted, 0).then(
-      (json) {
-        print('service list $json');
-        if (json['response_code'] == 200) {
-          List<Service> services = [];
-          for (Map<String, dynamic> service in json['data']) {
-            print('started');
-            services.add(Service(
-                sNo: service['s_no'],
-                registrationNo: service['vehicle_registration_number'],
-                location: service['location'],
-                scheduleDate: service['schedule_date'],
-                jobCardNo: service['job_card_no'],
-                jobType: service['job_type']));
-            print('ended');
-          }
-          emit(state.copyWith(
-              status: ServiceStatus.success, services: services));
-          print('status emitted');
-        } else {
-          emit(state.copyWith(status: ServiceStatus.failure));
-        }
-      },
-    ).onError(
-      (error, stackTrace) {
-        emit(state.copyWith(status: ServiceStatus.failure));
-      },
-    );
-  }
+  // Future<void> _onGetJobCard(
+  //     GetJobCards event, Emitter<ServiceState> emit) async {
+  //   if (state.status == ServiceStatus.initial) {
+  //     emit(state.copyWith(status: ServiceStatus.loading));
+  //   }
+  //   await _repo.getHistory(event.year ?? "", event.getCompleted, 0).then(
+  //     (json) {
+  //       print('service list $json');
+  //       if (json['response_code'] == 200) {
+  //         List<Service> services = [];
+  //         for (Map<String, dynamic> service in json['data']) {
+  //           print('started');
+  //           services.add(Service(
+  //               sNo: service['s_no'],
+  //               registrationNo: service['vehicle_registration_number'],
+  //               location: service['location'],
+  //               scheduleDate: service['schedule_date'],
+  //               jobCardNo: service['job_card_no'],
+  //               jobType: service['job_type']));
+  //           print('ended');
+  //         }
+  //         emit(state.copyWith(
+  //             status: ServiceStatus.success, services: services));
+  //         print('status emitted');
+  //       } else {
+  //         emit(state.copyWith(status: ServiceStatus.failure));
+  //       }
+  //     },
+  //   ).onError(
+  //     (error, stackTrace) {
+  //       emit(state.copyWith(status: ServiceStatus.failure));
+  //     },
+  //   );
+  // }
 }
