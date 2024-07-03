@@ -24,3 +24,8 @@ class RemoveImageEvent extends VehiclePartsInteractionBlocEvent{
 class SubmitVehicleMediaEvent extends VehiclePartsInteractionBlocEvent{
   SubmitVehicleMediaEvent();
 }
+
+class SubmitBodyPartVehicleMediaEvent extends VehiclePartsInteractionBlocEvent{
+  String bodyPartName;
+  SubmitBodyPartVehicleMediaEvent({required this.bodyPartName});
+}

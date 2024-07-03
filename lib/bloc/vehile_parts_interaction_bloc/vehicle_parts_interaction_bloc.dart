@@ -80,48 +80,56 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
 
   void _onSubmitVehicleMedia(SubmitVehicleMediaEvent event,
       Emitter<VehiclePartsInteractionBlocState> emit) async {
-        emit(state.copyWith(state.media, VehiclePartsInteractionStatus.loading));
+    emit(state.copyWith(state.media, VehiclePartsInteractionStatus.loading));
     late Uint8List bytes;
     Map<String, dynamic> allPartsJson = {};
-    Map<String, dynamic> partJson={};
-  
-    for(int index=0;index<state.media.length;index++){
+    Map<String, dynamic> partJson = {};
+
+    for (int index = 0; index < state.media.length; index++) {
       List<String> compressedImagesBase64List = [];
-  print("state media ${state.media[index].name} ${state.media[index].images}");
-      if (state.media[index].images != null && state.media[index].images!.isNotEmpty) {
-        print("name ${state.media[index].name}${state.media[index].images!.length}");
-       for(int i=0;i<state.media[index].images!.length;i++){
-        final compressedImage = await FlutterImageCompress.compressAndGetFile(
+
+      print(
+          "state media ${state.media[index].name} ${state.media[index].images}");
+      if (state.media[index].images != null &&
+          state.media[index].images!.isNotEmpty) {
+        print(
+            "name ${state.media[index].name}${state.media[index].images!.length}");
+        for (int i = 0; i < state.media[index].images!.length; i++) {
+          final compressedImage = await FlutterImageCompress.compressAndGetFile(
             state.media[index].images![i].path,
             "${state.media[index].images![i].path}_compressed.jpg",
             quality: 60,
           );
           bytes = await compressedImage!.readAsBytes();
-          String base64String =  base64Encode(bytes);
+          String base64String = base64Encode(bytes);
           compressedImagesBase64List.add(base64String);
-       }
-        partJson={
+        }
+        partJson = {
           "images": compressedImagesBase64List,
           "comments": state.media[index].comments ?? ""
         };
-        allPartsJson.addAll({state.media[index].name:partJson});
-      print('${state.media[index].name} $partJson');
-      compressedImagesBase64List=[];
-      print(allPartsJson);
+        allPartsJson.addAll({state.media[index].name: partJson});
+        print('${state.media[index].name} $partJson');
+        compressedImagesBase64List = [];
+        print(allPartsJson);
       }
     }
-      await _repo.addVehicleMedia(allPartsJson).then((onValue){
-        emit(state.copyWith(state.media, VehiclePartsInteractionStatus.success));
-        emit(state.copyWith(state.media, VehiclePartsInteractionStatus.initial));
-      }).onError((error, stackTrace) {
-         emit(state.copyWith(state.media, VehiclePartsInteractionStatus.failure));
-        emit(state.copyWith(state.media, VehiclePartsInteractionStatus.initial));
-      },);
-    // displaying images and comments from db  
+    await _repo.addVehicleMedia(allPartsJson).then((onValue) {  
+      emit(state.copyWith(state.media, VehiclePartsInteractionStatus.success));
+      emit(state.copyWith(state.media, VehiclePartsInteractionStatus.initial));
+    }).onError(
+      (error, stackTrace) {
+        emit(
+            state.copyWith(state.media, VehiclePartsInteractionStatus.failure));
+        emit(
+            state.copyWith(state.media, VehiclePartsInteractionStatus.initial));
+      },
+    );
+    // displaying images and comments from db
     // Map<String,dynamic> imageMedia = jsonDecode(await  _repo.getImage());
     // print(imageMedia);
     // // Directory dir =  await getTemporaryDirectory();
-    // imageMedia.forEach((key, value) async{ 
+    // imageMedia.forEach((key, value) async{
     //   List<XFile> images=[];
     //   print('key $key value $value');
     //   if(value != {}  && value["images"] != null && value["images"] != []){
@@ -130,17 +138,16 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     //     Directory tempDir = Directory('${(await getTemporaryDirectory()).path}/$key');
     // if (!await tempDir.exists()) {
     //   await tempDir.create(recursive: true);
-    // } 
-    // String fileName = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg'; 
+    // }
+    // String fileName = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
     // File imageFile = File(fileName);
     // await imageFile.writeAsBytes(Base64Codec().decode(value["images"][i]));
     // images.add(XFile(fileName));
     //     print("$key $fileName");
-    //   }}  
+    //   }}
     // state.media.add(VehiclePartMedia(name: key,images: images,comments: value["comments"]));
     // },);
     // emit(state.copyWith(state.media, state.status));
-    
   }
 
   void _onRemoveImage(
@@ -155,4 +162,52 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     emit(state.copyWith(state.media, state.status));
   }
 
+  void _onSubmitBodyPartVehicleMedia(SubmitBodyPartVehicleMediaEvent event,
+      Emitter<VehiclePartsInteractionBlocState> emit) async {
+    
+
+    for (int index = 0; index < state.media.length; index++) {
+      List<String> compressedImagesBase64List = [];
+      if (state.media[index].name == event.bodyPartName) {
+        late Uint8List bytes;
+    Map<String, dynamic> partJson = {};
+        print(
+            "state media ${state.media[index].name} ${state.media[index].images}");
+        if (state.media[index].images != null &&
+            state.media[index].images!.isNotEmpty) {
+          print(
+              "name ${state.media[index].name}${state.media[index].images!.length}");
+          for (int i = 0; i < state.media[index].images!.length; i++) {
+            final compressedImage =
+                await FlutterImageCompress.compressAndGetFile(
+              state.media[index].images![i].path,
+              "${state.media[index].images![i].path}_compressed.jpg",
+              quality: 60,
+            );
+            bytes = await compressedImage!.readAsBytes();
+            String base64String = base64Encode(bytes);
+            compressedImagesBase64List.add(base64String);
+          }
+          partJson = {
+            "images": compressedImagesBase64List,
+            "comments": state.media[index].comments ?? ""
+          };
+          break;
+        }
+      
+      await _repo.addVehiclePartMedia(bodyPartData:  partJson,id:3).then((onValue) {
+        emit(
+            state.copyWith(state.media, VehiclePartsInteractionStatus.success));
+        emit(
+            state.copyWith(state.media, VehiclePartsInteractionStatus.initial));
+      }).onError(
+        (error, stackTrace) {
+          emit(state.copyWith(
+              state.media, VehiclePartsInteractionStatus.failure));
+          emit(state.copyWith(
+              state.media, VehiclePartsInteractionStatus.initial));
+        },
+      );
+    }}
+  }
 }
