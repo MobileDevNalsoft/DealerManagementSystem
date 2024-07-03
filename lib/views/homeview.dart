@@ -126,11 +126,16 @@ class _HomeView extends State<HomeView> {
                 height: size.height,
                 width: size.width,
                 decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                        'assets/images/dms_bg.png',
-                      ),
-                      fit: BoxFit.cover),
+                  gradient: LinearGradient(
+                      colors: [
+                        // Color.fromARGB(255, 255, 231, 231),
+                        Color.fromARGB(255, 238, 209, 209),
+                        Color.fromARGB(255, 238, 194, 194),
+                        Color.fromARGB(255, 231, 200, 200)
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.01, 0.35, 1]),
                   // gradient: LinearGradient(
                   //     colors: [
                   //       // Color.fromARGB(255, 255, 231, 231),
@@ -455,6 +460,20 @@ class _HomeView extends State<HomeView> {
                                       ).show(context);
                                       return;
                                     } else {
+                                      Service service = Service(
+                                          registrationNo:
+                                              vehRegNumController.text,
+                                          scheduleDate: context
+                                              .read<MultiBloc>()
+                                              .state
+                                              .date!
+                                              .toString()
+                                              .substring(0, 10),
+                                          location: locController.text,
+                                          kms: int.parse(kmsController.text),
+                                          customerName:
+                                              customerController.text);
+
                                       Navigator.push(
                                         context,
                                         PageRouteBuilder(
@@ -464,23 +483,7 @@ class _HomeView extends State<HomeView> {
                                                   secondaryAnimation) =>
                                               HomeProceedView(
                                                   clearFields: clearFields,
-                                                  service: Service(
-                                                      registrationNo:
-                                                          vehRegNumController
-                                                              .text,
-                                                      scheduleDate: context
-                                                          .read<MultiBloc>()
-                                                          .state
-                                                          .date!
-                                                          .toString()
-                                                          .substring(0, 10),
-                                                      location:
-                                                          locController.text,
-                                                      kms: int.parse(
-                                                          kmsController.text),
-                                                      customerName:
-                                                          customerController
-                                                              .text)),
+                                                  homeData: service.toJson()),
                                           transitionsBuilder: (context,
                                               animation,
                                               secondaryAnimation,
@@ -607,7 +610,9 @@ class _HomeView extends State<HomeView> {
                         ],
                       );
                     default:
-                      return const SizedBox();
+                      return Center(
+                        child: Text('Error'),
+                      );
                   }
                 }),
               ),
@@ -621,105 +626,105 @@ class _HomeView extends State<HomeView> {
                 )
             ],
           ),
-          floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
-              ? Padding(
-                  padding: EdgeInsets.only(
-                      right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
-                  child: CustomWidgets.CustomExpandableFAB(
-                      horizontalAlignment: isMobile ? -17 : -40,
-                      verticalAlignment: -15,
-                      rotational: false,
-                      angle: 90,
-                      distance: isMobile ? 50 : 70,
-                      color: const Color.fromARGB(255, 145, 19, 19),
-                      iconColor: Colors.white,
-                      children: [
-                        SizedBox(
-                          height: size.height * 0.08,
-                          width: size.width * (isMobile ? 0.24 : 0.1),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => HomeViewTest()));
-                            },
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/images/add_user.png',
-                                  color: Colors.white,
-                                  fit: BoxFit.cover,
-                                  scale: isMobile ? 22 : 15,
-                                ),
-                                Text(
-                                  'test',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: isMobile ? 11 : 14),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.08,
-                          width: size.width * (isMobile ? 0.24 : 0.1),
-                          child: GestureDetector(
-                            onTap: () {
-                              context.read<VehicleBloc>().state.status =
-                                  VehicleStatus.initial;
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const AddVehicleView()));
-                            },
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/images/car.png',
-                                  color: Colors.white,
-                                  fit: BoxFit.cover,
-                                  scale: isMobile ? 22 : 15,
-                                ),
-                                Text(
-                                  'Add Vehicle',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: isMobile ? 11 : 14),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.085,
-                          width: size.width * (isMobile ? 0.24 : 0.1),
-                          child: GestureDetector(
-                            onTap: () {
-                              context.read<VehicleBloc>().state.status =
-                                  VehicleStatus.initial;
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const ServiceHistoryView(),
-                              ));
-                            },
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.history,
-                                  size: isMobile ? 28 : 40,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  'History',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: isMobile ? 11 : 14),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]),
-                )
-              : const SizedBox(),
+          // floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
+          //     ? Padding(
+          //         padding: EdgeInsets.only(
+          //             right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
+          //         child: CustomWidgets.CustomExpandableFAB(
+          //             horizontalAlignment: isMobile ? -17 : -40,
+          //             verticalAlignment: -15,
+          //             rotational: false,
+          //             angle: 90,
+          //             distance: isMobile ? 50 : 70,
+          //             color: const Color.fromARGB(255, 145, 19, 19),
+          //             iconColor: Colors.white,
+          //             children: [
+          //               SizedBox(
+          //                 height: size.height * 0.08,
+          //                 width: size.width * (isMobile ? 0.24 : 0.1),
+          //                 child: GestureDetector(
+          //                   onTap: () {
+          //                     Navigator.of(context).push(MaterialPageRoute(
+          //                         builder: (_) => HomeViewTest()));
+          //                   },
+          //                   child: Column(
+          //                     children: [
+          //                       Image.asset(
+          //                         'assets/images/add_user.png',
+          //                         color: Colors.white,
+          //                         fit: BoxFit.cover,
+          //                         scale: isMobile ? 22 : 15,
+          //                       ),
+          //                       Text(
+          //                         'test',
+          //                         style: TextStyle(
+          //                             color: Colors.white,
+          //                             fontSize: isMobile ? 11 : 14),
+          //                       )
+          //                     ],
+          //                   ),
+          //                 ),
+          //               ),
+          //               SizedBox(
+          //                 height: size.height * 0.08,
+          //                 width: size.width * (isMobile ? 0.24 : 0.1),
+          //                 child: GestureDetector(
+          //                   onTap: () {
+          //                     context.read<VehicleBloc>().state.status =
+          //                         VehicleStatus.initial;
+          //                     Navigator.of(context).push(MaterialPageRoute(
+          //                         builder: (_) => const AddVehicleView()));
+          //                   },
+          //                   child: Column(
+          //                     children: [
+          //                       Image.asset(
+          //                         'assets/images/car.png',
+          //                         color: Colors.white,
+          //                         fit: BoxFit.cover,
+          //                         scale: isMobile ? 22 : 15,
+          //                       ),
+          //                       Text(
+          //                         'Add Vehicle',
+          //                         style: TextStyle(
+          //                             color: Colors.white,
+          //                             fontSize: isMobile ? 11 : 14),
+          //                       )
+          //                     ],
+          //                   ),
+          //                 ),
+          //               ),
+          //               SizedBox(
+          //                 height: size.height * 0.085,
+          //                 width: size.width * (isMobile ? 0.24 : 0.1),
+          //                 child: GestureDetector(
+          //                   onTap: () {
+          //                     context.read<VehicleBloc>().state.status =
+          //                         VehicleStatus.initial;
+          //                     Navigator.of(context).push(MaterialPageRoute(
+          //                       builder: (context) =>
+          //                           const ServiceHistoryView(),
+          //                     ));
+          //                   },
+          //                   child: Column(
+          //                     children: [
+          //                       Icon(
+          //                         Icons.history,
+          //                         size: isMobile ? 28 : 40,
+          //                         color: Colors.white,
+          //                       ),
+          //                       Text(
+          //                         'History',
+          //                         style: TextStyle(
+          //                             color: Colors.white,
+          //                             fontSize: isMobile ? 11 : 14),
+          //                       )
+          //                     ],
+          //                   ),
+          //                 ),
+          //               ),
+          //             ]),
+          //       )
+          //     : const SizedBox(),
         ),
       ),
     );

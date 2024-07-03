@@ -155,15 +155,12 @@ class Repository {
   }
 
   Future<int> addinspection(Map<String, dynamic> payload) async {
-    print('payload $payload');
     ApiResponse apiResponse = await _api.post('addInspection', data: payload);
     if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
-        Log.d(apiResponse.response);
         return response["response_code"];
       } else {
-        Log.e(apiResponse.response);
         return response["response_code"];
       }
     } else {

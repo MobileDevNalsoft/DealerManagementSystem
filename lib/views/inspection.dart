@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../bloc/multi/multi_bloc.dart';
+import '../bloc/service/service_bloc.dart';
 import '../vehiclemodule/xml_parser.dart';
 
 class InspectionView extends StatefulWidget {
@@ -177,6 +178,13 @@ class _InspectionViewState extends State<InspectionView> {
                                             1)
                                   ElevatedButton(
                                       onPressed: () async {
+                                        context.read<MultiBloc>().add(
+                                            InspectionJsonAdded(
+                                                jobCardNo: context
+                                                    .read<ServiceBloc>()
+                                                    .state
+                                                    .service!
+                                                    .jobCardNo!));
                                         await loadSvgImage(
                                                 svgImage:
                                                     'assets/images/image.svg')

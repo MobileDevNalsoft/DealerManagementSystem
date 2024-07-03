@@ -28,6 +28,8 @@ void main() async {
 
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
+  sharedPreferences.setBool('isLogged', true);
+
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
     child: MultiBlocProvider(

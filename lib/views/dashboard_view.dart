@@ -1,20 +1,17 @@
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/views/homeview.dart';
-import 'package:dms/views/service_history_view.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:circle_nav_bar/circle_nav_bar.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-
 import '../inits/init.dart';
+import '../models/services.dart';
 import 'login.dart';
 
 class DashboardView extends StatefulWidget {
@@ -63,35 +60,45 @@ class _DashboardViewState extends State<DashboardView> {
                 end: Alignment.bottomCenter,
                 stops: [0.01, 0.35, 1]),
           ),
-          child: PageView(controller: pageController, children: [
-            const Column(
-              children: [
-                JobCardPage(),
-              ],
-            ),
-            Services()
-          ])),
+          child: PageView(
+              controller: pageController,
+              children: [const JobCardPage(), Services()])),
       bottomNavigationBar: CircleNavBar(
-        activeIcons: const [
-          Icon(Icons.home, color: Color.fromARGB(255, 145, 19, 19)),
-          Icon(Icons.add, color: Color.fromARGB(255, 145, 19, 19)),
-          Icon(Icons.history, color: Color.fromARGB(255, 145, 19, 19)),
-        ],
-        inactiveIcons: const [
+        activeIcons: [
           Icon(
             Icons.home,
-            color: Color.fromARGB(255, 145, 19, 19),
+            color: const Color.fromARGB(255, 145, 19, 19),
+            size: size.height * 0.4,
           ),
           Icon(
             Icons.add,
-            color: Color.fromARGB(255, 145, 19, 19),
+            color: const Color.fromARGB(255, 145, 19, 19),
+            size: size.height * 0.04,
           ),
           Icon(
             Icons.history,
-            color: Color.fromARGB(255, 145, 19, 19),
+            color: const Color.fromARGB(255, 145, 19, 19),
+            size: size.height * 0.04,
           ),
         ],
-        color: const Color.fromARGB(255, 236, 232, 232),
+        inactiveIcons: [
+          Icon(
+            Icons.home,
+            size: size.height * 0.04,
+            color: const Color.fromARGB(255, 145, 19, 19),
+          ),
+          Icon(
+            Icons.add,
+            size: size.height * 0.04,
+            color: const Color.fromARGB(255, 145, 19, 19),
+          ),
+          Icon(
+            Icons.history,
+            size: size.height * 0.04,
+            color: const Color.fromARGB(255, 145, 19, 19),
+          ),
+        ],
+        color: const Color.fromARGB(255, 236, 224, 224),
         height: size.height * 0.07,
         circleWidth: size.height * 0.06,
         activeIndex: 1,
@@ -107,12 +114,15 @@ class _DashboardViewState extends State<DashboardView> {
                 duration: const Duration(seconds: 1), curve: Curves.ease);
           }
         },
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        padding: EdgeInsets.only(
+            left: size.width * 0.02,
+            right: size.width * 0.02,
+            bottom: size.width * 0.02),
         cornerRadius: const BorderRadius.only(
           topLeft: Radius.circular(8),
           topRight: Radius.circular(8),
-          bottomRight: Radius.circular(24),
-          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(30),
         ),
         shadowColor: const Color.fromARGB(255, 201, 94, 94),
         elevation: 5,
@@ -126,6 +136,8 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    Size size = MediaQuery.of(context).size;
+    print(shrinkOffset);
     return SizedBox(
       height: 280,
       child: ClipPath(
@@ -141,10 +153,11 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
               ],
             )),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
+                Gap(size.width * (shrinkOffset < 45 ? 0.03 : 0.4)),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
                   child: Text(
                     'Job Cards',
                     style: TextStyle(
@@ -153,18 +166,19 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                         fontSize: 18),
                   ),
                 ),
-                IconButton(
-                    onPressed: () {
-                      sharedPreferences.setBool("isLogged", false);
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginView(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    icon: Icon(Icons.person_pin))
+                if (shrinkOffset > 45)
+                  IconButton(
+                      onPressed: () {
+                        sharedPreferences.setBool("isLogged", false);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginView(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                      icon: const Icon(Icons.person_pin))
               ],
             ),
           )),
@@ -357,6 +371,7 @@ class JobCardPage extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class Services extends StatelessWidget {
   Services({super.key});
   final CustomColumnSizer _customColumnSizer = CustomColumnSizer();
@@ -396,7 +411,7 @@ class Services extends StatelessWidget {
                 Color.fromARGB(255, 145, 19, 19)
               ],
             )),
-            child: Center(
+            child: const Center(
               child: Text(
                 'Service History',
                 style: TextStyle(
@@ -507,5 +522,68 @@ class Services extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CustomColumnSizer extends ColumnSizer {
+  @override
+  double computeCellWidth(GridColumn column, DataGridRow row, Object? cellValue,
+      TextStyle textStyle) {
+    if (column.columnName == 'Sno') {
+      cellValue = cellValue;
+    } else if (column.columnName == 'Date') {
+      cellValue = cellValue;
+    }
+
+    return super.computeCellWidth(column, row, cellValue, textStyle);
+  }
+}
+
+class ServiceHistoryDataSource extends DataGridSource {
+  /// Creates the serviceHistory data source class with required details.
+  ServiceHistoryDataSource({required List<Service> serviceHistoryData}) {
+    _serviceHistoryData = serviceHistoryData
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+              DataGridCell<int>(
+                columnName: 'sno',
+                value: e.sNo,
+              ),
+              DataGridCell<String>(columnName: 'date', value: e.scheduleDate),
+              DataGridCell<String>(
+                  columnName: 'Job Card no.', value: e.jobCardNo),
+              DataGridCell<String>(columnName: 'Location', value: e.location),
+              DataGridCell<String>(columnName: 'Job Type', value: e.jobType),
+            ]))
+        .toList();
+  }
+
+  List<DataGridRow> _serviceHistoryData = [];
+
+  @override
+  List<DataGridRow> get rows => _serviceHistoryData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        color: Colors.white,
+        cells: row.getCells().map<Widget>((e) {
+          print("e ${e.columnName}");
+          return e.columnName == "Job Card no."
+              ? InkWell(
+                  onTap: () {
+                    print("${e.value}");
+                  },
+                  child: Center(
+                      child: Text(
+                    e.value.toString(),
+                    style: const TextStyle(color: Colors.blue),
+                  )),
+                )
+              : Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(e.value.toString()),
+                );
+        }).toList());
   }
 }

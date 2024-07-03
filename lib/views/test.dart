@@ -379,9 +379,18 @@ class _HomeViewTest extends State<HomeViewTest> {
 
                                 if (context.read<VehicleBloc>().state.status ==
                                     VehicleStatus.vehicleAlreadyAdded) {
-                                  print("vehicle present");
-                                  context.read<VehicleBloc>().state.status =
-                                      VehicleStatus.initial;
+                                  Service service = Service(
+                                      registrationNo: vehRegNumController.text,
+                                      scheduleDate: context
+                                          .read<MultiBloc>()
+                                          .state
+                                          .date!
+                                          .toString()
+                                          .substring(0, 10),
+                                      location: locController.text,
+                                      kms: int.parse(kmsController.text),
+                                      customerName: customerController.text);
+
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
@@ -391,20 +400,7 @@ class _HomeViewTest extends State<HomeViewTest> {
                                               secondaryAnimation) =>
                                           HomeProceedView(
                                               clearFields: clearFields,
-                                              service: Service(
-                                                  registrationNo:
-                                                      vehRegNumController.text,
-                                                  scheduleDate: context
-                                                      .read<MultiBloc>()
-                                                      .state
-                                                      .date!
-                                                      .toString()
-                                                      .substring(0, 10),
-                                                  location: locController.text,
-                                                  kms: int.parse(
-                                                      kmsController.text),
-                                                  customerName:
-                                                      customerController.text)),
+                                              homeData: service.toJson()),
                                       transitionsBuilder: (context, animation,
                                           secondaryAnimation, child) {
                                         const begin = Offset(1, 0.0);
