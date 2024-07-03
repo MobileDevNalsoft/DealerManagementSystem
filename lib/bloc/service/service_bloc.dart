@@ -19,6 +19,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<GetServiceLocations>(_onGetServiceLocations);
     on<GetJobCards>(_onGetJobCards);
     on<JobCardStatusUpdated>(_onJobCardStatusUpdated);
+    on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
+    on<DropDownOpenClose>(_onDropDownOpenClose);
   }
 
   final Repository _repo;
@@ -26,6 +28,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   void _onJobCardStatusUpdated(
       JobCardStatusUpdated event, Emitter<ServiceState> emit) {
     emit(state.copyWith(jobCards: state.jobCards));
+  }
+
+  void _onBottomNavigationBarClicked(BottomNavigationBarClicked event, Emitter<ServiceState> emit){
+    emit(state.copyWith(bottomNavigationBarActiveIndex: event.index));
+  }
+
+  void _onDropDownOpenClose(DropDownOpenClose event, Emitter<ServiceState> emit){
+    emit(state.copyWith(dropDownOpen: event.isOpen));
   }
 
   Future<void> _onServiceAdded(

@@ -24,3 +24,13 @@ class JobCardStatusUpdated extends ServiceEvent {
 }
 
 class GetServiceLocations extends ServiceEvent {}
+
+class BottomNavigationBarClicked extends ServiceEvent {
+  final int? index;
+  BottomNavigationBarClicked({this.index});
+}
+
+class DropDownOpenClose extends ServiceEvent{
+  final bool? isOpen;
+  DropDownOpenClose({this.isOpen});
+}

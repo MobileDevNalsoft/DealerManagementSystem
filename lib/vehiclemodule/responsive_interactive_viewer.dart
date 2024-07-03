@@ -6,7 +6,7 @@ import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/views/comments_view.dart';
-import 'package:dms/views/dashboard_view.dart';
+import 'package:dms/views/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

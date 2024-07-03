@@ -14,6 +14,8 @@ final class ServiceState {
       this.jobCards,
       this.locations,
       this.jobCardStatus,
+      this.dropDownOpen,
+      this.bottomNavigationBarActiveIndex,
       this.serviceLocationsStatus});
 
   ServiceStatus? status;
@@ -23,10 +25,12 @@ final class ServiceState {
   final List<Service>? services;
   final List<Service>? jobCards;
   final List<dynamic>? locations;
+  final bool? dropDownOpen;
+  int? bottomNavigationBarActiveIndex;
 
   factory ServiceState.initial() {
     return ServiceState(
-        status: ServiceStatus.initial, jobCardStatus: JobCardStatus.initial);
+        status: ServiceStatus.initial, jobCardStatus: JobCardStatus.initial, bottomNavigationBarActiveIndex: 0, dropDownOpen: false);
   }
 
   ServiceState copyWith(
@@ -35,6 +39,8 @@ final class ServiceState {
       GetServiceLocationsStatus? serviceLocationsStatus,
       Service? service,
       List<Service>? services,
+      int? bottomNavigationBarActiveIndex,
+      bool? dropDownOpen,
       List<Service>? jobCards,
       List<dynamic>? locations}) {
     return ServiceState(
@@ -42,8 +48,10 @@ final class ServiceState {
         jobCardStatus: jobCardStatus ?? this.jobCardStatus,
         serviceLocationsStatus:
             serviceLocationsStatus ?? this.serviceLocationsStatus,
+        bottomNavigationBarActiveIndex: bottomNavigationBarActiveIndex ?? this.bottomNavigationBarActiveIndex,
         service: service ?? this.service,
         services: services ?? this.services,
+        dropDownOpen: dropDownOpen ?? this.dropDownOpen,
         jobCards: jobCards ?? this.jobCards,
         locations: locations ?? this.locations);
   }

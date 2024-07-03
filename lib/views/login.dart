@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/inits/init.dart';
-import 'package:dms/views/dashboard_view.dart';
-import 'package:dms/views/homeview.dart';
+import 'package:dms/views/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -10,7 +9,6 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/authentication/authentication_bloc.dart';
 import '../network_handler_mixin/network_handler.dart';
-import '../repository/repository.dart';
 import 'customer_widgets/textformfield.dart';
 
 class LoginView extends StatefulWidget {
@@ -21,20 +19,34 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> with ConnectivityMixin {
-  final TextEditingController _emailController = TextEditingController();
 
+  // controllers
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // shared preference
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
+
+  // variable to hold Authentication bloc
+  late AuthenticationBloc _authBloc;
 
   @override
   void initState() {
     super.initState();
-    context.read<AuthenticationBloc>().state.obscure = true;
+
+    //initiating _authBloc
+    _authBloc = context.read<AuthenticationBloc>();
+
+    // setting the default state of the obscure password to true
+    _authBloc.state.obscure = true;
+
+    // setting the initial state for authentication
+    _authBloc.state.authenticationStatus = AuthenticationStatus.initial;
   }
 
   @override
   void dispose() {
+    //disposing controllers when this page is removed from the stack
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -42,8 +54,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
+    // responsive UI
+    Size size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
     return PopScope(
@@ -55,7 +67,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
             return SizedBox(
               height: size.height * 0.03,
               child: AlertDialog(
-                backgroundColor: Color.fromARGB(255, 245, 216, 216),
+                backgroundColor: const Color.fromARGB(255, 245, 216, 216),
                 contentPadding: EdgeInsets.only(
                     left: size.width * 0.04, top: size.height * 0.02),
                 content: const Text('Are you sure you want to exit the app?'),
@@ -67,7 +79,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       Navigator.pop(context, false); // Don't exit
                     },
                     style: TextButton.styleFrom(
-                        foregroundColor: Color.fromARGB(255, 145, 19, 19)),
+                        foregroundColor: const Color.fromARGB(255, 145, 19, 19)),
                     child: const Text('No'),
                   ),
                   TextButton(
@@ -75,7 +87,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       exit(0); // Exit
                     },
                     style: TextButton.styleFrom(
-                        foregroundColor: Color.fromARGB(255, 145, 19, 19)),
+                        foregroundColor: const Color.fromARGB(255, 145, 19, 19)),
                     child: const Text('Yes'),
                   ),
                 ],
@@ -103,7 +115,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>DashboardView(),
+                          builder: (context) =>const DashboardView(),
                         ),
                         (route) => false,
                       );
@@ -137,13 +149,12 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                   return Stack(
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
+                        width: size.width,
+                        height: size.height,
                         decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage('assets/images/login.png'),
                                 alignment: Alignment.topCenter),
-                            color: Colors.white,
                             gradient: LinearGradient(
                                 colors: [
                                   Color.fromARGB(255, 145, 19, 19),
@@ -234,7 +245,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                               right: size.width * 0.03),
                                         ).show(context);
                                       } else {
-                                        context.read<AuthenticationBloc>().add(
+                                        _authBloc.add(
                                             LoginButtonPressed(
                                                 username: _emailController.text,
                                                 password:
