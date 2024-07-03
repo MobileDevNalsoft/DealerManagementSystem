@@ -38,12 +38,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
               status: ServiceStatus.success, service: event.service));
           emit(state.copyWith(status: ServiceStatus.initial));
         } else {
+          Log.e(value);
           emit(state.copyWith(status: ServiceStatus.failure));
           emit(state.copyWith(status: ServiceStatus.initial));
         }
       },
     ).onError(
       (error, stackTrace) {
+        Log.e(error);
         emit(state.copyWith(status: ServiceStatus.failure));
         emit(state.copyWith(status: ServiceStatus.initial));
       },

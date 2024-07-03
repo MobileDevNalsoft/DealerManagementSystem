@@ -100,14 +100,15 @@ class _HomeViewTest extends State<HomeViewTest> {
             backgroundColor: const Color.fromARGB(255, 145, 19, 19),
             leading: IconButton(
                 onPressed: () {
-                  sharedPreferences.setBool("isLogged", false);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginView(),
-                    ),
-                    (route) => false,
-                  );
+                  // sharedPreferences.setBool("isLogged", false);
+                  // Navigator.pushAndRemoveUntil(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const LoginView(),
+                  //   ),
+                  //   (route) => false,
+                  // );
+                  Navigator.pop(context);
                 },
                 icon:
                     const Icon(Icons.arrow_back_rounded, color: Colors.white)),
@@ -121,21 +122,21 @@ class _HomeViewTest extends State<HomeViewTest> {
             height: size.height,
             width: size.width,
             decoration: const BoxDecoration(
-              // image: DecorationImage(
-              //     image: AssetImage(
-              //       'assets/images/dms_bg.png',
-              //     ),
-              //     fit: BoxFit.cover),
-              gradient: LinearGradient(
-                  colors: [
-                    // Color.fromARGB(255, 255, 231, 231),
-                    Color.fromARGB(255, 241, 193, 193),
-                    Color.fromARGB(255, 235, 136, 136),
-                    Color.fromARGB(255, 226, 174, 174)
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.01, 0.35, 1]),
+              image: DecorationImage(
+                  image: AssetImage(
+                    'assets/images/dms_bg.png',
+                  ),
+                  fit: BoxFit.cover),
+              // gradient: LinearGradient(
+              //     colors: [
+              //       // Color.fromARGB(255, 255, 231, 231),
+              //       Color.fromARGB(255, 241, 193, 193),
+              //       Color.fromARGB(255, 235, 136, 136),
+              //       Color.fromARGB(255, 226, 174, 174)
+              //     ],
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     stops: [0.01, 0.35, 1]),
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {

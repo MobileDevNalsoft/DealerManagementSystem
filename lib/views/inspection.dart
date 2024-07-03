@@ -51,183 +51,199 @@ class _InspectionViewState extends State<InspectionView> {
           ),
           centerTitle: true,
         ),
-        body: BlocBuilder<MultiBloc, MultiBlocState>(builder: (context, state) {
-          switch (state.jsonStatus) {
-            case JsonStatus.loading:
-              return Transform(
-                transform: Matrix4.translationValues(0, -40, 0),
-                child: Center(
-                  child: Lottie.asset('assets/lottie/car_loading.json',
-                      height: size.height * 0.5, width: size.width * 0.6),
-                ),
-              );
-            case JsonStatus.success:
-              List<String> buttonsText = [];
-
-              for (var entry in state.json!.entries) {
-                buttonsText.add(entry.key);
-              }
-
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Gap(size.height * 0.005),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Wrap(
-                      direction: Axis.horizontal,
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      spacing: size.width * 0.01,
-                      runSpacing: size.width * 0.01,
-                      children: buttonsText
-                          .map((e) => SizedBox(
-                                height: size.height * 0.035,
-                                child: TextButton(
-                                    style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        backgroundColor: state.index ==
-                                                buttonsText.indexOf(e)
-                                            ? const Color.fromARGB(
-                                                255, 145, 19, 19)
-                                            : const Color.fromARGB(
-                                                255, 238, 203, 203),
-                                        foregroundColor: state.index ==
-                                                buttonsText.indexOf(e)
-                                            ? Colors.white
-                                            : const Color.fromARGB(
-                                                255, 29, 22, 22),
-                                        side: const BorderSide(
-                                            color: Color.fromARGB(
-                                                255, 145, 19, 19))),
-                                    onPressed: () {
-                                      _pageController
-                                          .jumpToPage(buttonsText.indexOf(e));
-                                    },
-                                    child: Text(e)),
-                              ))
-                          .toList(),
-                    ),
+        body: Container(
+          height: size.height,
+          width: size.width,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [
+                  // Color.fromARGB(255, 255, 231, 231),
+                 Color.fromARGB(255, 241, 193, 193),
+                    Color.fromARGB(255, 235, 136, 136),
+                    Color.fromARGB(255, 226, 174, 174)
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.01, 0.35, 1]),
+          ),
+          child: BlocBuilder<MultiBloc, MultiBlocState>(builder: (context, state) {
+            switch (state.jsonStatus) {
+              case JsonStatus.loading:
+                return Transform(
+                  transform: Matrix4.translationValues(0, -40, 0),
+                  child: Center(
+                    child: Lottie.asset('assets/lottie/car_loading.json',
+                        height: size.height * 0.5, width: size.width * 0.6),
                   ),
-                  Divider(
-                    height: size.height * 0.015,
-                    thickness: 2,
-                    color: Colors.grey.shade300,
-                  ),
-                  Gap(size.height * 0.01),
-                  Expanded(
-                    child: SizedBox(
-                      width: size.width * 0.95,
-                      child: PageView.builder(
-                        itemCount: state.json!.length,
-                        controller: _pageController,
-                        onPageChanged: (value) {
-                          context
-                              .read<MultiBloc>()
-                              .add(PageChange(index: value));
-                        },
-                        itemBuilder: (context, pageIndex) => ListView.builder(
-                          itemCount: state.json![buttonsText[pageIndex]].length,
-                          itemBuilder: (context, index) {
-                            // if (state.json![buttonsText[pageIndex]][index]
-                            //         ['widget'] ==
-                            //     'textField') {
-                            //   textEditingController.text =
-                            //       state.json![buttonsText[pageIndex]][index]
-                            //           ['properties']['value'];
-                            // }
-                            return Column(
-                              children: [
-                                Gap(size.height * 0.01),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Gap(size.width * 0.05),
-                                    SizedBox(
-                                      width: size.width * 0.2,
-                                      child: Wrap(
-                                        children: [
-                                          Text(state
-                                                  .json![buttonsText[pageIndex]]
-                                              [index]['properties']['label'])
-                                        ],
-                                      ),
-                                    ),
-                                    Gap(size.width * 0.05),
-                                    getWidget(
-                                        context: context,
-                                        index: index,
-                                        page: buttonsText[pageIndex],
-                                        json: state.json!,
-                                        size: size),
-                                  ],
-                                ),
-                                Gap(size.height * 0.02),
-                                if (pageIndex == buttonsText.length - 1 &&
-                                    index ==
-                                        state.json![buttonsText[pageIndex]]
-                                                .length -
-                                            1)
-                                  Gap(size.height * 0.05),
-                                if (pageIndex == buttonsText.length - 1 &&
-                                    index ==
-                                        state.json![buttonsText[pageIndex]]
-                                                .length -
-                                            1)
-                                  ElevatedButton(
-                                      onPressed: () async {
-                                        context.read<MultiBloc>().add(
-                                            InspectionJsonAdded(
-                                                jobCardNo: context
-                                                    .read<ServiceBloc>()
-                                                    .state
-                                                    .service!
-                                                    .jobCardNo!));
-                                        await loadSvgImage(
-                                                svgImage:
-                                                    'assets/images/image.svg')
-                                            .then(
-                                          (value) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CustomDetector(
-                                                    model:
-                                                        BodySelectorViewModel(),
-                                                    generalParts: value,
-                                                  ),
-                                                ));
-                                          },
-                                        );
+                );
+              case JsonStatus.success:
+                List<String> buttonsText = [];
+          
+                for (var entry in state.json!.entries) {
+                  buttonsText.add(entry.key);
+                }
+          
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Gap(size.height * 0.005),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        spacing: size.width * 0.01,
+                        runSpacing: size.width * 0.01,
+                        children: buttonsText
+                            .map((e) => SizedBox(
+                                  height: size.height * 0.035,
+                                  child: TextButton(
+                                      style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          backgroundColor: state.index ==
+                                                  buttonsText.indexOf(e)
+                                              ? const Color.fromARGB(
+                                                  255, 145, 19, 19)
+                                              : const Color.fromARGB(
+                                                  255, 238, 203, 203),
+                                          foregroundColor: state.index ==
+                                                  buttonsText.indexOf(e)
+                                              ? Colors.white
+                                              : const Color.fromARGB(
+                                                  255, 29, 22, 22),
+                                          side: const BorderSide(
+                                              color: Color.fromARGB(
+                                                  255, 145, 19, 19))),
+                                      onPressed: () {
+                                        _pageController
+                                            .jumpToPage(buttonsText.indexOf(e));
                                       },
-                                      style: ElevatedButton.styleFrom(
-                                          minimumSize: const Size(70.0, 35.0),
-                                          padding: EdgeInsets.zero,
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 145, 19, 19),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5))),
-                                      child: const Text(
-                                        'Submit',
-                                        style: TextStyle(color: Colors.white),
-                                      ))
-                              ],
-                            );
-                          },
-                        ),
+                                      child: Text(e)),
+                                ))
+                            .toList(),
                       ),
                     ),
-                  )
-                ],
-              );
-            default:
-              return const SizedBox();
-          }
-        }),
+                    Divider(
+                      height: size.height * 0.015,
+                      thickness: 2,
+                      color: Colors.grey.shade300,
+                    ),
+                    Gap(size.height * 0.01),
+                    Expanded(
+                      child: SizedBox(
+                        width: size.width * 0.95,
+                        child: PageView.builder(
+                          itemCount: state.json!.length,
+                          controller: _pageController,
+                          onPageChanged: (value) {
+                            context
+                                .read<MultiBloc>()
+                                .add(PageChange(index: value));
+                          },
+                          itemBuilder: (context, pageIndex) => ListView.builder(
+                            itemCount: state.json![buttonsText[pageIndex]].length,
+                            itemBuilder: (context, index) {
+                              // if (state.json![buttonsText[pageIndex]][index]
+                              //         ['widget'] ==
+                              //     'textField') {
+                              //   textEditingController.text =
+                              //       state.json![buttonsText[pageIndex]][index]
+                              //           ['properties']['value'];
+                              // }
+                              return Column(
+                                children: [
+                                  Gap(size.height * 0.01),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Gap(size.width * 0.05),
+                                      SizedBox(
+                                        width: size.width * 0.2,
+                                        child: Wrap(
+                                          children: [
+                                            Text(state
+                                                    .json![buttonsText[pageIndex]]
+                                                [index]['properties']['label'])
+                                          ],
+                                        ),
+                                      ),
+                                      Gap(size.width * 0.05),
+                                      getWidget(
+                                          context: context,
+                                          index: index,
+                                          page: buttonsText[pageIndex],
+                                          json: state.json!,
+                                          size: size),
+                                    ],
+                                  ),
+                                  Gap(size.height * 0.02),
+                                  if (pageIndex == buttonsText.length - 1 &&
+                                      index ==
+                                          state.json![buttonsText[pageIndex]]
+                                                  .length -
+                                              1)
+                                    Gap(size.height * 0.05),
+                                  if (pageIndex == buttonsText.length - 1 &&
+                                      index ==
+                                          state.json![buttonsText[pageIndex]]
+                                                  .length -
+                                              1)
+                                    ElevatedButton(
+                                        onPressed: () async {
+                                          context.read<MultiBloc>().add(
+                                              InspectionJsonAdded(
+                                                  jobCardNo: context
+                                                      .read<ServiceBloc>()
+                                                      .state
+                                                      .service!
+                                                      .jobCardNo!));
+                                          await loadSvgImage(
+                                                  svgImage:
+                                                      'assets/images/image.svg')
+                                              .then(
+                                            (value) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CustomDetector(
+                                                      model:
+                                                          BodySelectorViewModel(),
+                                                      generalParts: value,
+                                                    ),
+                                                  ));
+                                            },
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            minimumSize: const Size(70.0, 35.0),
+                                            padding: EdgeInsets.zero,
+                                            backgroundColor: const Color.fromARGB(
+                                                255, 145, 19, 19),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5))),
+                                        child: const Text(
+                                          'Submit',
+                                          style: TextStyle(color: Colors.white),
+                                        ))
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              default:
+                return const SizedBox();
+            }
+          }),
+        ),
       ),
     ));
   }

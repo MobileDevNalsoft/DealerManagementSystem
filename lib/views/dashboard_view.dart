@@ -46,15 +46,16 @@ class _DashboardViewState extends State<DashboardView> {
 
     return SafeArea(
         child: Scaffold(
-      extendBody: true,
+          backgroundColor: Color.fromARGB(255, 226, 174, 174) ,
+      extendBody: false,
       body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
                 colors: [
                   // Color.fromARGB(255, 255, 231, 231),
-                  Color.fromARGB(255, 238, 209, 209),
-                  Color.fromARGB(255, 238, 194, 194),
-                  Color.fromARGB(255, 231, 200, 200)
+                 Color.fromARGB(255, 241, 193, 193),
+                    Color.fromARGB(255, 235, 136, 136),
+                    Color.fromARGB(255, 226, 174, 174)
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -63,7 +64,8 @@ class _DashboardViewState extends State<DashboardView> {
           child: PageView(
               controller: pageController,
               children: [const JobCardPage(), Services()])),
-      bottomNavigationBar: CircleNavBar(
+      bottomNavigationBar:  CircleNavBar(
+        
         activeIcons: [
           Icon(
             Icons.home,
@@ -162,10 +164,13 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                     'Job Cards',
                     style: TextStyle(
                         fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontSize: 18),
                   ),
                 ),
+                  if (shrinkOffset > 45)
+                  Spacer(),
                 if (shrinkOffset > 45)
                   IconButton(
                       onPressed: () {
@@ -249,28 +254,39 @@ class JobCardPage extends StatelessWidget {
                 pinned: true,
               ),
               SliverList(
+
                   delegate: SliverChildBuilderDelegate((context, index) {
                 return Skeletonizer(
                   enableSwitchAnimation: true,
                   enabled: state.jobCardStatus == JobCardStatus.loading,
-                  child: Row(
+                  child: Card(
+                    margin: EdgeInsets.symmetric(vertical: size.height*0.005,horizontal: size.width*0.026 ),
+                    color: Colors.white,
+                    elevation: 3,
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
+                        alignment: Alignment.center,
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         height: size.height * 0.05,
                         width: size.width * 0.3,
                         child: Text(
+                          textAlign: TextAlign.center,
                           state.jobCardStatus != JobCardStatus.loading
                               ? state.jobCards![index].jobCardNo!
                               : 'JC-MAD-633',
-                          style: const TextStyle(fontSize: 13),
+                          style: const TextStyle(fontSize: 13,color: Colors.blue,decoration: TextDecoration.underline),
                         ),
                       ),
                       Container(
+                         alignment: Alignment.center,
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         height: size.height * 0.05,
                         width: size.width * 0.3,
                         child: Text(
+                           textAlign: TextAlign.center,
                           state.jobCardStatus != JobCardStatus.loading
                               ? state.jobCards![index].registrationNo!
                               : 'TS09ED7884',
@@ -278,9 +294,10 @@ class JobCardPage extends StatelessWidget {
                         ),
                       ),
                       Container(
+                         alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: size.height * 0.05,
-                          width: size.width * 0.4,
+                          width: size.width * 0.25,
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton2<String>(
                               onMenuStateChange: (isOpen) {},
@@ -315,17 +332,10 @@ class JobCardPage extends StatelessWidget {
                               },
                               buttonStyleData: ButtonStyleData(
                                 height: size.height * 0.04,
-                                width: size.width * 0.5,
+                                width: size.width * 0.25,
                                 padding:
                                     const EdgeInsets.only(left: 14, right: 14),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: Colors.black,
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                elevation: 0,
+                                
                               ),
                               iconStyleData: const IconStyleData(
                                 icon: Icon(!false
@@ -337,7 +347,7 @@ class JobCardPage extends StatelessWidget {
                               ),
                               dropdownStyleData: DropdownStyleData(
                                 maxHeight: size.height * 0.3,
-                                width: size.width * 0.5,
+                                width: size.width * 0.15,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
@@ -358,6 +368,7 @@ class JobCardPage extends StatelessWidget {
                           ))
                     ],
                   ),
+                  )
                 );
               },
                       childCount: state.status != ServiceStatus.success

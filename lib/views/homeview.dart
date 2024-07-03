@@ -48,6 +48,7 @@ class _HomeView extends State<HomeView> {
   @override
   void initState() {
     super.initState();
+    clearFields();
     vehRegNumFocus.addListener(_onVehRegNumUnfocused);
     context.read<ServiceBloc>().add(GetServiceLocations());
     context.read<VehicleBloc>().state.status = VehicleStatus.initial;
@@ -129,9 +130,9 @@ class _HomeView extends State<HomeView> {
                   gradient: LinearGradient(
                       colors: [
                         // Color.fromARGB(255, 255, 231, 231),
-                        Color.fromARGB(255, 238, 209, 209),
-                        Color.fromARGB(255, 238, 194, 194),
-                        Color.fromARGB(255, 231, 200, 200)
+                        Color.fromARGB(255, 241, 193, 193),
+                    Color.fromARGB(255, 235, 136, 136),
+                    Color.fromARGB(255, 226, 174, 174)
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -459,7 +460,7 @@ class _HomeView extends State<HomeView> {
                                             right: size.width * 0.03),
                                       ).show(context);
                                       return;
-                                    } else {
+                                    } else  {
                                       Service service = Service(
                                           registrationNo:
                                               vehRegNumController.text,
@@ -626,105 +627,105 @@ class _HomeView extends State<HomeView> {
                 )
             ],
           ),
-          // floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
-          //     ? Padding(
-          //         padding: EdgeInsets.only(
-          //             right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
-          //         child: CustomWidgets.CustomExpandableFAB(
-          //             horizontalAlignment: isMobile ? -17 : -40,
-          //             verticalAlignment: -15,
-          //             rotational: false,
-          //             angle: 90,
-          //             distance: isMobile ? 50 : 70,
-          //             color: const Color.fromARGB(255, 145, 19, 19),
-          //             iconColor: Colors.white,
-          //             children: [
-          //               SizedBox(
-          //                 height: size.height * 0.08,
-          //                 width: size.width * (isMobile ? 0.24 : 0.1),
-          //                 child: GestureDetector(
-          //                   onTap: () {
-          //                     Navigator.of(context).push(MaterialPageRoute(
-          //                         builder: (_) => HomeViewTest()));
-          //                   },
-          //                   child: Column(
-          //                     children: [
-          //                       Image.asset(
-          //                         'assets/images/add_user.png',
-          //                         color: Colors.white,
-          //                         fit: BoxFit.cover,
-          //                         scale: isMobile ? 22 : 15,
-          //                       ),
-          //                       Text(
-          //                         'test',
-          //                         style: TextStyle(
-          //                             color: Colors.white,
-          //                             fontSize: isMobile ? 11 : 14),
-          //                       )
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ),
-          //               SizedBox(
-          //                 height: size.height * 0.08,
-          //                 width: size.width * (isMobile ? 0.24 : 0.1),
-          //                 child: GestureDetector(
-          //                   onTap: () {
-          //                     context.read<VehicleBloc>().state.status =
-          //                         VehicleStatus.initial;
-          //                     Navigator.of(context).push(MaterialPageRoute(
-          //                         builder: (_) => const AddVehicleView()));
-          //                   },
-          //                   child: Column(
-          //                     children: [
-          //                       Image.asset(
-          //                         'assets/images/car.png',
-          //                         color: Colors.white,
-          //                         fit: BoxFit.cover,
-          //                         scale: isMobile ? 22 : 15,
-          //                       ),
-          //                       Text(
-          //                         'Add Vehicle',
-          //                         style: TextStyle(
-          //                             color: Colors.white,
-          //                             fontSize: isMobile ? 11 : 14),
-          //                       )
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ),
-          //               SizedBox(
-          //                 height: size.height * 0.085,
-          //                 width: size.width * (isMobile ? 0.24 : 0.1),
-          //                 child: GestureDetector(
-          //                   onTap: () {
-          //                     context.read<VehicleBloc>().state.status =
-          //                         VehicleStatus.initial;
-          //                     Navigator.of(context).push(MaterialPageRoute(
-          //                       builder: (context) =>
-          //                           const ServiceHistoryView(),
-          //                     ));
-          //                   },
-          //                   child: Column(
-          //                     children: [
-          //                       Icon(
-          //                         Icons.history,
-          //                         size: isMobile ? 28 : 40,
-          //                         color: Colors.white,
-          //                       ),
-          //                       Text(
-          //                         'History',
-          //                         style: TextStyle(
-          //                             color: Colors.white,
-          //                             fontSize: isMobile ? 11 : 14),
-          //                       )
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ),
-          //             ]),
-          //       )
-          //     : const SizedBox(),
+          floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
+              ? Padding(
+                  padding: EdgeInsets.only(
+                      right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
+                  child: CustomWidgets.CustomExpandableFAB(
+                      horizontalAlignment: isMobile ? -17 : -40,
+                      verticalAlignment: -15,
+                      rotational: false,
+                      angle: 90,
+                      distance: isMobile ? 50 : 70,
+                      color: const Color.fromARGB(255, 145, 19, 19),
+                      iconColor: Colors.white,
+                      children: [
+                        SizedBox(
+                          height: size.height * 0.08,
+                          width: size.width * (isMobile ? 0.24 : 0.1),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => HomeViewTest()));
+                            },
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  'assets/images/add_user.png',
+                                  color: Colors.white,
+                                  fit: BoxFit.cover,
+                                  scale: isMobile ? 22 : 15,
+                                ),
+                                Text(
+                                  'test',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isMobile ? 11 : 14),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.08,
+                          width: size.width * (isMobile ? 0.24 : 0.1),
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<VehicleBloc>().state.status =
+                                  VehicleStatus.initial;
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => const AddVehicleView()));
+                            },
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  'assets/images/car.png',
+                                  color: Colors.white,
+                                  fit: BoxFit.cover,
+                                  scale: isMobile ? 22 : 15,
+                                ),
+                                Text(
+                                  'Add Vehicle',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isMobile ? 11 : 14),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.085,
+                          width: size.width * (isMobile ? 0.24 : 0.1),
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<VehicleBloc>().state.status =
+                                  VehicleStatus.initial;
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    const ServiceHistoryView(),
+                              ));
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.history,
+                                  size: isMobile ? 28 : 40,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  'History',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isMobile ? 11 : 14),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ]),
+                )
+              : const SizedBox(),
         ),
       ),
     );
