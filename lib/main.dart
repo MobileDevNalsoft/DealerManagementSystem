@@ -8,6 +8,9 @@ import 'package:dms/inits/init.dart';
 import 'package:dms/providers/home_provider.dart';
 import 'package:dms/providers/service_history_provider.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
+import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/dashboard_view.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/homeview.dart';
@@ -28,7 +31,7 @@ void main() async {
 
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
-  sharedPreferences.setBool('isLogged', true);
+  //sharedPreferences.setBool('isLogged', true);
 
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
@@ -38,11 +41,8 @@ void main() async {
         BlocProvider(create: (_) => CustomerBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => ServiceBloc(repo: _.read<Repository>())),
         BlocProvider(create: (_) => MultiBloc(repo: _.read<Repository>())),
-        BlocProvider(
-            create: (_) => AuthenticationBloc(repo: _.read<Repository>())),
-        BlocProvider(
-            create: (_) =>
-                VehiclePartsInteractionBloc(repo: _.read<Repository>())),
+        BlocProvider(create: (_) => AuthenticationBloc(repo: _.read<Repository>())),
+        BlocProvider(create: (_) => VehiclePartsInteractionBloc(repo: _.read<Repository>())),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ServiceHistoryProvider()),
         ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),

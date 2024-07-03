@@ -202,4 +202,27 @@ class Repository {
       throw Error();
     }
   }
+
+  Future<int>  addVehiclePartMedia({Map<String, dynamic>? bodyPartData,int? id}) async {
+    print(bodyPartData);
+    ApiResponse apiResponse = await _api.post('addImage',data: {
+      "id":3,
+      "data": jsonEncode(bodyPartData),
+    });
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return 200;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
 }

@@ -40,17 +40,17 @@ class BodySelectorViewModel extends ChangeNotifier{
   void selectGeneralBodyPart(String name){
     _selectedGeneralBodyPart = name;
 
-    print(name);
+    print("name from provider $name");
     notifyListeners();
   }
 
-set isTapped(value){
+set isTapped(bool value){
   _isTapped=value;
   notifyListeners();
 }
-get isTapped=>_isTapped;
+bool get isTapped=>_isTapped;
 
-  get selectedGeneralBodyPart => _selectedGeneralBodyPart;
+ String get selectedGeneralBodyPart => _selectedGeneralBodyPart;
   get interacting => _interaction;
 
   void setInteraction(bool value){
@@ -58,4 +58,8 @@ get isTapped=>_isTapped;
     notifyListeners();
   }
   
+  set selectedGeneralBodyPart(String value){
+    _selectedGeneralBodyPart =value;
+    notifyListeners();  
+  }
 }
