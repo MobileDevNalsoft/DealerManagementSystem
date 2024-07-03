@@ -6,6 +6,7 @@ import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/views/comments_view.dart';
+import 'package:dms/views/dashboard_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,20 +53,22 @@ class _CustomDetectorState extends State<CustomDetector> {
                 children: [
                   BlocListener<VehiclePartsInteractionBloc,
                       VehiclePartsInteractionBlocState>(
-                    listener: (context, state) {
+                    listener: (context, state) async{
                       if (state.status ==
                           VehiclePartsInteractionStatus.success) {
-                        Flushbar(
+                      await Flushbar(
                           flushbarPosition: FlushbarPosition.TOP,
                           backgroundColor: Colors.green,
                           message: "Successfully uploaded",
-                          duration: const Duration(seconds: 2),
+                          duration: const Duration(seconds: 1),
                           borderRadius: BorderRadius.circular(12),
                           margin: EdgeInsets.only(
                               top: size.height * 0.01,
                               left: isMobile ? 10 : size.width * 0.8,
                               right: size.width * 0.03),
                         ).show(context);
+                        Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => DashboardView()));
                       }
                     },
                     child: GestureDetector(

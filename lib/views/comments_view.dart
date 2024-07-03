@@ -177,11 +177,16 @@ class _CommentsViewState extends State<CommentsView> {
                                                               index: index));
                                                     }
                                                   },
-                                                  icon: Icon(
-                                                    Icons.remove_circle_rounded,
-                                                    color: Color.fromARGB(
-                                                        255, 167, 38, 38),
-                                                    size: 20,
+                                                  icon: CircleAvatar(
+                                                    radius: 8,
+                                                    backgroundColor: Colors.white,
+
+                                                    child: Icon(
+                                                      Icons.remove_circle_rounded,
+                                                      color: Color.fromARGB(
+                                                          255, 167, 38, 38),
+                                                      size: 16,
+                                                    ),
                                                   )))
                                         ]);
                                   },
@@ -218,7 +223,7 @@ class _CommentsViewState extends State<CommentsView> {
             ],
           ),
           Positioned(
-              top: -12.0,
+              top: -10.0,
               right: -10.0,
               child: IconButton(
                   onPressed: () {

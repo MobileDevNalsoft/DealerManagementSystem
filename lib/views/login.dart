@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/inits/init.dart';
+import 'package:dms/views/dashboard_view.dart';
 import 'package:dms/views/homeview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,7 +103,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomeView(),
+                          builder: (context) =>DashboardView(),
                         ),
                         (route) => false,
                       );
