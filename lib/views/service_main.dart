@@ -3,7 +3,7 @@ import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/add_vehicle_view.dart';
+import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/service_proceed.dart';
 import 'package:dms/views/inspection.dart';
 import 'package:dms/views/login.dart';
@@ -23,16 +23,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../inits/init.dart';
 
 class HomeView extends StatefulWidget {
+  PageController? pageController;
+  HomeView({Key? key, this.pageController}) : super(key: key);
+
   @override
   State<HomeView> createState() => _HomeView();
 }
 
 class _HomeView extends State<HomeView> {
+  // focusnodes
   FocusNode locFocus = FocusNode();
   FocusNode vehRegNumFocus = FocusNode();
   FocusNode customerFocus = FocusNode();
   FocusNode scheduleDateFocus = FocusNode();
   FocusNode kmsFocus = FocusNode();
+
+  // controllers
   TextEditingController locController = TextEditingController();
   TextEditingController locTypeAheadController = TextEditingController();
   TextEditingController vehRegNumController = TextEditingController();
@@ -79,7 +85,8 @@ class _HomeView extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.shortestSide < 500;
 
     // Set preferred orientations based on device type
     if (!isMobile) {
@@ -94,8 +101,6 @@ class _HomeView extends State<HomeView> {
       ]);
     }
 
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: GestureDetector(
         onTap: () {
@@ -104,6 +109,7 @@ class _HomeView extends State<HomeView> {
         child: PopScope(
           canPop: true,
           onPopInvoked: (didPop) {
+            widget.pageController!.jumpToPage(0);
             _serviceBloc.add(BottomNavigationBarClicked(index: 0));
           },
           child: Scaffold(
@@ -115,11 +121,10 @@ class _HomeView extends State<HomeView> {
               backgroundColor: const Color.fromARGB(255, 145, 19, 19),
               leading: IconButton(
                   onPressed: () {
-                    
                     Navigator.pop(context);
                   },
-                  icon:
-                      const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: Colors.white)),
               title: const Text(
                 "Service",
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -134,24 +139,13 @@ class _HomeView extends State<HomeView> {
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                         colors: [
-                          // Color.fromARGB(255, 255, 231, 231),
                           Color.fromARGB(255, 241, 193, 193),
-                      Color.fromARGB(255, 235, 136, 136),
-                      Color.fromARGB(255, 226, 174, 174)
+                          Color.fromARGB(255, 235, 136, 136),
+                          Color.fromARGB(255, 226, 174, 174)
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         stops: [0.01, 0.35, 1]),
-                    // gradient: LinearGradient(
-                    //     colors: [
-                    //       // Color.fromARGB(255, 255, 231, 231),
-                    //       Color.fromARGB(255, 241, 193, 193),
-                    //       Color.fromARGB(255, 235, 136, 136),
-                    //       Color.fromARGB(255, 226, 174, 174)
-                    //     ],
-                    //     begin: Alignment.topCenter,
-                    //     end: Alignment.bottomCenter,
-                    //     stops: [0.01, 0.35, 1]),
                   ),
                   child: BlocBuilder<ServiceBloc, ServiceState>(
                       builder: (context, state) {
@@ -160,7 +154,8 @@ class _HomeView extends State<HomeView> {
                         return Transform(
                           transform: Matrix4.translationValues(0, -40, 0),
                           child: Center(
-                            child: Lottie.asset('assets/lottie/car_loading.json',
+                            child: Lottie.asset(
+                                'assets/lottie/car_loading.json',
                                 height: size.height * 0.5,
                                 width: size.width * 0.6),
                           ),
@@ -227,21 +222,23 @@ class _HomeView extends State<HomeView> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       const Text(
                                                           'Oops! This Vehicle not Registered with us'),
                                                       Row(
                                                         mainAxisAlignment:
-                                                            MainAxisAlignment.end,
+                                                            MainAxisAlignment
+                                                                .end,
                                                         children: [
                                                           TextButton(
                                                             onPressed: () {
                                                               Navigator.pop(
                                                                   context);
                                                             },
-                                                            child:
-                                                                const Text('Ok'),
+                                                            child: const Text(
+                                                                'Ok'),
                                                           ),
                                                         ],
                                                       )
@@ -260,7 +257,8 @@ class _HomeView extends State<HomeView> {
                                                 "Server Failure Please check the internet connectivity",
                                             flushbarPosition:
                                                 FlushbarPosition.TOP,
-                                            duration: const Duration(seconds: 2),
+                                            duration:
+                                                const Duration(seconds: 2),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             margin: EdgeInsets.only(
@@ -326,7 +324,8 @@ class _HomeView extends State<HomeView> {
                                         isMobile: isMobile,
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
-                                          FilteringTextInputFormatter.digitsOnly,
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
                                         ],
                                         textcontroller: kmsController,
                                         focusNode: kmsFocus,
@@ -372,26 +371,31 @@ class _HomeView extends State<HomeView> {
                                                         state.vehicle!
                                                                 .chassisNumber ??
                                                             "",
-                                                        state.vehicle!.make ?? "",
+                                                        state.vehicle!.make ??
+                                                            "",
                                                         state.vehicle!.model ??
                                                             "",
-                                                        state.vehicle!.varient ??
+                                                        state.vehicle!
+                                                                .varient ??
                                                             "",
-                                                        state.vehicle!.color ?? ""
+                                                        state.vehicle!.color ??
+                                                            ""
                                                       ],
                                                       propertyFontStyle:
                                                           TextStyle(
-                                                              fontSize: isMobile
-                                                                  ? 16
-                                                                  : 18,
+                                                              fontSize:
+                                                                  isMobile
+                                                                      ? 16
+                                                                      : 18,
                                                               fontFamily:
                                                                   'Montserrat',
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold),
                                                       valueFontStyle: TextStyle(
-                                                          fontSize:
-                                                              isMobile ? 16 : 18,
+                                                          fontSize: isMobile
+                                                              ? 16
+                                                              : 18,
                                                           fontFamily: 'Roboto'),
                                                     ));
                                               },
@@ -409,7 +413,8 @@ class _HomeView extends State<HomeView> {
                                                 'view more',
                                                 style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: isMobile ? 12 : 14),
+                                                    fontSize:
+                                                        isMobile ? 12 : 14),
                                               ));
                                         } else {
                                           return SizedBox(
@@ -454,9 +459,11 @@ class _HomeView extends State<HomeView> {
                                           backgroundColor: Colors.red,
                                           blockBackgroundInteraction: true,
                                           message: message,
-                                          flushbarPosition: FlushbarPosition.TOP,
+                                          flushbarPosition:
+                                              FlushbarPosition.TOP,
                                           duration: const Duration(seconds: 2),
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                           margin: EdgeInsets.only(
                                               top: size.height * 0.01,
                                               left: isMobile
@@ -465,7 +472,7 @@ class _HomeView extends State<HomeView> {
                                               right: size.width * 0.03),
                                         ).show(context);
                                         return;
-                                      } else  {
+                                      } else {
                                         Service service = Service(
                                             registrationNo:
                                                 vehRegNumController.text,
@@ -479,12 +486,12 @@ class _HomeView extends State<HomeView> {
                                             kms: int.parse(kmsController.text),
                                             customerName:
                                                 customerController.text);
-          
+
                                         Navigator.push(
                                           context,
                                           PageRouteBuilder(
-                                            transitionDuration:
-                                                const Duration(milliseconds: 200),
+                                            transitionDuration: const Duration(
+                                                milliseconds: 200),
                                             pageBuilder: (context, animation,
                                                     secondaryAnimation) =>
                                                 HomeProceedView(
@@ -508,94 +515,6 @@ class _HomeView extends State<HomeView> {
                                           ),
                                         );
                                       }
-          
-                                      // if (context.read<VehicleBloc>().state.status ==
-                                      //     VehicleStatus.vehicleAlreadyAdded) {
-                                      //   print("vehicle present");
-                                      //   context.read<VehicleBloc>().state.status =
-                                      //       VehicleStatus.initial;
-                                      //   Navigator.push(
-                                      //     context,
-                                      //     PageRouteBuilder(
-                                      //       transitionDuration:
-                                      //           const Duration(milliseconds: 200),
-                                      //       pageBuilder: (context, animation,
-                                      //               secondaryAnimation) =>
-                                      //           HomeProceedView(
-                                      //               clearFields: clearFields,
-                                      //               service: Service(
-                                      //                   registrationNo:
-                                      //                       vehRegNumController.text,
-                                      //                   scheduleDate: context
-                                      //                       .read<MultiBloc>()
-                                      //                       .state
-                                      //                       .date!
-                                      //                       .toString()
-                                      //                       .substring(0, 10),
-                                      //                   location: locController.text,
-                                      //                   kms: int.parse(
-                                      //                       kmsController.text),
-                                      //                   customerName:
-                                      //                       customerController.text)),
-                                      //       transitionsBuilder: (context, animation,
-                                      //           secondaryAnimation, child) {
-                                      //         const begin = Offset(1, 0.0);
-                                      //         const end = Offset.zero;
-                                      //         final tween =
-                                      //             Tween(begin: begin, end: end);
-                                      //         final offsetAnimation =
-                                      //             animation.drive(tween);
-                                      //         return SlideTransition(
-                                      //           position: offsetAnimation,
-                                      //           child: child,
-                                      //         );
-                                      //       },
-                                      //     ),
-                                      //   );
-                                      // } else {
-                                      //   print("vehicle not present");
-                                      //   Flushbar(
-                                      //           flushbarPosition:
-                                      //               FlushbarPosition.TOP,
-                                      //           backgroundColor: Colors.red,
-                                      //           mainButton: InkWell(
-                                      //             onTap: () {
-                                      //               context
-                                      //                       .read<VehicleBloc>()
-                                      //                       .state
-                                      //                       .status =
-                                      //                   VehicleStatus.initial;
-                                      //               Navigator.of(context).push(
-                                      //                   MaterialPageRoute(
-                                      //                       builder: (_) =>
-                                      //                           const AddVehicleView()));
-                                      //             },
-                                      //             child: const Column(
-                                      //               children: [
-                                      //                 Icon(Icons.directions_car),
-                                      //                 Text(
-                                      //                   "Add Vehicle",
-                                      //                   style: TextStyle(
-                                      //                       color: Colors.black,
-                                      //                       fontWeight:
-                                      //                           FontWeight.w600),
-                                      //                 ),
-                                      //               ],
-                                      //             ),
-                                      //           ),
-                                      //           borderRadius:
-                                      //               BorderRadius.circular(12),
-                                      //           margin: EdgeInsets.only(
-                                      //               top: 24,
-                                      //               left: isMobile
-                                      //                   ? 10
-                                      //                   : size.width * 0.8,
-                                      //               right: 10),
-                                      //           duration: const Duration(seconds: 5),
-                                      //           message:
-                                      //               'Please register vehicle before service')
-                                      //       .show(context);
-                                      // }
                                     },
                                     style: ElevatedButton.styleFrom(
                                         minimumSize: const Size(70.0, 35.0),
@@ -609,14 +528,15 @@ class _HomeView extends State<HomeView> {
                                       'next',
                                       style: TextStyle(color: Colors.white),
                                     )),
-                                if (MediaQuery.of(context).viewInsets.bottom != 0)
+                                if (MediaQuery.of(context).viewInsets.bottom !=
+                                    0)
                                   Gap(size.height * (isMobile ? 0.4 : 0.5)),
                               ],
                             ),
                           ],
                         );
                       default:
-                        return Center(
+                        return const Center(
                           child: Text('Error'),
                         );
                     }
@@ -628,7 +548,8 @@ class _HomeView extends State<HomeView> {
                     color: Colors.black54,
                     child: Center(
                         child: Lottie.asset('assets/lottie/car_loading.json',
-                            height: size.height * 0.5, width: size.width * 0.6)),
+                            height: size.height * 0.5,
+                            width: size.width * 0.6)),
                   )
               ],
             ),

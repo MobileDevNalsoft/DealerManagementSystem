@@ -4,7 +4,7 @@ import 'package:dms/bloc/customer/customer_bloc.dart';
 import 'package:dms/custom_methods/methods.dart';
 import 'package:dms/models/customer.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/add_vehicle_view.dart';
+import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/service_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

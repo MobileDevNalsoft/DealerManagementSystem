@@ -111,7 +111,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                 data: SfDataGridThemeData.raw(
                     headerColor: Colors.white,
                     currentCellStyle: const DataGridCurrentCellStyle(
-                      borderColor: Colors.red,
+                      borderColor: Colors.black,
                       borderWidth: 2,
                     )),
                 child: BlocConsumer<ServiceBloc, ServiceState>(

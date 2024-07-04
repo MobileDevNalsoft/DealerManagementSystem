@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/views/service_main.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
@@ -23,8 +26,7 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
   late ServiceBloc _serviceBloc;
-  final PageController pageController =
-      PageController(initialPage: 0, viewportFraction: 1);
+  PageController pageController = PageController();
 
   @override
   void initState() {
@@ -40,6 +42,9 @@ class _DashboardViewState extends State<DashboardView> {
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
     _serviceBloc.add(GetJobCards(query: 'Main  Workshop'));
     _serviceBloc.add(GetServiceHistory(query: '2022'));
+
+    // set default orientation to portrait up
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   @override
@@ -48,109 +53,177 @@ class _DashboardViewState extends State<DashboardView> {
     Size size = MediaQuery.of(context).size;
 
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: const Color.fromARGB(255, 226, 174, 174),
-      extendBody:
-          false, // restricts the scaffold till above the bottom navigation bar in this case
-      body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 241, 193, 193),
-                  Color.fromARGB(255, 235, 136, 136),
-                  Color.fromARGB(255, 226, 174, 174)
+        child: PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SizedBox(
+              height: size.height * 0.03,
+              child: AlertDialog(
+                backgroundColor: const Color.fromARGB(255, 245, 216, 216),
+                contentPadding: EdgeInsets.only(
+                    left: size.width * 0.04, top: size.height * 0.02),
+                content: const Text('Are you sure you want to exit the app?'),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero,
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false); // Don't exit
+                    },
+                    style: TextButton.styleFrom(
+                        foregroundColor:
+                            const Color.fromARGB(255, 145, 19, 19)),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      exit(0); // Exit
+                    },
+                    style: TextButton.styleFrom(
+                        foregroundColor:
+                            const Color.fromARGB(255, 145, 19, 19)),
+                    child: const Text('Yes'),
+                  ),
                 ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.01, 0.35, 1]),
-          ),
-          child: PageView(
-              controller: pageController,
-              onPageChanged: (value) {
-                _serviceBloc
-                    .add(BottomNavigationBarClicked(index: value == 0 ? 0 : 2));
-              },
-              children: [
-                JobCardPage(
-                  serviceBloc: _serviceBloc,
-                ),
-                Services()
-              ])),
-      bottomNavigationBar: BlocBuilder<ServiceBloc, ServiceState>(
-        builder: (context, state) {
-          return CircleNavBar(
-            activeIcons: [
-              Icon(
-                Icons.home,
-                color: const Color.fromARGB(255, 145, 19, 19),
-                size: size.height * 0.04,
               ),
-              Icon(
-                Icons.add,
-                color: const Color.fromARGB(255, 145, 19, 19),
-                size: size.height * 0.04,
-              ),
-              Icon(
-                Icons.history,
-                color: const Color.fromARGB(255, 145, 19, 19),
-                size: size.height * 0.04,
-              ),
-            ],
-            inactiveIcons: [
-              Icon(
-                Icons.home,
-                size: size.height * 0.04,
-                color: const Color.fromARGB(255, 145, 19, 19),
-              ),
-              Icon(
-                Icons.add,
-                size: size.height * 0.04,
-                color: const Color.fromARGB(255, 145, 19, 19),
-              ),
-              Icon(
-                Icons.history,
-                size: size.height * 0.04,
-                color: const Color.fromARGB(255, 145, 19, 19),
-              ),
-            ],
-            iconCurve: Curves.easeIn,
-            iconDurationMillSec: 1000,
-            tabCurve: Curves.easeIn,
-            tabDurationMillSec: 1000,
-            color: const Color.fromARGB(255, 236, 224, 224),
-            height: size.height * 0.07,
-            circleWidth: size.height * 0.06,
-            activeIndex: state.bottomNavigationBarActiveIndex!,
-            onTap: (index) {
-              _serviceBloc.add(BottomNavigationBarClicked(index: index));
-              if (index == 0) {
-                pageController.animateToPage(0,
-                    duration: const Duration(seconds: 1), curve: Curves.ease);
-              } else if (index == 1) {
-                // added delay to show the button flow animation in bottom navigation bar
-                Future.delayed(const Duration(seconds: 1), () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeView()));
-                });
-              } else {
-                pageController.animateToPage(1,
-                    duration: const Duration(seconds: 1), curve: Curves.ease);
-              }
-            },
-            padding: EdgeInsets.only(
-                left: size.width * 0.02,
-                right: size.width * 0.02,
-                bottom: size.width * 0.02),
-            cornerRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-              bottomRight: Radius.circular(30),
-              bottomLeft: Radius.circular(30),
+            );
+          },
+        );
+      },
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 226, 174, 174),
+        extendBody:
+            false, // restricts the scaffold till above the bottom navigation bar in this case
+        body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 241, 193, 193),
+                    Color.fromARGB(255, 235, 136, 136),
+                    Color.fromARGB(255, 226, 174, 174)
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.01, 0.35, 1]),
             ),
-            shadowColor: const Color.fromARGB(255, 201, 94, 94),
-            elevation: 5,
-          );
-        },
+            child: BlocBuilder<ServiceBloc, ServiceState>(
+              builder: (context, state) {
+                return PageView(
+                    controller: pageController,
+                    onPageChanged: (value) {
+                      // if (value == 1) {
+                      //   Future.delayed(
+                      //     Duration(milliseconds: 500),
+                      //     () {
+                      //       SystemChrome.setPreferredOrientations([
+                      //         DeviceOrientation.landscapeLeft,
+                      //       ]);
+                      //     },
+                      //   );
+                      // } else {
+                      //   Future.delayed(
+                      //     Duration(milliseconds: 500),
+                      //     () {
+                      //       SystemChrome.setPreferredOrientations([
+                      //         DeviceOrientation.portraitUp,
+                      //       ]);
+                      //     },
+                      //   );
+                      // }
+                      _serviceBloc.add(BottomNavigationBarClicked(
+                          index: value == 0 ? 0 : 2));
+                    },
+                    children: [
+                      JobCardPage(
+                        serviceBloc: _serviceBloc,
+                      ),
+                      Services()
+                    ]);
+              },
+            )),
+        bottomNavigationBar: BlocBuilder<ServiceBloc, ServiceState>(
+          builder: (context, state) {
+            return CircleNavBar(
+              activeIcons: [
+                Icon(
+                  Icons.home,
+                  color: const Color.fromARGB(255, 145, 19, 19),
+                  size: size.height * 0.04,
+                ),
+                Icon(
+                  Icons.add,
+                  color: const Color.fromARGB(255, 145, 19, 19),
+                  size: size.height * 0.04,
+                ),
+                Icon(
+                  Icons.history,
+                  color: const Color.fromARGB(255, 145, 19, 19),
+                  size: size.height * 0.04,
+                ),
+              ],
+              inactiveIcons: [
+                Icon(
+                  Icons.home,
+                  size: size.height * 0.04,
+                  color: const Color.fromARGB(255, 145, 19, 19),
+                ),
+                Icon(
+                  Icons.add,
+                  size: size.height * 0.04,
+                  color: const Color.fromARGB(255, 145, 19, 19),
+                ),
+                Icon(
+                  Icons.history,
+                  size: size.height * 0.04,
+                  color: const Color.fromARGB(255, 145, 19, 19),
+                ),
+              ],
+              iconCurve: Curves.easeIn,
+              iconDurationMillSec: 1000,
+              tabCurve: Curves.easeIn,
+              tabDurationMillSec: 1000,
+              color: const Color.fromARGB(255, 236, 224, 224),
+              height: size.height * 0.07,
+              circleWidth: size.height * 0.06,
+              activeIndex: state.bottomNavigationBarActiveIndex!,
+              onTap: (index) {
+                _serviceBloc.add(BottomNavigationBarClicked(index: index));
+                if (index == 0) {
+                  pageController.animateToPage(0,
+                      duration: const Duration(seconds: 1), curve: Curves.ease);
+                } else if (index == 1) {
+                  // added delay to show the button flow animation in bottom navigation bar
+                  Future.delayed(const Duration(seconds: 1), () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomeView(
+                                  pageController: pageController,
+                                )));
+                  });
+                } else {
+                  pageController.animateToPage(1,
+                      duration: const Duration(seconds: 1), curve: Curves.ease);
+                }
+              },
+              padding: EdgeInsets.only(
+                  left: size.width * 0.02,
+                  right: size.width * 0.02,
+                  bottom: size.width * 0.02),
+              cornerRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+                bottomRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+              ),
+              shadowColor: const Color.fromARGB(255, 201, 94, 94),
+              elevation: 5,
+            );
+          },
+        ),
       ),
     ));
   }
@@ -163,115 +236,99 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: 100,
-      child: ClipPath(
-          clipper: BackgroundWaveClipper(),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            decoration:
-                const BoxDecoration(color: Color.fromARGB(255, 145, 19, 19)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Gap(size.width * (shrinkOffset < 45 ? 0.03 : 0.4)),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  child: Text(
-                    'Job Cards',
-                    style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 18),
-                  ),
+    return ClipPath(
+        clipper: BackgroundWaveClipper(),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 100,
+          decoration:
+              const BoxDecoration(color: Color.fromARGB(255, 145, 19, 19)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Gap(size.width * (shrinkOffset < 45 ? 0.03 : 0.4)),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                child: Text(
+                  'Job Cards',
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 18),
                 ),
-                if (shrinkOffset > 45) const Spacer(),
-                if (shrinkOffset > 45)
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      isExpanded: true,
-                      hint: const SizedBox(),
-                      items: const [
-                        DropdownMenuItem<String>(
-                            value: '0',
-                            child: Text(
-                              'Log out',
-                              style: TextStyle(color: Colors.transparent),
-                            ))
-                      ],
-                      value: '0',
-                      onChanged: (String? value) {
-                        sharedPreferences.setBool("isLogged", false);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginView(),
-                          ),
-                          (route) => false,
-                        );
-                      },
-                      buttonStyleData: ButtonStyleData(
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            color: Colors.transparent),
-                        height: size.height * 0.05,
-                        width: size.width * 0.25,
-                        padding: const EdgeInsets.only(left: 14, right: 14),
+              ),
+              if (shrinkOffset > 45) const Spacer(),
+              if (shrinkOffset > 45)
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    isExpanded: true,
+                    hint: const SizedBox(),
+                    items: const [
+                      DropdownMenuItem<String>(
+                          value: '0',
+                          child: Text(
+                            'Log out',
+                            style: TextStyle(color: Colors.transparent),
+                          ))
+                    ],
+                    value: '0',
+                    onChanged: (String? value) {
+                      sharedPreferences.setBool("isLogged", false);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginView(),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    buttonStyleData: ButtonStyleData(
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          color: Colors.transparent),
+                      height: size.height * 0.05,
+                      width: size.width * 0.25,
+                      padding: const EdgeInsets.only(left: 14, right: 14),
+                    ),
+                    iconStyleData: IconStyleData(
+                      icon: const Icon(
+                        Icons.person_pin,
+                        color: Colors.white,
                       ),
-                      iconStyleData: IconStyleData(
-                        icon: const Icon(
-                          Icons.person_pin,
+                      iconSize: size.height * 0.03,
+                      iconEnabledColor: Colors.black,
+                      iconDisabledColor: Colors.black,
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                        width: size.width * 0.17,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
                         ),
-                        iconSize: size.height * 0.038,
-                        iconEnabledColor: Colors.black,
-                        iconDisabledColor: Colors.black,
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                          width: size.width * 0.17,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
+                        offset: const Offset(5, 0)),
+                    menuItemStyleData: MenuItemStyleData(
+                      selectedMenuItemBuilder: (context, child) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.01),
+                          child: const Text(
+                            'Log out',
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
                           ),
-                          offset: const Offset(5, 0)),
-                      menuItemStyleData: MenuItemStyleData(
-                        selectedMenuItemBuilder: (context, child) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.01),
-                            child: const Text(
-                              'Log out',
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          );
-                        },
-                      ),
+                        );
+                      },
                     ),
-                  )
-                // IconButton(
-                //   color: Colors.white,
-                //     onPressed: () {
-                //       sharedPreferences.setBool("isLogged", false);
-                //       Navigator.pushAndRemoveUntil(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => const LoginView(),
-                //         ),
-                //         (route) => false,
-                //       );
-                //     },
-                //     icon: const Icon(Icons.person_pin))
-              ],
-            ),
-          )),
-    );
+                  ),
+                )
+            ],
+          ),
+        ));
   }
 
   @override
@@ -283,6 +340,99 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       oldDelegate.maxExtent != maxExtent || oldDelegate.minExtent != minExtent;
+}
+
+class SliverHeader extends SliverPersistentHeaderDelegate {
+  SliverHeader();
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final size = MediaQuery.of(context).size;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Card(
+            margin: EdgeInsets.only(
+                left: size.width * 0.026,
+                right: size.width * 0.026,
+                bottom: size.height * 0.005),
+            color: Colors.white,
+            elevation: 4,
+            shadowColor: const Color.fromARGB(255, 145, 19, 19),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    height: size.height * 0.068,
+                    width: size.width * 0.3,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black38),
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10))),
+                    child: const Text(
+                      textAlign: TextAlign.center,
+                      'Job Card No.',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    height: size.height * 0.068,
+                    width: size.width * 0.398,
+                    decoration: const BoxDecoration(
+                        border: Border.symmetric(
+                            horizontal: BorderSide(color: Colors.black38)),
+                        borderRadius: BorderRadius.only()),
+                    child: const Text(
+                      textAlign: TextAlign.center,
+                      'Registration No.',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    height: size.height * 0.068,
+                    width: size.width * 0.25,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black38),
+                        borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: const Text(
+                      textAlign: TextAlign.center,
+                      'Status',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ]))
+      ],
+    );
+  }
+
+  @override
+  double get maxExtent => 56;
+
+  @override
+  double get minExtent => kToolbarHeight;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return oldDelegate.maxExtent != maxExtent ||
+        oldDelegate.minExtent != minExtent;
+  }
 }
 
 class BackgroundWaveClipper extends CustomClipper<Path> {
@@ -331,7 +481,6 @@ class JobCardPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return SizedBox(
-      height: size.height * 0.92,
       width: size.width,
       child: BlocBuilder<ServiceBloc, ServiceState>(
         builder: (context, state) {
@@ -339,6 +488,11 @@ class JobCardPage extends StatelessWidget {
             slivers: [
               SliverPersistentHeader(
                 delegate: SliverAppBar(),
+                // Set this param so that it won't go off the screen when scrolling
+                pinned: true,
+              ),
+              SliverPersistentHeader(
+                delegate: SliverHeader(),
                 // Set this param so that it won't go off the screen when scrolling
                 pinned: true,
               ),
@@ -372,6 +526,7 @@ class JobCardPage extends StatelessWidget {
                                   ? state.jobCards![index].jobCardNo!
                                   : 'JC-MAD-633',
                               style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 13,
                                   color: Colors.blue,
                                   decoration: TextDecoration.underline),
@@ -402,7 +557,29 @@ class JobCardPage extends StatelessWidget {
                               height: size.height * 0.05,
                               width: size.width * 0.25,
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black12),
+                                  border: Border.all(
+                                      width: 2,
+                                      color: _serviceBloc!
+                                                  .state.jobCardStatus ==
+                                              JobCardStatus.success
+                                          ? _serviceBloc!.state.jobCards![index]
+                                                      .status ==
+                                                  'I'
+                                              ? Colors.yellow
+                                              : _serviceBloc!
+                                                          .state
+                                                          .jobCards![index]
+                                                          .status ==
+                                                      'N'
+                                                  ? Colors.orange
+                                                  : _serviceBloc!
+                                                              .state
+                                                              .jobCards![index]
+                                                              .status ==
+                                                          'CL'
+                                                      ? Colors.green
+                                                      : Colors.red
+                                          : Colors.white),
                                   borderRadius: const BorderRadius.only(
                                       topRight: Radius.circular(10),
                                       bottomRight: Radius.circular(10))),
@@ -439,34 +616,11 @@ class JobCardPage extends StatelessWidget {
                                         .add(JobCardStatusUpdated());
                                   },
                                   buttonStyleData: ButtonStyleData(
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.only(
+                                    decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(10),
-                                            bottomRight:
-                                                const Radius.circular(10)),
-                                        color: _serviceBloc!.state.status! ==
-                                                ServiceStatus.success
-                                            ? _serviceBloc!
-                                                        .state
-                                                        .jobCards![index]
-                                                        .status ==
-                                                    'I'
-                                                ? Colors.yellow.shade200
-                                                : _serviceBloc!
-                                                            .state
-                                                            .jobCards![index]
-                                                            .status ==
-                                                        'N'
-                                                    ? Colors.orange.shade200
-                                                    : _serviceBloc!
-                                                                .state
-                                                                .jobCards![
-                                                                    index]
-                                                                .status ==
-                                                            'CL'
-                                                        ? Colors.green.shade200
-                                                        : Colors.red.shade200
-                                            : null),
+                                            bottomRight: Radius.circular(10)),
+                                        color: Colors.white),
                                     height: size.height * 0.05,
                                     width: size.width * 0.25,
                                     padding: const EdgeInsets.only(
@@ -575,7 +729,6 @@ class Services extends StatelessWidget {
                 if (state.status == ServiceStatus.success) {}
               },
               builder: (context, state) {
-                print('state ${state.status}');
                 switch (state.status) {
                   case ServiceStatus.loading:
                     return Transform(
@@ -586,7 +739,6 @@ class Services extends StatelessWidget {
                       ),
                     );
                   case ServiceStatus.success:
-                    print('services ${state.services}');
                     return Expanded(
                       flex: 1,
                       child: SfDataGrid(
@@ -607,14 +759,13 @@ class Services extends StatelessWidget {
                         allowFiltering: true,
                         editingGestureType: EditingGestureType.doubleTap,
                         onCellDoubleTap: (details) {
-                          print(details.rowColumnIndex);
                           dataGridController.beginEdit(details.rowColumnIndex);
                         },
                         controller: dataGridController,
                         columns: <GridColumn>[
                           GridColumn(
                               allowEditing: true,
-                              width: 150,
+                              width: 120,
                               columnName: 'sno',
                               label: Container(
                                   padding: const EdgeInsets.all(16.0),
@@ -625,13 +776,11 @@ class Services extends StatelessWidget {
                           GridColumn(
                               columnName: 'date',
                               label: Container(
-                                  padding: const EdgeInsets.all(8.0),
                                   alignment: Alignment.center,
                                   child: const Text('Date'))),
                           GridColumn(
                               columnName: 'Job Card no.',
                               label: Container(
-                                  padding: const EdgeInsets.all(8.0),
                                   alignment: Alignment.center,
                                   child: InkWell(
                                     onTap: () {},
@@ -643,13 +792,11 @@ class Services extends StatelessWidget {
                           GridColumn(
                               columnName: 'Location',
                               label: Container(
-                                  padding: const EdgeInsets.all(8.0),
                                   alignment: Alignment.center,
                                   child: const Text('Location'))),
                           GridColumn(
                               columnName: 'Job Type',
                               label: Container(
-                                  padding: const EdgeInsets.all(8.0),
                                   alignment: Alignment.center,
                                   child: const Text('Job Type'))),
                         ],

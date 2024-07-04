@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/authentication/authentication_bloc.dart';
 import '../network_handler_mixin/network_handler.dart';
-import 'customer_widgets/textformfield.dart';
+import 'custom_widgets/textformfield.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -19,7 +19,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> with ConnectivityMixin {
-
   // controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -79,7 +78,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       Navigator.pop(context, false); // Don't exit
                     },
                     style: TextButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 145, 19, 19)),
+                        foregroundColor:
+                            const Color.fromARGB(255, 145, 19, 19)),
                     child: const Text('No'),
                   ),
                   TextButton(
@@ -87,7 +87,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       exit(0); // Exit
                     },
                     style: TextButton.styleFrom(
-                        foregroundColor: const Color.fromARGB(255, 145, 19, 19)),
+                        foregroundColor:
+                            const Color.fromARGB(255, 145, 19, 19)),
                     child: const Text('Yes'),
                   ),
                 ],
@@ -115,7 +116,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>const DashboardView(),
+                          builder: (context) => const DashboardView(),
                         ),
                         (route) => false,
                       );
@@ -245,11 +246,10 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                               right: size.width * 0.03),
                                         ).show(context);
                                       } else {
-                                        _authBloc.add(
-                                            LoginButtonPressed(
-                                                username: _emailController.text,
-                                                password:
-                                                    _passwordController.text));
+                                        _authBloc.add(LoginButtonPressed(
+                                            username: _emailController.text,
+                                            password:
+                                                _passwordController.text));
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../../logger/logger.dart';
@@ -30,34 +31,35 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(jobCards: state.jobCards));
   }
 
-  void _onBottomNavigationBarClicked(BottomNavigationBarClicked event, Emitter<ServiceState> emit){
+  void _onBottomNavigationBarClicked(
+      BottomNavigationBarClicked event, Emitter<ServiceState> emit) {
     emit(state.copyWith(bottomNavigationBarActiveIndex: event.index));
   }
 
-  void _onDropDownOpenClose(DropDownOpenClose event, Emitter<ServiceState> emit){
+  void _onDropDownOpenClose(
+      DropDownOpenClose event, Emitter<ServiceState> emit) {
     emit(state.copyWith(dropDownOpen: event.isOpen));
   }
 
   Future<void> _onServiceAdded(
       ServiceAdded event, Emitter<ServiceState> emit) async {
-    emit(state.copyWith(status: ServiceStatus.loading));
+    emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.loading));
     await _repo.addService(event.service.toJson()).then(
       (value) {
         if (value == 200) {
           emit(state.copyWith(
-              status: ServiceStatus.success, service: event.service));
-          emit(state.copyWith(status: ServiceStatus.initial));
+              serviceUploadStatus: ServiceUploadStatus.success,
+              service: event.service));
         } else {
           Log.e(value);
-          emit(state.copyWith(status: ServiceStatus.failure));
-          emit(state.copyWith(status: ServiceStatus.initial));
+          emit(
+              state.copyWith(serviceUploadStatus: ServiceUploadStatus.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
         Log.e(error);
-        emit(state.copyWith(status: ServiceStatus.failure));
-        emit(state.copyWith(status: ServiceStatus.initial));
+        emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.failure));
       },
     );
   }
@@ -126,8 +128,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future<void> _onGetServiceLocations(
       GetServiceLocations event, Emitter<ServiceState> emit) async {
-    emit(state.copyWith(
-        serviceLocationsStatus: GetServiceLocationsStatus.loading));
+    if (state.serviceLocationsStatus != GetServiceLocationsStatus.success) {
+      emit(state.copyWith(
+          serviceLocationsStatus: GetServiceLocationsStatus.loading));
+    }
     await _repo.getLocations().then(
       (json) {
         if (json['response_code'] == 200) {

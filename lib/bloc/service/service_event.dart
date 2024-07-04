@@ -30,7 +30,7 @@ class BottomNavigationBarClicked extends ServiceEvent {
   BottomNavigationBarClicked({this.index});
 }
 
-class DropDownOpenClose extends ServiceEvent{
+class DropDownOpenClose extends ServiceEvent {
   final bool? isOpen;
   DropDownOpenClose({this.isOpen});
 }

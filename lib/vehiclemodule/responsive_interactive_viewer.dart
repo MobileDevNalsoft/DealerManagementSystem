@@ -1,19 +1,16 @@
-import 'dart:ui';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
-import 'package:dms/views/comments_view.dart';
+import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
+import '../bloc/service/service_bloc.dart';
 
 class CustomDetector extends StatefulWidget {
   BodySelectorViewModel model;
@@ -25,10 +22,12 @@ class CustomDetector extends StatefulWidget {
 }
 
 class _CustomDetectorState extends State<CustomDetector> {
+  late ServiceBloc _serviceBloc;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _serviceBloc = BlocProvider.of<ServiceBloc>(context);
     widget.generalParts!.forEach((value) {
       if (!value.name.startsWith('text')) {
         context
@@ -53,10 +52,10 @@ class _CustomDetectorState extends State<CustomDetector> {
                 children: [
                   BlocListener<VehiclePartsInteractionBloc,
                       VehiclePartsInteractionBlocState>(
-                    listener: (context, state) async{
+                    listener: (context, state) async {
                       if (state.status ==
                           VehiclePartsInteractionStatus.success) {
-                      await Flushbar(
+                        await Flushbar(
                           flushbarPosition: FlushbarPosition.TOP,
                           backgroundColor: Colors.green,
                           message: "Successfully uploaded",
@@ -67,8 +66,12 @@ class _CustomDetectorState extends State<CustomDetector> {
                               left: isMobile ? 10 : size.width * 0.8,
                               right: size.width * 0.03),
                         ).show(context);
-                        Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => DashboardView()));
+                        _serviceBloc.add(BottomNavigationBarClicked(index: 0));
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (_) => const DashboardView()),
+                          (route) => false,
+                        );
                       }
                     },
                     child: GestureDetector(
@@ -84,15 +87,15 @@ class _CustomDetectorState extends State<CustomDetector> {
                       child: Container(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             // image: DecorationImage(
                             //     image: AssetImage("assets/images/road.jpg"),
                             //     fit: BoxFit.fill),
                             gradient: LinearGradient(colors: [
-                              Color.fromARGB(255, 230, 119, 119),
-                              Color.fromARGB(255, 214, 207, 207),
-                              Color.fromARGB(255, 230, 119, 119)
-                            ])),
+                          Color.fromARGB(255, 230, 119, 119),
+                          Color.fromARGB(255, 214, 207, 207),
+                          Color.fromARGB(255, 230, 119, 119)
+                        ])),
                         child: BodyCanvas(
                           generalParts: widget.generalParts,
                         ),

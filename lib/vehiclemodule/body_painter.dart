@@ -1,15 +1,7 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui; // Import the 'ui' library
-
-import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
-import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
-import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
 import 'package:touchable/touchable.dart';
 
@@ -94,7 +86,7 @@ class BodyPainter extends CustomPainter {
         paint.color = Color.fromRGBO(92, 92, 92, 1);
       } else if (["front_right_light", "front_left_light"]
           .contains(muscle.name)) {
-        paint.color = Color.fromRGBO(255, 221, 28,1);
+        paint.color = Color.fromRGBO(255, 221, 28, 1);
       } else if (["rear_right_light", "rear_left_light"]
           .contains(muscle.name)) {
         paint.color = Color.fromRGBO(190, 39, 39, 1);
@@ -122,7 +114,7 @@ class BodyPainter extends CustomPainter {
           if (!muscle.name.startsWith('text')) {
             print(" name ${muscle.name}");
             model.selectGeneralBodyPart(muscle.name);
-            model.isTapped=true;
+            model.isTapped = true;
           }
         },
         onSecondaryTapDown: (d) {

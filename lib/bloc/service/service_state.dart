@@ -2,6 +2,8 @@ part of 'service_bloc.dart';
 
 enum ServiceStatus { initial, loading, success, failure }
 
+enum ServiceUploadStatus { initial, loading, success, failure }
+
 enum JobCardStatus { initial, loading, success, failure }
 
 enum GetServiceLocationsStatus { initial, loading, success, failure }
@@ -14,6 +16,7 @@ final class ServiceState {
       this.jobCards,
       this.locations,
       this.jobCardStatus,
+      this.serviceUploadStatus,
       this.dropDownOpen,
       this.bottomNavigationBarActiveIndex,
       this.serviceLocationsStatus});
@@ -27,10 +30,16 @@ final class ServiceState {
   final List<dynamic>? locations;
   final bool? dropDownOpen;
   int? bottomNavigationBarActiveIndex;
+  ServiceUploadStatus? serviceUploadStatus;
 
   factory ServiceState.initial() {
     return ServiceState(
-        status: ServiceStatus.initial, jobCardStatus: JobCardStatus.initial, bottomNavigationBarActiveIndex: 0, dropDownOpen: false);
+        status: ServiceStatus.initial,
+        jobCardStatus: JobCardStatus.initial,
+        serviceLocationsStatus: GetServiceLocationsStatus.initial,
+        serviceUploadStatus: ServiceUploadStatus.initial,
+        bottomNavigationBarActiveIndex: 0,
+        dropDownOpen: false);
   }
 
   ServiceState copyWith(
@@ -40,6 +49,7 @@ final class ServiceState {
       Service? service,
       List<Service>? services,
       int? bottomNavigationBarActiveIndex,
+      ServiceUploadStatus? serviceUploadStatus,
       bool? dropDownOpen,
       List<Service>? jobCards,
       List<dynamic>? locations}) {
@@ -48,7 +58,9 @@ final class ServiceState {
         jobCardStatus: jobCardStatus ?? this.jobCardStatus,
         serviceLocationsStatus:
             serviceLocationsStatus ?? this.serviceLocationsStatus,
-        bottomNavigationBarActiveIndex: bottomNavigationBarActiveIndex ?? this.bottomNavigationBarActiveIndex,
+        serviceUploadStatus: serviceUploadStatus ?? this.serviceUploadStatus,
+        bottomNavigationBarActiveIndex: bottomNavigationBarActiveIndex ??
+            this.bottomNavigationBarActiveIndex,
         service: service ?? this.service,
         services: services ?? this.services,
         dropDownOpen: dropDownOpen ?? this.dropDownOpen,
