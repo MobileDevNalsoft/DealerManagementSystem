@@ -31,6 +31,8 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
         SubmitVehicleMediaEvent, VehiclePartsInteractionBlocState>);
     on<RemoveImageEvent>(_onRemoveImage
         as EventHandler<RemoveImageEvent, VehiclePartsInteractionBlocState>);
+    on<SubmitBodyPartVehicleMediaEvent>(_onSubmitBodyPartVehicleMedia as EventHandler<
+      SubmitBodyPartVehicleMediaEvent, VehiclePartsInteractionBlocState>);
   }
 
   final Repository _repo;
@@ -163,13 +165,13 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
 
   void _onSubmitBodyPartVehicleMedia(SubmitBodyPartVehicleMediaEvent event,
       Emitter<VehiclePartsInteractionBlocState> emit) async {
-    
-
+      emit(state.copyWith(state.media, VehiclePartsInteractionStatus.loading));
+  Map<String, dynamic> partJson = {};
     for (int index = 0; index < state.media.length; index++) {
       List<String> compressedImagesBase64List = [];
       if (state.media[index].name == event.bodyPartName) {
         late Uint8List bytes;
-    Map<String, dynamic> partJson = {};
+    
         print(
             "state media ${state.media[index].name} ${state.media[index].images}");
         if (state.media[index].images != null &&
@@ -193,8 +195,10 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
           };
           break;
         }
-      
-      await _repo.addVehiclePartMedia(bodyPartData:  partJson,id:3).then((onValue) {
+     
+    }}
+     
+      await _repo.addVehiclePartMedia(bodyPartData:  partJson,id:'4',name:event.bodyPartName).then((onValue) {
         emit(
             state.copyWith(state.media, VehiclePartsInteractionStatus.success));
         emit(
@@ -207,6 +211,5 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
               state.media, VehiclePartsInteractionStatus.initial));
         },
       );
-    }}
   }
 }

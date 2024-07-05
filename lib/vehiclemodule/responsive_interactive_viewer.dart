@@ -67,8 +67,9 @@ class _CustomDetectorState extends State<CustomDetector> {
                               left: isMobile ? 10 : size.width * 0.8,
                               right: size.width * 0.03),
                         ).show(context);
-                        Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => DashboardView()));
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //         builder: (_) => DashboardView()));
+                        
                       }
                     },
                     child: GestureDetector(
@@ -143,19 +144,21 @@ class _CustomDetectorState extends State<CustomDetector> {
                     left: 155,
                     child: ElevatedButton(
                         onPressed: () {
-                          context
-                              .read<VehiclePartsInteractionBloc>()
-                              .add(SubmitVehicleMediaEvent());
+                             Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => DashboardView()));
+                          // context
+                          //     .read<VehiclePartsInteractionBloc>()
+                          //     .add(SubmitVehicleMediaEvent());
                         },
                         style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(70.0, 35.0),
-                            padding: const EdgeInsets.all(8),
+                            // minimumSize: const Size(35.0, 35.0),
+                            // padding: const EdgeInsets.all(8),
                             backgroundColor:
                                 const Color.fromARGB(255, 145, 19, 19),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16))),
-                        child: const Text(
-                          'Submit',
+                                borderRadius: BorderRadius.circular(18))),
+                        child: const Text(  
+                          'Save',
                           style: TextStyle(color: Colors.white),
                         )),
                   ),
@@ -167,7 +170,7 @@ class _CustomDetectorState extends State<CustomDetector> {
                   color: Colors.blueGrey.withOpacity(0.25),
                   child: Center(
                       child: Lottie.asset('assets/lottie/car_loading.json',
-                          height: size.height * 0.4, width: size.width * 0.4)),
+                        height: size.height * 0.4, width: size.width * 0.4)),
                 )
             ],
           ),
