@@ -36,8 +36,8 @@ class _DashboardViewState extends State<DashboardView> {
     _serviceBloc = context.read<ServiceBloc>();
 
     // setting initial statuses of service and job card status to initial
-    _serviceBloc.state.status = ServiceStatus.initial;
-    _serviceBloc.state.jobCardStatus = JobCardStatus.initial;
+    _serviceBloc.state.getServiceStatus = GetServiceStatus.initial;
+    _serviceBloc.state.getJobCardStatus = GetJobCardStatus.initial;
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
     _serviceBloc.add(GetJobCards(query: 'Main  Workshop'));
@@ -498,9 +498,24 @@ class JobCardPage extends StatelessWidget {
               ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
+                List<String> dropDownList = ['N', 'I', 'CL', 'C'];
+
+                if (_serviceBloc!.state.getJobCardStatus ==
+                    GetJobCardStatus.success) {
+                  if (_serviceBloc!.state.jobCards![index].status == 'N') {
+                    dropDownList = ['N', 'I', 'C'];
+                  } else if (_serviceBloc!.state.jobCards![index].status ==
+                      'I') {
+                    dropDownList = ['I', 'CL', 'C'];
+                  }
+                }
+
                 return Skeletonizer(
                     enableSwitchAnimation: true,
-                    enabled: state.jobCardStatus == JobCardStatus.loading,
+                    enabled:
+                        state.getJobCardStatus == GetJobCardStatus.loading ||
+                            state.jobCardStatusUpdate ==
+                                JobCardStatusUpdate.loading,
                     child: Card(
                       margin: EdgeInsets.symmetric(
                           vertical: size.height * 0.005,
@@ -522,7 +537,7 @@ class JobCardPage extends StatelessWidget {
                                     bottomLeft: Radius.circular(10))),
                             child: Text(
                               textAlign: TextAlign.center,
-                              state.jobCardStatus != JobCardStatus.loading
+                              state.getJobCardStatus != GetJobCardStatus.loading
                                   ? state.jobCards![index].jobCardNo!
                                   : 'JC-MAD-633',
                               style: const TextStyle(
@@ -544,7 +559,7 @@ class JobCardPage extends StatelessWidget {
                                 borderRadius: BorderRadius.only()),
                             child: Text(
                               textAlign: TextAlign.center,
-                              state.jobCardStatus != JobCardStatus.loading
+                              state.getJobCardStatus != GetJobCardStatus.loading
                                   ? state.jobCards![index].registrationNo!
                                   : 'TS09ED7884',
                               style: const TextStyle(fontSize: 13),
@@ -560,18 +575,18 @@ class JobCardPage extends StatelessWidget {
                                   border: Border.all(
                                       width: 2,
                                       color: _serviceBloc!
-                                                  .state.jobCardStatus ==
-                                              JobCardStatus.success
+                                                  .state.getJobCardStatus ==
+                                              GetJobCardStatus.success
                                           ? _serviceBloc!.state.jobCards![index]
                                                       .status ==
-                                                  'I'
+                                                  'N'
                                               ? Colors.yellow
                                               : _serviceBloc!
                                                           .state
                                                           .jobCards![index]
                                                           .status ==
-                                                      'N'
-                                                  ? Colors.orange
+                                                      'I'
+                                                  ? Colors.green.shade200
                                                   : _serviceBloc!
                                                               .state
                                                               .jobCards![index]
@@ -590,7 +605,7 @@ class JobCardPage extends StatelessWidget {
                                         .add(DropDownOpenClose(isOpen: isOpen));
                                   },
                                   isExpanded: true,
-                                  items: ['I', 'N', 'CL', 'C']
+                                  items: dropDownList
                                       .map((String item) =>
                                           DropdownMenuItem<String>(
                                             value: item,
@@ -604,16 +619,20 @@ class JobCardPage extends StatelessWidget {
                                             ),
                                           ))
                                       .toList(),
-                                  value: state.jobCardStatus ==
-                                          JobCardStatus.success
+                                  value: state.getJobCardStatus ==
+                                          GetJobCardStatus.success
                                       ? state.jobCards![index].status!
-                                      : 'I',
+                                      : 'N',
                                   onChanged: (String? value) {
                                     _serviceBloc!
                                         .state.jobCards![index].status = value;
-                                    context
-                                        .read<ServiceBloc>()
-                                        .add(JobCardStatusUpdated());
+
+                                    _serviceBloc!.add(JobCardStatusUpdated(
+                                        jobCardStatus: value,
+                                        jobCardNo: _serviceBloc!
+                                            .state.jobCards![index].jobCardNo));
+                                    _serviceBloc!.state.jobCardStatusUpdate =
+                                        JobCardStatusUpdate.initial;
                                   },
                                   buttonStyleData: ButtonStyleData(
                                     decoration: const BoxDecoration(
@@ -636,7 +655,7 @@ class JobCardPage extends StatelessWidget {
                                   ),
                                   dropdownStyleData: DropdownStyleData(
                                     maxHeight: size.height * 0.3,
-                                    width: size.width * 0.15,
+                                    width: size.width * 0.18,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white,
@@ -645,7 +664,7 @@ class JobCardPage extends StatelessWidget {
                                     scrollbarTheme: ScrollbarThemeData(
                                       radius: const Radius.circular(40),
                                       thickness:
-                                          WidgetStateProperty.all<double>(6),
+                                          WidgetStateProperty.all<double>(1),
                                       thumbVisibility:
                                           WidgetStateProperty.all<bool>(true),
                                     ),
@@ -661,9 +680,10 @@ class JobCardPage extends StatelessWidget {
                       ),
                     ));
               },
-                      childCount: state.status != ServiceStatus.success
-                          ? 15
-                          : state.jobCards!.length)),
+                      childCount:
+                          state.getJobCardStatus != GetJobCardStatus.success
+                              ? 15
+                              : state.jobCards!.length)),
             ],
           );
         },
@@ -726,19 +746,19 @@ class Services extends StatelessWidget {
                 )),
             child: BlocConsumer<ServiceBloc, ServiceState>(
               listener: (context, state) {
-                if (state.status == ServiceStatus.success) {}
+                if (state.getServiceStatus == GetServiceStatus.success) {}
               },
               builder: (context, state) {
-                switch (state.status) {
-                  case ServiceStatus.loading:
+                switch (state.getServiceStatus) {
+                  case GetServiceStatus.loading:
                     return Transform(
-                      transform: Matrix4.translationValues(0, -40, 0),
+                      transform: Matrix4.translationValues(0, 80, 0),
                       child: Center(
                         child: Lottie.asset('assets/lottie/car_loading.json',
                             height: size.height * 0.5, width: size.width * 0.6),
                       ),
                     );
-                  case ServiceStatus.success:
+                  case GetServiceStatus.success:
                     return Expanded(
                       flex: 1,
                       child: SfDataGrid(
@@ -835,7 +855,7 @@ class ServiceHistoryDataSource extends DataGridSource {
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(
                 columnName: 'sno',
-                value: e.sNo,
+                value: serviceHistoryData.indexOf(e) + 1,
               ),
               DataGridCell<String>(columnName: 'date', value: e.scheduleDate),
               DataGridCell<String>(
@@ -856,12 +876,9 @@ class ServiceHistoryDataSource extends DataGridSource {
     return DataGridRowAdapter(
         color: Colors.white,
         cells: row.getCells().map<Widget>((e) {
-          print("e ${e.columnName}");
           return e.columnName == "Job Card no."
               ? InkWell(
-                  onTap: () {
-                    print("${e.value}");
-                  },
+                  onTap: () {},
                   child: Center(
                       child: Text(
                     e.value.toString(),

@@ -53,6 +53,7 @@ class _HomeView extends State<HomeView> {
 
   late ServiceBloc _serviceBloc;
   late VehicleBloc _vehicleBloc;
+  late MultiBloc _multiBloc;
 
   @override
   void initState() {
@@ -62,9 +63,11 @@ class _HomeView extends State<HomeView> {
 
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
+    _multiBloc = context.read<MultiBloc>();
 
     _serviceBloc.add(GetServiceLocations());
     _vehicleBloc.state.status = VehicleStatus.initial;
+    _multiBloc.state.date = null;
   }
 
   void _onVehRegNumUnfocused() {

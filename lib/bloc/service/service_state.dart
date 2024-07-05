@@ -1,29 +1,33 @@
 part of 'service_bloc.dart';
 
-enum ServiceStatus { initial, loading, success, failure }
+enum GetServiceStatus { initial, loading, success, failure }
 
 enum ServiceUploadStatus { initial, loading, success, failure }
 
-enum JobCardStatus { initial, loading, success, failure }
+enum GetJobCardStatus { initial, loading, success, failure }
+
+enum JobCardStatusUpdate { initial, loading, success, failure }
 
 enum GetServiceLocationsStatus { initial, loading, success, failure }
 
 final class ServiceState {
   ServiceState(
-      {this.status,
+      {this.getServiceStatus,
       this.service,
       this.services,
       this.jobCards,
       this.locations,
-      this.jobCardStatus,
+      this.getJobCardStatus,
       this.serviceUploadStatus,
+      this.jobCardStatusUpdate,
       this.dropDownOpen,
       this.bottomNavigationBarActiveIndex,
       this.serviceLocationsStatus});
 
-  ServiceStatus? status;
-  JobCardStatus? jobCardStatus;
+  GetServiceStatus? getServiceStatus;
+  GetJobCardStatus? getJobCardStatus;
   GetServiceLocationsStatus? serviceLocationsStatus;
+  JobCardStatusUpdate? jobCardStatusUpdate;
   final Service? service;
   final List<Service>? services;
   final List<Service>? jobCards;
@@ -34,28 +38,31 @@ final class ServiceState {
 
   factory ServiceState.initial() {
     return ServiceState(
-        status: ServiceStatus.initial,
-        jobCardStatus: JobCardStatus.initial,
+        getServiceStatus: GetServiceStatus.initial,
+        getJobCardStatus: GetJobCardStatus.initial,
         serviceLocationsStatus: GetServiceLocationsStatus.initial,
         serviceUploadStatus: ServiceUploadStatus.initial,
+        jobCardStatusUpdate: JobCardStatusUpdate.initial,
         bottomNavigationBarActiveIndex: 0,
         dropDownOpen: false);
   }
 
   ServiceState copyWith(
-      {ServiceStatus? status,
-      JobCardStatus? jobCardStatus,
+      {GetServiceStatus? getServiceStatus,
+      GetJobCardStatus? getJobCardStatus,
       GetServiceLocationsStatus? serviceLocationsStatus,
       Service? service,
       List<Service>? services,
       int? bottomNavigationBarActiveIndex,
       ServiceUploadStatus? serviceUploadStatus,
+      JobCardStatusUpdate? jobCardStatusUpdate,
       bool? dropDownOpen,
       List<Service>? jobCards,
       List<dynamic>? locations}) {
     return ServiceState(
-        status: status ?? this.status,
-        jobCardStatus: jobCardStatus ?? this.jobCardStatus,
+        getServiceStatus: getServiceStatus ?? this.getServiceStatus,
+        getJobCardStatus: getJobCardStatus ?? this.getJobCardStatus,
+        jobCardStatusUpdate: jobCardStatusUpdate ?? jobCardStatusUpdate,
         serviceLocationsStatus:
             serviceLocationsStatus ?? this.serviceLocationsStatus,
         serviceUploadStatus: serviceUploadStatus ?? this.serviceUploadStatus,

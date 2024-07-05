@@ -1,10 +1,10 @@
+import 'dart:math' as math;
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
-import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/models/salesPerson.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 import '../../logger/logger.dart';
 
 part 'multi_event.dart';
@@ -24,6 +24,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<InspectionJsonUpdated>(_onInspectionJsonUpdated);
     on<RadioOptionChanged>(_onRadioOptionChanged);
     on<InspectionJsonAdded>(_onInspectionJsonAdded);
+    on<OnFocusChange>(_onFocusChanged);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -75,6 +76,41 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
   void _onInspectionJsonUpdated(
       InspectionJsonUpdated event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(json: event.json));
+  }
+
+  void _onFocusChanged(OnFocusChange event, Emitter<MultiBlocState> emit) {
+    Future.delayed(const Duration(milliseconds: 500), () async {
+      final RenderBox renderBox =
+          event.focusNode.context!.findRenderObject() as RenderBox;
+      final offset = renderBox.localToGlobal(Offset.zero);
+      final textFieldTopPosition = offset.dy;
+      final textFieldBottomPosition = offset.dy + renderBox.size.height;
+
+      print('text field top position $textFieldTopPosition');
+      print('text field bottom position $textFieldBottomPosition');
+
+      // Calculate the amount to scroll
+      final screenHeight = MediaQuery.of(event.context).size.height;
+      final keyboardHeight = MediaQuery.of(event.context).viewInsets.bottom;
+      final visibleScreenHeight = screenHeight - keyboardHeight;
+
+      print('visible screen height $visibleScreenHeight');
+
+      // Check if the text field is already visible
+      if (textFieldTopPosition > visibleScreenHeight &&
+          textFieldBottomPosition + 30 > keyboardHeight) {
+        return;
+      } else {
+        // Calculate the amount to scroll
+        final scrollOffset = textFieldTopPosition -
+            (visibleScreenHeight - renderBox.size.height) / 2;
+        await event.scrollController.animateTo(
+          math.max(0, event.scrollController.offset + scrollOffset),
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   Future<void> _onInspectionJsonAdded(

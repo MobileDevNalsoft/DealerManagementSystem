@@ -20,7 +20,9 @@ class GetJobCards extends ServiceEvent {
 }
 
 class JobCardStatusUpdated extends ServiceEvent {
-  JobCardStatusUpdated();
+  final String? jobCardStatus;
+  final String? jobCardNo;
+  JobCardStatusUpdated({this.jobCardStatus, this.jobCardNo});
 }
 
 class GetServiceLocations extends ServiceEvent {}

@@ -1,5 +1,4 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
-import 'package:dms/providers/home_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,8 +44,10 @@ class DMSCustomWidgets {
               child: TextFormField(
                 onChanged: onChanged,
                 onTap: () {
-                  Provider.of<HomeProvider>(context, listen: false)
-                      .setFocusNode(focusNode, scrollController, context);
+                  context.read<MultiBloc>().add(OnFocusChange(
+                      focusNode: focusNode,
+                      scrollController: scrollController,
+                      context: context));
                 },
                 cursorColor: Colors.black,
                 inputFormatters: [
@@ -132,8 +133,10 @@ class DMSCustomWidgets {
             inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
             onTap: () {
-              Provider.of<HomeProvider>(context, listen: false)
-                  .setFocusNode(focusNode!, scrollController, context);
+              context.read<MultiBloc>().add(OnFocusChange(
+                  focusNode: focusNode!,
+                  scrollController: scrollController,
+                  context: context));
             },
             key: key,
             validator: validator,

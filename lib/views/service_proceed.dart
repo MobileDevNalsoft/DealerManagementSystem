@@ -4,7 +4,6 @@ import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/models/vehicle.dart';
-import 'package:dms/providers/home_provider.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/inspection.dart';
@@ -157,169 +156,152 @@ class _HomeProceedView extends State<HomeProceedView> {
                         SizedBox(
                           height: size.height * (0.05),
                         ),
-                        Consumer<HomeProvider>(
-                          builder: (context, provider, child) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                DMSCustomWidgets.SearchableDropDown(
-                                    items: ["Online", "Walk-in"],
-                                    size: size,
-                                    hint: 'Booking Source',
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            DMSCustomWidgets.SearchableDropDown(
+                                items: ["Online", "Walk-in"],
+                                size: size,
+                                hint: 'Booking Source',
+                                onChanged: (p0) {
+                                  if (p0 != null) {
+                                    bookingTypeAheadController.text = p0;
+                                  }
+                                },
+                                isMobile: isMobile,
+                                focus: bookingFocus,
+                                textcontroller: bookingController,
+                                typeAheadController: bookingTypeAheadController,
+                                icon: const Icon(Icons.arrow_drop_down),
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomDataCard(
+                                context: context,
+                                size: size,
+                                hint: 'Alternate Contact Person',
+                                inputFormatters: [InitCapCaseTextFormatter()],
+                                isMobile: isMobile,
+                                focusNode: altContFocus,
+                                textcontroller: altContController,
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomDataCard(
+                                context: context,
+                                size: size,
+                                hint: 'Alternate Person Contact No.',
+                                isMobile: isMobile,
+                                focusNode: altContPhoneNoFocus,
+                                textcontroller: altContPhoneNoController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10)
+                                ],
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            BlocBuilder<MultiBloc, MultiBlocState>(
+                              builder: (context, state) {
+                                return DMSCustomWidgets.SearchableDropDown(
                                     onChanged: (p0) {
                                       if (p0 != null) {
-                                        bookingTypeAheadController.text = p0;
+                                        spTypeAheadController.text = p0;
+                                      }
+                                      if (p0!.length >= 3) {
+                                        context.read<MultiBloc>().add(
+                                            GetSalesPersons(searchText: p0));
+                                      } else {
+                                        context
+                                            .read<MultiBloc>()
+                                            .state
+                                            .salesPersons = null;
                                       }
                                     },
-                                    isMobile: isMobile,
-                                    focus: bookingFocus,
-                                    textcontroller: bookingController,
-                                    typeAheadController:
-                                        bookingTypeAheadController,
-                                    icon: const Icon(Icons.arrow_drop_down),
-                                    scrollController: scrollController),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.005 : 0.015),
-                                ),
-                                DMSCustomWidgets.CustomDataCard(
-                                    context: context,
                                     size: size,
-                                    hint: 'Alternate Contact Person',
-                                    inputFormatters: [
-                                      InitCapCaseTextFormatter()
-                                    ],
+                                    items: state.salesPersons == null
+                                        ? []
+                                        : state.salesPersons!
+                                            .map((e) =>
+                                                "${e.empName}-${e.empId}")
+                                            .toList(),
+                                    hint: 'Sales Person',
+                                    // icon: const Icon(Icons.arrow_drop_down),
                                     isMobile: isMobile,
-                                    focusNode: altContFocus,
-                                    textcontroller: altContController,
-                                    scrollController: scrollController),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.005 : 0.015),
-                                ),
-                                DMSCustomWidgets.CustomDataCard(
-                                    context: context,
-                                    size: size,
-                                    hint: 'Alternate Person Contact No.',
-                                    isMobile: isMobile,
-                                    focusNode: altContPhoneNoFocus,
-                                    textcontroller: altContPhoneNoController,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(10)
-                                    ],
-                                    scrollController: scrollController),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.005 : 0.015),
-                                ),
-                                BlocBuilder<MultiBloc, MultiBlocState>(
-                                  builder: (context, state) {
-                                    return DMSCustomWidgets.SearchableDropDown(
-                                        onChanged: (p0) {
-                                          if (p0 != null) {
-                                            spTypeAheadController.text = p0;
-                                          }
-                                          if (p0!.length >= 3) {
-                                            context.read<MultiBloc>().add(
-                                                GetSalesPersons(
-                                                    searchText: p0));
-                                          } else {
-                                            context
-                                                .read<MultiBloc>()
-                                                .state
-                                                .salesPersons = null;
-                                          }
-                                        },
-                                        size: size,
-                                        items: state.salesPersons == null
-                                            ? []
-                                            : state.salesPersons!
-                                                .map((e) =>
-                                                    "${e.empName}-${e.empId}")
-                                                .toList(),
-                                        hint: 'Sales Person',
-                                        // icon: const Icon(Icons.arrow_drop_down),
-                                        isMobile: isMobile,
-                                        isLoading: state.status ==
-                                                MultiStateStatus.loading
+                                    isLoading:
+                                        state.status == MultiStateStatus.loading
                                             ? true
                                             : false,
-                                        focus: spFocus,
-                                        textcontroller: spController,
-                                        typeAheadController:
-                                            spTypeAheadController,
-                                        suggestionsController:
-                                            suggestionsController,
-                                        scrollController: scrollController);
-                                  },
-                                ),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.005 : 0.015),
-                                ),
-                                DMSCustomWidgets.SearchableDropDown(
-                                    items: bayList,
-                                    size: size,
-                                    hint: 'Bay',
-                                    isMobile: isMobile,
-                                    onChanged: (p0) {
-                                      if (p0 != null) {
-                                        bayTypeAheadController.text = p0;
-                                      }
-                                    },
-                                    focus: bayFocus,
-                                    textcontroller: bayController,
-                                    typeAheadController: bayTypeAheadController,
-                                    scrollController: scrollController),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.005 : 0.015),
-                                ),
-                                DMSCustomWidgets.SearchableDropDown(
-                                    size: size,
-                                    hint: 'Job Type',
-                                    items: jobTypeList,
-                                    onChanged: (p0) {
-                                      if (p0 != null) {
-                                        jobTypeAheadController.text = p0;
-                                      }
-                                    },
-                                    // icon: const Icon(Icons.arrow_drop_down),
-                                    focus: jobTypeFocus,
-                                    textcontroller: jobTypeController,
-                                    typeAheadController: jobTypeAheadController,
-                                    // provider: provider,
-                                    isMobile: isMobile,
-                                    scrollController: scrollController),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.005 : 0.015),
-                                ),
-                                DMSCustomWidgets.CustomTextFieldCard(
-                                    size: size,
-                                    hint: 'Customer Concerns',
-                                    isMobile: isMobile,
-                                    focusNode: custConcernsFocus,
-                                    textcontroller: custConcernsController),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.005 : 0.015),
-                                ),
-                                DMSCustomWidgets.CustomTextFieldCard(
-                                    size: size,
-                                    hint: 'Remarks',
-                                    isMobile: isMobile,
-                                    focusNode: remarksFocus,
-                                    textcontroller: remarksController),
-                                SizedBox(
-                                  height:
-                                      size.height * (isMobile ? 0.05 : 0.015),
-                                ),
-                              ],
-                            );
-                          },
+                                    focus: spFocus,
+                                    textcontroller: spController,
+                                    typeAheadController: spTypeAheadController,
+                                    suggestionsController:
+                                        suggestionsController,
+                                    scrollController: scrollController);
+                              },
+                            ),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.SearchableDropDown(
+                                items: bayList,
+                                size: size,
+                                hint: 'Bay',
+                                isMobile: isMobile,
+                                onChanged: (p0) {
+                                  if (p0 != null) {
+                                    bayTypeAheadController.text = p0;
+                                  }
+                                },
+                                focus: bayFocus,
+                                textcontroller: bayController,
+                                typeAheadController: bayTypeAheadController,
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.SearchableDropDown(
+                                size: size,
+                                hint: 'Job Type',
+                                items: jobTypeList,
+                                onChanged: (p0) {
+                                  if (p0 != null) {
+                                    jobTypeAheadController.text = p0;
+                                  }
+                                },
+                                // icon: const Icon(Icons.arrow_drop_down),
+                                focus: jobTypeFocus,
+                                textcontroller: jobTypeController,
+                                typeAheadController: jobTypeAheadController,
+                                // provider: provider,
+                                isMobile: isMobile,
+                                scrollController: scrollController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomTextFieldCard(
+                                size: size,
+                                hint: 'Customer Concerns',
+                                isMobile: isMobile,
+                                focusNode: custConcernsFocus,
+                                textcontroller: custConcernsController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.005 : 0.015),
+                            ),
+                            DMSCustomWidgets.CustomTextFieldCard(
+                                size: size,
+                                hint: 'Remarks',
+                                isMobile: isMobile,
+                                focusNode: remarksFocus,
+                                textcontroller: remarksController),
+                            SizedBox(
+                              height: size.height * (isMobile ? 0.05 : 0.015),
+                            ),
+                          ],
                         ),
                         BlocConsumer<ServiceBloc, ServiceState>(
                           listener: (context, state) {
