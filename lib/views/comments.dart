@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
+import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
@@ -216,6 +217,7 @@ class _CommentsViewState extends State<CommentsView> {
                                 ));
                           },
                         ),
+<<<<<<< HEAD:lib/views/comments.dart
                         // if (widget.vehiclePartMedia.images != null &&
                         //     widget.vehiclePartMedia.images!.isNotEmpty)
                         //   InkWell(
@@ -233,6 +235,42 @@ class _CommentsViewState extends State<CommentsView> {
                         //       ],
                         //     ),
                         //   ),
+=======
+                        Gap(2),
+                        if (widget.vehiclePartMedia.images != null &&
+                            widget.vehiclePartMedia.images!.isNotEmpty)
+                          InkWell(
+                            radius:  size.width*0.06,
+                            borderRadius: BorderRadius.circular(20),
+                            onTap: (){
+                              commentsFocus.unfocus();
+                                if(commentsController.text.trim().isEmpty){
+                                  commentsFocus.requestFocus();
+                                  Flushbar(
+                                    flushbarPosition: FlushbarPosition.TOP,
+                                    backgroundColor: Colors.red,
+                                    message: 'Please add comments',
+                                    duration: const Duration(seconds: 2),
+                                    borderRadius: BorderRadius.circular(12),
+                                    margin: EdgeInsets.only(
+                                        top: 24,
+                                        left: isMobile ? 10 : size.width * 0.8,
+                                        right: 10))
+                                .show(context);
+                                }
+                                else{
+                                context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(bodyPartName: widget.vehiclePartMedia.name,jobCardNo: 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}') as VehiclePartsInteractionBlocEvent);
+                                }
+                              },
+                            child: CircleAvatar(
+                              maxRadius: size.width*0.045,
+                              backgroundColor: const Color.fromARGB(255, 145, 19, 19),
+                              child: Center(child: Icon(Icons.cloud_upload_rounded,color: Colors.white,size: size.width*0.055,)),
+                                  
+                                  
+                            ),
+                          ),
+>>>>>>> origin/saisanjit:lib/views/comments_view.dart
                       Gap(8)
                       ],
                     ),
