@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
+import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
@@ -256,7 +257,7 @@ class _CommentsViewState extends State<CommentsView> {
                                 .show(context);
                                 }
                                 else{
-                                context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(bodyPartName: widget.vehiclePartMedia.name) as VehiclePartsInteractionBlocEvent);
+                                context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(bodyPartName: widget.vehiclePartMedia.name,jobCardNo: 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}') as VehiclePartsInteractionBlocEvent);
                                 }
                               },
                             child: CircleAvatar(
