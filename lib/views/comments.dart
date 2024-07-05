@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'package:another_flushbar/flushbar.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,11 +25,13 @@ class _CommentsViewState extends State<CommentsView> {
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
   var imagesCaptured = [];
-
+  final _formKey = GlobalKey<FormState>();
+  // AnimationController controller = AnimationController(vsync: this,duration: Duration(seconds: 2));
   @override
   void initState() {
     super.initState();
     initData();
+    context.read<MultiBloc>().state.isHighlighted=false;
   }
 
   void initData() async {
@@ -87,11 +92,19 @@ class _CommentsViewState extends State<CommentsView> {
                               horizontal: 5, vertical: 2),
                           height: size.height * 0.1,
                           child: TextFormField(
+                            key: _formKey,
                             focusNode: commentsFocus,
                             controller: commentsController,
-                            maxLines: 10,
+                            maxLines: 10, 
+                            validator: (value) {
+                              if(value!.isEmpty){
+                                return "Please enter comments";
+                              }
+                              return null;
+                            },           
+                                            
                             decoration: InputDecoration(
-                                hintStyle: const TextStyle(fontSize: 14),
+                                hintStyle: TextStyle(fontSize: 14),
                                 // fillColor: Color.fromARGB(255, 255, 255, 255),
                                 filled: true,
                                 contentPadding:
@@ -107,6 +120,7 @@ class _CommentsViewState extends State<CommentsView> {
                                       comments: value));
                             },
                           ),
+                          
                         ),
                         Center(
                             child: IconButton(
@@ -128,8 +142,7 @@ class _CommentsViewState extends State<CommentsView> {
                                     }
                                   }
                                 },
-                                icon: const Icon(
-                                    Icons.add_photo_alternate_rounded))),
+                                icon: Icon(Icons.add_photo_alternate_rounded))),
                         BlocConsumer<VehiclePartsInteractionBloc,
                             VehiclePartsInteractionBlocState>(
                           listener: (context, state) {
@@ -220,7 +233,7 @@ class _CommentsViewState extends State<CommentsView> {
                         //       ],
                         //     ),
                         //   ),
-                        const Gap(8)
+                      Gap(8)
                       ],
                     ),
                   ),
@@ -229,21 +242,24 @@ class _CommentsViewState extends State<CommentsView> {
             ],
           ),
           Positioned(
-              top: -10.0,
-              right: -10.0,
+              top: -8.0,
+              right: -6.0,
               child: IconButton(
                   onPressed: () {
-                    Provider.of<BodySelectorViewModel>(context, listen: false)
+                    if(widget.vehiclePartMedia.images!.isEmpty){
+                      context.read<MultiBloc>().state.isHighlighted = true;
+                    }
+                   else{ Provider.of<BodySelectorViewModel>(context, listen: false)
                         .isTapped = false;
                     Provider.of<BodySelectorViewModel>(context, listen: false)
-                        .selectedGeneralBodyPart = "";
+                        .selectedGeneralBodyPart = "";}
                   },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.cancel,
                     color: Colors.red,
-                    size: size.width * 0.05,
+                    size: size.width * 0.06,
                   )))
         ],
       ),

@@ -222,11 +222,11 @@ class Repository {
     }
   }
 
-  Future<int> addVehiclePartMedia(
-      {Map<String, dynamic>? bodyPartData, int? id}) async {
+  Future<int>  addVehiclePartMedia({Map<String, dynamic>? bodyPartData,required String id,required String name}) async {
     print(bodyPartData);
-    ApiResponse apiResponse = await _api.post('addImage', data: {
-      "id": 3,
+    ApiResponse apiResponse = await _api.post('addVehiclePartMedia',data: {
+      "id":id,
+      "name":name,
       "data": jsonEncode(bodyPartData),
     });
     if (apiResponse.response != null) {
