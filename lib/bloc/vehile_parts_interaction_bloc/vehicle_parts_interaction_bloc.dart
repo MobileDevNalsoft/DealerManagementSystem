@@ -198,7 +198,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
      
     }}
      
-      await _repo.addVehiclePartMedia(bodyPartData:  partJson,id:'4',name:event.bodyPartName).then((onValue) {
+      await _repo.addVehiclePartMedia(bodyPartData:  partJson,id:event.jobCardNo,name:event.bodyPartName).then((onValue) {
         emit(
             state.copyWith(state.media, VehiclePartsInteractionStatus.success));
         emit(
