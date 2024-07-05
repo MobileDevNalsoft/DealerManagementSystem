@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 import '../../logger/logger.dart';
@@ -19,42 +21,83 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<GetServiceLocations>(_onGetServiceLocations);
     on<GetJobCards>(_onGetJobCards);
     on<JobCardStatusUpdated>(_onJobCardStatusUpdated);
+    on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
+    on<DropDownOpenClose>(_onDropDownOpenClose);
   }
 
   final Repository _repo;
 
-  void _onJobCardStatusUpdated(
-      JobCardStatusUpdated event, Emitter<ServiceState> emit) {
-    emit(state.copyWith(jobCards: state.jobCards));
-  }
-
-  Future<void> _onServiceAdded(
-      ServiceAdded event, Emitter<ServiceState> emit) async {
-    emit(state.copyWith(status: ServiceStatus.loading));
-    await _repo.addService(event.service.toJson()).then(
+  Future<void> _onJobCardStatusUpdated(
+      JobCardStatusUpdated event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.loading));
+    await _repo
+        .updateJobCardStatus(event.jobCardStatus!, event.jobCardNo!)
+        .then(
       (value) {
         if (value == 200) {
+          emit(
+              state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.success));
+          if (event.jobCardStatus == 'CL') {
+            state.services!.add(state.jobCards!
+                .where((e) => e.jobCardNo == event.jobCardNo)
+                .first
+                .copyWith(
+                    scheduleDate:
+                        DateFormat('dd-mm-yyyy').format(DateTime.now())));
+            state.jobCards!.removeWhere((e) => e.jobCardNo == event.jobCardNo);
+          }
           emit(state.copyWith(
-              status: ServiceStatus.success, service: event.service));
-          emit(state.copyWith(status: ServiceStatus.initial));
+              jobCards: state.jobCards, services: state.services));
         } else {
           Log.e(value);
-          emit(state.copyWith(status: ServiceStatus.failure));
-          emit(state.copyWith(status: ServiceStatus.initial));
+          emit(
+              state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
         Log.e(error);
-        emit(state.copyWith(status: ServiceStatus.failure));
-        emit(state.copyWith(status: ServiceStatus.initial));
+        emit(state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.failure));
+      },
+    );
+  }
+
+  void _onBottomNavigationBarClicked(
+      BottomNavigationBarClicked event, Emitter<ServiceState> emit) {
+    emit(state.copyWith(bottomNavigationBarActiveIndex: event.index));
+  }
+
+  void _onDropDownOpenClose(
+      DropDownOpenClose event, Emitter<ServiceState> emit) {
+    emit(state.copyWith(dropDownOpen: event.isOpen));
+  }
+
+  Future<void> _onServiceAdded(
+      ServiceAdded event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.loading));
+    await _repo.addService(event.service.toJson()).then(
+      (value) {
+        if (value == 200) {
+          emit(state.copyWith(
+              serviceUploadStatus: ServiceUploadStatus.success,
+              service: event.service));
+        } else {
+          Log.e(value);
+          emit(
+              state.copyWith(serviceUploadStatus: ServiceUploadStatus.failure));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        Log.e(error);
+        emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.failure));
       },
     );
   }
 
   Future<void> _onGetServiceHistory(
       GetServiceHistory event, Emitter<ServiceState> emit) async {
-    emit(state.copyWith(status: ServiceStatus.loading));
+    emit(state.copyWith(getServiceStatus: GetServiceStatus.loading));
     await _repo.getHistory(event.query!, 0).then(
       (json) {
         print('json $json');
@@ -70,22 +113,22 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 jobType: service['job_type']));
           }
           emit(state.copyWith(
-              status: ServiceStatus.success, services: services));
+              getServiceStatus: GetServiceStatus.success, services: services));
         } else {
-          emit(state.copyWith(status: ServiceStatus.failure));
+          emit(state.copyWith(getServiceStatus: GetServiceStatus.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
         Log.e(error);
-        emit(state.copyWith(status: ServiceStatus.failure));
+        emit(state.copyWith(getServiceStatus: GetServiceStatus.failure));
       },
     );
   }
 
   Future<void> _onGetJobCards(
       GetJobCards event, Emitter<ServiceState> emit) async {
-    emit(state.copyWith(jobCardStatus: JobCardStatus.loading));
+    emit(state.copyWith(getJobCardStatus: GetJobCardStatus.loading));
     await _repo.getHistory(event.query!, 0).then(
       (json) {
         print('json $json');
@@ -102,22 +145,24 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 jobType: service['job_type']));
           }
           emit(state.copyWith(
-              jobCardStatus: JobCardStatus.success, jobCards: jobCards));
+              getJobCardStatus: GetJobCardStatus.success, jobCards: jobCards));
         } else {
-          emit(state.copyWith(jobCardStatus: JobCardStatus.failure));
+          emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
-        emit(state.copyWith(jobCardStatus: JobCardStatus.failure));
+        emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
       },
     );
   }
 
   Future<void> _onGetServiceLocations(
       GetServiceLocations event, Emitter<ServiceState> emit) async {
-    emit(state.copyWith(
-        serviceLocationsStatus: GetServiceLocationsStatus.loading));
+    if (state.serviceLocationsStatus != GetServiceLocationsStatus.success) {
+      emit(state.copyWith(
+          serviceLocationsStatus: GetServiceLocationsStatus.loading));
+    }
     await _repo.getLocations().then(
       (json) {
         if (json['response_code'] == 200) {

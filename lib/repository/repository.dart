@@ -184,6 +184,25 @@ class Repository {
     }
   }
 
+  Future<int> updateJobCardStatus(
+      String jobCardStatus, String jobCardNo) async {
+    ApiResponse apiResponse = await _api.post('updateJobCardStatus',
+        queryParameters: {"status": jobCardStatus, "jobCardNo": jobCardNo});
+    if (apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
   Future getImage() async {
     ApiResponse apiResponse = await _api.get('getImage');
     if (apiResponse.response != null) {
@@ -203,10 +222,11 @@ class Repository {
     }
   }
 
-  Future<int>  addVehiclePartMedia({Map<String, dynamic>? bodyPartData,int? id}) async {
+  Future<int> addVehiclePartMedia(
+      {Map<String, dynamic>? bodyPartData, int? id}) async {
     print(bodyPartData);
-    ApiResponse apiResponse = await _api.post('addImage',data: {
-      "id":3,
+    ApiResponse apiResponse = await _api.post('addImage', data: {
+      "id": 3,
       "data": jsonEncode(bodyPartData),
     });
     if (apiResponse.response != null) {
@@ -224,5 +244,4 @@ class Repository {
       throw Error();
     }
   }
-
 }

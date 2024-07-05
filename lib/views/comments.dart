@@ -66,8 +66,13 @@ class _CommentsViewState extends State<CommentsView> {
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.vehiclePartMedia.name.replaceAll("_", " ").replaceFirst(widget.vehiclePartMedia.name[0], widget.vehiclePartMedia.name[0].toUpperCase()),
-                          style: TextStyle(
+                          widget.vehiclePartMedia.name
+                              .replaceAll("_", " ")
+                              .replaceFirst(
+                                  widget.vehiclePartMedia.name[0],
+                                  widget.vehiclePartMedia.name[0]
+                                      .toUpperCase()),
+                          style: const TextStyle(
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
@@ -78,23 +83,23 @@ class _CommentsViewState extends State<CommentsView> {
                         //         fontWeight: FontWeight.bold,
                         //         fontSize: 18)),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5,vertical: 2),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 2),
                           height: size.height * 0.1,
                           child: TextFormField(
                             focusNode: commentsFocus,
                             controller: commentsController,
                             maxLines: 10,
                             decoration: InputDecoration(
-                                hintStyle: TextStyle(fontSize: 14),
+                                hintStyle: const TextStyle(fontSize: 14),
                                 // fillColor: Color.fromARGB(255, 255, 255, 255),
                                 filled: true,
                                 contentPadding:
-                                    EdgeInsets.only(left: 14, top: 14),
+                                    const EdgeInsets.only(left: 14, top: 14),
                                 hintText: "Comments",
                                 // alignLabelWithHint: true,
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16))
-                                    ),
+                                    borderRadius: BorderRadius.circular(16))),
                             onChanged: (value) {
                               context.read<VehiclePartsInteractionBloc>().add(
                                   AddCommentsEvent(
@@ -123,7 +128,8 @@ class _CommentsViewState extends State<CommentsView> {
                                     }
                                   }
                                 },
-                                icon: Icon(Icons.add_photo_alternate_rounded))),
+                                icon: const Icon(
+                                    Icons.add_photo_alternate_rounded))),
                         BlocConsumer<VehiclePartsInteractionBloc,
                             VehiclePartsInteractionBlocState>(
                           listener: (context, state) {
@@ -153,7 +159,6 @@ class _CommentsViewState extends State<CommentsView> {
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             child: Image.file(
-                                              
                                               File(widget.vehiclePartMedia
                                                   .images![index].path),
                                               fit: BoxFit.fitWidth,
@@ -177,12 +182,13 @@ class _CommentsViewState extends State<CommentsView> {
                                                               index: index));
                                                     }
                                                   },
-                                                  icon: CircleAvatar(
+                                                  icon: const CircleAvatar(
                                                     radius: 8,
-                                                    backgroundColor: Colors.white,
-
+                                                    backgroundColor:
+                                                        Colors.white,
                                                     child: Icon(
-                                                      Icons.remove_circle_rounded,
+                                                      Icons
+                                                          .remove_circle_rounded,
                                                       color: Color.fromARGB(
                                                           255, 167, 38, 38),
                                                       size: 16,
@@ -214,7 +220,7 @@ class _CommentsViewState extends State<CommentsView> {
                         //       ],
                         //     ),
                         //   ),
-                      Gap(8)
+                        const Gap(8)
                       ],
                     ),
                   ),
@@ -233,7 +239,7 @@ class _CommentsViewState extends State<CommentsView> {
                         .selectedGeneralBodyPart = "";
                   },
                   padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
+                  constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.cancel,
                     color: Colors.red,

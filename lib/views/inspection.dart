@@ -20,11 +20,18 @@ class InspectionView extends StatefulWidget {
 class _InspectionViewState extends State<InspectionView> {
   final PageController _pageController = PageController();
 
+  late MultiBloc _multiBloc;
+  late ServiceBloc _serviceBloc;
+
   @override
   void initState() {
     super.initState();
-    context.read<MultiBloc>().add(GetJson());
-    context.read<MultiBloc>().state.index = 0;
+
+    _multiBloc = context.read<MultiBloc>();
+    _multiBloc.add(GetJson());
+    _multiBloc.state.index = 0;
+
+    _serviceBloc = context.read<ServiceBloc>();
   }
 
   @override
@@ -54,19 +61,20 @@ class _InspectionViewState extends State<InspectionView> {
         body: Container(
           height: size.height,
           width: size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
                 colors: [
                   // Color.fromARGB(255, 255, 231, 231),
-                 Color.fromARGB(255, 241, 193, 193),
-                    Color.fromARGB(255, 235, 136, 136),
-                    Color.fromARGB(255, 226, 174, 174)
+                  Color.fromARGB(255, 241, 193, 193),
+                  Color.fromARGB(255, 235, 136, 136),
+                  Color.fromARGB(255, 226, 174, 174)
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [0.01, 0.35, 1]),
           ),
-          child: BlocBuilder<MultiBloc, MultiBlocState>(builder: (context, state) {
+          child:
+              BlocBuilder<MultiBloc, MultiBlocState>(builder: (context, state) {
             switch (state.jsonStatus) {
               case JsonStatus.loading:
                 return Transform(
@@ -78,11 +86,11 @@ class _InspectionViewState extends State<InspectionView> {
                 );
               case JsonStatus.success:
                 List<String> buttonsText = [];
-          
+
                 for (var entry in state.json!.entries) {
                   buttonsText.add(entry.key);
                 }
-          
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +135,7 @@ class _InspectionViewState extends State<InspectionView> {
                     ),
                     Divider(
                       height: size.height * 0.015,
-                      thickness: 2,
+                      thickness: 1,
                       color: Colors.grey.shade300,
                     ),
                     Gap(size.height * 0.01),
@@ -143,7 +151,8 @@ class _InspectionViewState extends State<InspectionView> {
                                 .add(PageChange(index: value));
                           },
                           itemBuilder: (context, pageIndex) => ListView.builder(
-                            itemCount: state.json![buttonsText[pageIndex]].length,
+                            itemCount:
+                                state.json![buttonsText[pageIndex]].length,
                             itemBuilder: (context, index) {
                               // if (state.json![buttonsText[pageIndex]][index]
                               //         ['widget'] ==
@@ -157,15 +166,16 @@ class _InspectionViewState extends State<InspectionView> {
                                   Gap(size.height * 0.01),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Gap(size.width * 0.05),
                                       SizedBox(
                                         width: size.width * 0.2,
                                         child: Wrap(
                                           children: [
-                                            Text(state
-                                                    .json![buttonsText[pageIndex]]
+                                            Text(state.json![
+                                                    buttonsText[pageIndex]]
                                                 [index]['properties']['label'])
                                           ],
                                         ),
@@ -221,8 +231,9 @@ class _InspectionViewState extends State<InspectionView> {
                                         style: ElevatedButton.styleFrom(
                                             minimumSize: const Size(70.0, 35.0),
                                             padding: EdgeInsets.zero,
-                                            backgroundColor: const Color.fromARGB(
-                                                255, 145, 19, 19),
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 145, 19, 19),
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(5))),
@@ -260,17 +271,19 @@ class _InspectionViewState extends State<InspectionView> {
           height: size.height * 0.03,
           width: size.width * 0.05,
           child: Checkbox(
+            checkColor: Colors.white,
+            fillColor: json[page][index]['properties']['value'] == true
+                ? const WidgetStatePropertyAll(Color.fromARGB(255, 145, 19, 19))
+                : const WidgetStatePropertyAll(Colors.white),
             value: json[page][index]['properties']['value'],
             side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
             onChanged: (value) {
               json[page][index]['properties']['value'] = value;
               context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
-              print(context.read<MultiBloc>().state.json);
             },
           ),
         );
       case "textField":
-        print(json);
         TextEditingController textEditingController = TextEditingController();
 
         textEditingController.text = json[page][index]['properties']['value'];
@@ -317,9 +330,6 @@ class _InspectionViewState extends State<InspectionView> {
           json[page][index]['properties']['value'] = items[0];
         }
 
-        print(items);
-        print(json[page][index]['properties']['value']);
-
         return DropdownButtonHideUnderline(
           child: DropdownButton2<String>(
             onMenuStateChange: (isOpen) {},
@@ -341,7 +351,6 @@ class _InspectionViewState extends State<InspectionView> {
             onChanged: (String? value) {
               json[page][index]['properties']['value'] = value;
               context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
-              print(context.read<MultiBloc>().state.json);
             },
             buttonStyleData: ButtonStyleData(
               height: size.height * 0.04,
@@ -410,9 +419,9 @@ class _InspectionViewState extends State<InspectionView> {
                       value: options.indexOf(e) + 1,
                       groupValue: json[page][index]['properties']['value'],
                       activeColor: Colors
-                          .red, // Change the active radio button color here
-                      fillColor: WidgetStateProperty.all(
-                          Colors.red), // Change the fill color when selected
+                          .white, // Change the active radio button color here
+                      fillColor: WidgetStateProperty.all(Color.fromARGB(255,
+                          145, 19, 19)), // Change the fill color when selected
                       splashRadius: 20, // Change the splash radius when clicked
                       onChanged: (value) {
                         json[page][index]['properties']['value'] = value;
