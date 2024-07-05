@@ -301,7 +301,7 @@ class _InspectionViewState extends State<InspectionView> {
                 hintStyle: TextStyle(color: Colors.black38),
               ),
               onChanged: (value) {
-                textEditingController.text = value;
+                
                 context.read<MultiBloc>().state.json![page][index]['properties']
                     ['value'] = value;
               }),
