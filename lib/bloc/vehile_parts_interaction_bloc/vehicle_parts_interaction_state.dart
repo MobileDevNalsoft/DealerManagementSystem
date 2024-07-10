@@ -4,18 +4,14 @@ enum VehiclePartsInteractionStatus{initial, loading, success, failure}
 
 @immutable
  class VehiclePartsInteractionBlocState {
-  List<VehiclePartMedia> media;
-  Uint8List? image;
+  Map<String, VehiclePartMedia> mapMedia;
   VehiclePartsInteractionStatus status;
-  VehiclePartsInteractionBlocState({required this.media,this.status = VehiclePartsInteractionStatus.initial,this.image});
+  VehiclePartsInteractionBlocState({required this.mapMedia,this.status = VehiclePartsInteractionStatus.initial});
 
-  VehiclePartsInteractionBlocState copyWith(List<VehiclePartMedia>? media,status,{Uint8List? image}){
+  VehiclePartsInteractionBlocState copyWith(Map<String, VehiclePartMedia>? mapMedia,status,{Uint8List? image}){
   return VehiclePartsInteractionBlocState(
-    media: media?? this.media,
-    status: status?? this.status,
-    image: image??this.image
+    mapMedia: mapMedia??this.mapMedia,
+    status: status?? this.status
   );
 }
 }
-
-

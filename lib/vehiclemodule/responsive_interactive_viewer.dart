@@ -29,13 +29,13 @@ class _CustomDetectorState extends State<CustomDetector> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.generalParts!.forEach((value) {
-      if (!value.name.startsWith('text')) {
-        context
-            .read<VehiclePartsInteractionBloc>()
-            .add(AddCommentsEvent(name: value.name));
-      }
-    });
+    // widget.generalParts!.forEach((value) {
+    //   if (!value.name.startsWith('text')) {
+    //     context
+    //         .read<VehiclePartsInteractionBloc>()
+    //         .add(AddCommentsEvent(name: value.name));
+    //   }
+    // });
   }
 
   @override
@@ -67,6 +67,10 @@ class _CustomDetectorState extends State<CustomDetector> {
                               left: isMobile ? 10 : size.width * 0.8,
                               right: size.width * 0.03),
                         ).show(context);
+                         Provider.of<BodySelectorViewModel>(context, listen: false)
+                        .isTapped = false;
+                         Provider.of<BodySelectorViewModel>(context, listen: false)
+                         .selectedGeneralBodyPart = "";
                         // Navigator.of(context).push(MaterialPageRoute(
                         //         builder: (_) => DashboardView()));
                         
@@ -112,27 +116,18 @@ class _CustomDetectorState extends State<CustomDetector> {
                           BlocConsumer<VehiclePartsInteractionBloc,
                               VehiclePartsInteractionBlocState>(
                             listener: (context, state) {
-                              state.media.forEach((value) {
-                                print(
-                                    "listening ${value.name} ${value.images}");
-                              });
+                              
                             },
                             builder: (context, state) {
                               return CommentsView(
-                                vehiclePartMedia: state.media.firstWhere(
-                                    (e) =>
-                                        e.name ==
-                                        Provider.of<BodySelectorViewModel>(
-                                                context,
-                                                listen: true)
-                                            .selectedGeneralBodyPart,
-                                    orElse: () => VehiclePartMedia(
-                                        name:
-                                            Provider.of<BodySelectorViewModel>(
+                                vehiclePartMedia:
+                                state.mapMedia[Provider.of<BodySelectorViewModel>(
                                                     context,
                                                     listen: true)
-                                                .selectedGeneralBodyPart,
-                                        comments: "")),
+                                                .selectedGeneralBodyPart]??VehiclePartMedia(name: Provider.of<BodySelectorViewModel>(
+                                                    context,
+                                                    listen: true)
+                                                .selectedGeneralBodyPart, isUploaded: false),
                               );
                             },
                           ),
@@ -144,8 +139,10 @@ class _CustomDetectorState extends State<CustomDetector> {
                     left: 155,
                     child: ElevatedButton(
                         onPressed: () {
+                            if(!Provider.of<BodySelectorViewModel>(context, listen: false)
+                        .isTapped ){
                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => DashboardView()));
+                                builder: (_) => DashboardView()));}
                           // context
                           //     .read<VehiclePartsInteractionBloc>()
                           //     .add(SubmitVehicleMediaEvent());
