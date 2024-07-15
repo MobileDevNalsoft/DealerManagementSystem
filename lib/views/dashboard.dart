@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/views/job_info.dart';
 import 'package:dms/views/service_main.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -241,8 +243,9 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 100,
-          decoration:
-              const BoxDecoration(color: Color.fromARGB(255, 145, 19, 19)),
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 145, 19, 19),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -501,7 +504,8 @@ class JobCardPage extends StatelessWidget {
                 List<String> dropDownList = ['N', 'I', 'CL', 'C'];
 
                 if (_serviceBloc!.state.getJobCardStatus ==
-                    GetJobCardStatus.success) {
+                        GetJobCardStatus.success &&
+                    index < state.jobCards!.length) {
                   if (_serviceBloc!.state.jobCards![index].status == 'N') {
                     dropDownList = ['N', 'I', 'C'];
                   } else if (_serviceBloc!.state.jobCards![index].status ==
@@ -510,180 +514,210 @@ class JobCardPage extends StatelessWidget {
                   }
                 }
 
-                return Skeletonizer(
-                    enableSwitchAnimation: true,
-                    enabled:
-                        state.getJobCardStatus == GetJobCardStatus.loading ||
-                            state.jobCardStatusUpdate ==
-                                JobCardStatusUpdate.loading,
-                    child: Card(
-                      margin: EdgeInsets.symmetric(
-                          vertical: size.height * 0.005,
-                          horizontal: size.width * 0.026),
-                      color: Colors.white,
-                      elevation: 3,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                return _serviceBloc!.state.getJobCardStatus ==
+                        GetJobCardStatus.success
+                    ? index >= state.jobCards!.length
+                        ? SizedBox(
                             height: size.height * 0.05,
-                            width: size.width * 0.3,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black12),
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10))),
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              state.getJobCardStatus != GetJobCardStatus.loading
-                                  ? state.jobCards![index].jobCardNo!
-                                  : 'JC-MAD-633',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 13,
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            height: size.height * 0.05,
-                            width: size.width * 0.39,
-                            decoration: const BoxDecoration(
-                                border: Border.symmetric(
-                                    horizontal:
-                                        BorderSide(color: Colors.black12)),
-                                borderRadius: BorderRadius.only()),
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              state.getJobCardStatus != GetJobCardStatus.loading
-                                  ? state.jobCards![index].registrationNo!
-                                  : 'TS09ED7884',
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                          ),
-                          Container(
-                              alignment: Alignment.center,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 0),
-                              height: size.height * 0.05,
-                              width: size.width * 0.25,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 2,
-                                      color: _serviceBloc!
-                                                  .state.getJobCardStatus ==
-                                              GetJobCardStatus.success
-                                          ? _serviceBloc!.state.jobCards![index]
-                                                      .status ==
-                                                  'N'
-                                              ? Colors.yellow
-                                              : _serviceBloc!
-                                                          .state
-                                                          .jobCards![index]
-                                                          .status ==
-                                                      'I'
-                                                  ? Colors.green.shade200
-                                                  : _serviceBloc!
-                                                              .state
-                                                              .jobCards![index]
-                                                              .status ==
-                                                          'CL'
-                                                      ? Colors.green
-                                                      : Colors.red
-                                          : Colors.white),
-                                  borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10))),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton2<String>(
-                                  onMenuStateChange: (isOpen) {
-                                    _serviceBloc!
-                                        .add(DropDownOpenClose(isOpen: isOpen));
-                                  },
-                                  isExpanded: true,
-                                  items: dropDownList
-                                      .map((String item) =>
-                                          DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Text(
-                                              item,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ))
-                                      .toList(),
-                                  value: state.getJobCardStatus ==
-                                          GetJobCardStatus.success
-                                      ? state.jobCards![index].status!
-                                      : 'N',
-                                  onChanged: (String? value) {
-                                    _serviceBloc!
-                                        .state.jobCards![index].status = value;
-
-                                    _serviceBloc!.add(JobCardStatusUpdated(
-                                        jobCardStatus: value,
-                                        jobCardNo: _serviceBloc!
-                                            .state.jobCards![index].jobCardNo));
-                                    _serviceBloc!.state.jobCardStatusUpdate =
-                                        JobCardStatusUpdate.initial;
-                                  },
-                                  buttonStyleData: ButtonStyleData(
+                          )
+                        : Skeletonizer(
+                            enableSwitchAnimation: true,
+                            enabled: state.getJobCardStatus ==
+                                    GetJobCardStatus.loading ||
+                                state.jobCardStatusUpdate ==
+                                    JobCardStatusUpdate.loading,
+                            child: Card(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.005,
+                                  horizontal: size.width * 0.026),
+                              color: Colors.white,
+                              elevation: 3,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    height: size.height * 0.05,
+                                    width: size.width * 0.3,
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: Colors.black12),
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10))),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      customBorder: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      enableFeedback: true,
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) => JobCardInfo(
+                                                      service: state
+                                                          .jobCards![index],
+                                                    )));
+                                      },
+                                      child: Text(
+                                        textAlign: TextAlign.center,
+                                        state.getJobCardStatus !=
+                                                GetJobCardStatus.loading
+                                            ? state.jobCards![index].jobCardNo!
+                                            : 'JC-MAD-633',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    height: size.height * 0.05,
+                                    width: size.width * 0.39,
                                     decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight: Radius.circular(10)),
-                                        color: Colors.white),
+                                        border: Border.symmetric(
+                                            horizontal: BorderSide(
+                                                color: Colors.black12)),
+                                        borderRadius: BorderRadius.only()),
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      state.getJobCardStatus !=
+                                              GetJobCardStatus.loading
+                                          ? state
+                                              .jobCards![index].registrationNo!
+                                          : 'TS09ED7884',
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 0),
                                     height: size.height * 0.05,
                                     width: size.width * 0.25,
-                                    padding: const EdgeInsets.only(
-                                        left: 14, right: 14),
-                                  ),
-                                  iconStyleData: IconStyleData(
-                                    icon: Icon(_serviceBloc!.state.dropDownOpen!
-                                        ? Icons.keyboard_arrow_up_rounded
-                                        : Icons.keyboard_arrow_down_rounded),
-                                    iconSize: 14,
-                                    iconEnabledColor: Colors.black,
-                                    iconDisabledColor: Colors.black,
-                                  ),
-                                  dropdownStyleData: DropdownStyleData(
-                                    maxHeight: size.height * 0.3,
-                                    width: size.width * 0.18,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
+                                        border: Border.all(
+                                            width: 2,
+                                            color: _serviceBloc!.state
+                                                        .getJobCardStatus ==
+                                                    GetJobCardStatus.success
+                                                ? _serviceBloc!
+                                                            .state
+                                                            .jobCards![index]
+                                                            .status ==
+                                                        'N'
+                                                    ? Colors.yellow
+                                                    : _serviceBloc!
+                                                                .state
+                                                                .jobCards![
+                                                                    index]
+                                                                .status ==
+                                                            'I'
+                                                        ? Colors.green.shade200
+                                                        : _serviceBloc!
+                                                                    .state
+                                                                    .jobCards![
+                                                                        index]
+                                                                    .status ==
+                                                                'CL'
+                                                            ? Colors.green
+                                                            : Colors.red
+                                                : Colors.white),
+                                        borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10))),
+                                    child: Text(
+                                      textAlign: TextAlign.center,
+                                      state.getJobCardStatus !=
+                                              GetJobCardStatus.loading
+                                          ? state.jobCards![index].status!
+                                          : 'N',
+                                      style: const TextStyle(fontSize: 13),
                                     ),
-                                    offset: const Offset(0, 0),
-                                    scrollbarTheme: ScrollbarThemeData(
-                                      radius: const Radius.circular(40),
-                                      thickness:
-                                          WidgetStateProperty.all<double>(1),
-                                      thumbVisibility:
-                                          WidgetStateProperty.all<bool>(true),
-                                    ),
-                                  ),
-                                  menuItemStyleData: const MenuItemStyleData(
-                                    height: 30,
-                                    padding:
-                                        EdgeInsets.only(left: 14, right: 14),
-                                  ),
+                                  )
+                                ],
+                              ),
+                            ))
+                    : Skeletonizer(
+                        enableSwitchAnimation: true,
+                        enabled: true,
+                        child: Card(
+                          margin: EdgeInsets.symmetric(
+                              vertical: size.height * 0.005,
+                              horizontal: size.width * 0.026),
+                          color: Colors.white,
+                          elevation: 3,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                height: size.height * 0.05,
+                                width: size.width * 0.3,
+                                child: const Text(
+                                  'JC-MAD-633',
                                 ),
-                              ))
-                        ],
-                      ),
-                    ));
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                height: size.height * 0.05,
+                                width: size.width * 0.3,
+                                child: const Text(
+                                  'TS09ED7884',
+                                ),
+                              ),
+                              Container(
+                                  alignment: Alignment.center,
+                                  height: size.height * 0.05,
+                                  width: size.width * 0.25,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      isExpanded: true,
+                                      items: const [
+                                        DropdownMenuItem<String>(
+                                          value: 'N',
+                                          child: Text('N'),
+                                        )
+                                      ],
+                                      value: 'N',
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        ));
               },
                       childCount:
-                          state.getJobCardStatus != GetJobCardStatus.success
-                              ? 15
-                              : state.jobCards!.length)),
+                          state.getJobCardStatus == GetJobCardStatus.success
+                              ? state.jobCards!.length < 15
+                                  ? state.jobCards!.length +
+                                      (15 - state.jobCards!.length)
+                                  : state.jobCards!.length
+                              : 15)),
+              if (_serviceBloc!.state.getJobCardStatus ==
+                      GetJobCardStatus.success &&
+                  state.jobCards!.isEmpty)
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                      (context, index) => SizedBox(
+                            height: size.height * 0.8,
+                            child: Transform(
+                                transform: Matrix4.translationValues(
+                                    size.width * 0.22, size.height * 0.3, 0),
+                                child: const Text(
+                                    'No Job Cards are in progress.')),
+                          ),
+                      childCount: 1),
+                )
             ],
           );
         },

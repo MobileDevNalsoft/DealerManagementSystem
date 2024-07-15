@@ -55,8 +55,8 @@ class DMSCustomWidgets {
                 ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16, vertical: size.height * 0.016),
+                  contentPadding: EdgeInsets.only(
+                      left: 16, right: 16, bottom: size.height * 0.016),
                   suffixIcon: icon,
                   hintText: hint,
                   hintStyle: const TextStyle(
