@@ -18,9 +18,14 @@ class _DraggableSheetState extends State<DraggableSheet> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return DraggableScrollableSheet(
+          controller: contoller,
+          initialChildSize: 0.5,
+          minChildSize: 0.25,
+          maxChildSize: 0.95,
+          expand: true,
           builder: (context, scrollController) {
-            return DecoratedBox(
-                decoration: const BoxDecoration(
+            return const DecoratedBox(
+                decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(

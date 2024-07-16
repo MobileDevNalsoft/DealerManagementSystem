@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dms/bloc/service/service_bloc.dart';
-import 'package:dms/views/job_info.dart';
+import 'package:dms/views/custom_widgets/draggable_sheet.dart';
 import 'package:dms/views/service_main.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +17,7 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../inits/init.dart';
 import '../models/services.dart';
+import 'jobcard_details.dart';
 import 'login.dart';
 
 class DashboardView extends StatefulWidget {
@@ -503,19 +504,16 @@ class JobCardPage extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate((context, index) {
                 List<String> dropDownList = ['N', 'I', 'CL', 'C'];
 
-                if (_serviceBloc!.state.getJobCardStatus ==
-                        GetJobCardStatus.success &&
+                if (state.getJobCardStatus == GetJobCardStatus.success &&
                     index < state.jobCards!.length) {
-                  if (_serviceBloc!.state.jobCards![index].status == 'N') {
+                  if (state.jobCards![index].status == 'N') {
                     dropDownList = ['N', 'I', 'C'];
-                  } else if (_serviceBloc!.state.jobCards![index].status ==
-                      'I') {
+                  } else if (state.jobCards![index].status == 'I') {
                     dropDownList = ['I', 'CL', 'C'];
                   }
                 }
 
-                return _serviceBloc!.state.getJobCardStatus ==
-                        GetJobCardStatus.success
+                return state.getJobCardStatus == GetJobCardStatus.success
                     ? index >= state.jobCards!.length
                         ? SizedBox(
                             height: size.height * 0.05,
@@ -550,6 +548,8 @@ class JobCardPage extends StatelessWidget {
                                             bottomLeft: Radius.circular(10))),
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(20),
+                                      radius: 100,
+                                      splashColor: Colors.transparent,
                                       customBorder: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20)),
@@ -558,10 +558,141 @@ class JobCardPage extends StatelessWidget {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (_) => JobCardInfo(
-                                                      service: state
-                                                          .jobCards![index],
-                                                    )));
+                                                builder: (_) => JobCardDetails(
+                                                    service: state
+                                                        .jobCards![index])));
+                                        // showModalBottomSheet(
+                                        //   context: context,
+                                        //   backgroundColor: const Color.fromARGB(
+                                        //       255, 236, 224, 224),
+                                        //   showDragHandle: true,
+                                        //   sheetAnimationStyle: AnimationStyle(
+                                        //       curve: Curves.easeIn,
+                                        //       duration: const Duration(
+                                        //           milliseconds: 600),
+                                        //       reverseCurve: Curves.easeOut,
+                                        //       reverseDuration: const Duration(
+                                        //           milliseconds: 300)),
+                                        //   useSafeArea: false,
+                                        //   builder: (context) {
+                                        //     return Container(
+                                        //       height: size.height * 0.26,
+                                        //       width: size.width * 0.9,
+                                        //       alignment: Alignment.topCenter,
+                                        //       padding: EdgeInsets.only(
+                                        //           left: size.width * 0.08),
+                                        //       child: Row(
+                                        //         mainAxisAlignment:
+                                        //             MainAxisAlignment.center,
+                                        //         mainAxisSize: MainAxisSize.min,
+                                        //         crossAxisAlignment:
+                                        //             CrossAxisAlignment.start,
+                                        //         children: [
+                                        //           SizedBox(
+                                        //             width: size.width * 0.3,
+                                        //             child: Column(
+                                        //               mainAxisAlignment:
+                                        //                   MainAxisAlignment
+                                        //                       .start,
+                                        //               mainAxisSize:
+                                        //                   MainAxisSize.min,
+                                        //               crossAxisAlignment:
+                                        //                   CrossAxisAlignment
+                                        //                       .start,
+                                        //               children: [
+                                        //                 const Text(
+                                        //                     'Job Card No.'),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 const Text(
+                                        //                     'Vehicle Registration No.'),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 const Text('Location'),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 const Text('Job Type'),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 const Text(
+                                        //                     'Job Card Status')
+                                        //               ],
+                                        //             ),
+                                        //           ),
+                                        //           SizedBox(
+                                        //             width: size.width * 0.1,
+                                        //             child: Column(
+                                        //               mainAxisAlignment:
+                                        //                   MainAxisAlignment
+                                        //                       .start,
+                                        //               mainAxisSize:
+                                        //                   MainAxisSize.min,
+                                        //               crossAxisAlignment:
+                                        //                   CrossAxisAlignment
+                                        //                       .center,
+                                        //               children: [
+                                        //                 const Text(':'),
+                                        //                 Gap(size.height * 0.03),
+                                        //                 const Text(':'),
+                                        //                 Gap(size.height *
+                                        //                     0.035),
+                                        //                 const Text(':'),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 const Text(':'),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 const Text(':'),
+                                        //               ],
+                                        //             ),
+                                        //           ),
+                                        //           SizedBox(
+                                        //             width: size.width * 0.4,
+                                        //             child: Column(
+                                        //               mainAxisAlignment:
+                                        //                   MainAxisAlignment
+                                        //                       .start,
+                                        //               mainAxisSize:
+                                        //                   MainAxisSize.min,
+                                        //               crossAxisAlignment:
+                                        //                   CrossAxisAlignment
+                                        //                       .start,
+                                        //               children: [
+                                        //                 Text(
+                                        //                   state.jobCards![index]
+                                        //                       .jobCardNo!,
+                                        //                 ),
+                                        //                 Gap(size.height * 0.03),
+                                        //                 Text(state
+                                        //                     .jobCards![index]
+                                        //                     .registrationNo!),
+                                        //                 Gap(size.height *
+                                        //                     0.035),
+                                        //                 Text(
+                                        //                     state
+                                        //                         .jobCards![
+                                        //                             index]
+                                        //                         .location!,
+                                        //                     maxLines: 2,
+                                        //                     overflow:
+                                        //                         TextOverflow
+                                        //                             .ellipsis),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 Text(
+                                        //                     state
+                                        //                         .jobCards![
+                                        //                             index]
+                                        //                         .jobType!,
+                                        //                     maxLines: 2,
+                                        //                     overflow:
+                                        //                         TextOverflow
+                                        //                             .ellipsis),
+                                        //                 Gap(size.height * 0.02),
+                                        //                 Text(state
+                                        //                     .jobCards![index]
+                                        //                     .status!),
+                                        //               ],
+                                        //             ),
+                                        //           ),
+                                        //         ],
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // );
                                       },
                                       child: Text(
                                         textAlign: TextAlign.center,
@@ -608,26 +739,17 @@ class JobCardPage extends StatelessWidget {
                                     decoration: BoxDecoration(
                                         border: Border.all(
                                             width: 2,
-                                            color: _serviceBloc!.state
-                                                        .getJobCardStatus ==
+                                            color: state.getJobCardStatus ==
                                                     GetJobCardStatus.success
-                                                ? _serviceBloc!
-                                                            .state
-                                                            .jobCards![index]
+                                                ? state.jobCards![index]
                                                             .status ==
                                                         'N'
                                                     ? Colors.yellow
-                                                    : _serviceBloc!
-                                                                .state
-                                                                .jobCards![
-                                                                    index]
+                                                    : state.jobCards![index]
                                                                 .status ==
                                                             'I'
                                                         ? Colors.green.shade200
-                                                        : _serviceBloc!
-                                                                    .state
-                                                                    .jobCards![
-                                                                        index]
+                                                        : state.jobCards![index]
                                                                     .status ==
                                                                 'CL'
                                                             ? Colors.green
@@ -703,8 +825,7 @@ class JobCardPage extends StatelessWidget {
                                       (15 - state.jobCards!.length)
                                   : state.jobCards!.length
                               : 15)),
-              if (_serviceBloc!.state.getJobCardStatus ==
-                      GetJobCardStatus.success &&
+              if (state.getJobCardStatus == GetJobCardStatus.success &&
                   state.jobCards!.isEmpty)
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
