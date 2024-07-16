@@ -6,9 +6,9 @@ import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,25 +20,23 @@ class CommentsView extends StatefulWidget {
   VehiclePartMedia vehiclePartMedia;
   CommentsView({super.key, required this.vehiclePartMedia});
 
-  @override
+  @override 
   State<CommentsView> createState() => _CommentsViewState();
 }
 
-class _CommentsViewState extends State<CommentsView>
-    with SingleTickerProviderStateMixin {
+class _CommentsViewState extends State<CommentsView> with SingleTickerProviderStateMixin{
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
-  late AnimationController animationController;
-  var imagesCaptured = [];
   final _formKey = GlobalKey<FormState>();
-  // AnimationController controller = AnimationController(vsync: this,duration: Duration(seconds: 2));
+  late AnimationController animationController;
   @override
   void initState() {
     super.initState();
+       animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
     widget.vehiclePartMedia.comments ??= "";
     widget.vehiclePartMedia.images ??= [];
-    animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    animationController.repeat();
   }
 
   @override
@@ -51,8 +49,7 @@ class _CommentsViewState extends State<CommentsView>
   @override
   Widget build(BuildContext context) {
     print("images ${widget.vehiclePartMedia.images}");
-    if (widget.vehiclePartMedia.images == null)
-      widget.vehiclePartMedia.images = [];
+    widget.vehiclePartMedia.images ??= [];
     commentsController.text = widget.vehiclePartMedia.comments ?? "";
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
@@ -95,14 +92,9 @@ class _CommentsViewState extends State<CommentsView>
                             focusNode: commentsFocus,
                             controller: commentsController,
                             maxLines: 10,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter comments";
-                              }
-                              return null;
-                            },
                             decoration: InputDecoration(
                                 suffixIcon: IconButton(
+                                  padding: EdgeInsets.zero,
                                     onPressed: () async {
                                       commentsFocus.unfocus();
                                       if (widget
@@ -126,36 +118,42 @@ class _CommentsViewState extends State<CommentsView>
                                       }
                                     },
                                     icon: Transform(
-                                        transform:
-                                            Matrix4.translationValues(0, 18, 0),
-                                        child: Icon(Icons
-                                                .add_photo_alternate_rounded)
-                                            .animate(
-                                                controller: animationController,
-                                                onPlay: (controller) => widget
-                                                            .vehiclePartMedia
-                                                            .images!
-                                                            .length <=
-                                                        3
-                                                    ? controller.repeat()
-                                                    : controller.stop())
-                                            .shimmer(
-                                                delay: 2000.ms,
-                                                duration: 1500.ms) // shimmer +
-                                            .shake(
-                                                hz: 4,
-                                                curve: Curves
-                                                    .easeInOutCubic) // shake +
-                                            .scale(
-                                                begin: Offset(0.8, 0.8),
-                                                end: Offset(1.1, 1.1),
-                                                duration: 600.ms) // scale up
-                                            .then(
-                                                delay: 350.ms) // then wait and
-                                            .scale(
-                                              begin: Offset(1.1, 1.1),
-                                              end: Offset(0.8, 0.8),
-                                            ))),
+                                        transform: Matrix4.translationValues(8, 20, 0),
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Icon(Icons
+                                                    .add_photo_alternate_rounded),
+                                            Lottie.asset("assets/lottie/highlight.json",width: 50,controller: animationController)
+                                          ],
+                                        )
+                                            // .animate(
+                                            //     controller: widget.animationController,
+                                            //     onPlay: (controller) => widget
+                                            //                 .vehiclePartMedia
+                                            //                 .images!
+                                            //                 .length <=
+                                            //             3
+                                            //         ? controller.repeat()
+                                            //         : controller.stop())
+                                            // .shimmer(
+                                            //     delay: 2000.ms,
+                                            //     duration: 1500.ms) // shimmer +
+                                            // .shake(
+                                            //     hz: 4,
+                                            //     curve: Curves
+                                            //         .easeInOutCubic) // shake +
+                                            // .scale(
+                                            //     begin: Offset(0.8, 0.8),
+                                            //     end: Offset(1.1, 1.1),
+                                            //     duration: 600.ms) // scale up
+                                            // .then(
+                                            //     delay: 350.ms) // then wait and
+                                            // .scale(
+                                            //   begin: Offset(1.1, 1.1),
+                                            //   end: Offset(0.8, 0.8),
+                                            // )
+                                            )),
                                 hintStyle: TextStyle(fontSize: 14),
                                 filled: true,
                                 contentPadding:
@@ -171,35 +169,15 @@ class _CommentsViewState extends State<CommentsView>
                             },
                           ),
                         ),
-                        Gap(4),
-                        // Center(
-                        //     child: IconButton(
-                        //         onPressed: () async {
-                        //           commentsFocus.unfocus();
-                        //           if (widget.vehiclePartMedia.images!.length <
-                        //               3) {
-                        //             ImagePicker imagePicker = ImagePicker();
-                        //             XFile? image = await imagePicker.pickImage(
-                        //               source: ImageSource.camera,
-                        //             );
-                        //             if (image != null) {
-                        //               context
-                        //                   .read<VehiclePartsInteractionBloc>()
-                        //                   .add(AddImageEvent(
-                        //                       name:
-                        //                           widget.vehiclePartMedia.name,
-                        //                       image: image));
-                        //             }
-                        //           }
-                        //         },
-                        //         icon: Icon(Icons.add_photo_alternate_rounded))),
+                        Gap(4), 
                         BlocConsumer<VehiclePartsInteractionBloc,
                             VehiclePartsInteractionBlocState>(
                           listener: (context, state) {
                             if (widget.vehiclePartMedia.images!.length == 3) {
-                              animationController.stop();
+                             animationController.reset();
+                             animationController.stop();
                             } else {
-                              animationController.repeat();
+                             animationController.repeat();
                             }
                           },
                           builder: (context, state) {
@@ -380,10 +358,10 @@ class _CommentsViewState extends State<CommentsView>
                           .show(context);
                       return;
                     }
-                    Provider.of<BodySelectorViewModel>(context, listen: false)
-                        .isTapped = false;
-                    Provider.of<BodySelectorViewModel>(context, listen: false)
-                        .selectedGeneralBodyPart = "";
+                    // Provider.of<BodySelectorViewModel>(context, listen: false)
+                    //     .isTapped = false;
+                    // Provider.of<BodySelectorViewModel>(context, listen: false)
+                    //     .selectedGeneralBodyPart = "";
                   },
                   padding: EdgeInsets.zero,
                   constraints: BoxConstraints(),
@@ -392,6 +370,7 @@ class _CommentsViewState extends State<CommentsView>
                     color: Colors.red,
                     size: size.width * 0.06,
                   )))
+        
         ],
       ),
     );

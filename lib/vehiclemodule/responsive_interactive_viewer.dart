@@ -24,11 +24,12 @@ class CustomDetector extends StatefulWidget {
   State<CustomDetector> createState() => _CustomDetectorState();
 }
 
-class _CustomDetectorState extends State<CustomDetector> {
+class _CustomDetectorState extends State<CustomDetector> with SingleTickerProviderStateMixin{
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+ 
     // widget.generalParts!.forEach((value) {
     //   if (!value.name.startsWith('text')) {
     //     context
@@ -107,33 +108,23 @@ class _CustomDetectorState extends State<CustomDetector> {
                   if (Provider.of<BodySelectorViewModel>(context, listen: true)
                       .isTapped)
                     Positioned(
-                      left: isMobile ? size.width * 0.129 : size.width * 0.365,
-                      // right: size.width * 0.1,
-                      top: isMobile ? 150 : 200,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          BlocConsumer<VehiclePartsInteractionBloc,
-                              VehiclePartsInteractionBlocState>(
-                            listener: (context, state) {
-                              
-                            },
-                            builder: (context, state) {
-                              return CommentsView(
-                                vehiclePartMedia:
-                                state.mapMedia[Provider.of<BodySelectorViewModel>(
-                                                    context,
-                                                    listen: true)
-                                                .selectedGeneralBodyPart]??VehiclePartMedia(name: Provider.of<BodySelectorViewModel>(
-                                                    context,
-                                                    listen: true)
-                                                .selectedGeneralBodyPart, isUploaded: false),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                    left: isMobile ? size.width * 0.129 : size.width * 0.365,
+                    // right: size.width * 0.1,
+                    top: isMobile ? 150 : 200,
+                    child:  
+                    // Card()
+                     CommentsView(
+                          vehiclePartMedia:
+                          context.read<VehiclePartsInteractionBloc>().state.mapMedia[Provider.of<BodySelectorViewModel>(
+                                              context,
+                                              listen: false)
+                                          .selectedGeneralBodyPart]??VehiclePartMedia(name: Provider.of<BodySelectorViewModel>(
+                                              context,
+                                              listen: false)
+                                          .selectedGeneralBodyPart, isUploaded: false),
+                        )
+                    
+                  ),
                   Positioned(
                     bottom: 100,
                     left: 155,
