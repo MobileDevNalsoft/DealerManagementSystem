@@ -26,6 +26,7 @@ class SubmitVehicleMediaEvent extends VehiclePartsInteractionBlocEvent{
 }
 
 class SubmitBodyPartVehicleMediaEvent extends VehiclePartsInteractionBlocEvent{
+  String jobCardNo;
   String bodyPartName;
-  SubmitBodyPartVehicleMediaEvent({required this.bodyPartName});
+  SubmitBodyPartVehicleMediaEvent({required this.bodyPartName ,required this.jobCardNo});
 }

@@ -21,20 +21,19 @@ class CustomDetector extends StatefulWidget {
   State<CustomDetector> createState() => _CustomDetectorState();
 }
 
-class _CustomDetectorState extends State<CustomDetector> {
-  late ServiceBloc _serviceBloc;
-
+class _CustomDetectorState extends State<CustomDetector>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _serviceBloc = BlocProvider.of<ServiceBloc>(context);
-    widget.generalParts!.forEach((value) {
-      if (!value.name.startsWith('text')) {
-        context
-            .read<VehiclePartsInteractionBloc>()
-            .add(AddCommentsEvent(name: value.name));
-      }
-    });
+
+    // widget.generalParts!.forEach((value) {
+    //   if (!value.name.startsWith('text')) {
+    //     context
+    //         .read<VehiclePartsInteractionBloc>()
+    //         .add(AddCommentsEvent(name: value.name));
+    //   }
+    // });
   }
 
   @override
@@ -66,12 +65,14 @@ class _CustomDetectorState extends State<CustomDetector> {
                               left: isMobile ? 10 : size.width * 0.8,
                               right: size.width * 0.03),
                         ).show(context);
-                        _serviceBloc.add(BottomNavigationBarClicked(index: 0));
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (_) => const DashboardView()),
-                          (route) => false,
-                        );
+                        Provider.of<BodySelectorViewModel>(context,
+                                listen: false)
+                            .isTapped = false;
+                        Provider.of<BodySelectorViewModel>(context,
+                                listen: false)
+                            .selectedGeneralBodyPart = "";
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //         builder: (_) => DashboardView()));
                       }
                     },
                     child: GestureDetector(
@@ -105,60 +106,51 @@ class _CustomDetectorState extends State<CustomDetector> {
                   if (Provider.of<BodySelectorViewModel>(context, listen: true)
                       .isTapped)
                     Positioned(
-                      left: isMobile ? size.width * 0.129 : size.width * 0.365,
-                      // right: size.width * 0.1,
-                      top: isMobile ? 150 : 200,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          BlocConsumer<VehiclePartsInteractionBloc,
-                              VehiclePartsInteractionBlocState>(
-                            listener: (context, state) {
-                              state.media.forEach((value) {
-                                print(
-                                    "listening ${value.name} ${value.images}");
-                              });
-                            },
-                            builder: (context, state) {
-                              return CommentsView(
-                                vehiclePartMedia: state.media.firstWhere(
-                                    (e) =>
-                                        e.name ==
-                                        Provider.of<BodySelectorViewModel>(
-                                                context,
-                                                listen: true)
-                                            .selectedGeneralBodyPart,
-                                    orElse: () => VehiclePartMedia(
-                                        name:
-                                            Provider.of<BodySelectorViewModel>(
-                                                    context,
-                                                    listen: true)
-                                                .selectedGeneralBodyPart,
-                                        comments: "")),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                        left:
+                            isMobile ? size.width * 0.129 : size.width * 0.365,
+                        // right: size.width * 0.1,
+                        top: isMobile ? 150 : 200,
+                        child:
+                            // Card()
+                            CommentsView(
+                          vehiclePartMedia: context
+                                  .read<VehiclePartsInteractionBloc>()
+                                  .state
+                                  .mapMedia[Provider.of<BodySelectorViewModel>(
+                                      context,
+                                      listen: false)
+                                  .selectedGeneralBodyPart] ??
+                              VehiclePartMedia(
+                                  name: Provider.of<BodySelectorViewModel>(
+                                          context,
+                                          listen: false)
+                                      .selectedGeneralBodyPart,
+                                  isUploaded: false),
+                        )),
                   Positioned(
                     bottom: 100,
                     left: 155,
                     child: ElevatedButton(
                         onPressed: () {
-                          context
-                              .read<VehiclePartsInteractionBloc>()
-                              .add(SubmitVehicleMediaEvent());
+                          if (!Provider.of<BodySelectorViewModel>(context,
+                                  listen: false)
+                              .isTapped) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => DashboardView()));
+                          }
+                          // context
+                          //     .read<VehiclePartsInteractionBloc>()
+                          //     .add(SubmitVehicleMediaEvent());
                         },
                         style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(70.0, 35.0),
-                            padding: const EdgeInsets.all(8),
+                            // minimumSize: const Size(35.0, 35.0),
+                            // padding: const EdgeInsets.all(8),
                             backgroundColor:
                                 const Color.fromARGB(255, 145, 19, 19),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16))),
+                                borderRadius: BorderRadius.circular(18))),
                         child: const Text(
-                          'Submit',
+                          'Save',
                           style: TextStyle(color: Colors.white),
                         )),
                   ),

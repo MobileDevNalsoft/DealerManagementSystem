@@ -5,6 +5,6 @@ class VehiclePartMedia{
   String name;
   String? comments;
   List<XFile>? images;
-
-  VehiclePartMedia({required this.name,this.comments,this.images});
+  bool isUploaded;
+  VehiclePartMedia({required this.name,this.comments,this.images,required this.isUploaded});
 }

@@ -1,4 +1,8 @@
 import 'dart:ui' as ui; // Import the 'ui' library
+
+import 'package:another_flushbar/flushbar.dart';
+import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
+import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +14,7 @@ class BodyPainter extends CustomPainter {
   final BodySelectorViewModel model;
   final List<GeneralBodyPart>? generalParts;
   String previousSelected = '';
-  static int cnt = 1;
+  static int cnt = 0;
   BodyPainter({
     required this.context,
     required this.model,
@@ -22,7 +26,6 @@ class BodyPainter extends CustomPainter {
     Paint paint = Paint()
       ..style = PaintingStyle.fill
       ..strokeWidth = 8.0;
-
     // Paint borderPaint = Paint()
     //   ..style = PaintingStyle.stroke
     //   ..strokeWidth = 0.65
@@ -55,6 +58,10 @@ class BodyPainter extends CustomPainter {
       matrix4.translate(translateX, translateY);
       matrix4.scale(xScale, yScale);
     }
+    int count = 0;
+
+    var myCanvas = TouchyCanvas(context, canvas);
+    bool isPathTapped = false;
 
     for (var muscle in generalParts!) {
       Path path = parseSvgPath(muscle.path);
@@ -100,7 +107,6 @@ class BodyPainter extends CustomPainter {
         paint.color = Colors.white;
       }
 
-      var myCanvas = TouchyCanvas(context, canvas);
       //     myCanvas.drawPath(
       //   path.transform(matrix4.storage),
       //   borderPaint,
@@ -109,21 +115,31 @@ class BodyPainter extends CustomPainter {
       myCanvas.drawPath(
         path.transform(matrix4.storage),
         paint,
+
         onTapDown: (details) {
-          print("details $details");
-          if (!muscle.name.startsWith('text')) {
+          count++;
+          cnt++;
+          print("details ${details}");
+          if (!muscle.name.startsWith('text') && !isPathTapped) {
             print(" name ${muscle.name}");
-            model.selectGeneralBodyPart(muscle.name);
+            model.selectedGeneralBodyPart = muscle.name;
             model.isTapped = true;
           }
         },
-        onSecondaryTapDown: (d) {
-          print(d);
-        },
+        // onTapUp: (details) {
+        //   isPathTapped = false;
+        // },
+        // onSecondaryTapDown: (d) {
+        //   print(d);
+        // },
       );
     }
+
+    print("count $cnt");
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
 }
