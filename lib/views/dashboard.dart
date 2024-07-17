@@ -702,7 +702,7 @@ class JobCardPage extends StatelessWidget {
                                             : 'JC-MAD-633',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w500,
-                                            fontSize: 13,
+                                            fontSize: 12,
                                             color: Colors.blue,
                                             decoration:
                                                 TextDecoration.underline),
@@ -738,23 +738,7 @@ class JobCardPage extends StatelessWidget {
                                     width: size.width * 0.25,
                                     decoration: BoxDecoration(
                                         border: Border.all(
-                                            width: 2,
-                                            color: state.getJobCardStatus ==
-                                                    GetJobCardStatus.success
-                                                ? state.jobCards![index]
-                                                            .status ==
-                                                        'N'
-                                                    ? Colors.yellow
-                                                    : state.jobCards![index]
-                                                                .status ==
-                                                            'I'
-                                                        ? Colors.green.shade200
-                                                        : state.jobCards![index]
-                                                                    .status ==
-                                                                'CL'
-                                                            ? Colors.green
-                                                            : Colors.red
-                                                : Colors.white),
+                                            width: 2, color: Colors.black12),
                                         borderRadius: const BorderRadius.only(
                                             topRight: Radius.circular(10),
                                             bottomRight: Radius.circular(10))),
