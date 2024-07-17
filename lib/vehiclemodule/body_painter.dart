@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui; // Import the 'ui' library
 
 import 'package:another_flushbar/flushbar.dart';
@@ -6,11 +5,7 @@ import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
-import 'package:dms/views/comments_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
 import 'package:touchable/touchable.dart';
 
@@ -69,7 +64,6 @@ class BodyPainter extends CustomPainter {
     bool isPathTapped = false;
 
     for (var muscle in generalParts!) {
-      
       Path path = parseSvgPath(muscle.path);
       paint.color = ui.Color.fromARGB(133, 97, 97, 194);
       if (muscle.name.startsWith("text")) {
@@ -129,7 +123,7 @@ class BodyPainter extends CustomPainter {
           if (!muscle.name.startsWith('text') && !isPathTapped) {
             print(" name ${muscle.name}");
             model.selectedGeneralBodyPart = muscle.name;
-            model.isTapped = true;  
+            model.isTapped = true;
           }
         },
         // onTapUp: (details) {
@@ -146,7 +140,6 @@ class BodyPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-
     return false;
   }
 }

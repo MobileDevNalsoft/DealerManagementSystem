@@ -75,6 +75,9 @@ dependencies:
   circle_nav_bar: ^2.0.1+1
   slider_button: ^2.1.0
   shimmer: ^3.0.0
+  flutter_neumorphic: ^3.2.0
+  flutter_inset_box_shadow: ^1.0.8
+  clay_containers: ^0.3.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

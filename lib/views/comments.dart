@@ -20,11 +20,12 @@ class CommentsView extends StatefulWidget {
   VehiclePartMedia vehiclePartMedia;
   CommentsView({super.key, required this.vehiclePartMedia});
 
-  @override 
+  @override
   State<CommentsView> createState() => _CommentsViewState();
 }
 
-class _CommentsViewState extends State<CommentsView> with SingleTickerProviderStateMixin{
+class _CommentsViewState extends State<CommentsView>
+    with SingleTickerProviderStateMixin {
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
@@ -32,7 +33,7 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-       animationController =
+    animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     widget.vehiclePartMedia.comments ??= "";
     widget.vehiclePartMedia.images ??= [];
@@ -147,15 +148,15 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                             ],
                           ),
                         ),
-                        Gap(4), 
+                        Gap(4),
                         BlocConsumer<VehiclePartsInteractionBloc,
                             VehiclePartsInteractionBlocState>(
                           listener: (context, state) {
                             if (widget.vehiclePartMedia.images!.length == 3) {
-                             animationController.reset();
-                             animationController.stop();
+                              animationController.reset();
+                              animationController.stop();
                             } else {
-                             animationController.repeat();
+                              animationController.repeat();
                             }
                           },
                           builder: (context, state) {
@@ -192,7 +193,13 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                                               right: -14.0,
                                               child: IconButton(
                                                   onPressed: () {
-                                                    if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!
+                                                    if (context
+                                                            .read<
+                                                                VehiclePartsInteractionBloc>()
+                                                            .state
+                                                            .mapMedia[widget
+                                                                .vehiclePartMedia
+                                                                .name]!
                                                             .images !=
                                                         null) {
                                                       context
@@ -228,7 +235,7 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                         ),
                         Gap(2),
                         if (widget.vehiclePartMedia.images != null &&
-                           widget.vehiclePartMedia.images!.isNotEmpty)
+                            widget.vehiclePartMedia.images!.isNotEmpty)
                           InkWell(
                             radius: size.width * 0.06,
                             borderRadius: BorderRadius.circular(20),
@@ -253,12 +260,11 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                                 //use service/jobcard number
                                 context.read<VehiclePartsInteractionBloc>().add(
                                     SubmitBodyPartVehicleMediaEvent(
-                                            bodyPartName:
-                                                widget.vehiclePartMedia.name,
-                                            jobCardNo:'5'
-                                                // 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}'
-                                                )
-                                        as VehiclePartsInteractionBlocEvent);
+                                        bodyPartName:
+                                            widget.vehiclePartMedia.name,
+                                        jobCardNo: '5'
+                                        // 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}'
+                                        ) as VehiclePartsInteractionBlocEvent);
                               }
                             },
                             child: CircleAvatar(
@@ -309,11 +315,31 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                       return;
                     }
                     String message = "";
-                    if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.comments!.isNotEmpty &&
-                        context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isEmpty) {
+                    if (context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .comments!
+                            .isNotEmpty &&
+                        context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .images!
+                            .isEmpty) {
                       message = 'Please add atleat one image';
-                    } else if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.comments!.isEmpty &&
-                        context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isNotEmpty) {
+                    } else if (context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .comments!
+                            .isEmpty &&
+                        context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .images!
+                            .isNotEmpty) {
                       message = 'Please add comments';
                     } else if (context
                             .read<VehiclePartsInteractionBloc>()
@@ -348,13 +374,12 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                     //     .selectedGeneralBodyPart = "";
                   },
                   padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
+                  constraints: const BoxConstraints(),
                   icon: Icon(
                     Icons.cancel,
                     color: Colors.red,
                     size: size.width * 0.06,
                   )))
-        
         ],
       ),
     );

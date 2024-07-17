@@ -1,5 +1,4 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
-import 'package:dms/providers/home_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +32,7 @@ class DMSCustomWidgets {
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
         elevation: 3,
-        color: Color.fromARGB(255, 250, 239, 239),
+        color: const Color.fromARGB(255, 250, 239, 239),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
           suggestionsController: suggestionsController,
@@ -45,8 +44,10 @@ class DMSCustomWidgets {
               child: TextFormField(
                 onChanged: onChanged,
                 onTap: () {
-                  Provider.of<HomeProvider>(context, listen: false)
-                      .setFocusNode(focusNode, scrollController, context);
+                  context.read<MultiBloc>().add(OnFocusChange(
+                      focusNode: focusNode,
+                      scrollController: scrollController,
+                      context: context));
                 },
                 cursorColor: Colors.black,
                 inputFormatters: [
@@ -54,8 +55,8 @@ class DMSCustomWidgets {
                 ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16, vertical: size.height * 0.016),
+                  contentPadding: EdgeInsets.only(
+                      left: 16, right: 16, bottom: size.height * 0.016),
                   suffixIcon: icon,
                   hintText: hint,
                   hintStyle: const TextStyle(
@@ -80,15 +81,13 @@ class DMSCustomWidgets {
           },
           itemBuilder: (context, suggestion) => Skeletonizer(
             enabled: isLoading,
-            child: SizedBox(
+            child: Container(
               height: size.height * 0.038,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Text(
-                  suggestion,
-                  style: TextStyle(fontSize: isMobile ? 13 : 14),
-                ),
+              color: const Color.fromARGB(255, 250, 239, 239),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: Text(
+                suggestion,
+                style: TextStyle(fontSize: isMobile ? 13 : 14),
               ),
             ),
           ),
@@ -122,7 +121,7 @@ class DMSCustomWidgets {
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
         elevation: 3,
-        color: Color.fromARGB(255, 250, 239, 239),
+        color: const Color.fromARGB(255, 250, 239, 239),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Transform(
@@ -134,8 +133,10 @@ class DMSCustomWidgets {
             inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
             onTap: () {
-              Provider.of<HomeProvider>(context, listen: false)
-                  .setFocusNode(focusNode!, scrollController, context);
+              context.read<MultiBloc>().add(OnFocusChange(
+                  focusNode: focusNode!,
+                  scrollController: scrollController,
+                  context: context));
             },
             key: key,
             validator: validator,
@@ -182,7 +183,7 @@ class DMSCustomWidgets {
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
         elevation: 3,
-        color: Color.fromARGB(255, 250, 239, 239),
+        color: const Color.fromARGB(255, 250, 239, 239),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: TextFormField(
@@ -267,7 +268,7 @@ class DMSCustomWidgets {
         },
         child: Card(
             elevation: 3,
-            color: Color.fromARGB(255, 250, 239, 239),
+            color: const Color.fromARGB(255, 250, 239, 239),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
             child: Padding(
@@ -395,10 +396,9 @@ class DMSCustomWidgets {
               ],
               cancelButton: TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text(
+                child: const Text(
                   'Set',
-                  style:
-                      TextStyle(color: const Color.fromARGB(255, 145, 19, 19)),
+                  style: TextStyle(color: Color.fromARGB(255, 145, 19, 19)),
                 ),
               ),
             ),

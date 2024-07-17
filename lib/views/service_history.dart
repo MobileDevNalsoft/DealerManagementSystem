@@ -25,10 +25,10 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   @override
   void initState() {
     super.initState();
-    serviceState.copyWith(status: ServiceStatus.initial);
+    serviceState.copyWith(getServiceStatus: GetServiceStatus.initial);
     context.read<ServiceBloc>().add(GetServiceHistory(query: '2022'));
-    print('got service list');
-    context.read<ServiceBloc>().state.status = ServiceStatus.initial;
+    context.read<ServiceBloc>().state.getServiceStatus =
+        GetServiceStatus.initial;
   }
 
   // @override
@@ -111,16 +111,16 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                 data: SfDataGridThemeData.raw(
                     headerColor: Colors.white,
                     currentCellStyle: const DataGridCurrentCellStyle(
-                      borderColor: Colors.red,
+                      borderColor: Colors.black,
                       borderWidth: 2,
                     )),
                 child: BlocConsumer<ServiceBloc, ServiceState>(
                   listener: (context, state) {
-                    if (state.status == ServiceStatus.success) {}
+                    if (state.getServiceStatus == GetServiceStatus.success) {}
                   },
                   builder: (context, state) {
-                    switch (state.status) {
-                      case ServiceStatus.loading:
+                    switch (state.getServiceStatus) {
+                      case GetServiceStatus.loading:
                         return Transform(
                           transform: Matrix4.translationValues(0, -40, 0),
                           child: Center(
@@ -130,7 +130,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                                 width: size.width * 0.6),
                           ),
                         );
-                      case ServiceStatus.success:
+                      case GetServiceStatus.success:
                         return Expanded(
                           flex: 1,
                           child: SfDataGrid(
@@ -151,7 +151,6 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                             allowFiltering: true,
                             editingGestureType: EditingGestureType.doubleTap,
                             onCellDoubleTap: (details) {
-                              print(details.rowColumnIndex);
                               dataGridController
                                   .beginEdit(details.rowColumnIndex);
                             },
@@ -233,7 +232,7 @@ class ServiceHistoryDataSource extends DataGridSource {
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(
                 columnName: 'sno',
-                value: e.sNo,
+                value: serviceHistoryData.indexOf(e),
               ),
               DataGridCell<String>(columnName: 'date', value: e.scheduleDate),
               DataGridCell<String>(
@@ -254,7 +253,6 @@ class ServiceHistoryDataSource extends DataGridSource {
     return DataGridRowAdapter(
         color: Colors.white,
         cells: row.getCells().map<Widget>((e) {
-          print("e ${e.columnName}");
           return e.columnName == "Job Card no."
               ? InkWell(
                   onTap: () {

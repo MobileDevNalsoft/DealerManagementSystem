@@ -44,3 +44,13 @@ class InspectionJsonAdded extends MultiBlocEvent {
   final String jobCardNo;
   InspectionJsonAdded({required this.jobCardNo});
 }
+
+class OnFocusChange extends MultiBlocEvent {
+  final FocusNode focusNode;
+  final ScrollController scrollController;
+  final BuildContext context;
+  OnFocusChange(
+      {required this.focusNode,
+      required this.scrollController,
+      required this.context});
+}

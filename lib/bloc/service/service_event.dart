@@ -20,7 +20,19 @@ class GetJobCards extends ServiceEvent {
 }
 
 class JobCardStatusUpdated extends ServiceEvent {
-  JobCardStatusUpdated();
+  final String? jobCardStatus;
+  final String? jobCardNo;
+  JobCardStatusUpdated({this.jobCardStatus, this.jobCardNo});
 }
 
 class GetServiceLocations extends ServiceEvent {}
+
+class BottomNavigationBarClicked extends ServiceEvent {
+  final int? index;
+  BottomNavigationBarClicked({this.index});
+}
+
+class DropDownOpenClose extends ServiceEvent {
+  final bool? isOpen;
+  DropDownOpenClose({this.isOpen});
+}
