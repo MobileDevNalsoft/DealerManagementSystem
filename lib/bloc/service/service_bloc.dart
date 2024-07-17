@@ -102,7 +102,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 jobType: service['job_type']));
           }
           emit(state.copyWith(
-              jobCardStatus: JobCardStatus.success, jobCards: jobCards));
+              jobCardStatus: JobCardStatus.success,status: ServiceStatus.initial, jobCards: jobCards));
+              
         } else {
           emit(state.copyWith(jobCardStatus: JobCardStatus.failure));
         }

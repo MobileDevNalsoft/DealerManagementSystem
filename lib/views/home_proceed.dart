@@ -14,8 +14,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:customs/src.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:slider_button/slider_button.dart';
+import 'package:stacked/stacked.dart';
 
 import '../logger/logger.dart';
 
@@ -126,15 +130,15 @@ class _HomeProceedView extends State<HomeProceedView> {
             width: size.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  // Color.fromARGB(255, 255, 231, 231),
-                 Color.fromARGB(255, 241, 193, 193),
+                  colors: [
+                    // Color.fromARGB(255, 255, 231, 231),
+                    Color.fromARGB(255, 241, 193, 193),
                     Color.fromARGB(255, 235, 136, 136),
                     Color.fromARGB(255, 226, 174, 174)
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.01, 0.35, 1]),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.01, 0.35, 1]),
             ),
             child: ListView(
               controller: scrollController,
@@ -316,6 +320,7 @@ class _HomeProceedView extends State<HomeProceedView> {
                             jobTypeController.text = "";
                             custConcernsController.text = "";
                             remarksController.text = "";
+                            print("object after success" );
                             Flushbar(
                                     flushbarPosition: FlushbarPosition.TOP,
                                     backgroundColor: Colors.green,
@@ -350,106 +355,199 @@ class _HomeProceedView extends State<HomeProceedView> {
                         }
                       },
                       builder: (context, state) {
-                        return state.status == ServiceStatus.loading
-                            ? const CircularProgressIndicator()
-                            : BlocBuilder<MultiBloc, MultiBlocState>(
+                        return  BlocBuilder<MultiBloc, MultiBlocState>(
                                 builder: (context, state) {
-                                  return ElevatedButton(
-                                      onPressed: () {
-                                        bookingFocus.unfocus();
-                                        altContFocus.unfocus();
-                                        spFocus.unfocus();
-                                        bayFocus.unfocus();
-                                        jobTypeFocus.unfocus();
-                                        custConcernsFocus.unfocus();
-                                        remarksFocus.unfocus();
-                                        print(jobTypeController.text);
+                                 return CustomSliderButton(context:context,size:size,
+                                 sliderStatus: context.watch<ServiceBloc>().state.status!,
+                                 label: Text("Proceed to receive",style: TextStyle(
+                                          color: Color(0xff4a4a4a),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 17),), icon:Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: Color.fromARGB(255, 145, 19, 19),
+                                    ),  onDismissed: () async {
+                                      bookingFocus.unfocus();
+                                      altContFocus.unfocus();
+                                      spFocus.unfocus();
+                                      bayFocus.unfocus();
+                                      jobTypeFocus.unfocus();
+                                      custConcernsFocus.unfocus();
+                                      remarksFocus.unfocus();
+                                      print(jobTypeController.text);
 
-                                        String? message = _bookingSourceValidator(
-                                                bookingController.text) ??
-                                            (altContController.text.isEmpty
-                                                ? "Alternate Contact Person cannot be empty"
-                                                : null) ??
-                                            _altPersonContactNoValidation(
-                                                altContPhoneNoController
-                                                    .text) ??
-                                            _salesPersonValidator(
-                                                spController.text,
-                                                (state.salesPersons ?? [])
-                                                    .map((e) => e.empName)
-                                                    .toList()) ??
-                                            _bayValidator(
-                                                bayController.text, bayList) ??
-                                            _jobTypeValidator(
-                                                jobTypeController.text,
-                                                jobTypeList);
+                                      String? message = _bookingSourceValidator(
+                                              bookingController.text) ??
+                                          (altContController.text.isEmpty
+                                              ? "Alternate Contact Person cannot be empty"
+                                              : null) ??
+                                          _altPersonContactNoValidation(
+                                              altContPhoneNoController.text) ??
+                                          _salesPersonValidator(
+                                              spController.text,
+                                              (state.salesPersons ?? [])
+                                                  .map((e) => e.empName)
+                                                  .toList()) ??
+                                          _bayValidator(
+                                              bayController.text, bayList) ??
+                                          _jobTypeValidator(
+                                              jobTypeController.text,
+                                              jobTypeList);
 
-                                        if (message != null) {
-                                          Flushbar(
-                                            flushbarPosition:
-                                                FlushbarPosition.TOP,
-                                            backgroundColor: Colors.red,
-                                            message: message,
-                                            duration:
-                                                const Duration(seconds: 2),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            margin: EdgeInsets.only(
-                                                top: size.height * 0.01,
-                                                left: isMobile
-                                                    ? 10
-                                                    : size.width * 0.8,
-                                                right: size.width * 0.03),
-                                          ).show(context);
-                                        } else {
-                                          Service service =
-                                              Service.fromJson(widget.homeData);
+                                      if (message != null) {
+                                        Flushbar(
+                                          flushbarPosition:
+                                              FlushbarPosition.TOP,
+                                          backgroundColor: Colors.red,
+                                          message: message,
+                                          duration: const Duration(seconds: 2),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          margin: EdgeInsets.only(
+                                              top: size.height * 0.01,
+                                              left: isMobile
+                                                  ? 10
+                                                  : size.width * 0.8,
+                                              right: size.width * 0.03),
+                                        ).show(context);
+                                      } else {
+                                        Service service =
+                                            Service.fromJson(widget.homeData);
 
-                                          Service finalService = Service(
-                                              registrationNo:
-                                                  service.registrationNo,
-                                              location: service.location,
-                                              customerName:
-                                                  service.customerName,
-                                              scheduleDate:
-                                                  service.scheduleDate,
-                                              kms: service.kms,
-                                              bookingSource:
-                                                  bookingController.text,
-                                              alternateContactPerson:
-                                                  altContController.text,
-                                              alternatePersonContactNo:
-                                                  int.parse(
-                                                      altContPhoneNoController
-                                                          .text),
-                                              salesPerson: spController.text
-                                                  .split('-')[0],
-                                              bay: bayController.text,
-                                              jobType: jobTypeController.text,
-                                              jobCardNo:
-                                                  'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
-                                              customerConcerns:
-                                                  custConcernsController.text,
-                                              remarks: remarksController.text);
+                                        Service finalService = Service(
+                                            registrationNo:
+                                                service.registrationNo,
+                                            location: service.location,
+                                            customerName: service.customerName,
+                                            scheduleDate: service.scheduleDate,
+                                            kms: service.kms,
+                                            bookingSource:
+                                                bookingController.text,
+                                            alternateContactPerson:
+                                                altContController.text,
+                                            alternatePersonContactNo: int.parse(
+                                                altContPhoneNoController.text),
+                                            salesPerson:
+                                                spController.text.split('-')[0],
+                                            bay: bayController.text,
+                                            jobType: jobTypeController.text,
+                                            jobCardNo:
+                                                'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
+                                            customerConcerns:
+                                                custConcernsController.text,
+                                            remarks: remarksController.text);
 
-                                          Log.d(finalService.toJson());
-                                          context.read<ServiceBloc>().add(
-                                              ServiceAdded(
-                                                  service: finalService));
-                                        }
-                                      },
-                                      child: const Text(
-                                        'proceed to recieve',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                          minimumSize: const Size(140.0, 35.0),
-                                          padding: EdgeInsets.zero,
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 145, 19, 19),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5))));
+                                        Log.d(finalService.toJson());
+                                        context.read<ServiceBloc>().add(
+                                            ServiceAdded(
+                                                service: finalService));
+                                      }
+                                    
+                                    },
+                                    );
+
+
+
+                                  // return SliderButton(
+                                  //   buttonSize: size.width*0.118,
+                                  //   width: size.width*0.58,
+                                  //   height: size.height*0.065,
+                                  //   // disable: false,
+                                  //   dismissThresholds: 0.5,
+                                  //   // vibrationFlag: true,
+                                  //   backgroundColor:Color.fromARGB(255, 241, 90, 90),
+                                  //   icon: Icon(
+                                  //     Icons.arrow_forward_ios_rounded,
+                                  //     color: Color.fromARGB(255, 145, 19, 19),
+                                  //   ),
+                                  //   label: Text(
+                                  //     "Proceed to recieve",
+                                  //     style: TextStyle(
+                                  //         color: Color(0xff4a4a4a),
+                                  //         fontWeight: FontWeight.w500,
+                                  //         fontSize: 17),
+                                  //   ),
+                                  //   action: () async {
+                                  //     bookingFocus.unfocus();
+                                  //     altContFocus.unfocus();
+                                  //     spFocus.unfocus();
+                                  //     bayFocus.unfocus();
+                                  //     jobTypeFocus.unfocus();
+                                  //     custConcernsFocus.unfocus();
+                                  //     remarksFocus.unfocus();
+                                  //     print(jobTypeController.text);
+
+                                  //     String? message = _bookingSourceValidator(
+                                  //             bookingController.text) ??
+                                  //         (altContController.text.isEmpty
+                                  //             ? "Alternate Contact Person cannot be empty"
+                                  //             : null) ??
+                                  //         _altPersonContactNoValidation(
+                                  //             altContPhoneNoController.text) ??
+                                  //         _salesPersonValidator(
+                                  //             spController.text,
+                                  //             (state.salesPersons ?? [])
+                                  //                 .map((e) => e.empName)
+                                  //                 .toList()) ??
+                                  //         _bayValidator(
+                                  //             bayController.text, bayList) ??
+                                  //         _jobTypeValidator(
+                                  //             jobTypeController.text,
+                                  //             jobTypeList);
+
+                                  //     if (message != null) {
+                                  //       Flushbar(
+                                  //         flushbarPosition:
+                                  //             FlushbarPosition.TOP,
+                                  //         backgroundColor: Colors.red,
+                                  //         message: message,
+                                  //         duration: const Duration(seconds: 2),
+                                  //         borderRadius:
+                                  //             BorderRadius.circular(12),
+                                  //         margin: EdgeInsets.only(
+                                  //             top: size.height * 0.01,
+                                  //             left: isMobile
+                                  //                 ? 10
+                                  //                 : size.width * 0.8,
+                                  //             right: size.width * 0.03),
+                                  //       ).show(context);
+                                  //     } else {
+                                  //       Service service =
+                                  //           Service.fromJson(widget.homeData);
+
+                                  //       Service finalService = Service(
+                                  //           registrationNo:
+                                  //               service.registrationNo,
+                                  //           location: service.location,
+                                  //           customerName: service.customerName,
+                                  //           scheduleDate: service.scheduleDate,
+                                  //           kms: service.kms,
+                                  //           bookingSource:
+                                  //               bookingController.text,
+                                  //           alternateContactPerson:
+                                  //               altContController.text,
+                                  //           alternatePersonContactNo: int.parse(
+                                  //               altContPhoneNoController.text),
+                                  //           salesPerson:
+                                  //               spController.text.split('-')[0],
+                                  //           bay: bayController.text,
+                                  //           jobType: jobTypeController.text,
+                                  //           jobCardNo:
+                                  //               'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
+                                  //           customerConcerns:
+                                  //               custConcernsController.text,
+                                  //           remarks: remarksController.text);
+
+                                  //       Log.d(finalService.toJson());
+                                  //       await Future.delayed(Duration(seconds: 2));
+                                  //       context.read<ServiceBloc>().add(
+                                  //           ServiceAdded(
+                                  //               service: finalService));
+                                  //     }
+                                    
+                                  //     return false;
+                                  //   },
+                                  // );
+                                 
                                 },
                               );
                       },
@@ -588,5 +686,143 @@ class _HomeProceedView extends State<HomeProceedView> {
       return "Invalid Jpb Type";
     }
     return null;
+  }
+}
+
+
+
+class CustomSliderButton extends StatefulWidget {
+  final Size size;
+  final BuildContext context;
+  final Widget label;
+  final Widget icon;
+  final onDismissed;
+  ServiceStatus sliderStatus;
+   CustomSliderButton({
+    Key? key,
+    required this.size,
+    required this.context,
+    required this.label,
+    required this.icon,
+    required this.onDismissed,
+    this.sliderStatus=ServiceStatus.initial
+  }) : super(key: key);
+
+  @override
+  _CustomSliderButtonState createState() => _CustomSliderButtonState();
+}
+
+class _CustomSliderButtonState extends State<CustomSliderButton> {
+
+  late double _position ;
+  late double _startPosition;
+  late double _endPosition;
+
+
+
+  @override
+  void initState(){
+    super.initState();
+    print("stattus from init ${context.read<ServiceBloc>().state.status}");
+    _position =  widget.size.width*0.22;
+    _startPosition = widget.size.width*0.22;
+    _endPosition = widget.size.width*0.68;
+    
+    }
+
+
+  void _onPanStart(DragStartDetails details) {
+    // setState(() {
+    //   _isSliding = true;
+    // });
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    setState(() {
+      _position = details.localPosition.dx;
+      if (_position > _endPosition) {
+        _position = _endPosition;
+      }
+      else if(_position < _startPosition){
+        _position = _startPosition;
+      }
+    });
+  }
+
+  void _onPanEnd(DragEndDetails details) async{
+    if (_position <= widget.size.width /2) {
+      setState(() {
+      _position = _startPosition;
+      });
+       return;
+      }
+    await widget.onDismissed();
+    setState(() {
+        print("status from state ${context.read<ServiceBloc>().state.status}");  
+        if(context.read<ServiceBloc>().state.status==ServiceStatus.initial){
+        _position = _startPosition;
+        }
+         else if(context.read<ServiceBloc>().state.status==ServiceStatus.loading){
+            _position = _endPosition;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("status ${widget.sliderStatus}");
+    return GestureDetector(
+      onPanStart: _onPanStart,
+      onPanUpdate: _onPanUpdate,
+      onPanEnd: _onPanEnd,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+              color: Color.fromARGB(255, 235, 136, 136),),
+              width: widget.size.width*0.58,
+              height: 45,
+              child: Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Shimmer.fromColors(
+          baseColor: Colors.black,
+          highlightColor: Colors.grey.shade100,
+          enabled: true,
+          child: widget.label) ,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left:_position,
+            top:1.5,
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(40),
+              ),
+              child: Center(child: Stack(
+                children: [
+                  Center(child: (context.watch<ServiceBloc>().state.status==ServiceStatus.success)? Lottie.asset("assets/lottie/success.json",repeat: false): widget.icon),
+                  if(context.watch<ServiceBloc>().state.status==ServiceStatus.loading)Align(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(
+                      strokeWidth: widget.size.width*0.008,
+                      strokeCap: StrokeCap.round,
+                    ),
+                  )
+                ],
+              )),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
