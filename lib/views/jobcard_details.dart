@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'dart:convert';
+
+import 'package:flutter/material.dart'
+    hide BoxDecoration, BoxShadow, Stepper, Step;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 
 import '../models/services.dart';
+import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatelessWidget {
   JobCardDetails({super.key, required this.service});
@@ -13,6 +18,12 @@ class JobCardDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    int activeStep = service.status! == 'N'
+        ? 0
+        : service.status! == 'I'
+            ? 1
+            : 2;
 
     List<String> dmsFlow = [
       'Initiated',
@@ -28,6 +39,21 @@ class JobCardDetails extends StatelessWidget {
       'quality_check',
       'inspection_out',
       'completed'
+    ];
+
+    List<String> statusLines = [
+      'Job Card created on "Creation Date"',
+      'Vehicle Service is in progress',
+      'Quality Check is done',
+      'Inpection out is done',
+      'Service Completed'
+    ];
+
+    List<String> pendingStatusLines = [
+      '',
+      'Vehicle Service needs to be done',
+      'Quality Check needs to be done',
+      'Inpection out needs to be done'
     ];
 
     return SafeArea(
@@ -113,7 +139,8 @@ class JobCardDetails extends StatelessWidget {
                   Expanded(
                     child: Container(
                         margin: EdgeInsets.only(top: size.height * 0.04),
-                        width: size.width * 0.95,
+                        padding: EdgeInsets.only(top: size.height * 0.01),
+                        width: size.width * 0.93,
                         decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -127,56 +154,32 @@ class JobCardDetails extends StatelessWidget {
                                   offset: Offset(1, 1),
                                   spreadRadius: 10)
                             ]),
-                        child: SizedBox(
-                          child: EasyStepper(
-                              showTitle: true,
-                              activeStep: 1,
-                              direction: Axis.vertical,
-                              alignment: Alignment.center,
-                              enableStepTapping: false,
-                              showLoadingAnimation: false,
-                              defaultStepBorderType: BorderType.normal,
-                              padding: EdgeInsets.zero,
-                              fitWidth: true,
-                              showStepBorder: false,
-                              stepRadius: 25,
-                              lineStyle: const LineStyle(
-                                  lineType: LineType.normal,
-                                  finishedLineColor: Colors.green,
-                                  lineLength: 20,
-                                  lineSpace: 5,
-                                  lineWidth: 10,
-                                  unreachedLineColor: Colors.grey,
-                                  unreachedLineType: LineType.dotted),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'Status',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Gap(size.height * 0.01),
+                            Expanded(
+                                child: Stepper(
                               steps: dmsFlow
-                                  .map(
-                                    (e) => EasyStep(
-                                        customTitle: Transform(
-                                            transform:
-                                                Matrix4.translationValues(
-                                                    1, -60, 0),
-                                            child: Text(
-                                              e,
-                                              style: TextStyle(fontSize: 10),
-                                              textAlign: TextAlign.center,
-                                            )),
-                                        customStep: CircleAvatar(
-                                          backgroundColor:
-                                              dmsFlow.indexOf(e) < 1
-                                                  ? Colors.lightGreen.shade300
-                                                  : dmsFlow.indexOf(e) == 1
-                                                      ? Colors.amber.shade200
-                                                      : Colors.grey.shade300,
-                                          maxRadius: 50,
-                                          child: Image.asset(
-                                            'assets/images/${icons[dmsFlow.indexOf(e)]}.png',
-                                            fit: BoxFit.cover,
-                                            height: 30,
-                                            width: 30,
-                                          ),
-                                        )),
-                                  )
-                                  .toList()),
+                                  .map((e) => Step(
+                                        activeStep: activeStep,
+                                        currentStep: dmsFlow.indexOf(e),
+                                        icons: icons,
+                                        stepperLength: dmsFlow.length,
+                                        title: e,
+                                        statusLines: statusLines,
+                                        pendingStatusLines: pendingStatusLines,
+                                        jobCardNo: service.jobCardNo!,
+                                      ))
+                                  .toList(),
+                            )),
+                          ],
                         )),
                   )
                 ],
@@ -192,12 +195,14 @@ class JobCardDetails extends StatelessWidget {
         children: [
           Text(
             key,
-            style: const TextStyle(fontFamily: 'Gilroy'),
+            style: const TextStyle(fontFamily: 'Gilroy', fontSize: 13),
           ),
           Text(
             value,
             style: const TextStyle(
-                fontFamily: 'Gilroy', fontWeight: FontWeight.bold),
+                fontFamily: 'Gilroy',
+                fontWeight: FontWeight.bold,
+                fontSize: 13),
           )
         ]);
   }

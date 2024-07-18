@@ -443,7 +443,7 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     // size will be of the container's
-    print('height ${size.height} width ${size.width}');
+    // print('height ${size.height} width ${size.width}');
     Path path = Path();
 
     const minSize = 50.0;
@@ -502,17 +502,6 @@ class JobCardPage extends StatelessWidget {
               ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                List<String> dropDownList = ['N', 'I', 'CL', 'C'];
-
-                if (state.getJobCardStatus == GetJobCardStatus.success &&
-                    index < state.jobCards!.length) {
-                  if (state.jobCards![index].status == 'N') {
-                    dropDownList = ['N', 'I', 'C'];
-                  } else if (state.jobCards![index].status == 'I') {
-                    dropDownList = ['I', 'CL', 'C'];
-                  }
-                }
-
                 return state.getJobCardStatus == GetJobCardStatus.success
                     ? index >= state.jobCards!.length
                         ? SizedBox(
@@ -561,138 +550,6 @@ class JobCardPage extends StatelessWidget {
                                                 builder: (_) => JobCardDetails(
                                                     service: state
                                                         .jobCards![index])));
-                                        // showModalBottomSheet(
-                                        //   context: context,
-                                        //   backgroundColor: const Color.fromARGB(
-                                        //       255, 236, 224, 224),
-                                        //   showDragHandle: true,
-                                        //   sheetAnimationStyle: AnimationStyle(
-                                        //       curve: Curves.easeIn,
-                                        //       duration: const Duration(
-                                        //           milliseconds: 600),
-                                        //       reverseCurve: Curves.easeOut,
-                                        //       reverseDuration: const Duration(
-                                        //           milliseconds: 300)),
-                                        //   useSafeArea: false,
-                                        //   builder: (context) {
-                                        //     return Container(
-                                        //       height: size.height * 0.26,
-                                        //       width: size.width * 0.9,
-                                        //       alignment: Alignment.topCenter,
-                                        //       padding: EdgeInsets.only(
-                                        //           left: size.width * 0.08),
-                                        //       child: Row(
-                                        //         mainAxisAlignment:
-                                        //             MainAxisAlignment.center,
-                                        //         mainAxisSize: MainAxisSize.min,
-                                        //         crossAxisAlignment:
-                                        //             CrossAxisAlignment.start,
-                                        //         children: [
-                                        //           SizedBox(
-                                        //             width: size.width * 0.3,
-                                        //             child: Column(
-                                        //               mainAxisAlignment:
-                                        //                   MainAxisAlignment
-                                        //                       .start,
-                                        //               mainAxisSize:
-                                        //                   MainAxisSize.min,
-                                        //               crossAxisAlignment:
-                                        //                   CrossAxisAlignment
-                                        //                       .start,
-                                        //               children: [
-                                        //                 const Text(
-                                        //                     'Job Card No.'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(
-                                        //                     'Vehicle Registration No.'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text('Location'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text('Job Type'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(
-                                        //                     'Job Card Status')
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //           SizedBox(
-                                        //             width: size.width * 0.1,
-                                        //             child: Column(
-                                        //               mainAxisAlignment:
-                                        //                   MainAxisAlignment
-                                        //                       .start,
-                                        //               mainAxisSize:
-                                        //                   MainAxisSize.min,
-                                        //               crossAxisAlignment:
-                                        //                   CrossAxisAlignment
-                                        //                       .center,
-                                        //               children: [
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height * 0.03),
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height *
-                                        //                     0.035),
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(':'),
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //           SizedBox(
-                                        //             width: size.width * 0.4,
-                                        //             child: Column(
-                                        //               mainAxisAlignment:
-                                        //                   MainAxisAlignment
-                                        //                       .start,
-                                        //               mainAxisSize:
-                                        //                   MainAxisSize.min,
-                                        //               crossAxisAlignment:
-                                        //                   CrossAxisAlignment
-                                        //                       .start,
-                                        //               children: [
-                                        //                 Text(
-                                        //                   state.jobCards![index]
-                                        //                       .jobCardNo!,
-                                        //                 ),
-                                        //                 Gap(size.height * 0.03),
-                                        //                 Text(state
-                                        //                     .jobCards![index]
-                                        //                     .registrationNo!),
-                                        //                 Gap(size.height *
-                                        //                     0.035),
-                                        //                 Text(
-                                        //                     state
-                                        //                         .jobCards![
-                                        //                             index]
-                                        //                         .location!,
-                                        //                     maxLines: 2,
-                                        //                     overflow:
-                                        //                         TextOverflow
-                                        //                             .ellipsis),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 Text(
-                                        //                     state
-                                        //                         .jobCards![
-                                        //                             index]
-                                        //                         .jobType!,
-                                        //                     maxLines: 2,
-                                        //                     overflow:
-                                        //                         TextOverflow
-                                        //                             .ellipsis),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 Text(state
-                                        //                     .jobCards![index]
-                                        //                     .status!),
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //         ],
-                                        //       ),
-                                        //     );
-                                        //   },
-                                        // );
                                       },
                                       child: Text(
                                         textAlign: TextAlign.center,
@@ -714,7 +571,7 @@ class JobCardPage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     height: size.height * 0.05,
-                                    width: size.width * 0.39,
+                                    width: size.width * 0.398,
                                     decoration: const BoxDecoration(
                                         border: Border.symmetric(
                                             horizontal: BorderSide(
@@ -737,8 +594,8 @@ class JobCardPage extends StatelessWidget {
                                     height: size.height * 0.05,
                                     width: size.width * 0.25,
                                     decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 2, color: Colors.black12),
+                                        border:
+                                            Border.all(color: Colors.black12),
                                         borderRadius: const BorderRadius.only(
                                             topRight: Radius.circular(10),
                                             bottomRight: Radius.circular(10))),

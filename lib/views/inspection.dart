@@ -141,7 +141,7 @@ class _InspectionViewState extends State<InspectionView> {
                     Gap(size.height * 0.01),
                     Expanded(
                       child: SizedBox(
-                        width: size.width * 0.95,
+                        width: size.width,
                         child: PageView.builder(
                           itemCount: state.json!.length,
                           controller: _pageController,

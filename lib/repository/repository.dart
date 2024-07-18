@@ -112,6 +112,22 @@ class Repository {
     }
   }
 
+  Future<Map<String, dynamic>> getInspection(String jobCardNo) async {
+    ApiResponse apiResponse = await _api
+        .get('getInspection', queryParameters: {"jobCardNo": jobCardNo});
+
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        return jsonDecode(apiResponse.response!.data);
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
   Future<List<dynamic>> getSalesPersons(String searchText) async {
     print(searchText);
     ApiResponse apiResponse = await _api

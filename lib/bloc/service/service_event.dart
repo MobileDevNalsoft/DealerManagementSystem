@@ -36,3 +36,8 @@ class DropDownOpenClose extends ServiceEvent {
   final bool? isOpen;
   DropDownOpenClose({this.isOpen});
 }
+
+class GetInspectionDetails extends ServiceEvent {
+  final String? jobCardNo;
+  GetInspectionDetails({this.jobCardNo});
+}

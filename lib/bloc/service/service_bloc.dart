@@ -23,6 +23,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<JobCardStatusUpdated>(_onJobCardStatusUpdated);
     on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
     on<DropDownOpenClose>(_onDropDownOpenClose);
+    on<GetInspectionDetails>(_onGetInspectionDetails);
   }
 
   final Repository _repo;
@@ -131,7 +132,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(getJobCardStatus: GetJobCardStatus.loading));
     await _repo.getHistory(event.query!, 0).then(
       (json) {
-        print('json $json');
         if (json['response_code'] == 200) {
           List<Service> jobCards = [];
           for (Map<String, dynamic> service in json['data']) {
@@ -153,6 +153,29 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     ).onError(
       (error, stackTrace) {
         emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
+      },
+    );
+  }
+
+  Future<void> _onGetInspectionDetails(
+      GetInspectionDetails event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(getInspectionStatus: GetInspectionStatus.loading));
+    print('emitted');
+    await _repo.getInspection(event.jobCardNo!).then(
+      (json) {
+        print('json $json');
+        if (json['response_code'] == 200) {
+          emit(state.copyWith(
+              getInspectionStatus: GetInspectionStatus.success,
+              inspectionDetails: json));
+        } else {
+          emit(
+              state.copyWith(getInspectionStatus: GetInspectionStatus.failure));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(getInspectionStatus: GetInspectionStatus.failure));
       },
     );
   }
