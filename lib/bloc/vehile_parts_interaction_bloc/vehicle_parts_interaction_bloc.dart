@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'vehicle_parts_interaction_event.dart';
 part 'vehicle_parts_interaction_state.dart';
@@ -29,6 +31,10 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
         as EventHandler<RemoveImageEvent, VehiclePartsInteractionBlocState>);
     on<SubmitBodyPartVehicleMediaEvent>(_onSubmitBodyPartVehicleMedia as EventHandler<
       SubmitBodyPartVehicleMediaEvent, VehiclePartsInteractionBlocState>);
+    on<FetchVehicleMediaEvent>(_onFetchVehicleMedia as EventHandler<
+      FetchVehicleMediaEvent, VehiclePartsInteractionBlocState>);
+    on<ModifyAcceptedEvent>(_onModifyAcceptedStatus as EventHandler<ModifyAcceptedEvent, VehiclePartsInteractionBlocState>);
+
   }
 
   final Repository _repo;
@@ -172,7 +178,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
           };
           
         }
-      await _repo.addVehiclePartMedia(bodyPartData: partJson, id:'4', name:event.bodyPartName).then((onValue) {
+      await _repo.addVehiclePartMedia(bodyPartData: partJson, id:event.jobCardNo, name:event.bodyPartName).then((onValue) {
        state.mapMedia[event.bodyPartName]!.isUploaded=true;
         emit(
             state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
@@ -187,4 +193,37 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
         },
       );
   }
+
+  void _onFetchVehicleMedia( FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState> emit) async{
+emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.loading));
+      Map<String,dynamic> imageMedia = jsonDecode(await  _repo.getImage(event.jobCardNo));
+    print(imageMedia);
+    // Directory dir =  await getTemporaryDirectory();
+    imageMedia.forEach((key, value) async{
+      List<XFile> images=[];
+      print('key $key value $value');
+      if(value != {}  && value["images"] != null && value["images"] != []){
+         print("images ${value["images"]}");
+      for(int i=0;i<value["images"].length;i++){
+        Directory tempDir = Directory('${(await getTemporaryDirectory()).path}/$key');
+    if (!await tempDir.exists()) {
+      await tempDir.create(recursive: true);
+    }
+    String fileName = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    File imageFile = File(fileName);
+    await imageFile.writeAsBytes(Base64Codec().decode(value["images"][i]));
+    images.add(XFile(fileName));
+        print("$key $fileName");
+      }}
+    state.mapMedia.putIfAbsent(key,()=>VehiclePartMedia(name: key,images: images,comments: value["comments"], isUploaded: false));
+    },);
+    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
+  }
+
+
+  void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState> emit){
+    state.mapMedia[event.bodyPartName]!.isAccepted= event.isAccepted;
+    emit(state.copyWith(state.mapMedia, state.status));
+  }
+
 }

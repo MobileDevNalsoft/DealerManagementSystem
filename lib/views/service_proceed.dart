@@ -129,8 +129,10 @@ class _HomeProceedView extends State<HomeProceedView> {
           ),
           centerTitle: true,
         ),
-        body: Stack(
-          children: [
+        body: 
+        // Stack(
+        //   children: [
+
             GestureDetector(
               onTap: () {
                 FocusScope.of(context).unfocus();
@@ -470,16 +472,17 @@ class _HomeProceedView extends State<HomeProceedView> {
                 
               
             ),),
-            if(context.watch<ServiceBloc>().state.serviceUploadStatus ==
-                ServiceUploadStatus.loading)
-              Container(
-                color: Colors.black54,
-                child: Center(
-                    child: Lottie.asset('assets/lottie/car_loading.json',
-                        height: size.height * 0.5, width: size.width * 0.6)),
-              ),
-          ],
-        ),
+            
+            // if(context.watch<ServiceBloc>().state.serviceUploadStatus ==
+            //     ServiceUploadStatus.loading)
+            //   Container(
+            //     color: Colors.black54,
+            //     child: Center(
+            //         child: Lottie.asset('assets/lottie/car_loading.json',
+            //             height: size.height * 0.5, width: size.width * 0.6)),
+            //   ),
+        //   ],
+        // ),
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
             ? Padding(
                 padding: EdgeInsets.only(
@@ -727,7 +730,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
               ),
               child: Center(child: Stack(
                 children: [
-                  Center(child: (context.watch<ServiceBloc>().state.serviceUploadStatus==ServiceUploadStatus.success)? Lottie.asset("assets/lottie/success.json",repeat: false): widget.icon),
+                  Center(child: (context.watch<ServiceBloc>().state.serviceUploadStatus==ServiceUploadStatus.success && _position==_endPosition)? Lottie.asset("assets/lottie/success.json",repeat: false): widget.icon),
                   if(context.watch<ServiceBloc>().state.serviceUploadStatus==ServiceUploadStatus.loading)Align(
                     alignment: Alignment.center,
                     child: CircularProgressIndicator(

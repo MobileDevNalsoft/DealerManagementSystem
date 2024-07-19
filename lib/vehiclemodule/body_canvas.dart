@@ -7,18 +7,18 @@ import 'package:touchable/touchable.dart';
 
 class BodyCanvas extends ViewModelWidget<BodySelectorViewModel> {
   final List<GeneralBodyPart>? generalParts;
-
-  BodyCanvas({super.key, this.generalParts});
+final List<GeneralBodyPart>? acceptedParts;
+  BodyCanvas({super.key, this.generalParts, this.acceptedParts});
 
   @override
   Widget build(BuildContext context, BodySelectorViewModel model) {
     return CanvasTouchDetector(
-      gesturesToOverride: [GestureType.onTapDown],
+      gesturesToOverride:  Provider.of<BodySelectorViewModel>(context,listen:true).isTapped==false?[GestureType.onTapDown]:[GestureType.onTapUp],
+
       builder: (context) => CustomPaint(
         painter: BodyPainter(
-            context: context, model: model, generalParts: generalParts),
+            context: context, model: model, generalParts: generalParts,acceptedParts: acceptedParts),
       ),
-      // gesturesToOverride: [GestureType.onTapDown],
     );
   }
 }

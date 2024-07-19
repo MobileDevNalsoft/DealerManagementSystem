@@ -233,7 +233,7 @@ class _CommentsViewState extends State<CommentsView>
                                 ));
                           },
                         ),
-                        Gap(2),
+                        Gap(8),
                         if (widget.vehiclePartMedia.images != null &&
                             widget.vehiclePartMedia.images!.isNotEmpty)
                           InkWell(
@@ -279,7 +279,8 @@ class _CommentsViewState extends State<CommentsView>
                               )),
                             ),
                           ),
-                        Gap(8)
+                        Text("Upload",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w600),),
+                        Gap(2)
                       ],
                     ),
                   ),

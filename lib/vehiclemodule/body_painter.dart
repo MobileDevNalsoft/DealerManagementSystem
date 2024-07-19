@@ -6,6 +6,9 @@ import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
 import 'package:touchable/touchable.dart';
 
@@ -13,12 +16,14 @@ class BodyPainter extends CustomPainter {
   final BuildContext context;
   final BodySelectorViewModel model;
   final List<GeneralBodyPart>? generalParts;
+  final List<GeneralBodyPart>? acceptedParts;
   String previousSelected = '';
   static int cnt = 0;
   BodyPainter({
     required this.context,
     required this.model,
     this.generalParts,
+     this.acceptedParts
   });
 
   @override
@@ -58,10 +63,8 @@ class BodyPainter extends CustomPainter {
       matrix4.translate(translateX, translateY);
       matrix4.scale(xScale, yScale);
     }
-    int count = 0;
 
     var myCanvas = TouchyCanvas(context, canvas);
-    bool isPathTapped = false;
 
     for (var muscle in generalParts!) {
       Path path = parseSvgPath(muscle.path);
@@ -102,8 +105,7 @@ class BodyPainter extends CustomPainter {
       } else if (["front_bumper", "rear_bumper"].contains(muscle.name)) {
         paint.color = Color.fromRGBO(133, 127, 127, 0.612);
       }
-      if (model.selectedGeneralBodyPart != null &&
-          model.selectedGeneralBodyPart == muscle.name) {
+      if (model.selectedGeneralBodyPart == muscle.name) {
         paint.color = Colors.white;
       }
 
@@ -111,31 +113,59 @@ class BodyPainter extends CustomPainter {
       //   path.transform(matrix4.storage),
       //   borderPaint,
       // );
-
+      
       myCanvas.drawPath(
         path.transform(matrix4.storage),
         paint,
-
+        
+      
         onTapDown: (details) {
-          count++;
-          cnt++;
           print("details ${details}");
-          if (!muscle.name.startsWith('text') && !isPathTapped) {
-            print(" name ${muscle.name}");
-            model.selectedGeneralBodyPart = muscle.name;
-            model.isTapped = true;
-          }
-        },
-        // onTapUp: (details) {
-        //   isPathTapped = false;
-        // },
-        // onSecondaryTapDown: (d) {
-        //   print(d);
-        // },
-      );
-    }
+         
+          if (!muscle.name.startsWith('text')) {
+            print(" name from painter${muscle.name} ${ Provider.of<BodySelectorViewModel>(context,listen:false).isTapped}");
 
-    print("count $cnt");
+             Provider.of<BodySelectorViewModel>(context,listen:false).selectedGeneralBodyPart =  muscle.name;
+             Provider.of<BodySelectorViewModel>(context,listen:false).isTapped = true;
+          }
+         
+        },
+        onTapUp: (details) {
+            print("outside if");
+            Provider.of<BodySelectorViewModel>(context,listen:false).isTapped=false;
+            Provider.of<BodySelectorViewModel>(context,listen:false).selectedGeneralBodyPart="";
+        },
+      );
+      
+      paint.color =ui.Color.fromARGB(255, 66, 255, 66);
+      if(context.read<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(muscle.name)){
+      
+        context.read<VehiclePartsInteractionBloc>().state.mapMedia.forEach((key,value){
+          if(context.read<VehiclePartsInteractionBloc>().state.mapMedia[muscle.name]!.isAccepted==true){
+          // Path path = parseSvgPath(acceptedParts!.where((test){if(test.name=="${muscle.name}_accept")return test;}).path);
+          myCanvas.drawPath(path.transform(matrix4.storage), paint,paintStyleForTouch: PaintingStyle.fill);
+          return;
+          }
+        });
+          
+      }
+      // Offset getPathCenterPoint(Path path) {
+      //   Rect bounds = path.getBounds();
+      //   return Offset(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+      // }      
+      // final icon = Icons.add;
+      // TextPainter textPainter = TextPainter(
+      //   textDirection: TextDirection.ltr,
+      // );
+      // textPainter.text = TextSpan(
+      //   text: String.fromCharCode(icon.codePoint),
+      //   style: TextStyle(
+      //     fontSize: 40.0,
+      //     fontFamily: icon.fontFamily,
+      //   ),
+      // );
+      // textPainter.layout();    
+    }
   }
 
   @override

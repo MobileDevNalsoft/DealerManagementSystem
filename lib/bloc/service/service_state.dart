@@ -58,7 +58,7 @@ final class ServiceState {
       JobCardStatusUpdate? jobCardStatusUpdate,
       bool? dropDownOpen,
       List<Service>? jobCards,
-      List<dynamic>? locations}) {
+      List<dynamic>? locations,  jobCardStatus}) {
     return ServiceState(
         getServiceStatus: getServiceStatus ?? this.getServiceStatus,
         getJobCardStatus: getJobCardStatus ?? this.getJobCardStatus,

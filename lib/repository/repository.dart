@@ -203,8 +203,8 @@ class Repository {
     }
   }
 
-  Future getImage() async {
-    ApiResponse apiResponse = await _api.get('getImage');
+  Future getImage(String jobCardNo) async {
+    ApiResponse apiResponse = await _api.get('getImage',queryParameters: {"jobCardNo":jobCardNo});
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
