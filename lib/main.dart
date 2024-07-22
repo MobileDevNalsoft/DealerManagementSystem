@@ -9,6 +9,7 @@ import 'package:dms/repository/repository.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/service_main.dart';
+import 'package:dms/views/test_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ void main() async {
         home: !sharedPreferences.containsKey('isLogged') ||
                 sharedPreferences.getBool('isLogged') == false
             ? const LoginView()
-            : const DashboardView(),
+            : const DribbleUI(),
         routes: {
           '/home': (context) => HomeView(),
         },
