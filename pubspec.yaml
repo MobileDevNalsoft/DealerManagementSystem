@@ -80,6 +80,7 @@ dependencies:
   clay_containers: ^0.3.4
   easy_stepper: ^0.8.5
   carousel_slider: ^4.2.1
+  image: ^4.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
