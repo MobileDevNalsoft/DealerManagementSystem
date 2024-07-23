@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:another_flushbar/flushbar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
@@ -9,19 +11,23 @@ import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'package:image/image.dart' as img;
 import '../bloc/service/service_bloc.dart';
 
 class QualityCheck extends StatefulWidget {
   BodySelectorViewModel model;
   final List<GeneralBodyPart>? generalParts;
   final List<GeneralBodyPart>? acceptedParts;
-  QualityCheck({super.key, required this.model, this.generalParts,this.acceptedParts});
+  final List<GeneralBodyPart>? rejectedParts;
+  final List<GeneralBodyPart>? pendingParts;
+  QualityCheck({super.key, required this.model, this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts});
   @override
   State<QualityCheck> createState() => _QualityCheckState();
 }
@@ -29,10 +35,13 @@ class QualityCheck extends StatefulWidget {
 class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderStateMixin {
   TextEditingController rejectionController = TextEditingController();
   FocusNode rejectionFocus = FocusNode();
+ 
+
   @override
   void initState() {
     super.initState();
     context.read<VehiclePartsInteractionBloc>().add(FetchVehicleMediaEvent(jobCardNo: "4"));
+   
   }
 
   @override
@@ -61,12 +70,14 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                           gradient: LinearGradient(
                               colors: [Color.fromARGB(255, 230, 119, 119), Color.fromARGB(255, 214, 207, 207), Color.fromARGB(255, 230, 119, 119)])),
                       child: BodyCanvas(
-                        generalParts: widget.generalParts,
-                        acceptedParts: widget.acceptedParts
-                      ),
+                        displayAcceptedStatus: true,
+                          generalParts: widget.generalParts,
+                          acceptedParts: widget.acceptedParts,
+                          rejectedParts: widget.rejectedParts,
+                          pendingParts: widget.pendingParts),
                     ),
                   ),
-                  Positioned(
+                  if(!Provider.of<BodySelectorViewModel>(context, listen: false).isTapped)Positioned(
                     bottom: 108,
                     left: 155,
                     child: SizedBox(
@@ -74,7 +85,32 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                       // width: size.width*0.2,
                       child: ElevatedButton(
                           onPressed: () {
-                            if (!Provider.of<BodySelectorViewModel>(context, listen: false).isTapped) {}
+                            String message="";
+                               for(var entry in context.read<VehiclePartsInteractionBloc>().state.mapMedia.entries) {
+                                if(entry.value.isAccepted==null){
+                                  message = "Please complete the quality check";
+                                }
+                                  else if(entry.value.isAccepted==false && entry.value.reasonForRejection!.isEmpty){
+                                   message = 'Please add rejection reasons for ${entry.key.toUpperCase()}';
+                                  }
+                                  if(message.isNotEmpty){
+                                   Flushbar(
+                                        flushbarPosition: FlushbarPosition.TOP,
+                                        backgroundColor: Colors.red,
+                                        message: message,
+                                        duration: const Duration(seconds: 2),
+                                        borderRadius: BorderRadius.circular(12),
+                                        margin: EdgeInsets.only(
+                                            top: 24,
+                                            left: isMobile
+                                                ? 10
+                                                : size.width * 0.8,
+                                            right: 10))
+                                    .show(context);}
+                                   
+                               }
+                                context
+                          .read<VehiclePartsInteractionBloc>().add(SubmitQualityCheckStatusEvent(jobCardNo: "5"));
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color.fromARGB(255, 145, 19, 19), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
@@ -92,6 +128,9 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                           .containsKey(Provider.of<BodySelectorViewModel>(context, listen: true).selectedGeneralBodyPart))
                     Center(
                       child: DraggableScrollableSheet(
+                        snap: true,
+                        shouldCloseOnMinExtent: true,
+                        minChildSize: 0.25,
                         maxChildSize: context
                                         .watch<VehiclePartsInteractionBloc>()
                                         .state
@@ -340,11 +379,14 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                 }
                                               },
                                             ),
-                                             if (context
+                                          if (context
                                                   .read<VehiclePartsInteractionBloc>()
                                                   .state
                                                   .mapMedia[Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart] !=
-                                              null)SizedBox(height: 40,)
+                                              null)
+                                            SizedBox(
+                                              height: 40,
+                                            )
                                         ],
                                       ),
                                     ),
@@ -467,14 +509,22 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
       });
       return;
     }
-    // await widget.onDismissed();
-    setState(() {
-      if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
+    else {
+      setState(() {
         _position = _startPosition;
-      } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
-        _position = _rightPosition;
-      }
-    });
+      context
+            .read<VehiclePartsInteractionBloc>()
+            .add(ModifyAcceptedEvent(bodyPartName: Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart, isAccepted: null));
+      });
+    }
+    // await widget.onDismissed();
+    // setState(() {
+    //   if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
+    //     _position = _startPosition;
+    //   } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
+    //     _position = _rightPosition;
+    //   }
+    // });
   }
 
   @override

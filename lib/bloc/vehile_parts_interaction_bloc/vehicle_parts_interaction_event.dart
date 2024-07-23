@@ -39,6 +39,10 @@ class FetchVehicleMediaEvent extends VehiclePartsInteractionBlocEvent{
 
 class ModifyAcceptedEvent extends VehiclePartsInteractionBlocEvent{
   String bodyPartName;
-  bool isAccepted;
+  bool? isAccepted;
   ModifyAcceptedEvent({required this.bodyPartName,required this.isAccepted});
+}
+class SubmitQualityCheckStatusEvent extends VehiclePartsInteractionBlocEvent{
+  String jobCardNo;
+  SubmitQualityCheckStatusEvent({required this.jobCardNo});
 }

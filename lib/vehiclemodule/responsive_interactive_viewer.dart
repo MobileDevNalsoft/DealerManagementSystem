@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
@@ -6,10 +9,10 @@ import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-
 import '../bloc/service/service_bloc.dart';
 
 class CustomDetector extends StatefulWidget {
@@ -23,18 +26,15 @@ class CustomDetector extends StatefulWidget {
 
 class _CustomDetectorState extends State<CustomDetector>
     with SingleTickerProviderStateMixin {
+
+
   @override
   void initState() {
     super.initState();
-
-    // widget.generalParts!.forEach((value) {
-    //   if (!value.name.startsWith('text')) {
-    //     context
-    //         .read<VehiclePartsInteractionBloc>()
-    //         .add(AddCommentsEvent(name: value.name));
-    //   }
-    // });
+    
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
