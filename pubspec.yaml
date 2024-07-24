@@ -75,10 +75,15 @@ dependencies:
   permission_handler: ^11.3.1
   connectivity_plus: ^6.0.3
   circle_nav_bar: ^2.0.1+1
+  slider_button: ^2.1.0
+  shimmer: ^3.0.0
   flutter_neumorphic: ^3.2.0
   flutter_inset_box_shadow: ^1.0.8
   clay_containers: ^0.3.4
   easy_stepper: ^0.8.5
+  carousel_slider: ^4.2.1
+  image: ^4.2.0
+  photo_view: ^0.15.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -106,6 +111,7 @@ flutter:
     - assets/images/
     - assets/lottie/
     - assets/jsons/
+    - assets/rive/
 
   #   - images/a_dot_ham.jpeg
 

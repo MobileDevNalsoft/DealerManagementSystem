@@ -1,6 +1,6 @@
 part of 'vehicle_parts_interaction_bloc.dart';
 
-enum VehiclePartsInteractionStatus{initial, loading, success, failure}
+enum VehiclePartsInteractionStatus{initial, loading, success, failure, rebuild}
 
 @immutable
  class VehiclePartsInteractionBlocState {

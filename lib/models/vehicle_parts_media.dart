@@ -6,5 +6,7 @@ class VehiclePartMedia{
   String? comments;
   List<XFile>? images;
   bool isUploaded;
-  VehiclePartMedia({required this.name,this.comments,this.images,required this.isUploaded});
+  bool? isAccepted;
+  String? reasonForRejection;
+  VehiclePartMedia({required this.name,this.comments,this.images,required this.isUploaded,this.isAccepted,this.reasonForRejection=""});
 }

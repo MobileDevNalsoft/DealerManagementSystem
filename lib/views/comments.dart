@@ -88,90 +88,64 @@ class _CommentsViewState extends State<CommentsView>
                           margin:
                               EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                           height: size.height * 0.1,
-                          child: TextFormField(
-                            key: _formKey,
-                            focusNode: commentsFocus,
-                            controller: commentsController,
-                            maxLines: 10,
-                            decoration: InputDecoration(
-                                suffixIcon: IconButton(
+                          child: Stack(
+                            children: [
+                              TextFormField(
+                                key: _formKey,
+                                focusNode: commentsFocus,
+                                controller: commentsController,
+                                maxLines: 10,
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(fontSize: 14),
+                                    filled: true,
+                                    contentPadding:
+                                        EdgeInsets.only(left: 14, top: 14),
+                                    hintText: "Comments",
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(16))),
+                                onChanged: (value) {
+                                  context.read<VehiclePartsInteractionBloc>().add(
+                                      AddCommentsEvent(
+                                          name: widget.vehiclePartMedia.name,
+                                          comments: value));
+                                },
+                              ),
+                               Align(
+                                alignment: Alignment.bottomRight,
+                                 child: IconButton(
                                     padding: EdgeInsets.zero,
-                                    onPressed: () async {
-                                      commentsFocus.unfocus();
-                                      if (widget
-                                              .vehiclePartMedia.images!.length <
-                                          3) {
-                                        ImagePicker imagePicker = ImagePicker();
-                                        XFile? image =
-                                            await imagePicker.pickImage(
-                                                source: ImageSource.camera,
-                                                preferredCameraDevice:
-                                                    CameraDevice.rear);
-                                        if (image != null) {
-                                          context
-                                              .read<
-                                                  VehiclePartsInteractionBloc>()
-                                              .add(AddImageEvent(
-                                                  name: widget
-                                                      .vehiclePartMedia.name,
-                                                  image: image));
+                                      onPressed: () async {
+                                        commentsFocus.unfocus();
+                                        if (widget
+                                                .vehiclePartMedia.images!.length <
+                                            3) {
+                                          ImagePicker imagePicker = ImagePicker();
+                                          XFile? image =
+                                              await imagePicker.pickImage(
+                                                  source: ImageSource.camera,
+                                                  preferredCameraDevice:
+                                                      CameraDevice.rear);
+                                          if (image != null) {
+                                            context
+                                                .read<
+                                                    VehiclePartsInteractionBloc>()
+                                                .add(AddImageEvent(
+                                                    name: widget
+                                                        .vehiclePartMedia.name,
+                                                    image: image));
+                                          }
                                         }
-                                      }
-                                    },
-                                    icon: Transform(
-                                        transform:
-                                            Matrix4.translationValues(8, 20, 0),
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Icon(Icons
-                                                .add_photo_alternate_rounded),
-                                            Lottie.asset(
-                                                "assets/lottie/highlight.json",
-                                                width: 50,
-                                                controller: animationController)
-                                          ],
-                                        )
-                                        // .animate(
-                                        //     controller: widget.animationController,
-                                        //     onPlay: (controller) => widget
-                                        //                 .vehiclePartMedia
-                                        //                 .images!
-                                        //                 .length <=
-                                        //             3
-                                        //         ? controller.repeat()
-                                        //         : controller.stop())
-                                        // .shimmer(
-                                        //     delay: 2000.ms,
-                                        //     duration: 1500.ms) // shimmer +
-                                        // .shake(
-                                        //     hz: 4,
-                                        //     curve: Curves
-                                        //         .easeInOutCubic) // shake +
-                                        // .scale(
-                                        //     begin: Offset(0.8, 0.8),
-                                        //     end: Offset(1.1, 1.1),
-                                        //     duration: 600.ms) // scale up
-                                        // .then(
-                                        //     delay: 350.ms) // then wait and
-                                        // .scale(
-                                        //   begin: Offset(1.1, 1.1),
-                                        //   end: Offset(0.8, 0.8),
-                                        // )
-                                        )),
-                                hintStyle: TextStyle(fontSize: 14),
-                                filled: true,
-                                contentPadding:
-                                    const EdgeInsets.only(left: 14, top: 14),
-                                hintText: "Comments",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(16))),
-                            onChanged: (value) {
-                              context.read<VehiclePartsInteractionBloc>().add(
-                                  AddCommentsEvent(
-                                      name: widget.vehiclePartMedia.name,
-                                      comments: value));
-                            },
+                                      },
+                                      icon: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Icon(Icons
+                                                  .add_photo_alternate_rounded),
+                                          Lottie.asset("assets/lottie/highlight.json",width: 50,controller: animationController)
+                                        ],
+                                      )),
+                               ),
+                            ],
                           ),
                         ),
                         Gap(4),
@@ -259,7 +233,7 @@ class _CommentsViewState extends State<CommentsView>
                                 ));
                           },
                         ),
-                        Gap(2),
+                        Gap(8),
                         if (widget.vehiclePartMedia.images != null &&
                             widget.vehiclePartMedia.images!.isNotEmpty)
                           InkWell(
@@ -288,7 +262,7 @@ class _CommentsViewState extends State<CommentsView>
                                     SubmitBodyPartVehicleMediaEvent(
                                         bodyPartName:
                                             widget.vehiclePartMedia.name,
-                                        jobCardNo: '5'
+                                        jobCardNo: 'JC-LOC-12'
                                         // 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}'
                                         ) as VehiclePartsInteractionBlocEvent);
                               }
@@ -305,7 +279,8 @@ class _CommentsViewState extends State<CommentsView>
                               )),
                             ),
                           ),
-                        Gap(8)
+                        Text("Upload",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w600),),
+                        Gap(2)
                       ],
                     ),
                   ),
@@ -322,7 +297,13 @@ class _CommentsViewState extends State<CommentsView>
                                 .read<VehiclePartsInteractionBloc>()
                                 .state
                                 .mapMedia[widget.vehiclePartMedia.name] ==
-                            null ||
+                            null ||(context
+                                .read<VehiclePartsInteractionBloc>()
+                                .state
+                                .mapMedia[widget.vehiclePartMedia.name]!.comments!.isEmpty && context
+                                .read<VehiclePartsInteractionBloc>()
+                                .state
+                                .mapMedia[widget.vehiclePartMedia.name]!.images!.isEmpty)||
                         context
                             .read<VehiclePartsInteractionBloc>()
                             .state

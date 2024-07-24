@@ -6,8 +6,12 @@ import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
+import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:dms/views/quality_check.dart';
 import 'package:dms/views/service_main.dart';
 import 'package:dms/views/test_dashboard.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +32,10 @@ void main() async {
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   //sharedPreferences.setBool('isLogged', true);
+  List<GeneralBodyPart> generalBodyPart =
+      await loadSvgImage(svgImage: 'assets/images/image.svg');
+  List<GeneralBodyPart> acceptedParts =
+      await loadSvgImage(svgImage: 'assets/images/image_accept.svg');
 
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),

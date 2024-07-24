@@ -219,8 +219,8 @@ class Repository {
     }
   }
 
-  Future getImage() async {
-    ApiResponse apiResponse = await _api.get('getImage');
+  Future getImage(String jobCardNo) async {
+    ApiResponse apiResponse = await _api.get('getImage',queryParameters: {"jobCardNo":jobCardNo});
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
@@ -248,6 +248,26 @@ class Repository {
       "name": name,
       "data": jsonEncode(bodyPartData),
     });
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return 200;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+   Future<int> addQualityStatus(
+      {Map<String, dynamic>? qualityCheckJson}) async {
+    print(qualityCheckJson);
+    ApiResponse apiResponse = await _api.post('qualityCheckStatus', data: qualityCheckJson);
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
