@@ -52,16 +52,22 @@ class _InspectionOutState extends State<InspectionOut> {
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.black)),
-          title: Container(
+          title: SizedBox(
             height: size.height * 0.06,
             width: size.width * 0.45,
-            decoration: BoxDecoration(
-                color: Colors.black, borderRadius: BorderRadius.circular(20)),
-            alignment: Alignment.center,
-            child: const Text(
-              'Inspection Out',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            child: Card(
+                elevation: 8,
+                color: Colors.black,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                shadowColor: Colors.orange.shade200,
+                child: Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'Inspection Out',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                )),
           ),
           centerTitle: true,
         ),

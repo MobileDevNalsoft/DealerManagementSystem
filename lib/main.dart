@@ -11,6 +11,7 @@ import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/service_main.dart';
 import 'package:dms/views/test_dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +19,7 @@ import 'dynamic_ui_src/Entry/json_to_widget.dart';
 import 'views/login.dart';
 
 void main() async {
+  // debugPaintSizeEnabled = true;
   WidgetsFlutterBinding.ensureInitialized();
 
   await init();
