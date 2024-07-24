@@ -13,6 +13,7 @@ import 'package:dms/views/dashboard.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/quality_check.dart';
 import 'package:dms/views/service_main.dart';
+import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,9 @@ void main() async {
   //sharedPreferences.setBool('isLogged', true);
    List<GeneralBodyPart> generalBodyPart = await  loadSvgImage(svgImage:'assets/images/image.svg');
    List<GeneralBodyPart> acceptedParts = await  loadSvgImage(svgImage:'assets/images/image_accept.svg');
+   List<GeneralBodyPart> rejectedParts = await  loadSvgImage(svgImage:'assets/images/image_reject.svg');
+   List<GeneralBodyPart> pendingParts = await  loadSvgImage(svgImage:'assets/images/image_pending.svg');
+   
 
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
@@ -52,9 +56,9 @@ void main() async {
         debugShowCheckedModeBanner: false,
         home: 
         // CustomDetector(model: BodySelectorViewModel(),generalParts: generalBodyPart),
-
+        // VehicleInfo()
         
-        QualityCheck(model: BodySelectorViewModel(),generalParts: generalBodyPart,acceptedParts: acceptedParts,),
+        QualityCheck(model: BodySelectorViewModel(),generalParts: generalBodyPart,acceptedParts: acceptedParts,rejectedParts:rejectedParts,pendingParts:pendingParts ),
         //  !sharedPreferences.containsKey('isLogged') ||
         //         sharedPreferences.getBool('isLogged') == false
         //     ? const LoginView()
