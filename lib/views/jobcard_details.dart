@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'dart:convert';
+
+import 'package:flutter/material.dart'
+    hide BoxDecoration, BoxShadow, Stepper, Step;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 
 import '../models/services.dart';
+import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatelessWidget {
   JobCardDetails({super.key, required this.service});
@@ -13,6 +18,12 @@ class JobCardDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    int activeStep = service.status! == 'N'
+        ? 0
+        : service.status! == 'I'
+            ? 1
+            : 2;
 
     List<String> dmsFlow = [
       'Initiated',
@@ -30,158 +41,160 @@ class JobCardDetails extends StatelessWidget {
       'completed'
     ];
 
-    return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              elevation: 5,
-              backgroundColor: const Color.fromARGB(255, 145, 19, 19),
-              leading: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded,
-                      color: Colors.white)),
-              title: const Text(
-                "JobCard Details",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+    List<String> statusLines = [
+      'Job Card created on "Creation Date"',
+      'Vehicle Service is in progress',
+      'Quality Check is done',
+      'Inpection out is done',
+      'Service Completed'
+    ];
+
+    List<String> pendingStatusLines = [
+      '',
+      'Vehicle Service needs to be done',
+      'Quality Check needs to be done',
+      'Inpection out needs to be done'
+    ];
+
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: false,
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          elevation: 0,
+          backgroundColor: Colors.black45,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.black)),
+          title: SizedBox(
+            height: size.height * 0.06,
+            width: size.width * 0.45,
+            child: Card(
+                elevation: 8,
+                color: Colors.black,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                shadowColor: Colors.orange.shade200,
+                child: Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    'JobCard Details',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                )),
+          ),
+          centerTitle: true,
+        ),
+        body: Container(
+          height: size.height,
+          width: size.width,
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.black45, Colors.black26, Colors.black45],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.1, 0.5, 1])),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: size.height * 0.04),
+                height: size.height * 0.31,
+                width: size.width * 0.9,
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.03,
+                    vertical: size.height * 0.03),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    buildDetailRow(
+                        'Job Card Number', service.jobCardNo.toString()),
+                    Divider(
+                      color: Colors.grey.shade100,
+                      height: size.height * 0.03,
+                      thickness: 3,
+                    ),
+                    buildDetailRow('Vehicle Registration Number',
+                        service.registrationNo.toString()),
+                    Divider(
+                      color: Colors.grey.shade100,
+                      height: size.height * 0.03,
+                      thickness: 3,
+                    ),
+                    buildDetailRow('Location', service.location.toString()),
+                    Divider(
+                      color: Colors.grey.shade100,
+                      height: size.height * 0.03,
+                      thickness: 3,
+                    ),
+                    buildDetailRow('Job Type', service.jobType.toString()),
+                    Divider(
+                      color: Colors.grey.shade100,
+                      height: size.height * 0.03,
+                      thickness: 3,
+                    ),
+                    buildDetailRow(
+                        'Schedule Date', service.scheduleDate.toString())
+                  ],
+                ),
               ),
-              centerTitle: true,
-            ),
-            body: Container(
-              height: size.height,
-              width: size.width,
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 241, 184, 184),
-                        Colors.white
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.4, 1])),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
+              Expanded(
+                child: Container(
                     margin: EdgeInsets.only(top: size.height * 0.04),
-                    height: size.height * 0.31,
-                    width: size.width * 0.9,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: size.width * 0.03,
-                        vertical: size.height * 0.03),
-                    decoration: BoxDecoration(
+                    padding: EdgeInsets.only(top: size.height * 0.01),
+                    width: size.width * 0.93,
+                    decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(25)),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            topRight: Radius.circular(25)),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 10,
+                              blurStyle: BlurStyle.normal,
+                              offset: Offset(1, 1),
+                              spreadRadius: 10)
+                        ]),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        buildDetailRow(
-                            'Job Card Number', service.jobCardNo.toString()),
-                        Divider(
-                          color: Colors.grey.shade100,
-                          height: size.height * 0.03,
-                          thickness: 3,
+                        const Text(
+                          'Status',
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        buildDetailRow('Vehicle Registration Number',
-                            service.registrationNo.toString()),
-                        Divider(
-                          color: Colors.grey.shade100,
-                          height: size.height * 0.03,
-                          thickness: 3,
-                        ),
-                        buildDetailRow('Location', service.location.toString()),
-                        Divider(
-                          color: Colors.grey.shade100,
-                          height: size.height * 0.03,
-                          thickness: 3,
-                        ),
-                        buildDetailRow('Job Type', service.jobType.toString()),
-                        Divider(
-                          color: Colors.grey.shade100,
-                          height: size.height * 0.03,
-                          thickness: 3,
-                        ),
-                        buildDetailRow(
-                            'Schedule Date', service.scheduleDate.toString())
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                        margin: EdgeInsets.only(top: size.height * 0.04),
-                        width: size.width * 0.95,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(25),
-                                topRight: Radius.circular(25)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 10,
-                                  blurStyle: BlurStyle.normal,
-                                  offset: Offset(1, 1),
-                                  spreadRadius: 10)
-                            ]),
-                        child: SizedBox(
-                          child: EasyStepper(
-                              showTitle: true,
-                              activeStep: 1,
-                              direction: Axis.vertical,
-                              alignment: Alignment.center,
-                              enableStepTapping: false,
-                              showLoadingAnimation: false,
-                              defaultStepBorderType: BorderType.normal,
-                              padding: EdgeInsets.zero,
-                              fitWidth: true,
-                              showStepBorder: false,
-                              stepRadius: 25,
-                              lineStyle: const LineStyle(
-                                  lineType: LineType.normal,
-                                  finishedLineColor: Colors.green,
-                                  lineLength: 20,
-                                  lineSpace: 5,
-                                  lineWidth: 10,
-                                  unreachedLineColor: Colors.grey,
-                                  unreachedLineType: LineType.dotted),
-                              steps: dmsFlow
-                                  .map(
-                                    (e) => EasyStep(
-                                        customTitle: Transform(
-                                            transform:
-                                                Matrix4.translationValues(
-                                                    1, -60, 0),
-                                            child: Text(
-                                              e,
-                                              style: TextStyle(fontSize: 10),
-                                              textAlign: TextAlign.center,
-                                            )),
-                                        customStep: CircleAvatar(
-                                          backgroundColor:
-                                              dmsFlow.indexOf(e) < 1
-                                                  ? Colors.lightGreen.shade300
-                                                  : dmsFlow.indexOf(e) == 1
-                                                      ? Colors.amber.shade200
-                                                      : Colors.grey.shade300,
-                                          maxRadius: 50,
-                                          child: Image.asset(
-                                            'assets/images/${icons[dmsFlow.indexOf(e)]}.png',
-                                            fit: BoxFit.cover,
-                                            height: 30,
-                                            width: 30,
-                                          ),
-                                        )),
-                                  )
-                                  .toList()),
+                        Gap(size.height * 0.01),
+                        Expanded(
+                            child: Stepper(
+                          steps: dmsFlow
+                              .map((e) => Step(
+                                    activeStep: activeStep,
+                                    currentStep: dmsFlow.indexOf(e),
+                                    icons: icons,
+                                    stepperLength: dmsFlow.length,
+                                    title: e,
+                                    statusLines: statusLines,
+                                    pendingStatusLines: pendingStatusLines,
+                                    jobCardNo: service.jobCardNo!,
+                                  ))
+                              .toList(),
                         )),
-                  )
-                ],
-              ),
-            )));
+                      ],
+                    )),
+              )
+            ],
+          ),
+        ));
   }
 
   Widget buildDetailRow(String key, String value) {
@@ -192,12 +205,14 @@ class JobCardDetails extends StatelessWidget {
         children: [
           Text(
             key,
-            style: const TextStyle(fontFamily: 'Gilroy'),
+            style: const TextStyle(fontFamily: 'Gilroy', fontSize: 13),
           ),
           Text(
             value,
             style: const TextStyle(
-                fontFamily: 'Gilroy', fontWeight: FontWeight.bold),
+                fontFamily: 'Gilroy',
+                fontWeight: FontWeight.bold,
+                fontSize: 13),
           )
         ]);
   }

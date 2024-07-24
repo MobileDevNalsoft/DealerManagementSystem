@@ -1,3 +1,4 @@
+import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:scroll_to_index/scroll_to_index.dart';
 import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
 import '../vehiclemodule/xml_parser.dart';
@@ -19,19 +20,17 @@ class InspectionView extends StatefulWidget {
 
 class _InspectionViewState extends State<InspectionView> {
   final PageController _pageController = PageController();
+  final AutoScrollController _autoScrollController = AutoScrollController();
 
-  late MultiBloc _multiBloc;
   late ServiceBloc _serviceBloc;
 
   @override
   void initState() {
     super.initState();
 
-    _multiBloc = context.read<MultiBloc>();
-    _multiBloc.add(GetJson());
-    _multiBloc.state.index = 0;
-
     _serviceBloc = context.read<ServiceBloc>();
+    _serviceBloc.state.index = 0;
+    _serviceBloc.add(GetJson());
   }
 
   @override
@@ -74,7 +73,7 @@ class _InspectionViewState extends State<InspectionView> {
                 stops: [0.01, 0.35, 1]),
           ),
           child:
-              BlocBuilder<MultiBloc, MultiBlocState>(builder: (context, state) {
+              BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             switch (state.jsonStatus) {
               case JsonStatus.loading:
                 return Transform(
@@ -98,39 +97,49 @@ class _InspectionViewState extends State<InspectionView> {
                     Gap(size.height * 0.005),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Wrap(
-                        direction: Axis.horizontal,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        spacing: size.width * 0.01,
-                        runSpacing: size.width * 0.01,
-                        children: buttonsText
-                            .map((e) => SizedBox(
-                                  height: size.height * 0.035,
-                                  child: TextButton(
-                                      style: TextButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          backgroundColor: state.index ==
-                                                  buttonsText.indexOf(e)
-                                              ? const Color.fromARGB(
-                                                  255, 145, 19, 19)
-                                              : const Color.fromARGB(
-                                                  255, 238, 203, 203),
-                                          foregroundColor: state.index ==
-                                                  buttonsText.indexOf(e)
-                                              ? Colors.white
-                                              : const Color.fromARGB(
-                                                  255, 29, 22, 22),
-                                          side: const BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 145, 19, 19))),
-                                      onPressed: () {
-                                        _pageController
-                                            .jumpToPage(buttonsText.indexOf(e));
-                                      },
-                                      child: Text(e)),
-                                ))
-                            .toList(),
+                      child: SizedBox(
+                        height: size.height * 0.04,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          controller: _autoScrollController,
+                          children: buttonsText
+                              .map((e) => AutoScrollTag(
+                                    key: ValueKey(buttonsText.indexOf(e)),
+                                    controller: _autoScrollController,
+                                    index: buttonsText.indexOf(e),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: size.width * 0.005),
+                                      child: SizedBox(
+                                        height: size.height * 0.035,
+                                        child: TextButton(
+                                            style: TextButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10),
+                                                backgroundColor: state.index ==
+                                                        buttonsText.indexOf(e)
+                                                    ? const Color.fromARGB(
+                                                        255, 145, 19, 19)
+                                                    : const Color.fromARGB(
+                                                        255, 238, 203, 203),
+                                                foregroundColor: state.index ==
+                                                        buttonsText.indexOf(e)
+                                                    ? Colors.white
+                                                    : const Color.fromARGB(
+                                                        255, 29, 22, 22),
+                                                side: const BorderSide(
+                                                    color: Color.fromARGB(255, 145, 19, 19))),
+                                            onPressed: () {
+                                              _pageController.jumpToPage(
+                                                  buttonsText.indexOf(e));
+                                            },
+                                            child: Text(e)),
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
                       ),
                     ),
                     Divider(
@@ -141,26 +150,18 @@ class _InspectionViewState extends State<InspectionView> {
                     Gap(size.height * 0.01),
                     Expanded(
                       child: SizedBox(
-                        width: size.width * 0.95,
+                        width: size.width,
                         child: PageView.builder(
                           itemCount: state.json!.length,
                           controller: _pageController,
                           onPageChanged: (value) {
-                            context
-                                .read<MultiBloc>()
-                                .add(PageChange(index: value));
+                            _serviceBloc.add(PageChange(index: value));
+                            _autoScrollController.scrollToIndex(value);
                           },
                           itemBuilder: (context, pageIndex) => ListView.builder(
                             itemCount:
-                                state.json![buttonsText[pageIndex]].length,
+                                state.json![buttonsText[pageIndex]].length - 1,
                             itemBuilder: (context, index) {
-                              // if (state.json![buttonsText[pageIndex]][index]
-                              //         ['widget'] ==
-                              //     'textField') {
-                              //   textEditingController.text =
-                              //       state.json![buttonsText[pageIndex]][index]
-                              //           ['properties']['value'];
-                              // }
                               return Column(
                                 children: [
                                   Gap(size.height * 0.01),
@@ -194,22 +195,23 @@ class _InspectionViewState extends State<InspectionView> {
                                       index ==
                                           state.json![buttonsText[pageIndex]]
                                                   .length -
-                                              1)
+                                              2)
                                     Gap(size.height * 0.05),
                                   if (pageIndex == buttonsText.length - 1 &&
                                       index ==
                                           state.json![buttonsText[pageIndex]]
                                                   .length -
-                                              1)
+                                              2)
                                     ElevatedButton(
                                         onPressed: () async {
-                                          context.read<MultiBloc>().add(
+                                          context.read<ServiceBloc>().add(
                                               InspectionJsonAdded(
-                                                  jobCardNo: context
-                                                      .read<ServiceBloc>()
-                                                      .state
-                                                      .service!
-                                                      .jobCardNo!));
+                                                  jobCardNo: _serviceBloc.state
+                                                      .service!.jobCardNo!));
+                                          context
+                                              .read<VehicleBloc>()
+                                              .state
+                                              .status = VehicleStatus.initial;
                                           await loadSvgImage(
                                                   svgImage:
                                                       'assets/images/image.svg')
@@ -279,7 +281,7 @@ class _InspectionViewState extends State<InspectionView> {
             side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
             onChanged: (value) {
               json[page][index]['properties']['value'] = value;
-              context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+              _serviceBloc.add(InspectionJsonUpdated(json: json));
             },
           ),
         );
@@ -315,8 +317,8 @@ class _InspectionViewState extends State<InspectionView> {
               ),
               onChanged: (value) {
                 textEditingController.text = value;
-                context.read<MultiBloc>().state.json![page][index]['properties']
-                    ['value'] = value;
+                _serviceBloc.state.json![page][index]['properties']['value'] =
+                    value;
               }),
         );
       case "dropDown":
@@ -350,7 +352,7 @@ class _InspectionViewState extends State<InspectionView> {
             value: json[page][index]['properties']['value'],
             onChanged: (String? value) {
               json[page][index]['properties']['value'] = value;
-              context.read<MultiBloc>().add(InspectionJsonUpdated(json: json));
+              _serviceBloc.add(InspectionJsonUpdated(json: json));
             },
             buttonStyleData: ButtonStyleData(
               height: size.height * 0.04,

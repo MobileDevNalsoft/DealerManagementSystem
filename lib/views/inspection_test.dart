@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../bloc/multi/multi_bloc.dart';
+import '../bloc/service/service_bloc.dart';
 
 class InspectionViewTest extends StatefulWidget {
   const InspectionViewTest({super.key});
@@ -22,10 +23,13 @@ class InspectionViewTest extends StatefulWidget {
 class _InspectionViewTestState extends State<InspectionViewTest> {
   Map<String, dynamic> functions = {};
 
+  late ServiceBloc _serviceBloc;
+
   @override
   void initState() {
     super.initState();
-    context.read<MultiBloc>().add(GetJson());
+    _serviceBloc = context.read<ServiceBloc>();
+    _serviceBloc.add(GetJson());
   }
 
   @override
@@ -48,7 +52,7 @@ class _InspectionViewTestState extends State<InspectionViewTest> {
         ),
         centerTitle: true,
       ),
-      body: BlocBuilder<MultiBloc, MultiBlocState>(
+      body: BlocBuilder<ServiceBloc, ServiceState>(
         builder: (context, state) {
           switch (state.jsonStatus) {
             case JsonStatus.loading:
@@ -100,7 +104,7 @@ class _InspectionViewTestState extends State<InspectionViewTest> {
                       "height": size.height * 0.052,
                       "child": {
                         "type": "checkBox",
-                        "value": state.checkBoxStates![key],
+                        "value": "",
                         "side": {"color": "#ffffff"},
                         "activeColor": "#911313",
                         "onChanged": "$key"

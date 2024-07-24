@@ -153,74 +153,6 @@ class _AddVehicleViewState extends State<AddVehicleView> {
         },
         child: Scaffold(
             backgroundColor: Colors.transparent,
-            floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
-                ? Padding(
-                    padding: EdgeInsets.only(
-                        right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
-                    child: CustomWidgets.CustomExpandableFAB(
-                        horizontalAlignment: isMobile ? -17 : -40,
-                        verticalAlignment: -15,
-                        rotational: false,
-                        angle: 90,
-                        distance: isMobile ? 50 : 70,
-                        color: const Color.fromARGB(255, 145, 19, 19),
-                        iconColor: Colors.white,
-                        children: [
-                          // SizedBox(
-                          //   height: size.height * 0.08,
-                          //   width: size.width * (isMobile ? 0.24 : 0.1),
-                          //   child: GestureDetector(
-                          //     onTap: () {
-                          //       Navigator.of(context).push(MaterialPageRoute(
-                          //           builder: (_) => AddCustomerView()));
-                          //     },
-                          //     child: Column(
-                          //       children: [
-                          //         Image.asset(
-                          //           'assets/images/add_user.png',
-                          //           color: Colors.white,
-                          //           fit: BoxFit.cover,
-                          //           scale: isMobile ? 22 : 15,
-                          //         ),
-                          //         Text(
-                          //           'Add Customer',
-                          //           style: TextStyle(
-                          //               color: Colors.white,
-                          //               fontSize: isMobile ? 11 : 14),
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
-                          SizedBox(
-                            height: size.height * 0.085,
-                            width: size.width * (isMobile ? 0.24 : 0.1),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ServiceHistoryView()));
-                              },
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.history,
-                                    color: Colors.white,
-                                    size: isMobile ? 28 : 40,
-                                  ),
-                                  Text(
-                                    'History',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: isMobile ? 11 : 14),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ]),
-                  )
-                : const SizedBox(),
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               elevation: 0.0,
@@ -241,11 +173,15 @@ class _AddVehicleViewState extends State<AddVehicleView> {
               height: size.height,
               width: size.width,
               decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(
-                      'assets/images/dms_bg.png',
-                    ),
-                    fit: BoxFit.cover),
+                gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 241, 193, 193),
+                      Color.fromARGB(255, 235, 136, 136),
+                      Color.fromARGB(255, 226, 174, 174)
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.01, 0.35, 1]),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

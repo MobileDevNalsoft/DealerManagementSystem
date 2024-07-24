@@ -18,8 +18,6 @@ class GetSalesPersons extends MultiBlocEvent {
   GetSalesPersons({required this.searchText});
 }
 
-class GetJson extends MultiBlocEvent {}
-
 class CheckBoxTapped extends MultiBlocEvent {
   final int key;
   CheckBoxTapped({required this.key});
@@ -28,21 +26,6 @@ class CheckBoxTapped extends MultiBlocEvent {
 class RadioOptionChanged extends MultiBlocEvent {
   final int selectedRadioOption;
   RadioOptionChanged({required this.selectedRadioOption});
-}
-
-class PageChange extends MultiBlocEvent {
-  final int index;
-  PageChange({required this.index});
-}
-
-class InspectionJsonUpdated extends MultiBlocEvent {
-  final Map<String, dynamic> json;
-  InspectionJsonUpdated({required this.json});
-}
-
-class InspectionJsonAdded extends MultiBlocEvent {
-  final String jobCardNo;
-  InspectionJsonAdded({required this.jobCardNo});
 }
 
 class OnFocusChange extends MultiBlocEvent {

@@ -113,6 +113,7 @@ class _HomeView extends State<HomeView> {
         child: PopScope(
           canPop: true,
           onPopInvoked: (didPop) {
+            Navigator.pop(context);
             widget.pageController!.jumpToPage(0);
             _serviceBloc.add(BottomNavigationBarClicked(index: 0));
           },

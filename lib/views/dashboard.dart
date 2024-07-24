@@ -17,6 +17,7 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../inits/init.dart';
 import '../models/services.dart';
+import 'custom_widgets/clipped_buttons.dart';
 import 'jobcard_details.dart';
 import 'login.dart';
 
@@ -59,58 +60,52 @@ class _DashboardViewState extends State<DashboardView> {
         child: PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SizedBox(
-              height: size.height * 0.03,
-              child: AlertDialog(
-                backgroundColor: const Color.fromARGB(255, 245, 216, 216),
-                contentPadding: EdgeInsets.only(
-                    left: size.width * 0.04, top: size.height * 0.02),
-                content: const Text('Are you sure you want to exit the app?'),
-                actionsPadding: EdgeInsets.zero,
-                buttonPadding: EdgeInsets.zero,
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context, false); // Don't exit
-                    },
-                    style: TextButton.styleFrom(
-                        foregroundColor:
-                            const Color.fromARGB(255, 145, 19, 19)),
-                    child: const Text('No'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      exit(0); // Exit
-                    },
-                    style: TextButton.styleFrom(
-                        foregroundColor:
-                            const Color.fromARGB(255, 145, 19, 19)),
-                    child: const Text('Yes'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+        Navigator.pop(context);
+        // await showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return SizedBox(
+        //       height: size.height * 0.03,
+        //       child: AlertDialog(
+        //         backgroundColor: const Color.fromARGB(255, 245, 216, 216),
+        //         contentPadding: EdgeInsets.only(
+        //             left: size.width * 0.04, top: size.height * 0.02),
+        //         content: const Text('Are you sure you want to exit the app?'),
+        //         actionsPadding: EdgeInsets.zero,
+        //         buttonPadding: EdgeInsets.zero,
+        //         actions: [
+        //           TextButton(
+        //             onPressed: () {
+        //               Navigator.pop(context, false); // Don't exit
+        //             },
+        //             style: TextButton.styleFrom(
+        //                 foregroundColor:
+        //                     const Color.fromARGB(255, 145, 19, 19)),
+        //             child: const Text('No'),
+        //           ),
+        //           TextButton(
+        //             onPressed: () {
+        //               exit(0); // Exit
+        //             },
+        //             style: TextButton.styleFrom(
+        //                 foregroundColor:
+        //                     const Color.fromARGB(255, 145, 19, 19)),
+        //             child: const Text('Yes'),
+        //           ),
+        //         ],
+        //       ),
+        //     );
+        //   },
+        // );
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 226, 174, 174),
         extendBody:
             false, // restricts the scaffold till above the bottom navigation bar in this case
         body: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                  colors: [
-                    Color.fromARGB(255, 241, 193, 193),
-                    Color.fromARGB(255, 235, 136, 136),
-                    Color.fromARGB(255, 226, 174, 174)
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.01, 0.35, 1]),
+                  colors: [Colors.black45, Colors.black26, Colors.black45],
+                  stops: [0.1, 0.5, 1]),
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
@@ -147,86 +142,86 @@ class _DashboardViewState extends State<DashboardView> {
                     ]);
               },
             )),
-        bottomNavigationBar: BlocBuilder<ServiceBloc, ServiceState>(
-          builder: (context, state) {
-            return CircleNavBar(
-              activeIcons: [
-                Icon(
-                  Icons.home,
-                  color: const Color.fromARGB(255, 145, 19, 19),
-                  size: size.height * 0.04,
-                ),
-                Icon(
-                  Icons.add,
-                  color: const Color.fromARGB(255, 145, 19, 19),
-                  size: size.height * 0.04,
-                ),
-                Icon(
-                  Icons.history,
-                  color: const Color.fromARGB(255, 145, 19, 19),
-                  size: size.height * 0.04,
-                ),
-              ],
-              inactiveIcons: [
-                Icon(
-                  Icons.home,
-                  size: size.height * 0.04,
-                  color: const Color.fromARGB(255, 145, 19, 19),
-                ),
-                Icon(
-                  Icons.add,
-                  size: size.height * 0.04,
-                  color: const Color.fromARGB(255, 145, 19, 19),
-                ),
-                Icon(
-                  Icons.history,
-                  size: size.height * 0.04,
-                  color: const Color.fromARGB(255, 145, 19, 19),
-                ),
-              ],
-              iconCurve: Curves.easeIn,
-              iconDurationMillSec: 1000,
-              tabCurve: Curves.easeIn,
-              tabDurationMillSec: 1000,
-              color: const Color.fromARGB(255, 236, 224, 224),
-              height: size.height * 0.07,
-              circleWidth: size.height * 0.06,
-              activeIndex: state.bottomNavigationBarActiveIndex!,
-              onTap: (index) {
-                _serviceBloc.add(BottomNavigationBarClicked(index: index));
-                if (index == 0) {
-                  pageController.animateToPage(0,
-                      duration: const Duration(seconds: 1), curve: Curves.ease);
-                } else if (index == 1) {
-                  // added delay to show the button flow animation in bottom navigation bar
-                  Future.delayed(const Duration(seconds: 1), () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HomeView(
-                                  pageController: pageController,
-                                )));
-                  });
-                } else {
-                  pageController.animateToPage(1,
-                      duration: const Duration(seconds: 1), curve: Curves.ease);
-                }
-              },
-              padding: EdgeInsets.only(
-                  left: size.width * 0.02,
-                  right: size.width * 0.02,
-                  bottom: size.width * 0.02),
-              cornerRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-                bottomRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30),
-              ),
-              shadowColor: const Color.fromARGB(255, 201, 94, 94),
-              elevation: 5,
-            );
-          },
-        ),
+        // bottomNavigationBar: BlocBuilder<ServiceBloc, ServiceState>(
+        //   builder: (context, state) {
+        //     return CircleNavBar(
+        //       activeIcons: [
+        //         Icon(
+        //           Icons.home,
+        //           color: const Color.fromARGB(255, 145, 19, 19),
+        //           size: size.height * 0.04,
+        //         ),
+        //         Icon(
+        //           Icons.add,
+        //           color: const Color.fromARGB(255, 145, 19, 19),
+        //           size: size.height * 0.04,
+        //         ),
+        //         Icon(
+        //           Icons.history,
+        //           color: const Color.fromARGB(255, 145, 19, 19),
+        //           size: size.height * 0.04,
+        //         ),
+        //       ],
+        //       inactiveIcons: [
+        //         Icon(
+        //           Icons.home,
+        //           size: size.height * 0.04,
+        //           color: const Color.fromARGB(255, 145, 19, 19),
+        //         ),
+        //         Icon(
+        //           Icons.add,
+        //           size: size.height * 0.04,
+        //           color: const Color.fromARGB(255, 145, 19, 19),
+        //         ),
+        //         Icon(
+        //           Icons.history,
+        //           size: size.height * 0.04,
+        //           color: const Color.fromARGB(255, 145, 19, 19),
+        //         ),
+        //       ],
+        //       iconCurve: Curves.easeIn,
+        //       iconDurationMillSec: 1000,
+        //       tabCurve: Curves.easeIn,
+        //       tabDurationMillSec: 1000,
+        //       color: const Color.fromARGB(255, 236, 224, 224),
+        //       height: size.height * 0.07,
+        //       circleWidth: size.height * 0.06,
+        //       activeIndex: state.bottomNavigationBarActiveIndex!,
+        //       onTap: (index) {
+        //         _serviceBloc.add(BottomNavigationBarClicked(index: index));
+        //         if (index == 0) {
+        //           pageController.animateToPage(0,
+        //               duration: const Duration(seconds: 1), curve: Curves.ease);
+        //         } else if (index == 1) {
+        //           // added delay to show the button flow animation in bottom navigation bar
+        //           Future.delayed(const Duration(seconds: 1), () {
+        //             Navigator.push(
+        //                 context,
+        //                 MaterialPageRoute(
+        //                     builder: (context) => HomeView(
+        //                           pageController: pageController,
+        //                         )));
+        //           });
+        //         } else {
+        //           pageController.animateToPage(1,
+        //               duration: const Duration(seconds: 1), curve: Curves.ease);
+        //         }
+        //       },
+        //       padding: EdgeInsets.only(
+        //           left: size.width * 0.02,
+        //           right: size.width * 0.02,
+        //           bottom: size.width * 0.02),
+        //       cornerRadius: const BorderRadius.only(
+        //         topLeft: Radius.circular(8),
+        //         topRight: Radius.circular(8),
+        //         bottomRight: Radius.circular(30),
+        //         bottomLeft: Radius.circular(30),
+        //       ),
+        //       shadowColor: const Color.fromARGB(255, 201, 94, 94),
+        //       elevation: 5,
+        //     );
+        //   },
+        // ),
       ),
     ));
   }
@@ -239,13 +234,26 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     Size size = MediaQuery.of(context).size;
-    return ClipPath(
+    return ClipShadowPath(
+        shadow: shrinkOffset < 40
+            ? BoxShadow(
+                blurRadius: 20,
+                blurStyle: BlurStyle.outer,
+                spreadRadius: 25,
+                color: Colors.orange.shade200,
+                offset: const Offset(0, 0))
+            : const BoxShadow(
+                blurRadius: 20,
+                blurStyle: BlurStyle.outer,
+                spreadRadius: 25,
+                color: Colors.transparent,
+                offset: Offset(0, 0)),
         clipper: BackgroundWaveClipper(),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 100,
           decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 145, 19, 19),
+            color: Colors.black,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -443,7 +451,7 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     // size will be of the container's
-    print('height ${size.height} width ${size.width}');
+    // print('height ${size.height} width ${size.width}');
     Path path = Path();
 
     const minSize = 50.0;
@@ -502,17 +510,6 @@ class JobCardPage extends StatelessWidget {
               ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                List<String> dropDownList = ['N', 'I', 'CL', 'C'];
-
-                if (state.getJobCardStatus == GetJobCardStatus.success &&
-                    index < state.jobCards!.length) {
-                  if (state.jobCards![index].status == 'N') {
-                    dropDownList = ['N', 'I', 'C'];
-                  } else if (state.jobCards![index].status == 'I') {
-                    dropDownList = ['I', 'CL', 'C'];
-                  }
-                }
-
                 return state.getJobCardStatus == GetJobCardStatus.success
                     ? index >= state.jobCards!.length
                         ? SizedBox(
@@ -561,138 +558,6 @@ class JobCardPage extends StatelessWidget {
                                                 builder: (_) => JobCardDetails(
                                                     service: state
                                                         .jobCards![index])));
-                                        // showModalBottomSheet(
-                                        //   context: context,
-                                        //   backgroundColor: const Color.fromARGB(
-                                        //       255, 236, 224, 224),
-                                        //   showDragHandle: true,
-                                        //   sheetAnimationStyle: AnimationStyle(
-                                        //       curve: Curves.easeIn,
-                                        //       duration: const Duration(
-                                        //           milliseconds: 600),
-                                        //       reverseCurve: Curves.easeOut,
-                                        //       reverseDuration: const Duration(
-                                        //           milliseconds: 300)),
-                                        //   useSafeArea: false,
-                                        //   builder: (context) {
-                                        //     return Container(
-                                        //       height: size.height * 0.26,
-                                        //       width: size.width * 0.9,
-                                        //       alignment: Alignment.topCenter,
-                                        //       padding: EdgeInsets.only(
-                                        //           left: size.width * 0.08),
-                                        //       child: Row(
-                                        //         mainAxisAlignment:
-                                        //             MainAxisAlignment.center,
-                                        //         mainAxisSize: MainAxisSize.min,
-                                        //         crossAxisAlignment:
-                                        //             CrossAxisAlignment.start,
-                                        //         children: [
-                                        //           SizedBox(
-                                        //             width: size.width * 0.3,
-                                        //             child: Column(
-                                        //               mainAxisAlignment:
-                                        //                   MainAxisAlignment
-                                        //                       .start,
-                                        //               mainAxisSize:
-                                        //                   MainAxisSize.min,
-                                        //               crossAxisAlignment:
-                                        //                   CrossAxisAlignment
-                                        //                       .start,
-                                        //               children: [
-                                        //                 const Text(
-                                        //                     'Job Card No.'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(
-                                        //                     'Vehicle Registration No.'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text('Location'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text('Job Type'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(
-                                        //                     'Job Card Status')
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //           SizedBox(
-                                        //             width: size.width * 0.1,
-                                        //             child: Column(
-                                        //               mainAxisAlignment:
-                                        //                   MainAxisAlignment
-                                        //                       .start,
-                                        //               mainAxisSize:
-                                        //                   MainAxisSize.min,
-                                        //               crossAxisAlignment:
-                                        //                   CrossAxisAlignment
-                                        //                       .center,
-                                        //               children: [
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height * 0.03),
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height *
-                                        //                     0.035),
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(':'),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 const Text(':'),
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //           SizedBox(
-                                        //             width: size.width * 0.4,
-                                        //             child: Column(
-                                        //               mainAxisAlignment:
-                                        //                   MainAxisAlignment
-                                        //                       .start,
-                                        //               mainAxisSize:
-                                        //                   MainAxisSize.min,
-                                        //               crossAxisAlignment:
-                                        //                   CrossAxisAlignment
-                                        //                       .start,
-                                        //               children: [
-                                        //                 Text(
-                                        //                   state.jobCards![index]
-                                        //                       .jobCardNo!,
-                                        //                 ),
-                                        //                 Gap(size.height * 0.03),
-                                        //                 Text(state
-                                        //                     .jobCards![index]
-                                        //                     .registrationNo!),
-                                        //                 Gap(size.height *
-                                        //                     0.035),
-                                        //                 Text(
-                                        //                     state
-                                        //                         .jobCards![
-                                        //                             index]
-                                        //                         .location!,
-                                        //                     maxLines: 2,
-                                        //                     overflow:
-                                        //                         TextOverflow
-                                        //                             .ellipsis),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 Text(
-                                        //                     state
-                                        //                         .jobCards![
-                                        //                             index]
-                                        //                         .jobType!,
-                                        //                     maxLines: 2,
-                                        //                     overflow:
-                                        //                         TextOverflow
-                                        //                             .ellipsis),
-                                        //                 Gap(size.height * 0.02),
-                                        //                 Text(state
-                                        //                     .jobCards![index]
-                                        //                     .status!),
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //         ],
-                                        //       ),
-                                        //     );
-                                        //   },
-                                        // );
                                       },
                                       child: Text(
                                         textAlign: TextAlign.center,
@@ -714,7 +579,7 @@ class JobCardPage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     height: size.height * 0.05,
-                                    width: size.width * 0.39,
+                                    width: size.width * 0.398,
                                     decoration: const BoxDecoration(
                                         border: Border.symmetric(
                                             horizontal: BorderSide(
@@ -737,8 +602,8 @@ class JobCardPage extends StatelessWidget {
                                     height: size.height * 0.05,
                                     width: size.width * 0.25,
                                     decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 2, color: Colors.black12),
+                                        border:
+                                            Border.all(color: Colors.black12),
                                         borderRadius: const BorderRadius.only(
                                             topRight: Radius.circular(10),
                                             bottomRight: Radius.circular(10))),
