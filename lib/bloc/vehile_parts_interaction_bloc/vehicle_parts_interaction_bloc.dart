@@ -114,7 +114,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
             images.add(XFile(fileName));
           }
         }
-        state.mapMedia.putIfAbsent(entry.key, () => VehiclePartMedia(name: entry.key, images: images, comments: entry.value["comments"], isUploaded: false,isAccepted: entry.value["isAccepted"]??null ));
+        state.mapMedia.putIfAbsent(entry.key, () => VehiclePartMedia(name: entry.key, images: images, comments: entry.value["comments"], isUploaded: false,isAccepted: entry.value["isAccepted"]!=null?entry.value["isAccepted"]=="true"?true:false:null ,reasonForRejection: entry.value["rejectedReason"]));
       }
     
     emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));

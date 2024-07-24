@@ -262,7 +262,7 @@ class _CommentsViewState extends State<CommentsView>
                                     SubmitBodyPartVehicleMediaEvent(
                                         bodyPartName:
                                             widget.vehiclePartMedia.name,
-                                        jobCardNo: '5'
+                                        jobCardNo: 'JC-LOC-12'
                                         // 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}'
                                         ) as VehiclePartsInteractionBlocEvent);
                               }

@@ -12,9 +12,12 @@ import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -40,7 +43,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    context.read<VehiclePartsInteractionBloc>().add(FetchVehicleMediaEvent(jobCardNo: "4"));
+    context.read<VehiclePartsInteractionBloc>().add(FetchVehicleMediaEvent(jobCardNo: "JC-LOC-12"));
    
   }
 
@@ -110,7 +113,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                    
                                }
                                 context
-                          .read<VehiclePartsInteractionBloc>().add(SubmitQualityCheckStatusEvent(jobCardNo: "5"));
+                          .read<VehiclePartsInteractionBloc>().add(SubmitQualityCheckStatusEvent(jobCardNo: "JC-LOC-12"));
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: const Color.fromARGB(255, 145, 19, 19), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
@@ -242,45 +245,38 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                           context: context,
                                                           useSafeArea: true,
                                                           builder: (context) {
-                                                            return Stack(
-                                                              children: [
-                                                                IconButton(
-                                                                    onPressed: () {
-                                                                      Navigator.of(context).pop();
-                                                                    },
-                                                                    icon: Icon(
-                                                                      Icons.highlight_remove_rounded,
-                                                                      color: Colors.white,
-                                                                      size: 25,
-                                                                    )),
-                                                                Center(
-                                                                  child: CarouselSlider(
-                                                                    // disableGesture: true,
-                                                                    items: context
-                                                                        .watch<VehiclePartsInteractionBloc>()
-                                                                        .state
-                                                                        .mapMedia[
-                                                                            Provider.of<BodySelectorViewModel>(context, listen: true).selectedGeneralBodyPart]!
-                                                                        .images!
-                                                                        .map((image) => ClipRRect(
-                                                                            borderRadius: BorderRadius.circular(12), child: Image.file(File(image.path))))
-                                                                        .toList(),
-                                                                    options: CarouselOptions(
-                                                                      initialPage: index,
-                                                                      height: size.height * 0.5,
-                                                                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                                      enlargeCenterPage: false,
-                                                                      autoPlay: false,
-                                                                      aspectRatio: 16 / 9,
-                                                                      autoPlayCurve: Curves.fastOutSlowIn,
-                                                                      enableInfiniteScroll: false,
-                                                                      autoPlayAnimationDuration: Duration(milliseconds: 800),
-                                                                      viewportFraction: 0.8,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            );
+                                                            return PhotoViewGallery.builder(itemCount: context
+                                                          .watch<VehiclePartsInteractionBloc>()
+                                                          .state
+                                                          .mapMedia[Provider.of<BodySelectorViewModel>(context, listen: true).selectedGeneralBodyPart]!
+                                                          .images ==
+                                                      null
+                                                  ? 0
+                                                  : context
+                                                      .watch<VehiclePartsInteractionBloc>()
+                                                      .state
+                                                      .mapMedia[Provider.of<BodySelectorViewModel>(context, listen: true).selectedGeneralBodyPart]!
+                                                      .images!
+                                                      .length, builder:( BuildContext context, int index) {
+                                                        return PhotoViewGalleryPageOptions(
+                                                          disableGestures: false,
+                                                          maxScale:1.5,
+                                                          filterQuality: FilterQuality.high,
+                                                          basePosition: Alignment.center,
+                                                          imageProvider: FileImage(   File(context
+                                                          .watch<VehiclePartsInteractionBloc>()
+                                                          .state
+                                                          .mapMedia[Provider.of<BodySelectorViewModel>(context, listen: true).selectedGeneralBodyPart]!
+                                                          .images![index]
+                                                          .path),) ,
+                                                          initialScale: PhotoViewComputedScale.contained * 0.8,
+                                                          heroAttributes: PhotoViewHeroAttributes(tag: context
+                                                          .watch<VehiclePartsInteractionBloc>()
+                                                          .state
+                                                          .mapMedia[Provider.of<BodySelectorViewModel>(context, listen: true).selectedGeneralBodyPart]!
+                                                          .images![index]),
+                                                        );
+                                                      },);
                                                           });
                                                     },
                                                     child: Image.file(
@@ -473,11 +469,6 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     _position = _initialPosition;
   }
 
-  void _onPanStart(DragStartDetails details) {
-    // setState(() {
-    //   _isSliding = true;
-    // });
-  }
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
@@ -517,21 +508,12 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             .add(ModifyAcceptedEvent(bodyPartName: Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart, isAccepted: null));
       });
     }
-    // await widget.onDismissed();
-    // setState(() {
-    //   if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
-    //     _position = _startPosition;
-    //   } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
-    //     _position = _rightPosition;
-    //   }
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
     print("status ${widget.sliderStatus}");
     return GestureDetector(
-      onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
       child: Stack(
@@ -554,7 +536,6 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Align(
-                    // alignment: Alignment.centerRight,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: Shimmer.fromColors(
