@@ -1,5 +1,9 @@
+import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/inspection.dart';
+import 'package:dms/views/inspection_out.dart';
+import 'package:dms/views/service_main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -19,15 +23,15 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       body: Container(
         height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors: [Colors.black26, Colors.black12, Colors.black26],
-                stops: [0.25, 0.5, 1])),
+                // colors: [Colors.black26, Colors.black12, Colors.black26],
+                colors: [Colors.black45, Colors.black26, Colors.black45],
+                stops: [0.1, 0.5, 1])),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -47,33 +51,47 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                   width: 200,
                 ),
                 Gap(size.height * 0.3),
-                Container(
-                  alignment: Alignment.center,
-                  width: size.width * 0.15,
-                  height: size.height * 0.08,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.black45, Colors.black87, Colors.black],
-                        stops: [0.05, 0.5, 1]),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey[600]!,
-                        blurRadius: 30,
-                        offset: const Offset(1, 10),
-                      ),
-                      BoxShadow(
-                        color: Colors.orange.shade100,
-                        blurRadius: 30,
-                        offset: Offset(-1, -10),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.orange.shade200,
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => HomeView()));
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: size.width * 0.15,
+                    height: size.height * 0.08,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.black45,
+                            Colors.black87,
+                            Colors.black
+                          ],
+                          stops: [
+                            0.05,
+                            0.5,
+                            1
+                          ]),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        const BoxShadow(
+                          color: Colors.black87,
+                          blurRadius: 30,
+                          offset: Offset(1, 10),
+                        ),
+                        BoxShadow(
+                          color: Colors.orange.shade100,
+                          blurRadius: 30,
+                          offset: const Offset(-1, -10),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.orange.shade200,
+                    ),
                   ),
                 )
               ],
@@ -86,33 +104,70 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ClippedButton(
-                    size: Size(size.width * 0.2, size.height * 0.2),
-                    decoration: const BoxDecoration(color: Colors.black),
-                    shadow: BoxShadow(
-                        blurRadius: 20,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 25,
-                        color: Colors.orange.shade200,
-                        offset: Offset(0, 0)),
-                    clipper: ButtonClipper(),
-                    child: Image.asset(
-                      'assets/images/add_vehicle_icon.png',
-                      color: Colors.orange.shade200,
-                      opacity: AnimationController(
-                        vsync: this,
-                        value: 0.7,
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const AddVehicleView()));
+                    },
+                    child: ClippedButton(
+                      size: Size(size.width * 0.2, size.height * 0.2),
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.black45,
+                              Colors.black87,
+                              Colors.black
+                            ],
+                            stops: [
+                              0.05,
+                              0.5,
+                              1
+                            ]),
                       ),
-                      alignment: Alignment.center,
-                      height: size.height * 0.1,
-                      width: size.width * 0.1,
+                      shadow: BoxShadow(
+                          blurRadius: 20,
+                          blurStyle: BlurStyle.outer,
+                          spreadRadius: 25,
+                          color: Colors.orange.shade200,
+                          offset: Offset(0, 0)),
+                      clipper: ButtonClipper(),
+                      child: Image.asset(
+                        'assets/images/add_vehicle_icon.png',
+                        color: Colors.orange.shade200,
+                        opacity: AnimationController(
+                          vsync: this,
+                          value: 0.7,
+                        ),
+                        alignment: Alignment.center,
+                        height: size.height * 0.1,
+                        width: size.width * 0.1,
+                      ),
                     ),
                   ),
                   Transform.flip(
                     flipX: true,
                     child: ClippedButton(
                       size: Size(size.width * 0.2, size.height * 0.2),
-                      decoration: const BoxDecoration(color: Colors.black),
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Colors.black45,
+                              Colors.black87,
+                              Colors.black
+                            ],
+                            stops: [
+                              0.05,
+                              0.5,
+                              1
+                            ]),
+                      ),
                       shadow: BoxShadow(
                           blurRadius: 20,
                           blurStyle: BlurStyle.outer,
@@ -203,28 +258,50 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                 children: [
                   Transform.flip(
                       flipY: true,
-                      child: ClippedButton(
-                        size: Size(size.width * 0.2, size.height * 0.2),
-                        decoration: const BoxDecoration(color: Colors.black),
-                        shadow: BoxShadow(
-                            blurRadius: 20,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 25,
-                            color: Colors.orange.shade200,
-                            offset: Offset(0, 0)),
-                        clipper: ButtonClipper(),
-                        child: Transform.flip(
-                          flipY: true,
-                          child: Image.asset(
-                            'assets/images/job_cards_icon.png',
-                            color: Colors.orange.shade200,
-                            opacity: AnimationController(
-                              vsync: this,
-                              value: 0.7,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const DashboardView()));
+                        },
+                        child: ClippedButton(
+                          size: Size(size.width * 0.2, size.height * 0.2),
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.black45,
+                                  Colors.black87,
+                                  Colors.black
+                                ],
+                                stops: [
+                                  0.05,
+                                  0.5,
+                                  1
+                                ]),
+                          ),
+                          shadow: BoxShadow(
+                              blurRadius: 20,
+                              blurStyle: BlurStyle.outer,
+                              spreadRadius: 25,
+                              color: Colors.orange.shade200,
+                              offset: Offset(0, 0)),
+                          clipper: ButtonClipper(),
+                          child: Transform.flip(
+                            flipY: true,
+                            child: Image.asset(
+                              'assets/images/job_cards_icon.png',
+                              color: Colors.orange.shade200,
+                              opacity: AnimationController(
+                                vsync: this,
+                                value: 0.7,
+                              ),
+                              alignment: Alignment.center,
+                              height: size.height * 0.085,
+                              width: size.width * 0.085,
                             ),
-                            alignment: Alignment.center,
-                            height: size.height * 0.085,
-                            width: size.width * 0.085,
                           ),
                         ),
                       )),
@@ -234,8 +311,21 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                         flipX: true,
                         child: ClippedButton(
                             size: Size(size.width * 0.2, size.height * 0.2),
-                            decoration:
-                                const BoxDecoration(color: Colors.black),
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Colors.black45,
+                                    Colors.black87,
+                                    Colors.black
+                                  ],
+                                  stops: [
+                                    0.05,
+                                    0.5,
+                                    1
+                                  ]),
+                            ),
                             shadow: BoxShadow(
                                 blurRadius: 20,
                                 blurStyle: BlurStyle.outer,
@@ -264,7 +354,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
           ],
         ),
       ),
-    ));
+    );
   }
 }
 

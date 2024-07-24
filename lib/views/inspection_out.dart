@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
@@ -20,41 +21,47 @@ class InspectionOut extends StatefulWidget {
 
 class _InspectionOutState extends State<InspectionOut> {
   final PageController _pageController = PageController();
+  final AutoScrollController _autoScrollController = AutoScrollController();
 
-  late MultiBloc _multiBloc;
   late ServiceBloc _serviceBloc;
 
   @override
   void initState() {
     super.initState();
 
-    _multiBloc = context.read<MultiBloc>();
-    _multiBloc.state.index = 0;
-
     _serviceBloc = context.read<ServiceBloc>();
+
+    _serviceBloc.state.index = 0;
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-        child: GestureDetector(
+    return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
         appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: const Color.fromARGB(255, 145, 19, 19),
+          scrolledUnderElevation: 0,
+          elevation: 0,
+          backgroundColor: Colors.black45,
           leading: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-          title: const Text(
-            "Inspection Out",
-            style: TextStyle(color: Colors.white, fontSize: 18),
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.black)),
+          title: Container(
+            height: size.height * 0.06,
+            width: size.width * 0.45,
+            decoration: BoxDecoration(
+                color: Colors.black, borderRadius: BorderRadius.circular(20)),
+            alignment: Alignment.center,
+            child: const Text(
+              'Inspection Out',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
           ),
           centerTitle: true,
         ),
@@ -63,15 +70,10 @@ class _InspectionOutState extends State<InspectionOut> {
           width: size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors: [
-                  // Color.fromARGB(255, 255, 231, 231),
-                  Color.fromARGB(255, 241, 193, 193),
-                  Color.fromARGB(255, 235, 136, 136),
-                  Color.fromARGB(255, 226, 174, 174)
-                ],
+                colors: [Colors.black45, Colors.black26, Colors.black45],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                stops: [0.01, 0.35, 1]),
+                stops: [0.1, 0.5, 1]),
           ),
           child:
               BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
@@ -91,53 +93,58 @@ class _InspectionOutState extends State<InspectionOut> {
                   buttonsText.add(entry.key);
                 }
 
+                List<Widget> widgets = [];
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Gap(size.height * 0.005),
+                    Gap(size.height * 0.008),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Wrap(
-                        direction: Axis.horizontal,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        spacing: size.width * 0.01,
-                        runSpacing: size.width * 0.01,
-                        children: buttonsText
-                            .map((e) => SizedBox(
-                                  height: size.height * 0.035,
-                                  child: TextButton(
-                                      style: TextButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          backgroundColor: _multiBloc
-                                                      .state.index ==
-                                                  buttonsText.indexOf(e)
-                                              ? const Color.fromARGB(
-                                                  255, 145, 19, 19)
-                                              : const Color.fromARGB(
-                                                  255, 238, 203, 203),
-                                          foregroundColor:
-                                              _multiBloc.state.index ==
-                                                      buttonsText.indexOf(e)
-                                                  ? Colors.white
-                                                  : const Color.fromARGB(
-                                                      255, 29, 22, 22),
-                                          side: const BorderSide(
-                                              color: Color.fromARGB(255, 145, 19, 19))),
-                                      onPressed: () {
-                                        _pageController
-                                            .jumpToPage(buttonsText.indexOf(e));
-                                      },
-                                      child: Text(e)),
-                                ))
-                            .toList(),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.005),
+                      child: SizedBox(
+                        height: size.height * 0.04,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          controller: _autoScrollController,
+                          children: buttonsText
+                              .map((e) => AutoScrollTag(
+                                    key: ValueKey(buttonsText.indexOf(e)),
+                                    controller: _autoScrollController,
+                                    index: buttonsText.indexOf(e),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: size.width * 0.008),
+                                      child: SizedBox(
+                                        height: size.height * 0.035,
+                                        child: TextButton(
+                                            style: TextButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10),
+                                                backgroundColor: state.index ==
+                                                        buttonsText.indexOf(e)
+                                                    ? Colors.black
+                                                    : Colors.grey.shade400,
+                                                foregroundColor: state.index ==
+                                                        buttonsText.indexOf(e)
+                                                    ? Colors.white
+                                                    : const Color.fromARGB(
+                                                        255, 29, 22, 22),
+                                                side: const BorderSide(
+                                                    color: Colors.black)),
+                                            onPressed: () {
+                                              _pageController.jumpToPage(
+                                                  buttonsText.indexOf(e));
+                                            },
+                                            child: Text(e)),
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                    Divider(
-                      height: size.height * 0.015,
-                      thickness: 1,
-                      color: Colors.grey.shade300,
                     ),
                     Gap(size.height * 0.01),
                     Expanded(
@@ -147,40 +154,81 @@ class _InspectionOutState extends State<InspectionOut> {
                           itemCount: state.inspectionDetails!.length,
                           controller: _pageController,
                           onPageChanged: (value) {
-                            context
-                                .read<MultiBloc>()
-                                .add(PageChange(index: value));
+                            _serviceBloc.add(PageChange(index: value));
+                            _autoScrollController.scrollToIndex(value);
                           },
-                          itemBuilder: (context, pageIndex) => Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              IntrinsicHeight(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  margin:
-                                      EdgeInsets.only(top: size.height * 0.04),
-                                  width: size.width * 0.9,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: size.width * 0.03,
-                                      vertical: size.height * 0.03),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(25)),
-                                  child: const Column(
-                                    mainAxisSize: MainAxisSize.min,
+                          itemBuilder: (context, pageIndex) => ListView.builder(
+                            itemCount: state
+                                    .inspectionDetails![buttonsText[pageIndex]]
+                                    .length -
+                                1,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Gap(size.height * 0.01),
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [],
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Gap(size.width * 0.05),
+                                      SizedBox(
+                                        width: size.width * 0.2,
+                                        child: Wrap(
+                                          children: [
+                                            Text(state.inspectionDetails![
+                                                    buttonsText[pageIndex]]
+                                                [index]['properties']['label'])
+                                          ],
+                                        ),
+                                      ),
+                                      Gap(size.width * 0.05),
+                                      getWidget(
+                                          context: context,
+                                          index: index,
+                                          page: buttonsText[pageIndex],
+                                          json: state.inspectionDetails!,
+                                          size: size),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
+                                  Gap(size.height * 0.02),
+                                  if (pageIndex == buttonsText.length - 1 &&
+                                      index ==
+                                          state
+                                                  .inspectionDetails![
+                                                      buttonsText[pageIndex]]
+                                                  .length -
+                                              2)
+                                    Gap(size.height * 0.05),
+                                  if (pageIndex == buttonsText.length - 1 &&
+                                      index ==
+                                          state
+                                                  .inspectionDetails![
+                                                      buttonsText[pageIndex]]
+                                                  .length -
+                                              2)
+                                    ElevatedButton(
+                                        onPressed: () async {},
+                                        style: ElevatedButton.styleFrom(
+                                            minimumSize: const Size(70.0, 35.0),
+                                            padding: EdgeInsets.zero,
+                                            backgroundColor: Colors.black,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5))),
+                                        child: const Text(
+                                          'Submit',
+                                          style: TextStyle(color: Colors.white),
+                                        ))
+                                ],
+                              );
+                            },
                           ),
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.1,
                     )
                   ],
                 );
@@ -190,26 +238,186 @@ class _InspectionOutState extends State<InspectionOut> {
           }),
         ),
       ),
-    ));
+    );
   }
 
-  Widget buildDetailRow(String key, String value) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            key,
-            style: const TextStyle(fontFamily: 'Gilroy', fontSize: 13),
+  Widget getWidget(
+      {required Size size,
+      required String page,
+      required int index,
+      required Map<String, dynamic> json,
+      required BuildContext context}) {
+    switch (json[page][index]['widget']) {
+      case "checkBox":
+        return SizedBox(
+          height: size.height * 0.03,
+          width: size.width * 0.05,
+          child: Checkbox(
+            checkColor: Colors.white,
+            fillColor: json[page][index]['properties']['value'] == true
+                ? const WidgetStatePropertyAll(Colors.black)
+                : const WidgetStatePropertyAll(Colors.white),
+            value: json[page][index]['properties']['value'],
+            side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
+            onChanged: (value) {
+              json[page][index]['properties']['value'] = value;
+              _serviceBloc.add(InspectionJsonUpdated(json: json));
+            },
           ),
-          Text(
-            value,
-            style: const TextStyle(
-                fontFamily: 'Gilroy',
-                fontWeight: FontWeight.bold,
-                fontSize: 13),
-          )
-        ]);
+        );
+      case "textField":
+        TextEditingController textEditingController = TextEditingController();
+
+        textEditingController.text = json[page][index]['properties']['value'];
+
+        textEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: textEditingController.text.length));
+
+        return Container(
+          height: size.height * 0.11,
+          width: size.width * 0.62,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              border: Border.all(color: Colors.black)),
+          child: TextField(
+              textInputAction: TextInputAction.done,
+              controller: textEditingController,
+              cursorColor: Colors.black,
+              minLines: 1,
+              maxLines: 5,
+              maxLength: 200,
+              decoration: const InputDecoration(
+                counterText: '',
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                hintStyle: TextStyle(color: Colors.black38),
+              ),
+              onChanged: (value) {
+                textEditingController.text = value;
+                _serviceBloc.state.json![page][index]['properties']['value'] =
+                    value;
+              }),
+        );
+      case "dropDown":
+        List<String> items = [];
+
+        for (String s in json[page][index]['properties']['items']) {
+          items.add(s);
+        }
+
+        if (json[page][index]['properties']['value'] == '') {
+          json[page][index]['properties']['value'] = items[0];
+        }
+
+        return DropdownButtonHideUnderline(
+          child: DropdownButton2<String>(
+            onMenuStateChange: (isOpen) {},
+            isExpanded: true,
+            items: items
+                .map((String item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ))
+                .toList(),
+            value: json[page][index]['properties']['value'],
+            onChanged: (String? value) {
+              json[page][index]['properties']['value'] = value;
+              _serviceBloc.add(InspectionJsonUpdated(json: json));
+            },
+            buttonStyleData: ButtonStyleData(
+              height: size.height * 0.04,
+              width: size.width * 0.5,
+              padding: const EdgeInsets.only(left: 14, right: 14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.black,
+                ),
+                color: Colors.white,
+              ),
+              elevation: 0,
+            ),
+            iconStyleData: const IconStyleData(
+              icon: Icon(!false
+                  ? Icons.keyboard_arrow_down_rounded
+                  : Icons.keyboard_arrow_up_rounded),
+              iconSize: 14,
+              iconEnabledColor: Colors.black,
+              iconDisabledColor: Colors.black,
+            ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: size.height * 0.3,
+              width: size.width * 0.5,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              offset: const Offset(0, 0),
+              scrollbarTheme: ScrollbarThemeData(
+                radius: const Radius.circular(40),
+                thickness: WidgetStateProperty.all<double>(6),
+                thumbVisibility: WidgetStateProperty.all<bool>(true),
+              ),
+            ),
+            menuItemStyleData: const MenuItemStyleData(
+              height: 30,
+              padding: EdgeInsets.only(left: 14, right: 14),
+            ),
+          ),
+        );
+      case "radioButtons":
+        List<String> options = [];
+
+        for (String s in json[page][index]['properties']['options']) {
+          options.add(s);
+        }
+
+        return SizedBox(
+          height: size.height * 0.25,
+          width: size.width * 0.6,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: options
+                .map(
+                  (e) => ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      json[page][index]['properties']['options']
+                          [options.indexOf(e)],
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                    leading: Radio<int>(
+                      value: options.indexOf(e) + 1,
+                      groupValue: json[page][index]['properties']['value'],
+                      activeColor: Colors
+                          .white, // Change the active radio button color here
+                      fillColor: WidgetStateProperty.all(
+                          Colors.black), // Change the fill color when selected
+                      splashRadius: 20, // Change the splash radius when clicked
+                      onChanged: (value) {
+                        json[page][index]['properties']['value'] = value;
+                        context.read<MultiBloc>().add(
+                            RadioOptionChanged(selectedRadioOption: value!));
+                      },
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        );
+    }
+
+    return const SizedBox();
   }
 }

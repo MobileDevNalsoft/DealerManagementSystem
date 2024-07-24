@@ -8,11 +8,237 @@
             }
         },
         {
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },{
+            "widget": "checkBox",
+            "properties": {
+                "label": "IsWashed",
+                "value": false
+            }
+        },
+        {
             "widget": "textField",
             "properties":{
                 "label": "Remarks",
                 "value": ""
             }
+        },
+        {
+            "status": ""
         }
     ],
     "Rear Side": [
@@ -41,6 +267,9 @@
                     "Sharp Dents"
                 ]
             }
+        },
+        {
+            "status": ""
         }
     ],
     "Interior Condition": [
@@ -70,6 +299,9 @@
                 "label": "Remarks",
                 "value": ""
             }
+        },
+        {
+            "status": ""
         }
     ],
     "Paint Condition": [
@@ -86,6 +318,9 @@
                 "label": "Remarks",
                 "value": ""
             }
+        },
+        {
+            "status": ""
         }
     ]
 }

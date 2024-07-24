@@ -330,6 +330,8 @@ class _HomeProceedView extends State<HomeProceedView> {
                                             right: 10))
                                     .show(context);
                                 context.read<MultiBloc>().state.date = null;
+                                state.serviceUploadStatus =
+                                    ServiceUploadStatus.initial;
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(

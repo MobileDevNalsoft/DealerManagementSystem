@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
@@ -19,7 +20,11 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<ServiceAdded>(_onServiceAdded);
     on<GetServiceHistory>(_onGetServiceHistory);
     on<GetServiceLocations>(_onGetServiceLocations);
+    on<PageChange>(_onPageChange);
     on<GetJobCards>(_onGetJobCards);
+    on<InspectionJsonUpdated>(_onInspectionJsonUpdated);
+    on<InspectionJsonAdded>(_onInspectionJsonAdded);
+    on<GetJson>(_onGetJson);
     on<JobCardStatusUpdated>(_onJobCardStatusUpdated);
     on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
     on<DropDownOpenClose>(_onDropDownOpenClose);
@@ -27,6 +32,62 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   final Repository _repo;
+
+  void _onPageChange(PageChange event, Emitter<ServiceState> emit) {
+    emit(state.copyWith(index: event.index));
+  }
+
+  Future<void> _onGetJson(GetJson event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(jsonStatus: JsonStatus.loading));
+    await rootBundle.loadString("assets/jsons/inspection.json").then(
+      (value) {
+        Log.d(value);
+        emit(state.copyWith(
+            json: jsonDecode(value), jsonStatus: JsonStatus.success));
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(jsonStatus: JsonStatus.failure));
+      },
+    );
+  }
+
+  Future<void> _onInspectionJsonAdded(
+      InspectionJsonAdded event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(
+        inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
+    print('jc no ${event.jobCardNo}');
+    await _repo.addinspection({
+      'job_card_no': event.jobCardNo,
+      'inspection_details': jsonEncode(state.json).toString()
+    }).then(
+      (value) {
+        if (value == 200) {
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
+        } else {
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(
+            inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
+        emit(state.copyWith(
+            inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
+      },
+    );
+  }
+
+  void _onInspectionJsonUpdated(
+      InspectionJsonUpdated event, Emitter<ServiceState> emit) {
+    emit(state.copyWith(json: event.json));
+  }
 
   Future<void> _onJobCardStatusUpdated(
       JobCardStatusUpdated event, Emitter<ServiceState> emit) async {
@@ -160,14 +221,13 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   Future<void> _onGetInspectionDetails(
       GetInspectionDetails event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getInspectionStatus: GetInspectionStatus.loading));
-    print('emitted');
     await _repo.getInspection(event.jobCardNo!).then(
       (json) {
-        print('json $json');
+        print('json ${jsonDecode(json["data"]).runtimeType}');
         if (json['response_code'] == 200) {
           emit(state.copyWith(
-              getInspectionStatus: GetInspectionStatus.success,
-              inspectionDetails: json));
+              inspectionDetails: jsonDecode(json["data"]),
+              getInspectionStatus: GetInspectionStatus.success));
         } else {
           emit(
               state.copyWith(getInspectionStatus: GetInspectionStatus.failure));

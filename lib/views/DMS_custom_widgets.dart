@@ -244,11 +244,8 @@ class DMSCustomWidgets {
                       initialSelectedDate: date ?? DateTime.now(),
                       showActionButtons: true,
                       onCancel: () {
-                        print("initialdate $initialDate");
                         date = initialDate;
-                        context
-                            .read<MultiBloc>()
-                            .add(DateChanged(date: date ?? DateTime.now()));
+
                         Navigator.pop(context);
                       },
                       onSubmit: (p0) {
