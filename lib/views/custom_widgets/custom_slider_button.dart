@@ -5,20 +5,28 @@ import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomSliderButton extends StatefulWidget {
-  final Size size;
-  final BuildContext context;
+  final double height;
+  final double width;
+  final Position position;
+  final Decoration decoration;
   final Widget leftLabel;
+  final void Function() onLeftLabelReached;
+  final void Function() onRightLabelReached;
+  final void Function() onNoStatus;
   final Widget rightLabel;
   final Widget icon;
-  final onDismissed;
   CustomSliderButton(
       {Key? key,
-      required this.size,
-      required this.context,
+      this.height = 45,
+      this.width = 100,
+      this.decoration = const BoxDecoration(),
+      required this.onLeftLabelReached,
+      required this.onRightLabelReached,
+      required this.onNoStatus,
+      this.position = Position.middle,
       required this.leftLabel,
       required this.rightLabel,
-      required this.icon,
-      required this.onDismissed})
+      required this.icon})
       : super(key: key);
 
   @override
@@ -30,86 +38,86 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   late double _startPosition;
   late double _rightPosition;
   late double _leftPosition;
-  late double _initialPosition;
   @override
   void initState() {
     super.initState();
+    print('in init state');
 
-    _leftPosition = widget.size.width * 0.057;
-    _startPosition = widget.size.width * 0.29;
-    _rightPosition = widget.size.width * 0.518;
-    if (true) {
-      _initialPosition = widget.size.width * 0.28;
-    } else if (false) {
-      _initialPosition = _rightPosition;
-    } else if (false) {
-      _initialPosition = _leftPosition;
+    _leftPosition = widget.width * 0.35;
+    _startPosition = widget.width * 0.735;
+    _rightPosition = widget.width * 1.12;
+
+    if (widget.position == Position.middle) {
+      print('in middle');
+      _position = _startPosition;
+    } else if (widget.position == Position.right) {
+      _position = _rightPosition;
+      print('in right');
+    } else if (widget.position == Position.left) {
+      _position = _leftPosition;
+      print('in left');
     }
-    _position = _initialPosition;
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       _position = details.localPosition.dx;
-      if (_position > _rightPosition) {
+      if (_position >= _rightPosition * 0.9) {
         _position = _rightPosition;
-      } else if (_position < _leftPosition) {
+      } else if (_position <= _leftPosition * 1.3) {
         _position = _leftPosition;
       }
     });
   }
 
-  void _onPanEnd(DragEndDetails details) async {
-    if (_position >= _rightPosition - 20) {
-      setState(() {
-        _position = _rightPosition;
-      });
-      return;
-    } else if (_position <= _leftPosition + 20) {
-      setState(() {
-        _position = _leftPosition;
-      });
-      return;
-    } else {
-      setState(() {
+  void _onPanEnd(DragEndDetails details) {
+    setState(() {
+      if (_position == _rightPosition) {
+        widget.onRightLabelReached();
+        return;
+      } else if (_position == _leftPosition) {
+        widget.onLeftLabelReached();
+        return;
+      } else {
         _position = _startPosition;
-      });
-    }
+        widget.onNoStatus();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onPanUpdate: _onPanUpdate,
-      onPanEnd: _onPanEnd,
+      onHorizontalDragUpdate: _onPanUpdate,
+      onHorizontalDragEnd: _onPanEnd,
+      onHorizontalDragCancel: () {
+        setState(() {
+          _position = _startPosition;
+        });
+      },
       child: Stack(
         children: [
           Align(
             alignment: Alignment.center,
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                color: Color.fromRGBO(233, 227, 227, 1),
-                // gradient: LinearGradient(colors: [
-                //   Color.fromARGB(255, 230, 119, 119),
-                //   Color.fromARGB(255, 235, 233, 233),
-                //   Color.fromARGB(255, 230, 119, 119)
-                // ]),
-              ),
-              width: widget.size.width * 0.58,
-              height: 45,
+              decoration: widget.decoration,
+              width: widget.width,
+              height: widget.height,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Align(
+                    alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: Shimmer.fromColors(
                           direction: ShimmerDirection.rtl,
-                          baseColor: Colors.black,
+                          baseColor: Colors.red,
                           highlightColor: Colors.grey.shade100,
                           enabled: true,
-                          child: widget.leftLabel),
+                          child: _position != _leftPosition
+                              ? widget.leftLabel
+                              : SizedBox()),
                     ),
                   ),
                   Align(
@@ -117,10 +125,12 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 16.0),
                       child: Shimmer.fromColors(
-                          baseColor: Colors.black,
+                          baseColor: Colors.green,
                           highlightColor: Colors.grey.shade100,
                           enabled: true,
-                          child: widget.rightLabel),
+                          child: _position != _rightPosition
+                              ? widget.rightLabel
+                              : SizedBox()),
                     ),
                   ),
                 ],
@@ -129,36 +139,22 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
           ),
           Positioned(
             left: _position,
-            top: 1.5,
+            top: widget.height * 0.39,
             child: Container(
-              width: 42,
-              height: 42,
+              width: widget.width * 0.2,
+              height: widget.height * 0.88,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(40),
               ),
               child: Center(
-                  child: Stack(
-                children: [
-                  Center(
-                      child: (_position == _rightPosition)
-                          ? Lottie.asset("assets/lottie/success.json",
+                  child: (_position == _rightPosition)
+                      ? Lottie.asset("assets/lottie/success.json",
+                          repeat: false)
+                      : (_position == _leftPosition)
+                          ? Lottie.asset("assets/lottie/error2.json",
                               repeat: false)
-                          : (_position == _leftPosition)
-                              ? Lottie.asset("assets/lottie/error2.json",
-                                  repeat: false)
-                              : widget.icon),
-                  if (context.watch<ServiceBloc>().state.serviceUploadStatus ==
-                      ServiceUploadStatus.loading)
-                    Align(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(
-                        strokeWidth: widget.size.width * 0.008,
-                        strokeCap: StrokeCap.round,
-                      ),
-                    )
-                ],
-              )),
+                          : widget.icon),
             ),
           ),
         ],
@@ -166,3 +162,5 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     );
   }
 }
+
+enum Position { left, middle, right }

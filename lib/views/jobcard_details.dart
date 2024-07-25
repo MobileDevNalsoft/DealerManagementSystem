@@ -63,28 +63,54 @@ class JobCardDetails extends StatelessWidget {
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.black45,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back_rounded, color: Colors.black)),
-          title: SizedBox(
-            height: size.height * 0.06,
-            width: size.width * 0.45,
-            child: Card(
-                elevation: 8,
+          leadingWidth: size.width * 0.14,
+          leading: Container(
+            margin: EdgeInsets.only(left: size.width * 0.045),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
                 color: Colors.black,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                shadowColor: Colors.orange.shade200,
-                child: Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    'JobCard Details',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                )),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 10,
+                      blurStyle: BlurStyle.outer,
+                      spreadRadius: 0,
+                      color: Colors.orange.shade200,
+                      offset: const Offset(0, 0))
+                ]),
+            child: Transform(
+              transform: Matrix4.translationValues(-3, 0, 0),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: Colors.white)),
+            ),
           ),
+          title: Container(
+              height: size.height * 0.05,
+              width: size.width * 0.45,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10,
+                        blurStyle: BlurStyle.outer,
+                        spreadRadius: 0,
+                        color: Colors.orange.shade200,
+                        offset: const Offset(0, 0))
+                  ]),
+              child: Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'JobCard Details',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 16),
+                ),
+              )),
           centerTitle: true,
         ),
         body: Container(
@@ -105,7 +131,7 @@ class JobCardDetails extends StatelessWidget {
                 height: size.height * 0.31,
                 width: size.width * 0.9,
                 padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.03,
+                    horizontal: size.width * 0.05,
                     vertical: size.height * 0.03),
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -117,30 +143,14 @@ class JobCardDetails extends StatelessWidget {
                   children: [
                     buildDetailRow(
                         'Job Card Number', service.jobCardNo.toString()),
-                    Divider(
-                      color: Colors.grey.shade100,
-                      height: size.height * 0.03,
-                      thickness: 3,
-                    ),
+                    Gap(size.height * 0.03),
                     buildDetailRow('Vehicle Registration Number',
                         service.registrationNo.toString()),
-                    Divider(
-                      color: Colors.grey.shade100,
-                      height: size.height * 0.03,
-                      thickness: 3,
-                    ),
+                    Gap(size.height * 0.03),
                     buildDetailRow('Location', service.location.toString()),
-                    Divider(
-                      color: Colors.grey.shade100,
-                      height: size.height * 0.03,
-                      thickness: 3,
-                    ),
+                    Gap(size.height * 0.03),
                     buildDetailRow('Job Type', service.jobType.toString()),
-                    Divider(
-                      color: Colors.grey.shade100,
-                      height: size.height * 0.03,
-                      thickness: 3,
-                    ),
+                    Gap(size.height * 0.03),
                     buildDetailRow(
                         'Schedule Date', service.scheduleDate.toString())
                   ],

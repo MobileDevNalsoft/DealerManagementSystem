@@ -31,6 +31,11 @@ class InspectionJsonUpdated extends ServiceEvent {
 
 class GetJson extends ServiceEvent {}
 
+class UpdateSliderPosition extends ServiceEvent {
+  final Position position;
+  UpdateSliderPosition({required this.position});
+}
+
 class GetJobCards extends ServiceEvent {
   final String? query;
   GetJobCards({this.query});

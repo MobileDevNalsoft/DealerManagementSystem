@@ -27,6 +27,7 @@ final class ServiceState {
       this.serviceUploadStatus,
       this.jobCardStatusUpdate,
       this.jsonStatus,
+      this.sliderPosition,
       this.json,
       this.dropDownOpen,
       this.inspectionJsonUploadStatus,
@@ -49,6 +50,7 @@ final class ServiceState {
   final Map<String, dynamic>? inspectionDetails;
   final bool? dropDownOpen;
   int? index;
+  Position? sliderPosition;
   Map<String, dynamic>? json;
   int? bottomNavigationBarActiveIndex;
   ServiceUploadStatus? serviceUploadStatus;
@@ -63,6 +65,7 @@ final class ServiceState {
         serviceUploadStatus: ServiceUploadStatus.initial,
         jobCardStatusUpdate: JobCardStatusUpdate.initial,
         getInspectionStatus: GetInspectionStatus.initial,
+        sliderPosition: Position.middle,
         jsonStatus: JsonStatus.initial,
         bottomNavigationBarActiveIndex: 0,
         index: 0,
@@ -86,6 +89,7 @@ final class ServiceState {
       Map<String, dynamic>? inspectionDetails,
       InspectionJsonUploadStatus? inspectionJsonUploadStatus,
       List<Service>? jobCards,
+      Position? sliderPosition,
       int? index,
       List<dynamic>? locations}) {
     return ServiceState(
@@ -98,6 +102,7 @@ final class ServiceState {
         json: json ?? this.json,
         jsonStatus: jsonStatus ?? this.jsonStatus,
         index: index ?? this.index,
+        sliderPosition: sliderPosition ?? this.sliderPosition,
         serviceLocationsStatus:
             serviceLocationsStatus ?? this.serviceLocationsStatus,
         getInspectionStatus: getInspectionStatus ?? this.getInspectionStatus,
