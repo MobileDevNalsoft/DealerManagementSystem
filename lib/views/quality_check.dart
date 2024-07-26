@@ -65,9 +65,14 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                     child: Container(
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [Color.fromARGB(255, 230, 119, 119), Color.fromARGB(255, 214, 207, 207), Color.fromARGB(255, 230, 119, 119)])),
+                      decoration: BoxDecoration(gradient: LinearGradient(
+                              colors: [Colors.black45, Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                              // begin: Alignment.topCenter,
+                              // end: Alignment.bottomCenter,
+                              stops: [0.1, 0.5, 1])
+                          // gradient: LinearGradient(
+                          //     colors: [Color.fromARGB(255, 230, 119, 119), Color.fromARGB(255, 214, 207, 207), Color.fromARGB(255, 230, 119, 119)])
+                          ),
                       child: BodyCanvas(
                           displayAcceptedStatus: true,
                           generalParts: widget.generalParts,
@@ -101,6 +106,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                           borderRadius: BorderRadius.circular(12),
                                           margin: EdgeInsets.only(top: 24, left: isMobile ? 10 : size.width * 0.8, right: 10))
                                       .show(context);
+                                  return;
                                 }
                               }
                               context.read<VehiclePartsInteractionBloc>().add(SubmitQualityCheckStatusEvent(jobCardNo: "JC-LOC-12"));
@@ -172,17 +178,28 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                 controller: scrollController,
                                 slivers: [
                                   SliverToBoxAdapter(
-                                    child: Center(
-                                        child: Column(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                          ),
-                                          height: 4,
-                                          width: 32,
-                                          margin: EdgeInsets.symmetric(vertical: 12),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Gap(size.width*0.35),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                              ),
+                                              height: 4,
+                                              width: 32,
+                                              padding: EdgeInsets.zero,
+                                            ),
+                                            Spacer(),
+                                            Align(alignment: Alignment.centerRight,child: IconButton(onPressed: (){
+                                              Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart ="";
+                                              Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
+                                            }, icon: Icon(Icons.cancel,),visualDensity: VisualDensity.compact,))
+                                          ],
                                         ),
                                         Text(
                                           "Qualtiy Check",
@@ -194,17 +211,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                           ),
                                         )
                                       ],
-                                    )
-
-                                        // IconButton( padding: EdgeInsets.zero,visualDensity: VisualDensity.compact,onPressed: ()async{
-                                        //   draggableScrollableController.animateTo(0.1, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-                                        //   await Future.delayed(Duration(milliseconds: 300));
-                                        //   Provider.of<BodySelectorViewModel>(context,listen:false).isTapped=false;
-                                        //   Provider.of<BodySelectorViewModel>(context,listen:false).selectedGeneralBodyPart="";
-                                        // },icon: Icon(Icons.keyboard_arrow_down_rounded,size: 40,) ,)
-
-                                        //
-                                        ),
+                                    ),
                                   ),
                                   SliverList.list(addRepaintBoundaries: true, children: [
                                     Padding(
@@ -363,13 +370,18 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                           CustomSliderButton(
                                               size: size,
                                               context: context,
-                                              rightLabel: Text("Accept",style: TextStyle(color: Colors.green),),
-                                              leftLabel: Text("Reject",style: TextStyle(color: Colors.red),),
+                                              rightLabel: Text(
+                                                "Accept",
+                                                style: TextStyle(color: Colors.green),
+                                              ),
+                                              leftLabel: Text(
+                                                "Reject",
+                                                style: TextStyle(color: Colors.red),
+                                              ),
                                               icon: Stack(
                                                 children: [
                                                   CircleAvatar(
                                                     backgroundColor: Color.fromRGBO(38, 38, 40, 1),
-                                                    
                                                   ),
                                                   Positioned(
                                                       top: 8,
@@ -416,13 +428,16 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                     //     rejectionController
                                                     //         .text.isEmpty,
                                                     maxLines: 5,
+                                                    style: TextStyle(color: Colors.white),
                                                     onTap: () {
                                                       context
                                                           .read<MultiBloc>()
                                                           .add(OnFocusChange(focusNode: rejectionFocus, scrollController: scrollController, context: context));
                                                     },
+
                                                     decoration: InputDecoration(
                                                         hintStyle: TextStyle(fontSize: 14),
+                                                        fillColor: Color.fromRGBO(38, 38, 40, 1),
                                                         filled: true,
                                                         contentPadding: EdgeInsets.only(left: 14, top: 14),
                                                         hintText: "Reasons for rejection",
@@ -597,31 +612,31 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 children: [
                   Align(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: 
-                      // Shimmer.fromColors(
-                      //     direction: ShimmerDirection.rtl,
-                      //     baseColor:  Colors.red,
-                      //     highlightColor: Color.fromARGB(255, 255, 159, 69),
-                      //     enabled: true,
-                          // child:
-                           widget.leftLabel
-                          // ),
-                    ),
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child:
+                            // Shimmer.fromColors(
+                            //     direction: ShimmerDirection.rtl,
+                            //     baseColor:  Colors.red,
+                            //     highlightColor: Color.fromARGB(255, 255, 159, 69),
+                            //     enabled: true,
+                            // child:
+                            widget.leftLabel
+                        // ),
+                        ),
                   ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: 
-                      // Shimmer.fromColors(
-                      //     baseColor: Colors.green,
-                      //     highlightColor: Color.fromARGB(255, 255, 159, 69),
-                      //     enabled: true,
-                      //     child:
-                           widget.rightLabel
-                          //  ),
-                    ),
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child:
+                            // Shimmer.fromColors(
+                            //     baseColor: Colors.green,
+                            //     highlightColor: Color.fromARGB(255, 255, 159, 69),
+                            //     enabled: true,
+                            //     child:
+                            widget.rightLabel
+                        //  ),
+                        ),
                   ),
                 ],
               ),
@@ -634,19 +649,20 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color:  Color.fromRGBO(36, 38, 40, 1),
-                borderRadius: BorderRadius.circular(40),
-                boxShadow: [
-                  BoxShadow(color: Color.fromARGB(255, 255, 159, 69), blurRadius: 0.1, spreadRadius: 0.5 )]
-              ),
+                  color: Color.fromRGBO(36, 38, 40, 1),
+                  borderRadius: BorderRadius.circular(40),
+                  boxShadow: [BoxShadow(color: Color.fromARGB(255, 255, 159, 69), blurRadius: 0.1, spreadRadius: 0.5)]),
               child: Center(
                   child: (_position == _rightPosition)
-                      ? 
+                      ?
                       // Icon(Icons.switch_left_rounded)
                       Lottie.asset("assets/lottie/success.json", repeat: false)
                       : (_position == _leftPosition)
                           ? Lottie.asset("assets/lottie/error2.json", repeat: false)
-                          : Icon(Icons.switch_left_rounded,color: Colors.white,)),
+                          : Icon(
+                              Icons.switch_left_rounded,
+                              color: Colors.white,
+                            )),
             ),
           ),
         ],
