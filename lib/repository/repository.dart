@@ -238,7 +238,7 @@ class Repository {
     }
   }
 
-  Future<int> addVehiclePartMedia(
+ Future<int> addVehiclePartMedia(
       {Map<String, dynamic>? bodyPartData,
       required String id,
       required String name}) async {

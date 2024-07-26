@@ -50,7 +50,6 @@ dependencies:
   syncfusion_flutter_datagrid: ^25.1.35
   syncfusion_flutter_core: ^25.1.35
   bloc: ^8.1.4
-  shimmer: ^3.0.0
   flutter_bloc: ^8.1.5
   get_it: ^7.7.0
   shared_preferences: ^2.2.3
@@ -115,7 +114,6 @@ flutter:
     - assets/images/
     - assets/lottie/
     - assets/jsons/
-    - assets/rive/
 
   #   - images/a_dot_ham.jpeg
 

@@ -156,7 +156,9 @@ class _InspectionViewState extends State<InspectionView> {
                           controller: _pageController,
                           onPageChanged: (value) {
                             _serviceBloc.add(PageChange(index: value));
-                            _autoScrollController.scrollToIndex(value);
+                            _autoScrollController.scrollToIndex(value,
+                                duration: Duration(milliseconds: 500),
+                                preferPosition: AutoScrollPosition.begin);
                           },
                           itemBuilder: (context, pageIndex) => ListView.builder(
                             itemCount:

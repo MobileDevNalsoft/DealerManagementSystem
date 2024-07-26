@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/views/custom_widgets/custom_slider_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -29,14 +30,17 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
     on<DropDownOpenClose>(_onDropDownOpenClose);
     on<GetInspectionDetails>(_onGetInspectionDetails);
-    on<GetGatePass>(_onGetGatePass);
-
   }
 
   final Repository _repo;
 
   void _onPageChange(PageChange event, Emitter<ServiceState> emit) {
     emit(state.copyWith(index: event.index));
+  }
+
+  void _onUpdateSliderPosition(
+      UpdateSliderPosition event, Emitter<ServiceState> emit) {
+    emit(state.copyWith(sliderPosition: event.position));
   }
 
   Future<void> _onGetJson(GetJson event, Emitter<ServiceState> emit) async {
@@ -208,7 +212,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 jobType: service['job_type']));
           }
           emit(state.copyWith(
-              getJobCardStatus: GetJobCardStatus.success,serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
+              jobCardStatus: GetJobCardStatus.success,serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
               
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));

@@ -52,18 +52,13 @@ void main() async {
       child: MaterialApp(
         theme: ThemeData(fontFamily: 'Gilroy'),
         debugShowCheckedModeBanner: false,
-        home: 
-        // CustomDetector(model: BodySelectorViewModel(),generalParts: generalBodyPart),
-
-        
-        QualityCheck(model: BodySelectorViewModel(),generalParts: generalBodyPart,acceptedParts: acceptedParts,),
-        //  !sharedPreferences.containsKey('isLogged') ||
-        //         sharedPreferences.getBool('isLogged') == false
-        //     ? const LoginView()
-        //     : const DashboardView(),
-        // routes: {
-        //   '/home': (context) => HomeView(),
-        // },
+        home: !sharedPreferences.containsKey('isLogged') ||
+                sharedPreferences.getBool('isLogged') == false
+            ? const LoginView()
+            : DashboardView(),
+        routes: {
+          '/home': (context) => HomeView(),
+        },
       ),
     ),
   ));

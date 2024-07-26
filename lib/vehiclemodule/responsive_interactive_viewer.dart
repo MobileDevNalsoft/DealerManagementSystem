@@ -27,15 +27,10 @@ class CustomDetector extends StatefulWidget {
 
 class _CustomDetectorState extends State<CustomDetector>
     with SingleTickerProviderStateMixin {
-
-
   @override
   void initState() {
     super.initState();
-    
   }
-
-  
 
   @override
   Widget build(BuildContext context) {

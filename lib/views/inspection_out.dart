@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dms/views/custom_widgets/custom_slider_button.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:slider_button/slider_button.dart';
 
 import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
@@ -22,6 +26,8 @@ class InspectionOut extends StatefulWidget {
 class _InspectionOutState extends State<InspectionOut> {
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
+  final SliderButtonController _sliderButtonController =
+      SliderButtonController();
 
   late ServiceBloc _serviceBloc;
 
@@ -47,31 +53,58 @@ class _InspectionOutState extends State<InspectionOut> {
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.black45,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back_rounded, color: Colors.black)),
-          title: SizedBox(
-            height: size.height * 0.06,
-            width: size.width * 0.45,
-            child: Card(
-                elevation: 8,
+          leadingWidth: size.width * 0.14,
+          leading: Container(
+            margin: EdgeInsets.only(left: size.width * 0.045),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
                 color: Colors.black,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                shadowColor: Colors.orange.shade200,
-                child: Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    'Inspection Out',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                )),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 10,
+                      blurStyle: BlurStyle.outer,
+                      spreadRadius: 0,
+                      color: Colors.orange.shade200,
+                      offset: const Offset(0, 0))
+                ]),
+            child: Transform(
+              transform: Matrix4.translationValues(-3, 0, 0),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: Colors.white)),
+            ),
           ),
+          title: Container(
+              height: size.height * 0.05,
+              width: size.width * 0.45,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10,
+                        blurStyle: BlurStyle.outer,
+                        spreadRadius: 0,
+                        color: Colors.orange.shade200,
+                        offset: const Offset(0, 0))
+                  ]),
+              child: const Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'Inspection Out',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 16),
+                ),
+              )),
           centerTitle: true,
         ),
         body: Container(
+          padding: EdgeInsets.only(top: size.height * 0.01),
           height: size.height,
           width: size.width,
           decoration: const BoxDecoration(
@@ -83,6 +116,7 @@ class _InspectionOutState extends State<InspectionOut> {
           ),
           child:
               BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
+            print('position ${state.sliderPosition}');
             switch (state.getInspectionStatus) {
               case GetInspectionStatus.loading:
                 return Transform(
@@ -161,81 +195,477 @@ class _InspectionOutState extends State<InspectionOut> {
                           controller: _pageController,
                           onPageChanged: (value) {
                             _serviceBloc.add(PageChange(index: value));
-                            _autoScrollController.scrollToIndex(value);
+                            _autoScrollController.scrollToIndex(value,
+                                duration: const Duration(milliseconds: 500),
+                                preferPosition: AutoScrollPosition.begin);
                           },
-                          itemBuilder: (context, pageIndex) => ListView.builder(
-                            itemCount: state
-                                    .inspectionDetails![buttonsText[pageIndex]]
-                                    .length -
-                                1,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  Gap(size.height * 0.01),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Gap(size.width * 0.05),
-                                      SizedBox(
-                                        width: size.width * 0.2,
-                                        child: Wrap(
-                                          children: [
-                                            Text(state.inspectionDetails![
+                          itemBuilder: (context, pageIndex) => Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: state
+                                          .inspectionDetails![
+                                              buttonsText[pageIndex]]
+                                          .length -
+                                      1,
+                                  itemBuilder: (context, index) {
+                                    state.sliderPosition = state
+                                                .inspectionDetails![
                                                     buttonsText[pageIndex]]
-                                                [index]['properties']['label'])
+                                                .last['status'] ==
+                                            "Accepted"
+                                        ? Position.right
+                                        : state
+                                                    .inspectionDetails![
+                                                        buttonsText[pageIndex]]
+                                                    .last['status'] ==
+                                                "Rejected"
+                                            ? Position.left
+                                            : Position.middle;
+                                    _sliderButtonController.position =
+                                        state.sliderPosition;
+                                    return Column(
+                                      children: [
+                                        Gap(size.height * 0.01),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Gap(size.width * 0.05),
+                                            SizedBox(
+                                              width: size.width * 0.2,
+                                              child: Wrap(
+                                                children: [
+                                                  Text(state.inspectionDetails![
+                                                          buttonsText[
+                                                              pageIndex]][index]
+                                                      ['properties']['label'])
+                                                ],
+                                              ),
+                                            ),
+                                            Gap(size.width * 0.05),
+                                            getWidget(
+                                                context: context,
+                                                index: index,
+                                                page: buttonsText[pageIndex],
+                                                json: state.inspectionDetails!,
+                                                size: size),
                                           ],
                                         ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                              // SizedBox(
+                              //   height: size.height * 0.1,
+                              //   width: size.width,
+                              //   child: CustomSliderButton(
+                              //     height: size.height * 0.06,
+                              //     width: size.width * 0.6,
+                              //     controller: _sliderButtonController,
+                              //     decoration: BoxDecoration(
+                              //       color:
+                              //           const Color.fromRGBO(233, 227, 227, 1),
+                              //       borderRadius: BorderRadius.circular(22),
+                              //     ),
+                              //     onLeftLabelReached: () {
+                              //       state
+                              //           .inspectionDetails![
+                              //               buttonsText[pageIndex]]
+                              //           .last['status'] = 'Rejected';
+                              //       state.sliderPosition = Position.left;
+                              //     },
+                              //     onRightLabelReached: () {
+                              //       state
+                              //           .inspectionDetails![
+                              //               buttonsText[pageIndex]]
+                              //           .last['status'] = 'Accepted';
+                              //       state.sliderPosition = Position.right;
+                              //       if (pageIndex == buttonsText.length - 1) {
+                              //         showSubmitDialog(
+                              //             size: size,
+                              //             state: state,
+                              //             controller: _sliderButtonController,
+                              //             page: buttonsText[pageIndex]);
+                              //       }
+                              //     },
+                              //     onNoStatus: () {
+                              //       state
+                              //           .inspectionDetails![
+                              //               buttonsText[pageIndex]]
+                              //           .last['status'] = '';
+                              //     },
+                              //     leftLabel: const Text(
+                              //       'Reject',
+                              //       style:
+                              //           TextStyle(fontWeight: FontWeight.bold),
+                              //     ),
+                              //     rightLabel: const Text(
+                              //       'Accept',
+                              //       style:
+                              //           TextStyle(fontWeight: FontWeight.bold),
+                              //     ),
+                              //     icon: Stack(
+                              //       children: [
+                              //         Container(
+                              //             height: size.height * 0.1,
+                              //             width: size.width * 0.1,
+                              //             decoration: BoxDecoration(
+                              //                 shape: BoxShape.circle,
+                              //                 color: Colors.black,
+                              //                 boxShadow: [
+                              //                   BoxShadow(
+                              //                       blurRadius: 15,
+                              //                       blurStyle: BlurStyle.outer,
+                              //                       spreadRadius: 0,
+                              //                       color:
+                              //                           Colors.orange.shade200,
+                              //                       offset: const Offset(0, 0))
+                              //                 ])),
+                              //         const Positioned(
+                              //             top: 8,
+                              //             child: Icon(
+                              //               Icons.chevron_left_rounded,
+                              //               color: Colors.white,
+                              //             )),
+                              //         const Positioned(
+                              //             top: 8,
+                              //             right: 1,
+                              //             child: Icon(
+                              //               Icons.chevron_right_rounded,
+                              //               color: Colors.white,
+                              //             ))
+                              //       ],
+                              //     ),
+                              //   ),
+                              // )
+                              DraggableScrollableSheet(
+                                controller: DraggableScrollableController(),
+                                snap: true,
+                                snapAnimationDuration:
+                                    Duration(milliseconds: 500),
+                                shouldCloseOnMinExtent: true,
+                                minChildSize: 0.25,
+                                maxChildSize: true ? 0.5 : 0.7,
+                                initialChildSize: true ? 0.5 : 0.7,
+                                builder: (BuildContext context,
+                                    ScrollController scrollController) {
+                                  return Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      width: size.width * 0.776,
+                                      decoration: BoxDecoration(
+                                          color: Color.fromRGBO(26, 26, 27, 1),
+                                          borderRadius:
+                                              BorderRadius.circular(25)),
+                                      child: CustomScrollView(
+                                        controller: scrollController,
+                                        slivers: [
+                                          SliverToBoxAdapter(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Gap(size.width * 0.35),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                                Radius.circular(
+                                                                    10)),
+                                                      ),
+                                                      height: 4,
+                                                      width: 32,
+                                                      padding: EdgeInsets.zero,
+                                                    ),
+                                                    Spacer(),
+                                                    Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: IconButton(
+                                                          onPressed: () {},
+                                                          icon: Icon(
+                                                            Icons.cancel,
+                                                          ),
+                                                          visualDensity:
+                                                              VisualDensity
+                                                                  .compact,
+                                                        ))
+                                                  ],
+                                                ),
+                                                Text(
+                                                  "Qualtiy Check",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    letterSpacing: 1.5,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 15,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          SliverList.list(
+                                              addRepaintBoundaries: true,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 18.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Gap(16),
+                                                      Row(
+                                                        children: [
+                                                          Gap(8),
+                                                          CircleAvatar(
+                                                            radius: 4,
+                                                            backgroundColor:
+                                                                Color.fromRGBO(
+                                                                    145,
+                                                                    19,
+                                                                    19,
+                                                                    1),
+                                                          ),
+                                                          Gap(6),
+                                                          Text("No data",
+                                                              style: TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        223,
+                                                                        220,
+                                                                        220),
+                                                              )),
+                                                        ],
+                                                      ),
+                                                      Gap(8.0),
+                                                      SizedBox(
+                                                        width: size.width * 0.8,
+                                                        height:
+                                                            size.height * 0.12,
+                                                        child: GridView.builder(
+                                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                              crossAxisCount:
+                                                                  true ? 3 : 5,
+                                                              crossAxisSpacing:
+                                                                  10,
+                                                              mainAxisSpacing:
+                                                                  10),
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
+                                                              child: InkWell(
+                                                                  onTap: () {},
+                                                                  child:
+                                                                      SizedBox()),
+                                                            );
+                                                          },
+                                                          itemCount: 1,
+                                                        ),
+                                                      ),
+                                                      Gap(8),
+                                                      SizedBox(
+                                                        height:
+                                                            size.height * 0.1,
+                                                        width: size.width,
+                                                        child:
+                                                            CustomSliderButton(
+                                                          height: size.height *
+                                                              0.06,
+                                                          width:
+                                                              size.width * 0.6,
+                                                          controller:
+                                                              _sliderButtonController,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: const Color
+                                                                .fromRGBO(233,
+                                                                227, 227, 1),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        22),
+                                                          ),
+                                                          onLeftLabelReached:
+                                                              () {
+                                                            state
+                                                                .inspectionDetails![
+                                                                    buttonsText[
+                                                                        pageIndex]]
+                                                                .last['status'] = 'Rejected';
+                                                            state.sliderPosition =
+                                                                Position.left;
+                                                          },
+                                                          onRightLabelReached:
+                                                              () {
+                                                            state
+                                                                .inspectionDetails![
+                                                                    buttonsText[
+                                                                        pageIndex]]
+                                                                .last['status'] = 'Accepted';
+                                                            state.sliderPosition =
+                                                                Position.right;
+                                                            if (pageIndex ==
+                                                                buttonsText
+                                                                        .length -
+                                                                    1) {
+                                                              showSubmitDialog(
+                                                                  size: size,
+                                                                  state: state,
+                                                                  controller:
+                                                                      _sliderButtonController,
+                                                                  page: buttonsText[
+                                                                      pageIndex]);
+                                                            }
+                                                          },
+                                                          onNoStatus: () {
+                                                            state
+                                                                .inspectionDetails![
+                                                                    buttonsText[
+                                                                        pageIndex]]
+                                                                .last['status'] = '';
+                                                          },
+                                                          leftLabel: const Text(
+                                                            'Reject',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          rightLabel:
+                                                              const Text(
+                                                            'Accept',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          icon: Stack(
+                                                            children: [
+                                                              Container(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.1,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.1,
+                                                                  decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            blurRadius:
+                                                                                15,
+                                                                            blurStyle: BlurStyle
+                                                                                .outer,
+                                                                            spreadRadius:
+                                                                                0,
+                                                                            color:
+                                                                                Colors.orange.shade200,
+                                                                            offset: const Offset(0, 0))
+                                                                      ])),
+                                                              const Positioned(
+                                                                  top: 8,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .chevron_left_rounded,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  )),
+                                                              const Positioned(
+                                                                  top: 8,
+                                                                  right: 1,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .chevron_right_rounded,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Gap(8),
+                                                      if (state
+                                                              .inspectionDetails![
+                                                                  buttonsText[
+                                                                      pageIndex]]
+                                                              .last['status'] ==
+                                                          'Rejected')
+                                                        TextFormField(
+                                                          controller:
+                                                              TextEditingController(),
+                                                          // autofocus:
+                                                          //     rejectionController
+                                                          //         .text.isEmpty,
+                                                          maxLines: 5,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          onTap: () {},
+
+                                                          decoration: InputDecoration(
+                                                              hintStyle:
+                                                                  TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                              fillColor: Color
+                                                                  .fromRGBO(
+                                                                      38,
+                                                                      38,
+                                                                      40,
+                                                                      1),
+                                                              filled: true,
+                                                              contentPadding:
+                                                                  EdgeInsets.only(
+                                                                      left: 14,
+                                                                      top: 14),
+                                                              hintText:
+                                                                  "Reasons for rejection",
+                                                              border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              16))),
+                                                          onChanged: (value) {},
+                                                        )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ])
+                                        ],
                                       ),
-                                      Gap(size.width * 0.05),
-                                      getWidget(
-                                          context: context,
-                                          index: index,
-                                          page: buttonsText[pageIndex],
-                                          json: state.inspectionDetails!,
-                                          size: size),
-                                    ],
-                                  ),
-                                  Gap(size.height * 0.02),
-                                  if (pageIndex == buttonsText.length - 1 &&
-                                      index ==
-                                          state
-                                                  .inspectionDetails![
-                                                      buttonsText[pageIndex]]
-                                                  .length -
-                                              2)
-                                    Gap(size.height * 0.05),
-                                  if (pageIndex == buttonsText.length - 1 &&
-                                      index ==
-                                          state
-                                                  .inspectionDetails![
-                                                      buttonsText[pageIndex]]
-                                                  .length -
-                                              2)
-                                    ElevatedButton(
-                                        onPressed: () async {},
-                                        style: ElevatedButton.styleFrom(
-                                            minimumSize: const Size(70.0, 35.0),
-                                            padding: EdgeInsets.zero,
-                                            backgroundColor: Colors.black,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5))),
-                                        child: const Text(
-                                          'Submit',
-                                          style: TextStyle(color: Colors.white),
-                                        ))
-                                ],
-                              );
-                            },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: size.height * 0.1,
-                    )
                   ],
                 );
               default:
@@ -245,6 +675,89 @@ class _InspectionOutState extends State<InspectionOut> {
         ),
       ),
     );
+  }
+
+  void showSubmitDialog(
+      {required Size size,
+      required ServiceState state,
+      required String page,
+      required SliderButtonController controller}) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              contentPadding: EdgeInsets.only(top: size.height * 0.01),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: size.width * 0.03),
+                    child: const Text(
+                      'Hey Advisor...\nAre you done with inspection ?',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Gap(size.height * 0.01),
+                  Container(
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(size.height * 0.001),
+                    decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              state.inspectionDetails![page].last['status'] =
+                                  '';
+                              _serviceBloc.add(UpdateSliderPosition(
+                                  position: Position.middle));
+                              Navigator.pop(context, false);
+                            },
+                            style: TextButton.styleFrom(
+                                fixedSize:
+                                    Size(size.width * 0.3, size.height * 0.1),
+                                foregroundColor: Colors.white),
+                            child: const Text(
+                              'No',
+                            ),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.white,
+                          thickness: 0.5,
+                        ),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            style: TextButton.styleFrom(
+                                fixedSize:
+                                    Size(size.width * 0.3, size.height * 0.1),
+                                foregroundColor: Colors.white),
+                            child: const Text(
+                              'Yes',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              actionsPadding: EdgeInsets.zero,
+              buttonPadding: EdgeInsets.zero);
+        });
   }
 
   Widget getWidget(
