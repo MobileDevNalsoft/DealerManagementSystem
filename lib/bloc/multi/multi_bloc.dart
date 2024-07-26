@@ -18,12 +18,8 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<DateChanged>(_onDateChanged);
     on<YearChanged>(_onYearChanged);
     on<GetSalesPersons>(_onGetSalesPersons);
-    on<GetJson>(_onGetJson);
     on<CheckBoxTapped>(_onCheckBoxTapped);
-    on<PageChange>(_onPageChange);
-    on<InspectionJsonUpdated>(_onInspectionJsonUpdated);
     on<RadioOptionChanged>(_onRadioOptionChanged);
-    on<InspectionJsonAdded>(_onInspectionJsonAdded);
     on<OnFocusChange>(_onFocusChanged);
   }
 
@@ -48,34 +44,10 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     print(state.salesPersons);
   }
 
-  Future<void> _onGetJson(GetJson event, Emitter<MultiBlocState> emit) async {
-    emit(state.copyWith(jsonStatus: JsonStatus.loading));
-    await rootBundle.loadString("assets/jsons/inspection.json").then(
-      (value) {
-        Log.d(value);
-        emit(state.copyWith(
-            json: jsonDecode(value), jsonStatus: JsonStatus.success));
-      },
-    ).onError(
-      (error, stackTrace) {
-        emit(state.copyWith(jsonStatus: JsonStatus.failure));
-      },
-    );
-  }
-
   void _onCheckBoxTapped(CheckBoxTapped event, Emitter<MultiBlocState> emit) {
     state.checkBoxStates![event.key] = !state.checkBoxStates![event.key]!;
     print(state.checkBoxStates);
     emit(state.copyWith(checkBoxStates: state.checkBoxStates));
-  }
-
-  void _onPageChange(PageChange event, Emitter<MultiBlocState> emit) {
-    emit(state.copyWith(index: event.index));
-  }
-
-  void _onInspectionJsonUpdated(
-      InspectionJsonUpdated event, Emitter<MultiBlocState> emit) {
-    emit(state.copyWith(json: event.json));
   }
 
   void _onFocusChanged(OnFocusChange event, Emitter<MultiBlocState> emit) {
@@ -111,38 +83,6 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
         );
       }
     });
-  }
-
-  Future<void> _onInspectionJsonAdded(
-      InspectionJsonAdded event, Emitter<MultiBlocState> emit) async {
-    emit(state.copyWith(
-        inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
-    print('jc no ${event.jobCardNo}');
-    await _repo.addinspection({
-      'job_card_no': event.jobCardNo,
-      'inspection_details': state.json.toString()
-    }).then(
-      (value) {
-        if (value == 200) {
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
-        } else {
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
-        }
-      },
-    ).onError(
-      (error, stackTrace) {
-        emit(state.copyWith(
-            inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
-        emit(state.copyWith(
-            inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
-      },
-    );
   }
 
   void _onRadioOptionChanged(

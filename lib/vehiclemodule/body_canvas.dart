@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:dms/vehiclemodule/body_painter.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:flutter/material.dart';
@@ -5,61 +7,48 @@ import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:touchable/touchable.dart';
 
-
 class BodyCanvas extends ViewModelWidget<BodySelectorViewModel> {
   final List<GeneralBodyPart>? generalParts;
-
-  BodyCanvas({super.key,this.generalParts});
+  final List<GeneralBodyPart>? acceptedParts;
+  final List<GeneralBodyPart>? rejectedParts;
+  final List<GeneralBodyPart>? pendingParts;
+  final bool displayAcceptedStatus;
+  BodyCanvas({super.key, this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts,this.displayAcceptedStatus=false});
 
   @override
   Widget build(BuildContext context, BodySelectorViewModel model) {
     return CanvasTouchDetector(
+      gesturesToOverride: Provider.of<BodySelectorViewModel>(context, listen: true).isTapped == false ? [GestureType.onTapDown] : [GestureType.onTapUp],
       builder: (context) => CustomPaint(
         painter: BodyPainter(
-          context: context,
-          model: model,
-          generalParts: generalParts
-
-        ),
+            context: context,
+            model: model, 
+            generalParts: generalParts, 
+            acceptedParts: acceptedParts, 
+            rejectedParts: rejectedParts, 
+            pendingParts: pendingParts,
+            displayAcceptedStatus: displayAcceptedStatus
+            ),
       ),
-      gesturesToOverride: [GestureType.onTapDown],
-    
     );
   }
 }
 
-
-
-class BodySelectorViewModel extends ChangeNotifier{
+class BodySelectorViewModel extends ChangeNotifier {
   String _selectedGeneralBodyPart = '';
-  bool _interaction = false;
-  bool _isTapped= false;
-  bool isSelected =false;
-  
+  bool _isTapped = false;
+  bool isSelected = false;
 
-  void selectGeneralBodyPart(String name){
-    _selectedGeneralBodyPart = name;
+  bool get isTapped => _isTapped;
+  String get selectedGeneralBodyPart => _selectedGeneralBodyPart;
 
-    print("name from provider $name");
+  set isTapped(bool value) {
+    _isTapped = value;
     notifyListeners();
   }
 
-set isTapped(bool value){
-  _isTapped=value;
-  notifyListeners();
-}
-bool get isTapped=>_isTapped;
-
- String get selectedGeneralBodyPart => _selectedGeneralBodyPart;
-  get interacting => _interaction;
-
-  void setInteraction(bool value){
-    _interaction = value;
+  set selectedGeneralBodyPart(String value) {
+    _selectedGeneralBodyPart = value;
     notifyListeners();
-  }
-  
-  set selectedGeneralBodyPart(String value){
-    _selectedGeneralBodyPart =value;
-    notifyListeners();  
   }
 }

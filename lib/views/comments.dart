@@ -6,6 +6,7 @@ import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CommentsView extends StatefulWidget {
   VehiclePartMedia vehiclePartMedia;
@@ -22,28 +24,33 @@ class CommentsView extends StatefulWidget {
   State<CommentsView> createState() => _CommentsViewState();
 }
 
-class _CommentsViewState extends State<CommentsView> {
+class _CommentsViewState extends State<CommentsView>
+    with SingleTickerProviderStateMixin {
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
-  var imagesCaptured = [];
   final _formKey = GlobalKey<FormState>();
-  // AnimationController controller = AnimationController(vsync: this,duration: Duration(seconds: 2));
+  late AnimationController animationController;
   @override
   void initState() {
     super.initState();
-    initData();
-    context.read<MultiBloc>().state.isHighlighted=false;
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    widget.vehiclePartMedia.comments ??= "";
+    widget.vehiclePartMedia.images ??= [];
+    animationController.repeat();
   }
 
-  void initData() async {
-    // _cameras = await availableCameras();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     print("images ${widget.vehiclePartMedia.images}");
-    if (widget.vehiclePartMedia.images == null)
-      widget.vehiclePartMedia.images = [];
+    widget.vehiclePartMedia.images ??= [];
     commentsController.text = widget.vehiclePartMedia.comments ?? "";
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
@@ -62,14 +69,8 @@ class _CommentsViewState extends State<CommentsView> {
                   child: Card(
                     color: Colors.white,
                     elevation: 10,
-                    // decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(16.0),
-                    //     color: Colors.white),
-                    // padding: EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
-                    // width: isMobile ? size.width * 0.74 : size.width * 0.4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           widget.vehiclePartMedia.name
@@ -78,32 +79,26 @@ class _CommentsViewState extends State<CommentsView> {
                                   widget.vehiclePartMedia.name[0],
                                   widget.vehiclePartMedia.name[0]
                                       .toUpperCase()),
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
                         ),
-                        // Text("Comments",
-                        //     style: TextStyle(
-                        //         fontFamily: 'Montserrat',
-                        //         fontWeight: FontWeight.bold,
-                        //         fontSize: 18)),
                         Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 2),
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                           height: size.height * 0.1,
                           child: TextFormField(
                             key: _formKey,
                             focusNode: commentsFocus,
                             controller: commentsController,
-                            maxLines: 10, 
+                            maxLines: 10,
                             validator: (value) {
-                              if(value!.isEmpty){
+                              if (value!.isEmpty) {
                                 return "Please enter comments";
                               }
                               return null;
-                            },           
-                                            
+                            },
                             decoration: InputDecoration(
                                 hintStyle: TextStyle(fontSize: 14),
                                 // fillColor: Color.fromARGB(255, 255, 255, 255),
@@ -121,7 +116,6 @@ class _CommentsViewState extends State<CommentsView> {
                                       comments: value));
                             },
                           ),
-                          
                         ),
                         Center(
                             child: IconButton(
@@ -147,7 +141,12 @@ class _CommentsViewState extends State<CommentsView> {
                         BlocConsumer<VehiclePartsInteractionBloc,
                             VehiclePartsInteractionBlocState>(
                           listener: (context, state) {
-                            // TODO: implement listener
+                            if (widget.vehiclePartMedia.images!.length == 3) {
+                              animationController.reset();
+                              animationController.stop();
+                            } else {
+                              animationController.repeat();
+                            }
                           },
                           builder: (context, state) {
                             return SizedBox(
@@ -183,7 +182,13 @@ class _CommentsViewState extends State<CommentsView> {
                                               right: -14.0,
                                               child: IconButton(
                                                   onPressed: () {
-                                                    if (widget.vehiclePartMedia
+                                                    if (context
+                                                            .read<
+                                                                VehiclePartsInteractionBloc>()
+                                                            .state
+                                                            .mapMedia[widget
+                                                                .vehiclePartMedia
+                                                                .name]!
                                                             .images !=
                                                         null) {
                                                       context
@@ -217,7 +222,6 @@ class _CommentsViewState extends State<CommentsView> {
                                 ));
                           },
                         ),
-<<<<<<< HEAD:lib/views/comments.dart
                         // if (widget.vehiclePartMedia.images != null &&
                         //     widget.vehiclePartMedia.images!.isNotEmpty)
                         //   InkWell(
@@ -235,43 +239,60 @@ class _CommentsViewState extends State<CommentsView> {
                         //       ],
                         //     ),
                         //   ),
-=======
                         Gap(2),
+                        Gap(8),
                         if (widget.vehiclePartMedia.images != null &&
                             widget.vehiclePartMedia.images!.isNotEmpty)
                           InkWell(
-                            radius:  size.width*0.06,
+                            radius: size.width * 0.06,
                             borderRadius: BorderRadius.circular(20),
-                            onTap: (){
+                            onTap: () {
                               commentsFocus.unfocus();
-                                if(commentsController.text.trim().isEmpty){
-                                  commentsFocus.requestFocus();
-                                  Flushbar(
-                                    flushbarPosition: FlushbarPosition.TOP,
-                                    backgroundColor: Colors.red,
-                                    message: 'Please add comments',
-                                    duration: const Duration(seconds: 2),
-                                    borderRadius: BorderRadius.circular(12),
-                                    margin: EdgeInsets.only(
-                                        top: 24,
-                                        left: isMobile ? 10 : size.width * 0.8,
-                                        right: 10))
-                                .show(context);
-                                }
-                                else{
-                                context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(bodyPartName: widget.vehiclePartMedia.name,jobCardNo: 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}') as VehiclePartsInteractionBlocEvent);
-                                }
-                              },
+                              if (commentsController.text.trim().isEmpty) {
+                                commentsFocus.requestFocus();
+                                Flushbar(
+                                        flushbarPosition: FlushbarPosition.TOP,
+                                        backgroundColor: Colors.red,
+                                        message: 'Please add comments',
+                                        duration: const Duration(seconds: 2),
+                                        borderRadius: BorderRadius.circular(12),
+                                        margin: EdgeInsets.only(
+                                            top: 24,
+                                            left: isMobile
+                                                ? 10
+                                                : size.width * 0.8,
+                                            right: 10))
+                                    .show(context);
+                              } else {
+                                //use service/jobcard number
+                                context.read<VehiclePartsInteractionBloc>().add(
+                                    SubmitBodyPartVehicleMediaEvent(
+                                        bodyPartName:
+                                            widget.vehiclePartMedia.name,
+                                        jobCardNo: 'JC-LOC-12'
+                                        // 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}'
+                                        ) as VehiclePartsInteractionBlocEvent);
+                              }
+                            },
                             child: CircleAvatar(
-                              maxRadius: size.width*0.045,
-                              backgroundColor: const Color.fromARGB(255, 145, 19, 19),
-                              child: Center(child: Icon(Icons.cloud_upload_rounded,color: Colors.white,size: size.width*0.055,)),
-                                  
-                                  
+                              maxRadius: size.width * 0.045,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 145, 19, 19),
+                              child: Center(
+                                  child: Icon(
+                                Icons.cloud_upload_rounded,
+                                color: Colors.white,
+                                size: size.width * 0.055,
+                              )),
                             ),
                           ),
->>>>>>> origin/saisanjit:lib/views/comments_view.dart
-                      Gap(8)
+                        Gap(8),
+                        Text(
+                          "Upload",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                        Gap(2)
                       ],
                     ),
                   ),
@@ -284,13 +305,92 @@ class _CommentsViewState extends State<CommentsView> {
               right: -6.0,
               child: IconButton(
                   onPressed: () {
-                    if(widget.vehiclePartMedia.images!.isEmpty){
-                      context.read<MultiBloc>().state.isHighlighted = true;
+                    if (context
+                                .read<VehiclePartsInteractionBloc>()
+                                .state
+                                .mapMedia[widget.vehiclePartMedia.name] ==
+                            null ||
+                        (context
+                                .read<VehiclePartsInteractionBloc>()
+                                .state
+                                .mapMedia[widget.vehiclePartMedia.name]!
+                                .comments!
+                                .isEmpty &&
+                            context
+                                .read<VehiclePartsInteractionBloc>()
+                                .state
+                                .mapMedia[widget.vehiclePartMedia.name]!
+                                .images!
+                                .isEmpty) ||
+                        context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .isUploaded) {
+                      Provider.of<BodySelectorViewModel>(context, listen: false)
+                          .isTapped = false;
+                      Provider.of<BodySelectorViewModel>(context, listen: false)
+                          .selectedGeneralBodyPart = "";
+                      return;
                     }
-                   else{ Provider.of<BodySelectorViewModel>(context, listen: false)
-                        .isTapped = false;
-                    Provider.of<BodySelectorViewModel>(context, listen: false)
-                        .selectedGeneralBodyPart = "";}
+                    String message = "";
+                    if (context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .comments!
+                            .isNotEmpty &&
+                        context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .images!
+                            .isEmpty) {
+                      message = 'Please add atleat one image';
+                    } else if (context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .comments!
+                            .isEmpty &&
+                        context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .images!
+                            .isNotEmpty) {
+                      message = 'Please add comments';
+                    } else if (context
+                            .read<VehiclePartsInteractionBloc>()
+                            .state
+                            .mapMedia[widget.vehiclePartMedia.name]!
+                            .isUploaded ==
+                        false) {
+                      message = 'Upload your files before closing';
+                    }
+                    // else if(widget.vehiclePartMedia.comments!.isNotEmpty &&
+                    //     widget.vehiclePartMedia.images!.isNotEmpty){
+                    //      message = '';
+                    //     }
+                    if (message.isNotEmpty) {
+                      animationController.repeat();
+                      Flushbar(
+                              flushbarPosition: FlushbarPosition.TOP,
+                              backgroundColor: Colors.red,
+                              message: message,
+                              duration: const Duration(seconds: 2),
+                              borderRadius: BorderRadius.circular(12),
+                              margin: EdgeInsets.only(
+                                  top: 24,
+                                  left: isMobile ? 10 : size.width * 0.8,
+                                  right: 10))
+                          .show(context);
+                      return;
+                    }
+                    // Provider.of<BodySelectorViewModel>(context, listen: false)
+                    //     .isTapped = false;
+                    // Provider.of<BodySelectorViewModel>(context, listen: false)
+                    //     .selectedGeneralBodyPart = "";
                   },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),

@@ -155,16 +155,17 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                         decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage('assets/images/login.png'),
-                                alignment: Alignment.topCenter),
+                                alignment: Alignment.topCenter,
+                                isAntiAlias: true),
                             gradient: LinearGradient(
                                 colors: [
-                                  Color.fromARGB(255, 145, 19, 19),
-                                  Colors.white,
-                                  Color.fromARGB(255, 201, 138, 138)
+                                  Colors.black45,
+                                  Colors.black26,
+                                  Colors.black45
                                 ],
-                                begin: Alignment.topRight,
+                                begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                stops: [0.08, 0.6, 1])),
+                                stops: [0.1, 0.5, 1])),
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,9 +254,9 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
-                                        elevation: 5,
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 145, 19, 19),
+                                        elevation: 10,
+                                        shadowColor: Colors.orange.shade200,
+                                        backgroundColor: Colors.black,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(15)),

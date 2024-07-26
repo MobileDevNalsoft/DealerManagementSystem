@@ -112,6 +112,22 @@ class Repository {
     }
   }
 
+  Future<Map<String, dynamic>> getInspection(String jobCardNo) async {
+    ApiResponse apiResponse = await _api
+        .get('getInspection', queryParameters: {"jobCardNo": jobCardNo});
+
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        return jsonDecode(apiResponse.response!.data);
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
   Future<List<dynamic>> getSalesPersons(String searchText) async {
     print(searchText);
     ApiResponse apiResponse = await _api
@@ -203,8 +219,8 @@ class Repository {
     }
   }
 
-  Future getImage() async {
-    ApiResponse apiResponse = await _api.get('getImage');
+  Future getImage(String jobCardNo) async {
+    ApiResponse apiResponse = await _api.get('getImage',queryParameters: {"jobCardNo":jobCardNo});
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
@@ -222,13 +238,41 @@ class Repository {
     }
   }
 
+<<<<<<<<< Temporary merge branch 1
+  Future<int> addVehiclePartMedia(
+      {Map<String, dynamic>? bodyPartData, int? id}) async {
+    print(bodyPartData);
+    ApiResponse apiResponse = await _api.post('addImage', data: {
+      "id": 3,
+=========
   Future<int>  addVehiclePartMedia({Map<String, dynamic>? bodyPartData,required String id,required String name}) async {
     print(bodyPartData);
     ApiResponse apiResponse = await _api.post('addVehiclePartMedia',data: {
       "id":id,
       "name":name,
+>>>>>>>>> Temporary merge branch 2
       "data": jsonEncode(bodyPartData),
     });
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return 200;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+   Future<int> addQualityStatus(
+      {Map<String, dynamic>? qualityCheckJson}) async {
+    print(qualityCheckJson);
+    ApiResponse apiResponse = await _api.post('qualityCheckStatus', data: qualityCheckJson);
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
