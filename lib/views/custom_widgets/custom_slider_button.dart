@@ -154,7 +154,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
           ),
           Positioned(
             left: _sliderButtonController.currentPosition,
-            top: widget.height * 0.39,
+            top: widget.height * 0.055,
             child: Container(
               width: widget.width * 0.2,
               height: widget.height * 0.88,

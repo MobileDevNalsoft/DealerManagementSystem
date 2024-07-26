@@ -209,7 +209,8 @@ class _InspectionViewState extends State<InspectionView> {
                                           context.read<ServiceBloc>().add(
                                               InspectionJsonAdded(
                                                   jobCardNo: _serviceBloc.state
-                                                      .service!.jobCardNo!));
+                                                      .service!.jobCardNo!,
+                                                  inspectionIn: 'true'));
                                           context
                                               .read<VehicleBloc>()
                                               .state
@@ -318,7 +319,6 @@ class _InspectionViewState extends State<InspectionView> {
                 hintStyle: TextStyle(color: Colors.black38),
               ),
               onChanged: (value) {
-                textEditingController.text = value;
                 _serviceBloc.state.json![page][index]['properties']['value'] =
                     value;
               }),

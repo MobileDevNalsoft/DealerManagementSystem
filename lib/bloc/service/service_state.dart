@@ -33,6 +33,7 @@ final class ServiceState {
       this.inspectionJsonUploadStatus,
       this.index,
       this.getInspectionStatus,
+      this.jobCardNo,
       this.bottomNavigationBarActiveIndex,
       this.inspectionDetails,
       this.serviceLocationsStatus});
@@ -43,6 +44,7 @@ final class ServiceState {
   JobCardStatusUpdate? jobCardStatusUpdate;
   InspectionJsonUploadStatus? inspectionJsonUploadStatus;
   JsonStatus? jsonStatus;
+  String? jobCardNo;
   final Service? service;
   final List<Service>? services;
   final List<Service>? jobCards;
@@ -85,6 +87,7 @@ final class ServiceState {
       ServiceUploadStatus? serviceUploadStatus,
       JobCardStatusUpdate? jobCardStatusUpdate,
       Map<String, dynamic>? json,
+      String? jobCardNo,
       bool? dropDownOpen,
       Map<String, dynamic>? inspectionDetails,
       InspectionJsonUploadStatus? inspectionJsonUploadStatus,
@@ -97,6 +100,7 @@ final class ServiceState {
         getJobCardStatus: getJobCardStatus ?? this.getJobCardStatus,
         jobCardStatusUpdate: jobCardStatusUpdate ?? jobCardStatusUpdate,
         inspectionDetails: inspectionDetails ?? this.inspectionDetails,
+        jobCardNo: jobCardNo ?? this.jobCardNo,
         inspectionJsonUploadStatus:
             inspectionJsonUploadStatus ?? this.inspectionJsonUploadStatus,
         json: json ?? this.json,

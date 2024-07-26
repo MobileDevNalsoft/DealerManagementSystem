@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:core';
 
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/services.dart';
@@ -66,7 +67,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     print('jc no ${event.jobCardNo}');
     await _repo.addinspection({
       'job_card_no': event.jobCardNo,
-      'inspection_details': jsonEncode(state.json).toString()
+      'inspection_details': jsonEncode(state.json).toString(),
+      'in': event.inspectionIn
     }).then(
       (value) {
         if (value == 200) {

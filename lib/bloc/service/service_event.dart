@@ -21,7 +21,8 @@ class PageChange extends ServiceEvent {
 
 class InspectionJsonAdded extends ServiceEvent {
   final String jobCardNo;
-  InspectionJsonAdded({required this.jobCardNo});
+  final String inspectionIn;
+  InspectionJsonAdded({required this.jobCardNo, required this.inspectionIn});
 }
 
 class InspectionJsonUpdated extends ServiceEvent {

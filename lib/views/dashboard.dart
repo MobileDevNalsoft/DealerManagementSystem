@@ -559,6 +559,11 @@ class JobCardPage extends StatelessWidget {
                                                                         20)),
                                                     enableFeedback: true,
                                                     onTap: () {
+                                                      state.jobCardNo = state
+                                                          .jobCards![index]
+                                                          .jobCardNo!;
+                                                      print(
+                                                          'job card no ${state.jobCardNo}');
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(

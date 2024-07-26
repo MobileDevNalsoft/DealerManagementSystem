@@ -58,7 +58,7 @@ void main() async {
         home: !sharedPreferences.containsKey('isLogged') ||
                 sharedPreferences.getBool('isLogged') == false
             ? const LoginView()
-            : DashboardView(),
+            : DribbleUI(),
         routes: {
           '/home': (context) => HomeView(),
         },
