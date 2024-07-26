@@ -30,6 +30,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
     on<DropDownOpenClose>(_onDropDownOpenClose);
     on<GetInspectionDetails>(_onGetInspectionDetails);
+    on<GetGatePass>(_onGetGatePass);
   }
 
   final Repository _repo;
@@ -212,7 +213,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 jobType: service['job_type']));
           }
           emit(state.copyWith(
-              jobCardStatus: GetJobCardStatus.success,serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
+              getJobCardStatus: GetJobCardStatus.success,serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
               
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));

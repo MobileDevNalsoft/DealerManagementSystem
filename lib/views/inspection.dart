@@ -319,7 +319,7 @@ class _InspectionViewState extends State<InspectionView> {
               ),
               onChanged: (value) {
                 
-                context.read<MultiBloc>().state.json![page][index]['properties']
+                context.read<ServiceBloc>().state.json![page][index]['properties']
                     ['value'] = value;
               }),
         );

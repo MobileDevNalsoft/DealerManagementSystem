@@ -61,7 +61,8 @@ final class ServiceState {
       this.inspectionDetails,
       this.serviceLocationsStatus,
       this.gatePassStatus,
-      this.gatePassno});
+      this.gatePassno,
+      this.sliderPosition});
 
   factory ServiceState.initial() {
     return ServiceState(

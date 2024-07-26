@@ -8,8 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:ticket_clippers/ticket_clippers.dart' hide RoundedEdgeClipper;
-import 'package:ticket_widget/ticket_widget.dart' hide TicketClipper;
+import 'package:ticket_clippers/ticket_clippers.dart';
+// import 'package:ticket_widget/ticket_widget.dart' hide TicketClipper;
 import 'package:widgets_to_image/widgets_to_image.dart' ;
 class GatePass extends StatefulWidget {
   const GatePass({super.key});
@@ -91,52 +91,45 @@ class _GatePassState extends State<GatePass> {
                   child: WidgetsToImage(
                                     controller: widgetsToImageController,
 
-                    child: TicketWidget(
-                      width: size.width * 0.8, // Ensure this width matches the inner child width
-                      height: size.height * 0.55,
-                      // decoration: BoxDecoration(color: Color.fromARGB(255, 247, 245, 243), borderRadius: BorderRadius.circular(16)),
-                      isCornerRounded: true,
-                      shadow: [],                                    
-
-                      child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Gap(size.height*0.04),
-                          TicketClipper(
-                            clipper: RoundedEdgeClipper(
-                              points: 8,
-                              depth: 16,
-                              edge: Edge.all,
-                            ),
-                            shadow: const BoxShadow(color: Colors.black, spreadRadius: 1, blurRadius: 2.5),
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: size.height * 0.2,
-                              width: size.width * 0.7,
-                              decoration: BoxDecoration(color: Colors.orange.shade200),
-                              child: Text(context.read<ServiceBloc>().state.gatePassno??"",style:TextStyle(color: Colors.black,fontWeight: FontWeight.w800,fontSize: 18)),
-                            ),
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Gap(size.height*0.04),
+                        TicketClipper(
+                          clipper: RoundedEdgeClipper(  
+                            points: 8,
+                            depth: 16,
+                            edge: Edge.vertical,
+                            
                           ),
-                          Gap(size.height*0.035),
-                          DottedLine(dashLength: 10,alignment: WrapAlignment.center,),
-                          Gap(size.height*0.025),
-                          Container(
-                            decoration: BoxDecoration(border: Border.symmetric(vertical: BorderSide(color: Colors.black),horizontal: BorderSide(color: Colors.black,),),borderRadius: BorderRadius.circular(16)),
-                            child: QrImageView(
-                              data: context.read<ServiceBloc>().state.gatePassno??"",
-                              version: QrVersions.auto,
-                              size: size.width * 0.4,
-                              // embeddedImage: ,
-                              eyeStyle: QrEyeStyle(color: Colors.black, eyeShape: QrEyeShape.circle ),
-                              gapless: true,
-                              // embeddedImage: AssetImage('assets/images/dashboard_car.png'),
-                              embeddedImageStyle: QrEmbeddedImageStyle(
-                                size: Size(80, 80),
-                              ),
-                            ),
+                          // shadow: const BoxShadow(color: Colors.black, spreadRadius: 1, blurRadius: 2.5),
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: size.height * 0.2,
+                            width: size.width * 0.7,
+                            decoration: BoxDecoration(color: Colors.white),
+                            child: Text(context.read<ServiceBloc>().state.gatePassno??"",style:TextStyle(color: Colors.black,fontWeight: FontWeight.w800,fontSize: 18)),
                           ),
-                        ],
-                      ),
+                        ),
+                        // Gap(size.height*0.035),
+                        // DottedLine(dashLength: 10,alignment: WrapAlignment.center,),
+                        // Gap(size.height*0.025),
+                        // Container(
+                        //   decoration: BoxDecoration(border: Border.symmetric(vertical: BorderSide(color: Colors.black),horizontal: BorderSide(color: Colors.black,),),borderRadius: BorderRadius.circular(16)),
+                        //   child: QrImageView(
+                        //     data: context.read<ServiceBloc>().state.gatePassno??"",
+                        //     version: QrVersions.auto,
+                        //     size: size.width * 0.4,
+                        //     // embeddedImage: ,
+                        //     eyeStyle: QrEyeStyle(color: Colors.black, eyeShape: QrEyeShape.circle ),
+                        //     gapless: true,
+                        //     // embeddedImage: AssetImage('assets/images/dashboard_car.png'),
+                        //     embeddedImageStyle: QrEmbeddedImageStyle(
+                        //       size: Size(80, 80),
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
                     ),
                   ),
                 ),
@@ -178,7 +171,6 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
 
     // Left or Horizontal
     path.moveTo(0, 0);
-    path.lineTo(0, h / 3);
     double x = 0;
     double y = h / 3;
     double c = w - depth;
@@ -194,15 +186,17 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
     }
 
     // Bottom or Vertical
-    path.lineTo(0, h);
-    path.lineTo(w / 2, h);
-    x = w / 2;
+    path.lineTo(0, h-20);
+    path.arcToPoint(Offset(20,h),radius: Radius.circular(-20),clockwise: false );
+    
+    
+    x = 20;
     y = h;
     c = h - depth;
     i = w / points;
 
     if (edge == Edge.bottom || edge == Edge.vertical || edge == Edge.all) {
-      while (x < w) {
+      while (x < w-40) {
         path.lineTo(x + 8, y);
         x = x + 8;
         path.quadraticBezierTo(x + i / 2, c, x + i, y);
@@ -211,6 +205,7 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
     }
 // path.lineTo(w, y);
     // Right or Horizontal
+    path.arcToPoint(Offset(w,h-20),radius: Radius.circular(40),clockwise: false );
     path.lineTo(w, h / 1.5);
     x = w;
     y = h / 1.5;
@@ -243,8 +238,7 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
       }
     }
     path.lineTo(0, 0);
-    path.addOval(
-        Rect.fromCircle(center: Offset(32.0, 32), radius: 10.0));
+    
     path.close();
     return path;
   }
