@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
@@ -6,10 +9,11 @@ import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-
 import '../bloc/service/service_bloc.dart';
 
 class CustomDetector extends StatefulWidget {
@@ -21,21 +25,17 @@ class CustomDetector extends StatefulWidget {
   State<CustomDetector> createState() => _CustomDetectorState();
 }
 
-class _CustomDetectorState extends State<CustomDetector> {
-  late ServiceBloc _serviceBloc;
+class _CustomDetectorState extends State<CustomDetector>
+    with SingleTickerProviderStateMixin {
+
 
   @override
   void initState() {
     super.initState();
-    _serviceBloc = BlocProvider.of<ServiceBloc>(context);
-    widget.generalParts!.forEach((value) {
-      if (!value.name.startsWith('text')) {
-        context
-            .read<VehiclePartsInteractionBloc>()
-            .add(AddCommentsEvent(name: value.name));
-      }
-    });
+    
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +66,14 @@ class _CustomDetectorState extends State<CustomDetector> {
                               left: isMobile ? 10 : size.width * 0.8,
                               right: size.width * 0.03),
                         ).show(context);
+                        Provider.of<BodySelectorViewModel>(context,
+                                listen: false)
+                            .isTapped = false;
+                        Provider.of<BodySelectorViewModel>(context,
+                                listen: false)
+                            .selectedGeneralBodyPart = "";
                         // Navigator.of(context).push(MaterialPageRoute(
                         //         builder: (_) => DashboardView()));
-                        
                       }
                     },
                     child: GestureDetector(
@@ -88,11 +93,13 @@ class _CustomDetectorState extends State<CustomDetector> {
                             // image: DecorationImage(
                             //     image: AssetImage("assets/images/road.jpg"),
                             //     fit: BoxFit.fill),
-                            gradient: LinearGradient(colors: [
-                          Color.fromARGB(255, 230, 119, 119),
-                          Color.fromARGB(255, 214, 207, 207),
-                          Color.fromARGB(255, 230, 119, 119)
-                        ])),
+                            // color:  Colors.black45,
+                        gradient: LinearGradient(
+                colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                // begin: Alignment.topCenter,
+                // end: Alignment.bottomCenter,
+                stops: [0.1, 0.5, 1])
+                        ),
                         child: BodyCanvas(
                           generalParts: widget.generalParts,
                         ),
@@ -102,63 +109,55 @@ class _CustomDetectorState extends State<CustomDetector> {
                   if (Provider.of<BodySelectorViewModel>(context, listen: true)
                       .isTapped)
                     Positioned(
-                      left: isMobile ? size.width * 0.129 : size.width * 0.365,
-                      // right: size.width * 0.1,
-                      top: isMobile ? 150 : 200,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          BlocConsumer<VehiclePartsInteractionBloc,
-                              VehiclePartsInteractionBlocState>(
-                            listener: (context, state) {
-                              state.media.forEach((value) {
-                                print(
-                                    "listening ${value.name} ${value.images}");
-                              });
-                            },
-                            builder: (context, state) {
-                              return CommentsView(
-                                vehiclePartMedia: state.media.firstWhere(
-                                    (e) =>
-                                        e.name ==
-                                        Provider.of<BodySelectorViewModel>(
-                                                context,
-                                                listen: true)
-                                            .selectedGeneralBodyPart,
-                                    orElse: () => VehiclePartMedia(
-                                        name:
-                                            Provider.of<BodySelectorViewModel>(
-                                                    context,
-                                                    listen: true)
-                                                .selectedGeneralBodyPart,
-                                        comments: "")),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                        left:
+                            isMobile ? size.width * 0.129 : size.width * 0.365,
+                        // right: size.width * 0.1,
+                        top: isMobile ? 150 : 200,
+                        child:
+                            // Card()
+                            CommentsView(
+                          vehiclePartMedia: context
+                                  .read<VehiclePartsInteractionBloc>()
+                                  .state
+                                  .mapMedia[Provider.of<BodySelectorViewModel>(
+                                      context,
+                                      listen: false)
+                                  .selectedGeneralBodyPart] ??
+                              VehiclePartMedia(
+                                  name: Provider.of<BodySelectorViewModel>(
+                                          context,
+                                          listen: false)
+                                      .selectedGeneralBodyPart,
+                                  isUploaded: false),
+                        )),
                   Positioned(
                     bottom: 100,
                     left: 155,
                     child: ElevatedButton(
                         onPressed: () {
-                             Navigator.of(context).push(MaterialPageRoute(
+                          if (!Provider.of<BodySelectorViewModel>(context,
+                                  listen: false)
+                              .isTapped) {
+                            Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => DashboardView()));
+                          }
                           // context
                           //     .read<VehiclePartsInteractionBloc>()
                           //     .add(SubmitVehicleMediaEvent());
                         },
                         style: ElevatedButton.styleFrom(
-                            // minimumSize: const Size(35.0, 35.0),
-                            // padding: const EdgeInsets.all(8),
-                            backgroundColor:
-                                const Color.fromARGB(255, 145, 19, 19),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18))),
-                        child: const Text(  
+                                                  backgroundColor: Colors.white,
+                                                  minimumSize: isMobile
+                                                      ? const Size(80, 25)
+                                                      : const Size(80.0, 20.0),
+                                                  padding: EdgeInsets.zero,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5))),
+                        child: const Text(
                           'Save',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                         )),
                   ),
                 ],
@@ -169,7 +168,7 @@ class _CustomDetectorState extends State<CustomDetector> {
                   color: Colors.blueGrey.withOpacity(0.25),
                   child: Center(
                       child: Lottie.asset('assets/lottie/car_loading.json',
-                        height: size.height * 0.4, width: size.width * 0.4)),
+                          height: size.height * 0.4, width: size.width * 0.4)),
                 )
             ],
           ),

@@ -105,7 +105,32 @@ class _CommentsViewState extends State<CommentsView> {
                             },           
                                             
                             decoration: InputDecoration(
+<<<<<<<<< Temporary merge branch 1:lib/views/comments.dart
+                                hintStyle: const TextStyle(fontSize: 14),
+=========
+                                suffixIcon: IconButton(
+                                onPressed: () async {
+                                  commentsFocus.unfocus();
+                                  if (widget.vehiclePartMedia.images!.length <
+                                      3) {
+                                    ImagePicker imagePicker = ImagePicker();
+                                    XFile? image = await imagePicker.pickImage(
+                                      source: ImageSource.camera,
+                                      preferredCameraDevice: CameraDevice.rear
+                                    );
+                                    if (image != null) {
+                                      context
+                                          .read<VehiclePartsInteractionBloc>()
+                                          .add(AddImageEvent(
+                                              name:
+                                                  widget.vehiclePartMedia.name,
+                                              image: image));
+                                    }
+                                  }
+                                },
+                                icon: Transform(transform: Matrix4.translationValues(10, 16, 0),child: Stack(alignment: Alignment.center,children: [Icon(Icons.add_photo_alternate_rounded),Lottie.asset('assets/lottie/highlight.json',repeat: false,alignment: Alignment.center)]))),
                                 hintStyle: TextStyle(fontSize: 14),
+>>>>>>>>> Temporary merge branch 2:lib/views/comments_view.dart
                                 // fillColor: Color.fromARGB(255, 255, 255, 255),
                                 filled: true,
                                 contentPadding:
@@ -123,6 +148,7 @@ class _CommentsViewState extends State<CommentsView> {
                           ),
                           
                         ),
+<<<<<<<<< Temporary merge branch 1:lib/views/comments.dart
                         Center(
                             child: IconButton(
                                 onPressed: () async {
@@ -143,7 +169,32 @@ class _CommentsViewState extends State<CommentsView> {
                                     }
                                   }
                                 },
-                                icon: Icon(Icons.add_photo_alternate_rounded))),
+                                icon: const Icon(
+                                    Icons.add_photo_alternate_rounded))),
+=========
+                        Gap(4),
+                        // Center(
+                        //     child: IconButton(
+                        //         onPressed: () async {
+                        //           commentsFocus.unfocus();
+                        //           if (widget.vehiclePartMedia.images!.length <
+                        //               3) {
+                        //             ImagePicker imagePicker = ImagePicker();
+                        //             XFile? image = await imagePicker.pickImage(
+                        //               source: ImageSource.camera,
+                        //             );
+                        //             if (image != null) {
+                        //               context
+                        //                   .read<VehiclePartsInteractionBloc>()
+                        //                   .add(AddImageEvent(
+                        //                       name:
+                        //                           widget.vehiclePartMedia.name,
+                        //                       image: image));
+                        //             }
+                        //           }
+                        //         },
+                        //         icon: Icon(Icons.add_photo_alternate_rounded))),
+>>>>>>>>> Temporary merge branch 2:lib/views/comments_view.dart
                         BlocConsumer<VehiclePartsInteractionBloc,
                             VehiclePartsInteractionBlocState>(
                           listener: (context, state) {
@@ -217,7 +268,7 @@ class _CommentsViewState extends State<CommentsView> {
                                 ));
                           },
                         ),
-<<<<<<< HEAD:lib/views/comments.dart
+<<<<<<<<< Temporary merge branch 1:lib/views/comments.dart
                         // if (widget.vehiclePartMedia.images != null &&
                         //     widget.vehiclePartMedia.images!.isNotEmpty)
                         //   InkWell(
@@ -235,7 +286,8 @@ class _CommentsViewState extends State<CommentsView> {
                         //       ],
                         //     ),
                         //   ),
-=======
+                        const Gap(8)
+=========
                         Gap(2),
                         if (widget.vehiclePartMedia.images != null &&
                             widget.vehiclePartMedia.images!.isNotEmpty)
@@ -270,8 +322,8 @@ class _CommentsViewState extends State<CommentsView> {
                                   
                             ),
                           ),
->>>>>>> origin/saisanjit:lib/views/comments_view.dart
                       Gap(8)
+>>>>>>>>> Temporary merge branch 2:lib/views/comments_view.dart
                       ],
                     ),
                   ),
