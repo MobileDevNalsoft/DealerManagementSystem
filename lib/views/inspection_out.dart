@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:slider_button/slider_button.dart';
 
 import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
@@ -25,6 +26,8 @@ class InspectionOut extends StatefulWidget {
 class _InspectionOutState extends State<InspectionOut> {
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
+  final SliderButtonController _sliderButtonController =
+      SliderButtonController();
 
   late ServiceBloc _serviceBloc;
 
@@ -221,7 +224,8 @@ class _InspectionOutState extends State<InspectionOut> {
                                                 "Rejected"
                                             ? Position.left
                                             : Position.middle;
-                                    print(state.sliderPosition);
+                                    _sliderButtonController.position =
+                                        state.sliderPosition;
                                     return Column(
                                       children: [
                                         Gap(size.height * 0.01),
@@ -257,107 +261,406 @@ class _InspectionOutState extends State<InspectionOut> {
                                   },
                                 ),
                               ),
-                              SizedBox(
-                                height: size.height * 0.1,
-                                width: size.width,
-                                child: CustomSliderButton(
-                                  height: size.height * 0.06,
-                                  width: size.width * 0.6,
-                                  position: state.sliderPosition!,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(233, 227, 227, 1),
-                                    borderRadius: BorderRadius.circular(22),
-                                  ),
-                                  onLeftLabelReached: () {
-                                    print('reached');
-                                    state
-                                        .inspectionDetails![
-                                            buttonsText[pageIndex]]
-                                        .last['status'] = 'Rejected';
-                                    print(
-                                        'status ${state.inspectionDetails![buttonsText[pageIndex]].last['status']}');
-                                    if (pageIndex == buttonsText.length - 1) {
-                                      showSubmitDialog(
-                                          size: size,
-                                          state: state,
-                                          page: buttonsText[pageIndex]);
-                                    }
-                                    print(
-                                        'status ${state.inspectionDetails![buttonsText[pageIndex]].last['status']}');
-                                    if (state
-                                            .inspectionDetails![
-                                                buttonsText[pageIndex]]
-                                            .last['status'] ==
-                                        '') {
-                                      setState(() {
-                                        print('middle');
-                                      });
-                                    }
-                                  },
-                                  onRightLabelReached: () {
-                                    state
-                                        .inspectionDetails![
-                                            buttonsText[pageIndex]]
-                                        .last['status'] = 'Accepted';
+                              // SizedBox(
+                              //   height: size.height * 0.1,
+                              //   width: size.width,
+                              //   child: CustomSliderButton(
+                              //     height: size.height * 0.06,
+                              //     width: size.width * 0.6,
+                              //     controller: _sliderButtonController,
+                              //     decoration: BoxDecoration(
+                              //       color:
+                              //           const Color.fromRGBO(233, 227, 227, 1),
+                              //       borderRadius: BorderRadius.circular(22),
+                              //     ),
+                              //     onLeftLabelReached: () {
+                              //       state
+                              //           .inspectionDetails![
+                              //               buttonsText[pageIndex]]
+                              //           .last['status'] = 'Rejected';
+                              //       state.sliderPosition = Position.left;
+                              //     },
+                              //     onRightLabelReached: () {
+                              //       state
+                              //           .inspectionDetails![
+                              //               buttonsText[pageIndex]]
+                              //           .last['status'] = 'Accepted';
+                              //       state.sliderPosition = Position.right;
+                              //       if (pageIndex == buttonsText.length - 1) {
+                              //         showSubmitDialog(
+                              //             size: size,
+                              //             state: state,
+                              //             controller: _sliderButtonController,
+                              //             page: buttonsText[pageIndex]);
+                              //       }
+                              //     },
+                              //     onNoStatus: () {
+                              //       state
+                              //           .inspectionDetails![
+                              //               buttonsText[pageIndex]]
+                              //           .last['status'] = '';
+                              //     },
+                              //     leftLabel: const Text(
+                              //       'Reject',
+                              //       style:
+                              //           TextStyle(fontWeight: FontWeight.bold),
+                              //     ),
+                              //     rightLabel: const Text(
+                              //       'Accept',
+                              //       style:
+                              //           TextStyle(fontWeight: FontWeight.bold),
+                              //     ),
+                              //     icon: Stack(
+                              //       children: [
+                              //         Container(
+                              //             height: size.height * 0.1,
+                              //             width: size.width * 0.1,
+                              //             decoration: BoxDecoration(
+                              //                 shape: BoxShape.circle,
+                              //                 color: Colors.black,
+                              //                 boxShadow: [
+                              //                   BoxShadow(
+                              //                       blurRadius: 15,
+                              //                       blurStyle: BlurStyle.outer,
+                              //                       spreadRadius: 0,
+                              //                       color:
+                              //                           Colors.orange.shade200,
+                              //                       offset: const Offset(0, 0))
+                              //                 ])),
+                              //         const Positioned(
+                              //             top: 8,
+                              //             child: Icon(
+                              //               Icons.chevron_left_rounded,
+                              //               color: Colors.white,
+                              //             )),
+                              //         const Positioned(
+                              //             top: 8,
+                              //             right: 1,
+                              //             child: Icon(
+                              //               Icons.chevron_right_rounded,
+                              //               color: Colors.white,
+                              //             ))
+                              //       ],
+                              //     ),
+                              //   ),
+                              // )
+                              DraggableScrollableSheet(
+                                controller: DraggableScrollableController(),
+                                snap: true,
+                                snapAnimationDuration:
+                                    Duration(milliseconds: 500),
+                                shouldCloseOnMinExtent: true,
+                                minChildSize: 0.25,
+                                maxChildSize: true ? 0.5 : 0.7,
+                                initialChildSize: true ? 0.5 : 0.7,
+                                builder: (BuildContext context,
+                                    ScrollController scrollController) {
+                                  return Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      width: size.width * 0.776,
+                                      decoration: BoxDecoration(
+                                          color: Color.fromRGBO(26, 26, 27, 1),
+                                          borderRadius:
+                                              BorderRadius.circular(25)),
+                                      child: CustomScrollView(
+                                        controller: scrollController,
+                                        slivers: [
+                                          SliverToBoxAdapter(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Gap(size.width * 0.35),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                                Radius.circular(
+                                                                    10)),
+                                                      ),
+                                                      height: 4,
+                                                      width: 32,
+                                                      padding: EdgeInsets.zero,
+                                                    ),
+                                                    Spacer(),
+                                                    Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: IconButton(
+                                                          onPressed: () {},
+                                                          icon: Icon(
+                                                            Icons.cancel,
+                                                          ),
+                                                          visualDensity:
+                                                              VisualDensity
+                                                                  .compact,
+                                                        ))
+                                                  ],
+                                                ),
+                                                Text(
+                                                  "Qualtiy Check",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    letterSpacing: 1.5,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 15,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          SliverList.list(
+                                              addRepaintBoundaries: true,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 18.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Gap(16),
+                                                      Row(
+                                                        children: [
+                                                          Gap(8),
+                                                          CircleAvatar(
+                                                            radius: 4,
+                                                            backgroundColor:
+                                                                Color.fromRGBO(
+                                                                    145,
+                                                                    19,
+                                                                    19,
+                                                                    1),
+                                                          ),
+                                                          Gap(6),
+                                                          Text("No data",
+                                                              style: TextStyle(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        223,
+                                                                        220,
+                                                                        220),
+                                                              )),
+                                                        ],
+                                                      ),
+                                                      Gap(8.0),
+                                                      SizedBox(
+                                                        width: size.width * 0.8,
+                                                        height:
+                                                            size.height * 0.12,
+                                                        child: GridView.builder(
+                                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                              crossAxisCount:
+                                                                  true ? 3 : 5,
+                                                              crossAxisSpacing:
+                                                                  10,
+                                                              mainAxisSpacing:
+                                                                  10),
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12),
+                                                              child: InkWell(
+                                                                  onTap: () {},
+                                                                  child:
+                                                                      SizedBox()),
+                                                            );
+                                                          },
+                                                          itemCount: 1,
+                                                        ),
+                                                      ),
+                                                      Gap(8),
+                                                      SizedBox(
+                                                        height:
+                                                            size.height * 0.1,
+                                                        width: size.width,
+                                                        child:
+                                                            CustomSliderButton(
+                                                          height: size.height *
+                                                              0.06,
+                                                          width:
+                                                              size.width * 0.6,
+                                                          controller:
+                                                              _sliderButtonController,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: const Color
+                                                                .fromRGBO(233,
+                                                                227, 227, 1),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        22),
+                                                          ),
+                                                          onLeftLabelReached:
+                                                              () {
+                                                            state
+                                                                .inspectionDetails![
+                                                                    buttonsText[
+                                                                        pageIndex]]
+                                                                .last['status'] = 'Rejected';
+                                                            state.sliderPosition =
+                                                                Position.left;
+                                                          },
+                                                          onRightLabelReached:
+                                                              () {
+                                                            state
+                                                                .inspectionDetails![
+                                                                    buttonsText[
+                                                                        pageIndex]]
+                                                                .last['status'] = 'Accepted';
+                                                            state.sliderPosition =
+                                                                Position.right;
+                                                            if (pageIndex ==
+                                                                buttonsText
+                                                                        .length -
+                                                                    1) {
+                                                              showSubmitDialog(
+                                                                  size: size,
+                                                                  state: state,
+                                                                  controller:
+                                                                      _sliderButtonController,
+                                                                  page: buttonsText[
+                                                                      pageIndex]);
+                                                            }
+                                                          },
+                                                          onNoStatus: () {
+                                                            state
+                                                                .inspectionDetails![
+                                                                    buttonsText[
+                                                                        pageIndex]]
+                                                                .last['status'] = '';
+                                                          },
+                                                          leftLabel: const Text(
+                                                            'Reject',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          rightLabel:
+                                                              const Text(
+                                                            'Accept',
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          icon: Stack(
+                                                            children: [
+                                                              Container(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.1,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.1,
+                                                                  decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            blurRadius:
+                                                                                15,
+                                                                            blurStyle: BlurStyle
+                                                                                .outer,
+                                                                            spreadRadius:
+                                                                                0,
+                                                                            color:
+                                                                                Colors.orange.shade200,
+                                                                            offset: const Offset(0, 0))
+                                                                      ])),
+                                                              const Positioned(
+                                                                  top: 8,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .chevron_left_rounded,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  )),
+                                                              const Positioned(
+                                                                  top: 8,
+                                                                  right: 1,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .chevron_right_rounded,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Gap(8),
+                                                      if (state
+                                                              .inspectionDetails![
+                                                                  buttonsText[
+                                                                      pageIndex]]
+                                                              .last['status'] ==
+                                                          'Rejected')
+                                                        TextFormField(
+                                                          controller:
+                                                              TextEditingController(),
+                                                          // autofocus:
+                                                          //     rejectionController
+                                                          //         .text.isEmpty,
+                                                          maxLines: 5,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                          onTap: () {},
 
-                                    if (pageIndex == buttonsText.length - 1) {
-                                      showSubmitDialog(
-                                          size: size,
-                                          state: state,
-                                          page: buttonsText[pageIndex]);
-                                    }
-                                  },
-                                  onNoStatus: () {
-                                    state
-                                        .inspectionDetails![
-                                            buttonsText[pageIndex]]
-                                        .last['status'] = '';
-                                  },
-                                  leftLabel: const Text(
-                                    'Reject',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  rightLabel: const Text(
-                                    'Accept',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  icon: Stack(
-                                    children: [
-                                      Container(
-                                          height: size.height * 0.1,
-                                          width: size.width * 0.1,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.black,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 15,
-                                                    blurStyle: BlurStyle.outer,
-                                                    spreadRadius: 0,
-                                                    color:
-                                                        Colors.orange.shade200,
-                                                    offset: const Offset(0, 0))
-                                              ])),
-                                      const Positioned(
-                                          top: 8,
-                                          child: Icon(
-                                            Icons.chevron_left_rounded,
-                                            color: Colors.white,
-                                          )),
-                                      const Positioned(
-                                          top: 8,
-                                          right: 1,
-                                          child: Icon(
-                                            Icons.chevron_right_rounded,
-                                            color: Colors.white,
-                                          ))
-                                    ],
-                                  ),
-                                ),
-                              )
+                                                          decoration: InputDecoration(
+                                                              hintStyle:
+                                                                  TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                              fillColor: Color
+                                                                  .fromRGBO(
+                                                                      38,
+                                                                      38,
+                                                                      40,
+                                                                      1),
+                                                              filled: true,
+                                                              contentPadding:
+                                                                  EdgeInsets.only(
+                                                                      left: 14,
+                                                                      top: 14),
+                                                              hintText:
+                                                                  "Reasons for rejection",
+                                                              border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              16))),
+                                                          onChanged: (value) {},
+                                                        )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ])
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -375,7 +678,10 @@ class _InspectionOutState extends State<InspectionOut> {
   }
 
   void showSubmitDialog(
-      {required Size size, required ServiceState state, required String page}) {
+      {required Size size,
+      required ServiceState state,
+      required String page,
+      required SliderButtonController controller}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -411,7 +717,6 @@ class _InspectionOutState extends State<InspectionOut> {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              print(state.sliderPosition);
                               state.inspectionDetails![page].last['status'] =
                                   '';
                               _serviceBloc.add(UpdateSliderPosition(

@@ -101,7 +101,7 @@ class JobCardDetails extends StatelessWidget {
                         color: Colors.orange.shade200,
                         offset: const Offset(0, 0))
                   ]),
-              child: Center(
+              child: const Center(
                 child: Text(
                   textAlign: TextAlign.center,
                   'JobCard Details',
@@ -215,14 +215,11 @@ class JobCardDetails extends StatelessWidget {
         children: [
           Text(
             key,
-            style: const TextStyle(fontFamily: 'Gilroy', fontSize: 13),
+            style: const TextStyle(fontSize: 13),
           ),
           Text(
             value,
-            style: const TextStyle(
-                fontFamily: 'Gilroy',
-                fontWeight: FontWeight.bold,
-                fontSize: 13),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           )
         ]);
   }

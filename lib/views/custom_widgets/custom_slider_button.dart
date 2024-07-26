@@ -7,7 +7,7 @@ import 'package:shimmer/shimmer.dart';
 class CustomSliderButton extends StatefulWidget {
   final double height;
   final double width;
-  final Position position;
+  final SliderButtonController? controller;
   final Decoration decoration;
   final Widget leftLabel;
   final void Function() onLeftLabelReached;
@@ -19,11 +19,11 @@ class CustomSliderButton extends StatefulWidget {
       {Key? key,
       this.height = 45,
       this.width = 100,
+      this.controller,
       this.decoration = const BoxDecoration(),
       required this.onLeftLabelReached,
       required this.onRightLabelReached,
       required this.onNoStatus,
-      this.position = Position.middle,
       required this.leftLabel,
       required this.rightLabel,
       required this.icon})
@@ -34,52 +34,60 @@ class CustomSliderButton extends StatefulWidget {
 }
 
 class _CustomSliderButtonState extends State<CustomSliderButton> {
-  late double _position;
   late double _startPosition;
   late double _rightPosition;
   late double _leftPosition;
+
+  late SliderButtonController _sliderButtonController;
   @override
   void initState() {
     super.initState();
-    print('in init state');
+    _initController();
 
     _leftPosition = widget.width * 0.35;
     _startPosition = widget.width * 0.735;
     _rightPosition = widget.width * 1.12;
 
-    if (widget.position == Position.middle) {
-      print('in middle');
-      _position = _startPosition;
-    } else if (widget.position == Position.right) {
-      _position = _rightPosition;
-      print('in right');
-    } else if (widget.position == Position.left) {
-      _position = _leftPosition;
-      print('in left');
+    if (_sliderButtonController.position == Position.middle) {
+      _sliderButtonController.currentPosition = _startPosition;
+    } else if (_sliderButtonController.position == Position.right) {
+      _sliderButtonController.currentPosition = _rightPosition;
+    } else if (_sliderButtonController.position == Position.left) {
+      _sliderButtonController.currentPosition = _leftPosition;
     }
+  }
+
+  void _initController() {
+    _sliderButtonController = widget.controller ?? SliderButtonController();
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      _position = details.localPosition.dx;
-      if (_position >= _rightPosition * 0.9) {
-        _position = _rightPosition;
-      } else if (_position <= _leftPosition * 1.3) {
-        _position = _leftPosition;
+      _sliderButtonController.currentPosition = details.localPosition.dx;
+      if (_sliderButtonController.currentPosition >= _rightPosition * 0.9) {
+        _sliderButtonController.position = Position.right;
+        _sliderButtonController.currentPosition = _rightPosition;
+      } else if (_sliderButtonController.currentPosition <=
+          _leftPosition * 1.3) {
+        _sliderButtonController.position = Position.left;
+        _sliderButtonController.currentPosition = _leftPosition;
+      } else {
+        _sliderButtonController.position = Position.moving;
       }
     });
   }
 
   void _onPanEnd(DragEndDetails details) {
     setState(() {
-      if (_position == _rightPosition) {
+      if (_sliderButtonController.currentPosition == _rightPosition) {
         widget.onRightLabelReached();
         return;
-      } else if (_position == _leftPosition) {
+      } else if (_sliderButtonController.currentPosition == _leftPosition) {
         widget.onLeftLabelReached();
         return;
       } else {
-        _position = _startPosition;
+        _sliderButtonController.currentPosition = _startPosition;
+        _sliderButtonController.position = Position.middle;
         widget.onNoStatus();
       }
     });
@@ -87,14 +95,19 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
 
   @override
   Widget build(BuildContext context) {
+    if (_sliderButtonController.position != Position.moving) {
+      if (_sliderButtonController.position == Position.middle) {
+        _sliderButtonController.currentPosition = _startPosition;
+      } else if (_sliderButtonController.position == Position.right) {
+        _sliderButtonController.currentPosition = _rightPosition;
+      } else if (_sliderButtonController.position == Position.left) {
+        _sliderButtonController.currentPosition = _leftPosition;
+      }
+    }
+
     return GestureDetector(
       onHorizontalDragUpdate: _onPanUpdate,
       onHorizontalDragEnd: _onPanEnd,
-      onHorizontalDragCancel: () {
-        setState(() {
-          _position = _startPosition;
-        });
-      },
       child: Stack(
         children: [
           Align(
@@ -115,7 +128,8 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                           baseColor: Colors.red,
                           highlightColor: Colors.grey.shade100,
                           enabled: true,
-                          child: _position != _leftPosition
+                          child: _sliderButtonController.currentPosition !=
+                                  _leftPosition
                               ? widget.leftLabel
                               : SizedBox()),
                     ),
@@ -128,7 +142,8 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                           baseColor: Colors.green,
                           highlightColor: Colors.grey.shade100,
                           enabled: true,
-                          child: _position != _rightPosition
+                          child: _sliderButtonController.currentPosition !=
+                                  _rightPosition
                               ? widget.rightLabel
                               : SizedBox()),
                     ),
@@ -138,7 +153,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             ),
           ),
           Positioned(
-            left: _position,
+            left: _sliderButtonController.currentPosition,
             top: widget.height * 0.39,
             child: Container(
               width: widget.width * 0.2,
@@ -148,10 +163,12 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 borderRadius: BorderRadius.circular(40),
               ),
               child: Center(
-                  child: (_position == _rightPosition)
+                  child: (_sliderButtonController.currentPosition ==
+                          _rightPosition)
                       ? Lottie.asset("assets/lottie/success.json",
                           repeat: false)
-                      : (_position == _leftPosition)
+                      : (_sliderButtonController.currentPosition ==
+                              _leftPosition)
                           ? Lottie.asset("assets/lottie/error2.json",
                               repeat: false)
                           : widget.icon),
@@ -163,4 +180,26 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   }
 }
 
-enum Position { left, middle, right }
+class SliderButtonController extends ChangeNotifier {
+  Position _position;
+  double? _currentPosition;
+
+  SliderButtonController({Position position = Position.middle})
+      : _position = position;
+
+  set position(position) {
+    _position = position;
+    notifyListeners();
+  }
+
+  get position => _position;
+
+  set currentPosition(currentPosition) {
+    _currentPosition = currentPosition;
+    notifyListeners();
+  }
+
+  get currentPosition => _currentPosition;
+}
+
+enum Position { left, middle, right, moving }
