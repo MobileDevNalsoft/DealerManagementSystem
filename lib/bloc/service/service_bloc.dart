@@ -212,7 +212,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 scheduleDate: service['schedule_date'],
                 jobCardNo: service['job_card_no'],
                 status: service['status'],
-                jobType: service['job_type']));
+                jobType: service['job_type'],customerName: service['customer_name'], customerContact: service['contact_no']));
           }
           emit(state.copyWith(
               getJobCardStatus: GetJobCardStatus.success,serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));

@@ -44,8 +44,8 @@ class _DashboardViewState extends State<DashboardView> {
     _serviceBloc.state.getJobCardStatus = GetJobCardStatus.initial;
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
-    _serviceBloc.add(GetJobCards(query: 'Main  Workshop'));
-    _serviceBloc.add(GetServiceHistory(query: '2022'));
+    _serviceBloc.add(GetJobCards(query: 'Quick Fit Center Abu Dhabi'));
+    // _serviceBloc.add(GetServiceHistory(query: '2022'));
 
     // set default orientation to portrait up
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -109,9 +109,7 @@ class _DashboardViewState extends State<DashboardView> {
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
-                return JobCardPage(
-                  serviceBloc: _serviceBloc,
-                );
+                return JobCardPage();
               },
             )),
         // bottomNavigationBar: BlocBuilder<ServiceBloc, ServiceState>(
@@ -206,6 +204,7 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     Size size = MediaQuery.of(context).size;
+    print('shrinkOffset $shrinkOffset');
     return ClipShadowPath(
         shadow: shrinkOffset < 40
             ? BoxShadow(
@@ -227,87 +226,21 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
           decoration: const BoxDecoration(
             color: Colors.black,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Gap(size.width * (shrinkOffset < 45 ? 0.03 : 0.4)),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0),
-                child: Text(
-                  'Job Cards',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 18),
-                ),
-              ),
-              if (shrinkOffset > 45) const Spacer(),
-              if (shrinkOffset > 45)
-                DropdownButtonHideUnderline(
-                  child: DropdownButton2<String>(
-                    isExpanded: true,
-                    hint: const SizedBox(),
-                    items: const [
-                      DropdownMenuItem<String>(
-                          value: '0',
-                          child: Text(
-                            'Log out',
-                            style: TextStyle(color: Colors.transparent),
-                          ))
-                    ],
-                    value: '0',
-                    onChanged: (String? value) {
-                      sharedPreferences.setBool("isLogged", false);
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginView(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    buttonStyleData: ButtonStyleData(
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                          color: Colors.transparent),
-                      height: size.height * 0.05,
-                      width: size.width * 0.25,
-                      padding: const EdgeInsets.only(left: 14, right: 14),
-                    ),
-                    iconStyleData: IconStyleData(
-                      icon: const Icon(
-                        Icons.person_pin,
-                        color: Colors.white,
-                      ),
-                      iconSize: size.height * 0.03,
-                      iconEnabledColor: Colors.black,
-                      iconDisabledColor: Colors.black,
-                    ),
-                    dropdownStyleData: DropdownStyleData(
-                        width: size.width * 0.17,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ),
-                        offset: const Offset(5, 0)),
-                    menuItemStyleData: MenuItemStyleData(
-                      selectedMenuItemBuilder: (context, child) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.01),
-                          child: const Text(
-                            'Log out',
-                            style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                )
-            ],
+          child: Padding(
+            padding: EdgeInsets.only(
+                top: shrinkOffset > 55
+                    ? size.height * 0.02
+                    : 42 - 0.5 * shrinkOffset,
+                left: shrinkOffset > 50
+                    ? size.width * 0.37
+                    : 2.5 * shrinkOffset + 5),
+            child: const Text(
+              'Job Cards',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontSize: 18),
+            ),
           ),
         ));
   }
@@ -472,9 +405,7 @@ class TicketClipper extends CustomClipper<Path> {
 }
 
 class JobCardPage extends StatelessWidget {
-  ServiceBloc? _serviceBloc;
-  JobCardPage({super.key, required ServiceBloc serviceBloc})
-      : _serviceBloc = serviceBloc;
+  JobCardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -498,373 +429,239 @@ class JobCardPage extends StatelessWidget {
               // ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                return state.getJobCardStatus == GetJobCardStatus.success
-                    ? index >= state.jobCards!.length
-                        ? SizedBox(
-                            height: size.height * 0.05,
-                          )
-                        : Skeletonizer(
-                            enableSwitchAnimation: true,
-                            enabled: state.getJobCardStatus ==
-                                    GetJobCardStatus.loading ||
-                                state.jobCardStatusUpdate ==
-                                    JobCardStatusUpdate.loading,
-                            child: SizedBox(
-                              height: size.height * 0.15,
-                              width: size.width * 0.95,
-                              child: ClipPath(
-                                clipper: TicketClipper(),
-                                clipBehavior: Clip.antiAlias,
-                                child: Card(
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: size.height * 0.006,
-                                  ),
-                                  color: Colors.white,
-                                  elevation: 3,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                return Skeletonizer(
+                    enableSwitchAnimation: true,
+                    enabled:
+                        state.getJobCardStatus == GetJobCardStatus.loading ||
+                            state.jobCardStatusUpdate ==
+                                JobCardStatusUpdate.loading,
+                    child: SizedBox(
+                      height: size.height * 0.15,
+                      width: size.width * 0.95,
+                      child: ClipPath(
+                        clipper: TicketClipper(),
+                        clipBehavior: Clip.antiAlias,
+                        child: Card(
+                          margin: EdgeInsets.symmetric(
+                            vertical: size.height * 0.006,
+                          ),
+                          color: Colors.white,
+                          elevation: 3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
                                         children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Gap(size.width * 0.05),
-                                                  Image.asset(
-                                                    'assets/images/job_card.png',
-                                                    scale: size.width * 0.05,
-                                                    color: Colors.black,
-                                                  ),
-                                                  Gap(size.width * 0.02),
-                                                  InkWell(
+                                          Gap(size.width * 0.05),
+                                          Image.asset(
+                                            'assets/images/job_card.png',
+                                            scale: size.width * 0.05,
+                                            color: Colors.black,
+                                          ),
+                                          Gap(size.width * 0.02),
+                                          InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            radius: 100,
+                                            splashColor: Colors.transparent,
+                                            customBorder:
+                                                RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            20),
-                                                    radius: 100,
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    customBorder:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)),
-                                                    enableFeedback: true,
-                                                    onTap: () {
-                                                      state.jobCardNo = state
-                                                          .jobCards![index]
-                                                          .jobCardNo!;
-                                                      print(
-                                                          'job card no ${state.jobCardNo}');
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (_) => JobCardDetails(
-                                                                  service: state
-                                                                          .jobCards![
-                                                                      index])));
-                                                    },
-                                                    child: Text(
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      state.getJobCardStatus !=
-                                                              GetJobCardStatus
-                                                                  .loading
-                                                          ? state
-                                                              .jobCards![index]
-                                                              .jobCardNo!
-                                                          : 'JC-MAD-633',
-                                                      style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 12,
-                                                          color: Colors.blue,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
-                                                    ),
-                                                  ),
-                                                  // Container(
-                                                  //   alignment: Alignment.center,
-                                                  //   padding: const EdgeInsets.symmetric(
-                                                  //       horizontal: 10),
-                                                  //   height: size.height * 0.05,
-                                                  //   width: size.width * 0.3,
-                                                  //   decoration: BoxDecoration(
-                                                  //       border:
-                                                  //           Border.all(color: Colors.black12),
-                                                  //       borderRadius: const BorderRadius.only(
-                                                  //           topLeft: Radius.circular(10),
-                                                  //           bottomLeft: Radius.circular(10))),
-                                                  //   child: InkWell(
-                                                  //     borderRadius: BorderRadius.circular(20),
-                                                  //     radius: 100,
-                                                  //     splashColor: Colors.transparent,
-                                                  //     customBorder: RoundedRectangleBorder(
-                                                  //         borderRadius:
-                                                  //             BorderRadius.circular(20)),
-                                                  //     enableFeedback: true,
-                                                  //     onTap: () {
-                                                  //       Navigator.push(
-                                                  //           context,
-                                                  //           MaterialPageRoute(
-                                                  //               builder: (_) =>
-                                                  //                   JobCardDetails(
-                                                  //                       service:
-                                                  //                           state.jobCards![
-                                                  //                               index])));
-                                                  //     },
-                                                  //     child: Text(
-                                                  //       textAlign: TextAlign.center,
-                                                  //       state.getJobCardStatus !=
-                                                  //               GetJobCardStatus.loading
-                                                  //           ? state
-                                                  //               .jobCards![index].jobCardNo!
-                                                  //           : 'JC-MAD-633',
-                                                  //       style: const TextStyle(
-                                                  //           fontWeight: FontWeight.w500,
-                                                  //           fontSize: 12,
-                                                  //           color: Colors.blue,
-                                                  //           decoration:
-                                                  //               TextDecoration.underline),
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
-                                                  // Container(
-                                                  //   alignment: Alignment.center,
-                                                  //   padding: const EdgeInsets.symmetric(
-                                                  //       horizontal: 10),
-                                                  //   height: size.height * 0.05,
-                                                  //   width: size.width * 0.398,
-                                                  //   decoration: const BoxDecoration(
-                                                  //       border: Border.symmetric(
-                                                  //           horizontal: BorderSide(
-                                                  //               color: Colors.black12)),
-                                                  //       borderRadius: BorderRadius.only()),
-                                                  //   child: Text(
-                                                  //     textAlign: TextAlign.center,
-                                                  //     state.getJobCardStatus !=
-                                                  //             GetJobCardStatus.loading
-                                                  //         ? state.jobCards![index]
-                                                  //             .registrationNo!
-                                                  //         : 'TS09ED7884',
-                                                  //     style: const TextStyle(fontSize: 13),
-                                                  //   ),
-                                                  // ),
-                                                  // Container(
-                                                  //   alignment: Alignment.center,
-                                                  //   padding: const EdgeInsets.symmetric(
-                                                  //       horizontal: 0),
-                                                  //   height: size.height * 0.05,
-                                                  //   width: size.width * 0.25,
-                                                  //   decoration: BoxDecoration(
-                                                  //       border:
-                                                  //           Border.all(color: Colors.black12),
-                                                  //       borderRadius: const BorderRadius.only(
-                                                  //           topRight: Radius.circular(10),
-                                                  //           bottomRight:
-                                                  //               Radius.circular(10))),
-                                                  //   child: Text(
-                                                  //     textAlign: TextAlign.center,
-                                                  //     state.getJobCardStatus !=
-                                                  //             GetJobCardStatus.loading
-                                                  //         ? state.jobCards![index].status!
-                                                  //         : 'N',
-                                                  //     style: const TextStyle(fontSize: 13),
-                                                  //   ),
-                                                  // )
-                                                ],
-                                              ),
-                                              Gap(size.width * 0.01),
-                                              Row(
-                                                children: [
-                                                  Gap(size.width * 0.055),
-                                                  Image.asset(
-                                                      'assets/images/registration_no.png',
-                                                      scale:
-                                                          size.width * 0.055),
-                                                  Gap(size.width * 0.02),
-                                                  Text(
-                                                    textAlign: TextAlign.center,
-                                                    state.getJobCardStatus !=
-                                                            GetJobCardStatus
-                                                                .loading
-                                                        ? state.jobCards![index]
-                                                            .registrationNo!
-                                                        : 'TS09ED7884',
-                                                    style: const TextStyle(
-                                                        fontSize: 13),
-                                                  ),
-                                                ],
-                                              ),
-                                              Gap(size.width * 0.01),
-                                            ],
-                                          ),
-                                          Gap(size.width * 0.08),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Gap(size.height * 0.03),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Gap(size.width * 0.058),
-                                                  Image.asset(
-                                                      'assets/images/status.png',
-                                                      scale:
-                                                          size.width * 0.058),
-                                                  Gap(size.width * 0.02),
-                                                  Text(
-                                                    textAlign: TextAlign.center,
-                                                    state.getJobCardStatus !=
-                                                            GetJobCardStatus
-                                                                .loading
-                                                        ? state.jobCards![index]
-                                                            .status!
-                                                        : 'N',
-                                                    style: const TextStyle(
-                                                        fontSize: 13),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                                            20)),
+                                            enableFeedback: true,
+                                            onTap: () {
+                                              state.jobCardNo = state
+                                                  .jobCards![index].jobCardNo!;
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (_) =>
+                                                          JobCardDetails(
+                                                              service: state
+                                                                      .jobCards![
+                                                                  index])));
+                                            },
+                                            child: Text(
+                                              textAlign: TextAlign.center,
+                                              state.getJobCardStatus ==
+                                                      GetJobCardStatus.success
+                                                  ? state.jobCards![index]
+                                                      .jobCardNo!
+                                                  : 'JC-MAD-633',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 12,
+                                                  color: Colors.blue,
+                                                  decoration:
+                                                      TextDecoration.underline),
+                                            ),
                                           )
                                         ],
                                       ),
-                                      Container(
-                                        height: size.height * 0.05,
-                                        width: size.width * 0.94,
-                                        decoration: BoxDecoration(
-                                            color: Colors.orange.shade200,
-                                            borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(10),
-                                                bottomRight:
-                                                    Radius.circular(10))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/images/customer.png',
-                                                  scale: size.width * 0.06,
-                                                ),
-                                                Gap(size.width * 0.02),
-                                                Text(
-                                                  textAlign: TextAlign.center,
-                                                  'Customer Name',
-                                                  style: const TextStyle(
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
+                                      Gap(size.width * 0.01),
+                                      Row(
+                                        children: [
+                                          Gap(size.width * 0.055),
+                                          Image.asset(
+                                              'assets/images/registration_no.png',
+                                              scale: size.width * 0.055),
+                                          Gap(size.width * 0.02),
+                                          SizedBox(
+                                            width: size.width * 0.28,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Text(
+                                                textAlign: TextAlign.center,
+                                                state.getJobCardStatus ==
+                                                        GetJobCardStatus.success
+                                                    ? state.jobCards![index]
+                                                        .registrationNo!
+                                                    : 'TS09ED7884',
+                                                style: const TextStyle(
+                                                    fontSize: 13),
+                                              ),
                                             ),
-                                            Gap(size.width * 0.1),
-                                            Row(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/images/call.png',
-                                                  scale: size.width * 0.06,
-                                                ),
-                                                Gap(size.width * 0.02),
-                                                Text(
-                                                  textAlign: TextAlign.center,
-                                                  'Contact Number',
-                                                  style: const TextStyle(
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
+                                          ),
+                                        ],
+                                      ),
+                                      Gap(size.width * 0.01),
                                     ],
                                   ),
-                                ),
+                                  Gap(size.width * 0.01),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Gap(size.height * 0.03),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Gap(size.width * 0.058),
+                                          Image.asset(
+                                              'assets/images/status.png',
+                                              scale: size.width * 0.058),
+                                          Gap(size.width * 0.02),
+                                          Text(
+                                            textAlign: TextAlign.center,
+                                            state.getJobCardStatus ==
+                                                    GetJobCardStatus.success
+                                                ? state.jobCards![index].status!
+                                                : 'Work in Progress',
+                                            style:
+                                                const TextStyle(fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
-                            ))
-                    : Skeletonizer(
-                        enableSwitchAnimation: true,
-                        enabled: true,
-                        child: Card(
-                          margin: EdgeInsets.symmetric(
-                              vertical: size.height * 0.005,
-                              horizontal: size.width * 0.026),
-                          color: Colors.white,
-                          elevation: 3,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
                               Container(
-                                alignment: Alignment.center,
                                 height: size.height * 0.05,
-                                width: size.width * 0.3,
-                                child: const Text(
-                                  'JC-MAD-633',
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                height: size.height * 0.05,
-                                width: size.width * 0.3,
-                                child: const Text(
-                                  'TS09ED7884',
-                                ),
-                              ),
-                              Container(
-                                  alignment: Alignment.center,
-                                  height: size.height * 0.05,
-                                  width: size.width * 0.25,
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton2<String>(
-                                      isExpanded: true,
-                                      items: const [
-                                        DropdownMenuItem<String>(
-                                          value: 'N',
-                                          child: Text('N'),
-                                        )
+                                width: size.width * 0.94,
+                                decoration: BoxDecoration(
+                                    color: Colors.orange.shade200,
+                                    borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10))),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/customer.png',
+                                          scale: size.width * 0.06,
+                                        ),
+                                        Gap(size.width * 0.02),
+                                        SizedBox(
+                                          width: size.width * 0.36,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Text(
+                                              state.getJobCardStatus ==
+                                                      GetJobCardStatus.success
+                                                  ? state.jobCards![index]
+                                                      .customerName!
+                                                  : 'Customer Name',
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
                                       ],
-                                      value: 'N',
                                     ),
-                                  ))
+                                    Gap(size.width * 0.1),
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/call.png',
+                                          scale: size.width * 0.06,
+                                        ),
+                                        Gap(size.width * 0.02),
+                                        SizedBox(
+                                          width: size.width * 0.25,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Text(
+                                              state.getJobCardStatus ==
+                                                      GetJobCardStatus.success
+                                                  ? state.jobCards![index]
+                                                          .customerContact ??
+                                                      '-'
+                                                  : 'Contact Number',
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                        ));
+                        ),
+                      ),
+                    ));
               },
                       childCount:
                           state.getJobCardStatus == GetJobCardStatus.success
-                              ? state.jobCards!.length < 15
-                                  ? state.jobCards!.length +
-                                      (15 - state.jobCards!.length)
-                                  : state.jobCards!.length
-                              : 15)),
+                              ? state.jobCards!.length
+                              : 7)),
               if (state.getJobCardStatus == GetJobCardStatus.success &&
                   state.jobCards!.isEmpty)
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                      (context, index) => SizedBox(
-                            height: size.height * 0.8,
-                            child: Transform(
-                                transform: Matrix4.translationValues(
-                                    size.width * 0.22, size.height * 0.3, 0),
-                                child: const Text(
-                                    'No Job Cards are in progress.')),
+                      (context, index) => Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              SizedBox(
+                                height: size.height * 1,
+                                child: Transform(
+                                  transform: Matrix4.translationValues(
+                                      0, -size.height * 0.1, 0),
+                                  child: const Center(
+                                    child:
+                                        Text('No Job Cards are in progress.'),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                       childCount: 1),
                 )
@@ -875,3 +672,70 @@ class JobCardPage extends StatelessWidget {
     );
   }
 }
+
+// if (shrinkOffset > 45) const Spacer(),
+              // if (shrinkOffset > 45)
+              //   DropdownButtonHideUnderline(
+              //     child: DropdownButton2<String>(
+              //       isExpanded: true,
+              //       hint: const SizedBox(),
+              //       items: const [
+              //         DropdownMenuItem<String>(
+              //             value: '0',
+              //             child: Text(
+              //               'Log out',
+              //               style: TextStyle(color: Colors.transparent),
+              //             ))
+              //       ],
+              //       value: '0',
+              //       onChanged: (String? value) {
+              //         sharedPreferences.setBool("isLogged", false);
+              //         Navigator.pushAndRemoveUntil(
+              //           context,
+              //           MaterialPageRoute(
+              //             builder: (context) => const LoginView(),
+              //           ),
+              //           (route) => false,
+              //         );
+              //       },
+              //       buttonStyleData: ButtonStyleData(
+              //         decoration: const BoxDecoration(
+              //             borderRadius: BorderRadius.only(
+              //                 topRight: Radius.circular(10),
+              //                 bottomRight: Radius.circular(10)),
+              //             color: Colors.transparent),
+              //         height: size.height * 0.05,
+              //         width: size.width * 0.25,
+              //         padding: const EdgeInsets.only(left: 14, right: 14),
+              //       ),
+              //       iconStyleData: IconStyleData(
+              //         icon: const Icon(
+              //           Icons.person_pin,
+              //           color: Colors.white,
+              //         ),
+              //         iconSize: size.height * 0.03,
+              //         iconEnabledColor: Colors.black,
+              //         iconDisabledColor: Colors.black,
+              //       ),
+              //       dropdownStyleData: DropdownStyleData(
+              //           width: size.width * 0.17,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(10),
+              //             color: Colors.white,
+              //           ),
+              //           offset: const Offset(5, 0)),
+              //       menuItemStyleData: MenuItemStyleData(
+              //         selectedMenuItemBuilder: (context, child) {
+              //           return Padding(
+              //             padding: EdgeInsets.symmetric(
+              //                 horizontal: size.width * 0.01),
+              //             child: const Text(
+              //               'Log out',
+              //               style: TextStyle(
+              //                   fontSize: 13, fontWeight: FontWeight.bold),
+              //             ),
+              //           );
+              //         },
+              //       ),
+              //     ),
+              //   )

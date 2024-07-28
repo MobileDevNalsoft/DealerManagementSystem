@@ -19,15 +19,9 @@ class JobCardDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    int activeStep = service.status! == 'N'
-        ? 0
-        : service.status! == 'I'
-            ? 1
-            : 2;
-
     List<String> dmsFlow = [
-      'Initiated',
-      'In Progress',
+      'New',
+      'Work in progress',
       'Quality Check',
       'Inspection out',
       'Completed'
@@ -136,23 +130,20 @@ class JobCardDetails extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(25)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: ListView(
                   children: [
                     buildDetailRow(
-                        'Job Card Number', service.jobCardNo.toString()),
+                        'Job Card Number', service.jobCardNo.toString(), size),
                     Gap(size.height * 0.03),
                     buildDetailRow('Vehicle Registration Number',
-                        service.registrationNo.toString()),
+                        service.registrationNo.toString(), size),
                     Gap(size.height * 0.03),
-                    buildDetailRow('Location', service.location.toString()),
+                    buildDetailRow('Location', service.location.toString(), size),
                     Gap(size.height * 0.03),
-                    buildDetailRow('Job Type', service.jobType.toString()),
+                    buildDetailRow('Job Type', service.jobType.toString(), size),
                     Gap(size.height * 0.03),
                     buildDetailRow(
-                        'Schedule Date', service.scheduleDate.toString())
+                        'Schedule Date', service.scheduleDate.toString(), size)
                   ],
                 ),
               ),
@@ -188,7 +179,7 @@ class JobCardDetails extends StatelessWidget {
                             child: Stepper(
                           steps: dmsFlow
                               .map((e) => Step(
-                                    activeStep: activeStep,
+                                    activeStep: dmsFlow.indexWhere((e) => e == service.status),
                                     currentStep: dmsFlow.indexOf(e),
                                     icons: icons,
                                     stepperLength: dmsFlow.length,
@@ -207,19 +198,28 @@ class JobCardDetails extends StatelessWidget {
         ));
   }
 
-  Widget buildDetailRow(String key, String value) {
+  Widget buildDetailRow(String key, String value, Size size) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            key,
-            style: const TextStyle(fontSize: 13),
+          SizedBox(
+            width: size.width*0.4,
+            child: Text(
+              key,
+              softWrap: true,
+              style: const TextStyle(fontSize: 13),
+            ),
           ),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+          SizedBox(
+            width: size.width*0.4,
+            child: Text(
+              textAlign: TextAlign.right,
+              value,
+              softWrap: true,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, overflow: TextOverflow.visible),
+            ),
           )
         ]);
   }

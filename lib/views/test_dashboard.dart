@@ -1,14 +1,8 @@
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/dashboard.dart';
-import 'package:dms/views/inspection.dart';
-import 'package:dms/views/inspection_out.dart';
 import 'package:dms/views/service_main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'dart:math' as math;
 import 'package:gap/gap.dart';
 
 class DribbleUI extends StatefulWidget {
@@ -29,7 +23,6 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
         width: double.infinity,
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-                // colors: [Colors.black26, Colors.black12, Colors.black26],
                 colors: [Colors.black45, Colors.black26, Colors.black45],
                 stops: [0.1, 0.5, 1])),
         child: Stack(

@@ -15,6 +15,7 @@ final class Service {
   String? customerConcerns;
   String? remarks;
   String? status;
+  String? customerContact;
 
   Service(
       {this.sNo,
@@ -22,6 +23,7 @@ final class Service {
       this.jobCardNo,
       this.location,
       this.customerName,
+      this.customerContact,
       this.scheduleDate,
       this.kms,
       this.bookingSource,
@@ -38,6 +40,7 @@ final class Service {
     registrationNo = json['vehicle_registration_no'];
     location = json['location'];
     customerName = json['customer_name'];
+    customerContact = json['contact_no'];
     scheduleDate = json['schedule_date'];
     kms = json['kms'];
     bookingSource = json['booking_source'];
