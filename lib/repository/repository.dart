@@ -238,7 +238,7 @@ class Repository {
     }
   }
 
-  Future<int> addVehiclePartMedia(
+ Future<int> addVehiclePartMedia(
       {Map<String, dynamic>? bodyPartData,
       required String id,
       required String name}) async {
@@ -283,4 +283,22 @@ class Repository {
       throw Error();
     }
   }
+
+  Future getGatePass({required String jobCardNo}) async{
+ ApiResponse apiResponse = await _api.get('gatePass', queryParameters: {"jobCardNo":jobCardNo});
+     if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        if ((apiResponse.response!.data)["count"] == 1) {
+          return (apiResponse.response!.data)["items"][0];
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
 }

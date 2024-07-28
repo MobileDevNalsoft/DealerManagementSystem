@@ -10,6 +10,7 @@ import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -26,15 +27,10 @@ class CustomDetector extends StatefulWidget {
 
 class _CustomDetectorState extends State<CustomDetector>
     with SingleTickerProviderStateMixin {
-
-
   @override
   void initState() {
     super.initState();
-    
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -92,11 +88,13 @@ class _CustomDetectorState extends State<CustomDetector>
                             // image: DecorationImage(
                             //     image: AssetImage("assets/images/road.jpg"),
                             //     fit: BoxFit.fill),
-                            gradient: LinearGradient(colors: [
-                          Color.fromARGB(255, 230, 119, 119),
-                          Color.fromARGB(255, 214, 207, 207),
-                          Color.fromARGB(255, 230, 119, 119)
-                        ])),
+                            // color:  Colors.black45,
+                        gradient: LinearGradient(
+                colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                // begin: Alignment.topCenter,
+                // end: Alignment.bottomCenter,
+                stops: [0.1, 0.5, 1])
+                        ),
                         child: BodyCanvas(
                           generalParts: widget.generalParts,
                         ),
@@ -143,15 +141,18 @@ class _CustomDetectorState extends State<CustomDetector>
                           //     .add(SubmitVehicleMediaEvent());
                         },
                         style: ElevatedButton.styleFrom(
-                            // minimumSize: const Size(35.0, 35.0),
-                            // padding: const EdgeInsets.all(8),
-                            backgroundColor:
-                                const Color.fromARGB(255, 145, 19, 19),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18))),
+                                                  backgroundColor: Colors.white,
+                                                  minimumSize: isMobile
+                                                      ? const Size(80, 25)
+                                                      : const Size(80.0, 20.0),
+                                                  padding: EdgeInsets.zero,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5))),
                         child: const Text(
                           'Save',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                         )),
                   ),
                 ],

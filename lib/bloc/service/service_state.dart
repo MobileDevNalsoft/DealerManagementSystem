@@ -16,6 +16,8 @@ enum JsonStatus { initial, loading, success, failure }
 
 enum InspectionJsonUploadStatus { initial, loading, success, failure }
 
+enum GatePassStatus {initial, loading, success, failure }
+
 final class ServiceState {
   ServiceState(
       {this.getServiceStatus,
@@ -36,7 +38,8 @@ final class ServiceState {
       this.jobCardNo,
       this.bottomNavigationBarActiveIndex,
       this.inspectionDetails,
-      this.serviceLocationsStatus});
+      this.serviceLocationsStatus,this.gatePassStatus,
+      this.gatePassno});
 
   GetServiceStatus? getServiceStatus;
   GetJobCardStatus? getJobCardStatus;
@@ -57,6 +60,8 @@ final class ServiceState {
   int? bottomNavigationBarActiveIndex;
   ServiceUploadStatus? serviceUploadStatus;
   GetInspectionStatus? getInspectionStatus;
+  GatePassStatus? gatePassStatus;
+  String? gatePassno;
 
   factory ServiceState.initial() {
     return ServiceState(
@@ -72,7 +77,8 @@ final class ServiceState {
         bottomNavigationBarActiveIndex: 0,
         index: 0,
         json: null,
-        dropDownOpen: false);
+        dropDownOpen: false,
+        );
   }
 
   ServiceState copyWith(
@@ -94,7 +100,9 @@ final class ServiceState {
       List<Service>? jobCards,
       Position? sliderPosition,
       int? index,
-      List<dynamic>? locations}) {
+      List<dynamic>? locations,
+      GatePassStatus? gatePassStatus,
+      String? gatePassno}) {
     return ServiceState(
         getServiceStatus: getServiceStatus ?? this.getServiceStatus,
         getJobCardStatus: getJobCardStatus ?? this.getJobCardStatus,
@@ -117,6 +125,9 @@ final class ServiceState {
         services: services ?? this.services,
         dropDownOpen: dropDownOpen ?? this.dropDownOpen,
         jobCards: jobCards ?? this.jobCards,
-        locations: locations ?? this.locations);
+        locations: locations ?? this.locations,
+        gatePassStatus: gatePassStatus??this.gatePassStatus,
+        gatePassno: gatePassno??this.gatePassno
+        );
   }
 }

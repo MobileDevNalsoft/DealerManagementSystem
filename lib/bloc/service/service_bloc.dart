@@ -31,7 +31,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
     on<DropDownOpenClose>(_onDropDownOpenClose);
     on<GetInspectionDetails>(_onGetInspectionDetails);
-    on<UpdateSliderPosition>(_onUpdateSliderPosition);
+    on<GetGatePass>(_onGetGatePass);
   }
 
   final Repository _repo;
@@ -215,9 +215,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 jobType: service['job_type']));
           }
           emit(state.copyWith(
-              getJobCardStatus: GetJobCardStatus.success,
-              serviceUploadStatus: ServiceUploadStatus.initial,
-              jobCards: jobCards));
+              getJobCardStatus: GetJobCardStatus.success,serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
+              
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
         }
@@ -310,4 +309,26 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   //     },
   //   );
   // }
+
+void _onGetGatePass(  GetGatePass event, Emitter<ServiceState> emit) async {
+      emit(state.copyWith(gatePassStatus: GatePassStatus.loading
+          ));
+    await _repo.getGatePass(jobCardNo: event.jobCardNo).then(
+      (value) {
+        print("gatepassno ${value["gate_pass_out_no"]}");
+          emit(state.copyWith(
+              gatePassno: value["gate_pass_out_no"],
+              gatePassStatus: GatePassStatus.success
+              ));
+      
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(
+            gatePassStatus: GatePassStatus.failure));
+      },
+    );
+
+}
+
 }

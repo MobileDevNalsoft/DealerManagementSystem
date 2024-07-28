@@ -13,7 +13,6 @@ import 'package:dms/views/dashboard.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/quality_check.dart';
 import 'package:dms/views/service_main.dart';
-import 'package:dms/views/test_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,10 +31,8 @@ void main() async {
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   //sharedPreferences.setBool('isLogged', true);
-  List<GeneralBodyPart> generalBodyPart =
-      await loadSvgImage(svgImage: 'assets/images/image.svg');
-  List<GeneralBodyPart> acceptedParts =
-      await loadSvgImage(svgImage: 'assets/images/image_accept.svg');
+   List<GeneralBodyPart> generalBodyPart = await  loadSvgImage(svgImage:'assets/images/image.svg');
+   List<GeneralBodyPart> acceptedParts = await  loadSvgImage(svgImage:'assets/images/image_accept.svg');
 
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
