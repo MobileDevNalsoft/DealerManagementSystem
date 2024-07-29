@@ -1,26 +1,24 @@
-
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:dms/bloc/service/service_bloc.dart';
-import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:ticket_clippers/ticket_clippers.dart';
 // import 'package:ticket_widget/ticket_widget.dart' hide TicketClipper;
-import 'package:widgets_to_image/widgets_to_image.dart' ;
+import 'package:widgets_to_image/widgets_to_image.dart';
+
 class GatePass extends StatefulWidget {
   const GatePass({super.key});
-  
+
   @override
   State<GatePass> createState() => _GatePassState();
 }
 
 class _GatePassState extends State<GatePass> {
   // WidgetsToImageController to access widget
-  WidgetsToImageController widgetsToImageController = WidgetsToImageController();
+  WidgetsToImageController widgetsToImageController =
+      WidgetsToImageController();
   late Uint8List? bytes;
   @override
   void initState() {
@@ -28,6 +26,7 @@ class _GatePassState extends State<GatePass> {
     super.initState();
     context.read<ServiceBloc>().add(GetGatePass(jobCardNo: "JC-MWC-420"));
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -46,30 +45,50 @@ class _GatePassState extends State<GatePass> {
             leadingWidth: size.width * 0.14,
             leading: Container(
               margin: EdgeInsets.only(left: size.width * 0.045),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10,
+                        blurStyle: BlurStyle.outer,
+                        spreadRadius: 0,
+                        color: Colors.orange.shade200,
+                        offset: const Offset(0, 0))
+                  ]),
               child: Transform(
                 transform: Matrix4.translationValues(-3, 0, 0),
                 child: IconButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                    icon: const Icon(Icons.arrow_back_rounded,
+                        color: Colors.white)),
               ),
             ),
             title: Container(
                 alignment: Alignment.center,
                 height: size.height * 0.05,
                 width: size.width * 0.45,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                ]),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black,
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 10,
+                          blurStyle: BlurStyle.outer,
+                          spreadRadius: 0,
+                          color: Colors.orange.shade200,
+                          offset: const Offset(0, 0))
+                    ]),
                 child: Center(
                   child: Text(
                     textAlign: TextAlign.center,
                     'Gate Pass',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 16),
                   ),
                 )),
             centerTitle: true,
@@ -87,20 +106,19 @@ class _GatePassState extends State<GatePass> {
                   ),
                 ),
                 child: Align(
-                  alignment: Alignment.center, // Align the child container in the center
+                  alignment: Alignment
+                      .center, // Align the child container in the center
                   child: WidgetsToImage(
-                                    controller: widgetsToImageController,
-
+                    controller: widgetsToImageController,
                     child: Column(
                       // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Gap(size.height*0.04),
+                        Gap(size.height * 0.04),
                         TicketClipper(
-                          clipper: RoundedEdgeClipper(  
+                          clipper: RoundedEdgeClipper(
                             points: 8,
                             depth: 16,
                             edge: Edge.vertical,
-                            
                           ),
                           // shadow: const BoxShadow(color: Colors.black, spreadRadius: 1, blurRadius: 2.5),
                           child: Container(
@@ -108,7 +126,13 @@ class _GatePassState extends State<GatePass> {
                             height: size.height * 0.2,
                             width: size.width * 0.7,
                             decoration: BoxDecoration(color: Colors.white),
-                            child: Text(context.read<ServiceBloc>().state.gatePassno??"",style:TextStyle(color: Colors.black,fontWeight: FontWeight.w800,fontSize: 18)),
+                            child: Text(
+                                context.read<ServiceBloc>().state.gatePassno ??
+                                    "",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 18)),
                           ),
                         ),
                         // Gap(size.height*0.035),
@@ -134,10 +158,13 @@ class _GatePassState extends State<GatePass> {
                   ),
                 ),
               ),
-               if (context.watch<ServiceBloc>().state.gatePassStatus == GatePassStatus.loading)
+              if (context.watch<ServiceBloc>().state.gatePassStatus ==
+                  GatePassStatus.loading)
                 Container(
                   color: Colors.blueGrey.withOpacity(0.25),
-                  child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
+                  child: Center(
+                      child: Lottie.asset('assets/lottie/car_loading.json',
+                          height: size.height * 0.4, width: size.width * 0.4)),
                 )
             ],
           )),
@@ -186,17 +213,17 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
     }
 
     // Bottom or Vertical
-    path.lineTo(0, h-20);
-    path.arcToPoint(Offset(20,h),radius: Radius.circular(-20),clockwise: false );
-    
-    
+    path.lineTo(0, h - 20);
+    path.arcToPoint(Offset(20, h),
+        radius: Radius.circular(-20), clockwise: false);
+
     x = 20;
     y = h;
     c = h - depth;
     i = w / points;
 
     if (edge == Edge.bottom || edge == Edge.vertical || edge == Edge.all) {
-      while (x < w-40) {
+      while (x < w - 40) {
         path.lineTo(x + 8, y);
         x = x + 8;
         path.quadraticBezierTo(x + i / 2, c, x + i, y);
@@ -205,7 +232,8 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
     }
 // path.lineTo(w, y);
     // Right or Horizontal
-    path.arcToPoint(Offset(w,h-20),radius: Radius.circular(40),clockwise: false );
+    path.arcToPoint(Offset(w, h - 20),
+        radius: Radius.circular(40), clockwise: false);
     path.lineTo(w, h / 1.5);
     x = w;
     y = h / 1.5;
@@ -238,7 +266,7 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
       }
     }
     path.lineTo(0, 0);
-    
+
     path.close();
     return path;
   }
@@ -248,5 +276,3 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
     return false;
   }
 }
-
-

@@ -29,6 +29,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<GetJson>(_onGetJson);
     on<JobCardStatusUpdated>(_onJobCardStatusUpdated);
     on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
+    on<UpdateSliderPosition>(_onUpdateSliderPosition);
     on<DropDownOpenClose>(_onDropDownOpenClose);
     on<GetInspectionDetails>(_onGetInspectionDetails);
     on<GetGatePass>(_onGetGatePass);
@@ -212,11 +213,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 scheduleDate: service['schedule_date'],
                 jobCardNo: service['job_card_no'],
                 status: service['status'],
-                jobType: service['job_type'],customerName: service['customer_name'], customerContact: service['contact_no']));
+                jobType: service['job_type'],
+                customerName: service['customer_name'],
+                customerContact: service['contact_no']));
           }
           emit(state.copyWith(
-              getJobCardStatus: GetJobCardStatus.success,serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
-              
+              getJobCardStatus: GetJobCardStatus.success,
+              serviceUploadStatus: ServiceUploadStatus.initial,
+              jobCards: jobCards));
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
         }
@@ -310,25 +314,19 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   //   );
   // }
 
-void _onGetGatePass(  GetGatePass event, Emitter<ServiceState> emit) async {
-      emit(state.copyWith(gatePassStatus: GatePassStatus.loading
-          ));
+  void _onGetGatePass(GetGatePass event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(gatePassStatus: GatePassStatus.loading));
     await _repo.getGatePass(jobCardNo: event.jobCardNo).then(
       (value) {
         print("gatepassno ${value["gate_pass_out_no"]}");
-          emit(state.copyWith(
-              gatePassno: value["gate_pass_out_no"],
-              gatePassStatus: GatePassStatus.success
-              ));
-      
+        emit(state.copyWith(
+            gatePassno: value["gate_pass_out_no"],
+            gatePassStatus: GatePassStatus.success));
       },
     ).onError(
       (error, stackTrace) {
-        emit(state.copyWith(
-            gatePassStatus: GatePassStatus.failure));
+        emit(state.copyWith(gatePassStatus: GatePassStatus.failure));
       },
     );
-
-}
-
+  }
 }

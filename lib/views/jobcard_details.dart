@@ -1,19 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart'
     hide BoxDecoration, BoxShadow, Stepper, Step;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:easy_stepper/easy_stepper.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
 
 import '../models/services.dart';
 import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatelessWidget {
-  JobCardDetails({super.key, required this.service});
+  JobCardDetails({super.key, this.service});
 
-  Service service;
+  Service? service;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +19,7 @@ class JobCardDetails extends StatelessWidget {
       'New',
       'Work in progress',
       'Quality Check',
-      'Inspection out',
+      'Inspection Out',
       'Completed'
     ];
 
@@ -36,8 +32,8 @@ class JobCardDetails extends StatelessWidget {
     ];
 
     List<String> statusLines = [
-      'Job Card created on "Creation Date"',
-      'Vehicle Service is in progress',
+      'JC created on "Creation Date"',
+      'Vehicle Service is done',
       'Quality Check is done',
       'Inpection out is done',
       'Service Completed'
@@ -45,9 +41,10 @@ class JobCardDetails extends StatelessWidget {
 
     List<String> pendingStatusLines = [
       '',
-      'Vehicle Service needs to be done',
+      'Vehicle Service is in progress',
       'Quality Check needs to be done',
-      'Inpection out needs to be done'
+      'Inpection out needs to be done',
+      'Gate Pass Generated'
     ];
 
     return Scaffold(
@@ -133,17 +130,19 @@ class JobCardDetails extends StatelessWidget {
                 child: ListView(
                   children: [
                     buildDetailRow(
-                        'Job Card Number', service.jobCardNo.toString(), size),
+                        'Job Card Number', service!.jobCardNo.toString(), size),
                     Gap(size.height * 0.03),
                     buildDetailRow('Vehicle Registration Number',
-                        service.registrationNo.toString(), size),
-                    Gap(size.height * 0.03),
-                    buildDetailRow('Location', service.location.toString(), size),
-                    Gap(size.height * 0.03),
-                    buildDetailRow('Job Type', service.jobType.toString(), size),
+                        service!.registrationNo.toString(), size),
                     Gap(size.height * 0.03),
                     buildDetailRow(
-                        'Schedule Date', service.scheduleDate.toString(), size)
+                        'Location', service!.location.toString(), size),
+                    Gap(size.height * 0.03),
+                    buildDetailRow(
+                        'Job Type', service!.jobType.toString(), size),
+                    Gap(size.height * 0.03),
+                    buildDetailRow(
+                        'Schedule Date', service!.scheduleDate.toString(), size)
                   ],
                 ),
               ),
@@ -179,14 +178,15 @@ class JobCardDetails extends StatelessWidget {
                             child: Stepper(
                           steps: dmsFlow
                               .map((e) => Step(
-                                    activeStep: dmsFlow.indexWhere((e) => e == service.status),
+                                    activeStep: dmsFlow.indexWhere(
+                                        (e) => e == service!.status),
                                     currentStep: dmsFlow.indexOf(e),
                                     icons: icons,
                                     stepperLength: dmsFlow.length,
                                     title: e,
                                     statusLines: statusLines,
                                     pendingStatusLines: pendingStatusLines,
-                                    jobCardNo: service.jobCardNo!,
+                                    jobCardNo: service!.jobCardNo!,
                                   ))
                               .toList(),
                         )),
@@ -205,7 +205,7 @@ class JobCardDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: size.width*0.4,
+            width: size.width * 0.4,
             child: Text(
               key,
               softWrap: true,
@@ -213,12 +213,15 @@ class JobCardDetails extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: size.width*0.4,
+            width: size.width * 0.4,
             child: Text(
               textAlign: TextAlign.right,
               value,
               softWrap: true,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, overflow: TextOverflow.visible),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  overflow: TextOverflow.visible),
             ),
           )
         ]);

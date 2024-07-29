@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
@@ -7,18 +8,12 @@ import 'package:dms/models/vehicle.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/inspection.dart';
-import 'package:dms/views/inspection_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
-import 'package:customs/src.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:slider_button/slider_button.dart';
-import 'package:stacked/stacked.dart';
 
 import '../logger/logger.dart';
 

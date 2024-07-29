@@ -1,25 +1,12 @@
-import 'dart:io';
-
 import 'package:dms/bloc/service/service_bloc.dart';
-import 'package:dms/views/custom_widgets/draggable_sheet.dart';
-import 'package:dms/views/service_main.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:circle_nav_bar/circle_nav_bar.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../inits/init.dart';
-import '../models/services.dart';
 import 'custom_widgets/clipped_buttons.dart';
 import 'jobcard_details.dart';
-import 'login.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
