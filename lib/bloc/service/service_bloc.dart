@@ -33,6 +33,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<DropDownOpenClose>(_onDropDownOpenClose);
     on<GetInspectionDetails>(_onGetInspectionDetails);
     on<GetGatePass>(_onGetGatePass);
+    on<SearchJobCards>(_onSearchJobCards);
+    on<DropDownOpen>(_onDropDownOpen);
   }
 
   final Repository _repo;
@@ -41,9 +43,27 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(index: event.index));
   }
 
+  void _onDropDownOpen(DropDownOpen event, Emitter<ServiceState> emit) {
+    emit(state);
+  }
+
   void _onUpdateSliderPosition(
       UpdateSliderPosition event, Emitter<ServiceState> emit) {
     emit(state.copyWith(sliderPosition: event.position));
+  }
+
+  void _onSearchJobCards(
+      SearchJobCards event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(getJobCardStatus: GetJobCardStatus.loading));
+    await Future.delayed(Duration(milliseconds: 500), () {
+      emit(state.copyWith(
+          filteredJobCards: state.jobCards!
+              .where((e) => e.registrationNo!
+                  .toLowerCase()
+                  .contains(event.searchText.toLowerCase()))
+              .toList()));
+    });
+    emit(state.copyWith(getJobCardStatus: GetJobCardStatus.success));
   }
 
   Future<void> _onGetJson(GetJson event, Emitter<ServiceState> emit) async {
@@ -75,21 +95,15 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         if (value == 200) {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         } else {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         }
       },
     ).onError(
       (error, stackTrace) {
         emit(state.copyWith(
             inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
-        emit(state.copyWith(
-            inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
       },
     );
   }
@@ -221,6 +235,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
               getJobCardStatus: GetJobCardStatus.success,
               serviceUploadStatus: ServiceUploadStatus.initial,
               jobCards: jobCards));
+          emit(state.copyWith(filteredJobCards: jobCards));
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
         }

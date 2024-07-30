@@ -29,6 +29,7 @@ class _InspectionViewState extends State<InspectionView> {
     super.initState();
 
     _serviceBloc = context.read<ServiceBloc>();
+    _serviceBloc.state.serviceUploadStatus = ServiceUploadStatus.initial;
     _serviceBloc.state.index = 0;
     _serviceBloc.add(GetJson());
   }
@@ -37,24 +38,64 @@ class _InspectionViewState extends State<InspectionView> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-        child: GestureDetector(
+    return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: const Color.fromARGB(255, 145, 19, 19),
-          leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-          title: const Text(
-            "Inspection",
-            style: TextStyle(color: Colors.white, fontSize: 18),
+          scrolledUnderElevation: 0,
+          elevation: 0,
+          backgroundColor: Colors.black45,
+          leadingWidth: size.width * 0.14,
+          leading: Container(
+            margin: EdgeInsets.only(left: size.width * 0.045),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 10,
+                      blurStyle: BlurStyle.outer,
+                      spreadRadius: 0,
+                      color: Colors.orange.shade200,
+                      offset: const Offset(0, 0))
+                ]),
+            child: Transform(
+              transform: Matrix4.translationValues(-3, 0, 0),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: Colors.white)),
+            ),
           ),
+          title: Container(
+              height: size.height * 0.05,
+              width: size.width * 0.45,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10,
+                        blurStyle: BlurStyle.outer,
+                        spreadRadius: 0,
+                        color: Colors.orange.shade200,
+                        offset: const Offset(0, 0))
+                  ]),
+              child: const Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'Inspection In',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 16),
+                ),
+              )),
           centerTitle: true,
         ),
         body: Container(
@@ -62,15 +103,10 @@ class _InspectionViewState extends State<InspectionView> {
           width: size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors: [
-                  // Color.fromARGB(255, 255, 231, 231),
-                  Color.fromARGB(255, 241, 193, 193),
-                  Color.fromARGB(255, 235, 136, 136),
-                  Color.fromARGB(255, 226, 174, 174)
-                ],
+                colors: [Colors.black45, Colors.black26, Colors.black45],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                stops: [0.01, 0.35, 1]),
+                stops: [0.1, 0.5, 1]),
           ),
           child:
               BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
@@ -94,9 +130,10 @@ class _InspectionViewState extends State<InspectionView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Gap(size.height * 0.005),
+                    Gap(size.height * 0.008),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.005),
                       child: SizedBox(
                         height: size.height * 0.04,
                         child: ListView(
@@ -119,17 +156,15 @@ class _InspectionViewState extends State<InspectionView> {
                                                         horizontal: 10),
                                                 backgroundColor: state.index ==
                                                         buttonsText.indexOf(e)
-                                                    ? const Color.fromARGB(
-                                                        255, 145, 19, 19)
-                                                    : const Color.fromARGB(
-                                                        255, 238, 203, 203),
+                                                    ? Colors.black
+                                                    : Colors.grey.shade400,
                                                 foregroundColor: state.index ==
                                                         buttonsText.indexOf(e)
                                                     ? Colors.white
                                                     : const Color.fromARGB(
                                                         255, 29, 22, 22),
                                                 side: const BorderSide(
-                                                    color: Color.fromARGB(255, 145, 19, 19))),
+                                                    color: Colors.black)),
                                             onPressed: () {
                                               _pageController.jumpToPage(
                                                   buttonsText.indexOf(e));
@@ -141,11 +176,6 @@ class _InspectionViewState extends State<InspectionView> {
                               .toList(),
                         ),
                       ),
-                    ),
-                    Divider(
-                      height: size.height * 0.015,
-                      thickness: 1,
-                      color: Colors.grey.shade300,
                     ),
                     Gap(size.height * 0.01),
                     Expanded(
@@ -236,9 +266,7 @@ class _InspectionViewState extends State<InspectionView> {
                                         style: ElevatedButton.styleFrom(
                                             minimumSize: const Size(70.0, 35.0),
                                             padding: EdgeInsets.zero,
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 145, 19, 19),
+                                            backgroundColor: Colors.black,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(5))),
@@ -261,7 +289,7 @@ class _InspectionViewState extends State<InspectionView> {
           }),
         ),
       ),
-    ));
+    );
   }
 
   Widget getWidget(
@@ -278,7 +306,7 @@ class _InspectionViewState extends State<InspectionView> {
           child: Checkbox(
             checkColor: Colors.white,
             fillColor: json[page][index]['properties']['value'] == true
-                ? const WidgetStatePropertyAll(Color.fromARGB(255, 145, 19, 19))
+                ? const WidgetStatePropertyAll(Colors.black)
                 : const WidgetStatePropertyAll(Colors.white),
             value: json[page][index]['properties']['value'],
             side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
@@ -424,8 +452,8 @@ class _InspectionViewState extends State<InspectionView> {
                       groupValue: json[page][index]['properties']['value'],
                       activeColor: Colors
                           .white, // Change the active radio button color here
-                      fillColor: WidgetStateProperty.all(Color.fromARGB(255,
-                          145, 19, 19)), // Change the fill color when selected
+                      fillColor: WidgetStateProperty.all(
+                          Colors.black), // Change the fill color when selected
                       splashRadius: 20, // Change the splash radius when clicked
                       onChanged: (value) {
                         json[page][index]['properties']['value'] = value;

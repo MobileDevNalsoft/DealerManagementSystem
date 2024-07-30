@@ -1,21 +1,12 @@
-import 'dart:convert';
-
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
-import 'package:dms/views/dashboard.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:slider_button/slider_button.dart';
-
 import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
-import '../vehiclemodule/body_canvas.dart';
-import '../vehiclemodule/responsive_interactive_viewer.dart';
-import '../vehiclemodule/xml_parser.dart';
 
 class InspectionOut extends StatefulWidget {
   const InspectionOut({super.key});

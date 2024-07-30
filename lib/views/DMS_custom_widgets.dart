@@ -32,12 +32,12 @@ class DMSCustomWidgets {
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
         elevation: 3,
-        color: const Color.fromARGB(255, 250, 239, 239),
+        color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
           suggestionsController: suggestionsController,
           builder: (context, controller, focusNode) {
-            focus = focusNode;
+            // focus = focusNode;
             typeAheadController = controller;
             return Transform(
               transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
@@ -83,7 +83,7 @@ class DMSCustomWidgets {
             enabled: isLoading,
             child: Container(
               height: size.height * 0.038,
-              color: const Color.fromARGB(255, 250, 239, 239),
+              color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Text(
                 suggestion,
@@ -121,7 +121,7 @@ class DMSCustomWidgets {
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
         elevation: 3,
-        color: const Color.fromARGB(255, 250, 239, 239),
+        color: Colors.white,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Transform(
@@ -183,7 +183,7 @@ class DMSCustomWidgets {
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
         elevation: 3,
-        color: const Color.fromARGB(255, 250, 239, 239),
+        color: Colors.white,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: TextFormField(
@@ -235,9 +235,8 @@ class DMSCustomWidgets {
                             .add(DateChanged(date: date ?? DateTime.now()));
                       },
                       allowViewNavigation: true,
-                      todayHighlightColor:
-                          const Color.fromARGB(255, 145, 19, 19),
-                      selectionColor: const Color.fromARGB(255, 145, 19, 19),
+                      todayHighlightColor: Colors.black,
+                      selectionColor: Colors.black,
                       maxDate: DateTime(2024, 12, 31),
                       showNavigationArrow: true,
                       backgroundColor: Colors.white,
@@ -256,7 +255,8 @@ class DMSCustomWidgets {
                         Navigator.pop(context);
                       },
                       headerStyle: const DateRangePickerHeaderStyle(
-                          backgroundColor: Color.fromARGB(255, 187, 76, 76),
+                          backgroundColor: Colors.black,
+                          textStyle: TextStyle(color: Colors.white),
                           textAlign: TextAlign.center),
                     )),
               );
@@ -265,7 +265,7 @@ class DMSCustomWidgets {
         },
         child: Card(
             elevation: 3,
-            color: const Color.fromARGB(255, 250, 239, 239),
+            color: Colors.white,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
             child: Padding(

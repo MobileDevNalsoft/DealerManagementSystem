@@ -10,14 +10,15 @@ import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 
-class ServiceHistoryView extends StatefulWidget {
-  const ServiceHistoryView({super.key});
+class ServiceHistoryViewSample extends StatefulWidget {
+  const ServiceHistoryViewSample({super.key});
 
   @override
-  State<ServiceHistoryView> createState() => _ServiceHistoryViewState();
+  State<ServiceHistoryViewSample> createState() =>
+      _ServiceHistoryViewSampleState();
 }
 
-class _ServiceHistoryViewState extends State<ServiceHistoryView> {
+class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
   late ServiceHistoryDataSource serviceHistoryDataSource;
   DataGridController dataGridController = DataGridController();
   final ServiceState serviceState = ServiceState();
@@ -76,74 +77,36 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
         //   DeviceOrientation.landscapeRight
         // ]);
         return Scaffold(
-            resizeToAvoidBottomInset: false,
-            extendBodyBehindAppBar: false,
+            backgroundColor: Colors.transparent,
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
-              scrolledUnderElevation: 0,
-              elevation: 0,
-              backgroundColor: Colors.black45,
-              leadingWidth: size.width * 0.14,
-              leading: Container(
-                margin: EdgeInsets.only(left: size.width * 0.045),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.black,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 0,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0))
-                    ]),
-                child: Transform(
-                  transform: Matrix4.translationValues(-3, 0, 0),
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back_rounded,
-                          color: Colors.white)),
-                ),
+              elevation: 0.0,
+              backgroundColor: const Color.fromARGB(255, 145, 19, 19),
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: Colors.white)),
+              title: const Text(
+                "Service History",
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
-              title: Container(
-                  height: size.height * 0.05,
-                  width: size.width * 0.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.black,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 0,
-                            color: Colors.orange.shade200,
-                            offset: const Offset(0, 0))
-                      ]),
-                  child: const Center(
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      'Service History',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          fontSize: 16),
-                    ),
-                  )),
               centerTitle: true,
             ),
             body: Container(
               height: size.height,
               width: double.infinity,
               margin: EdgeInsets.zero,
-              padding: EdgeInsets.only(
-                  top: size.height * 0.01, left: size.width * 0.01),
+              padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.black45, Colors.black26, Colors.black45],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.1, 0.5, 1]),
+                image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.5), BlendMode.darken),
+                    image: const AssetImage(
+                      'assets/images/dms_bg.png',
+                    ),
+                    fit: BoxFit.cover),
               ),
               child: SfDataGridTheme(
                 data: SfDataGridThemeData.raw(
@@ -152,7 +115,10 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                       borderColor: Colors.black,
                       borderWidth: 2,
                     )),
-                child: BlocBuilder<ServiceBloc, ServiceState>(
+                child: BlocConsumer<ServiceBloc, ServiceState>(
+                  listener: (context, state) {
+                    if (state.getServiceStatus == GetServiceStatus.success) {}
+                  },
                   builder: (context, state) {
                     switch (state.getServiceStatus) {
                       case GetServiceStatus.loading:
@@ -166,70 +132,73 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                           ),
                         );
                       case GetServiceStatus.success:
-                        return SfDataGrid(
-                          columnSizer: _customColumnSizer,
-                          columnWidthMode: ColumnWidthMode.fitByColumnName,
-                          source: ServiceHistoryDataSource(
-                              serviceHistoryData: state.services!),
-                          gridLinesVisibility: GridLinesVisibility.both,
-                          headerGridLinesVisibility: GridLinesVisibility.both,
-                          showHorizontalScrollbar: false,
-                          allowEditing: true,
-                          shrinkWrapColumns: false,
-                          shrinkWrapRows: false,
-                          allowSorting: true,
-                          allowColumnsResizing: true,
-                          allowColumnsDragging: true,
-                          columnResizeMode: ColumnResizeMode.onResize,
-                          allowFiltering: true,
-                          editingGestureType: EditingGestureType.doubleTap,
-                          onCellDoubleTap: (details) {
-                            dataGridController
-                                .beginEdit(details.rowColumnIndex);
-                          },
-                          controller: dataGridController,
-                          columns: <GridColumn>[
-                            GridColumn(
-                                allowEditing: true,
-                                width: 150,
-                                columnName: 'sno',
-                                label: Container(
-                                    padding: const EdgeInsets.all(16.0),
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      'Sno',
-                                    ))),
-                            GridColumn(
-                                columnName: 'date',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: const Text('Date'))),
-                            GridColumn(
-                                columnName: 'Job Card no.',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: InkWell(
-                                      onTap: () {},
+                        return Expanded(
+                          flex: 1,
+                          child: SfDataGrid(
+                            columnSizer: _customColumnSizer,
+                            columnWidthMode: ColumnWidthMode.fitByColumnName,
+                            source: ServiceHistoryDataSource(
+                                serviceHistoryData: state.services!),
+                            gridLinesVisibility: GridLinesVisibility.both,
+                            headerGridLinesVisibility: GridLinesVisibility.both,
+                            showHorizontalScrollbar: false,
+                            allowEditing: true,
+                            shrinkWrapColumns: false,
+                            shrinkWrapRows: false,
+                            allowSorting: true,
+                            allowColumnsResizing: true,
+                            allowColumnsDragging: true,
+                            columnResizeMode: ColumnResizeMode.onResize,
+                            allowFiltering: true,
+                            editingGestureType: EditingGestureType.doubleTap,
+                            onCellDoubleTap: (details) {
+                              dataGridController
+                                  .beginEdit(details.rowColumnIndex);
+                            },
+                            controller: dataGridController,
+                            columns: <GridColumn>[
+                              GridColumn(
+                                  allowEditing: true,
+                                  width: 150,
+                                  columnName: 'sno',
+                                  label: Container(
+                                      padding: const EdgeInsets.all(16.0),
+                                      alignment: Alignment.center,
                                       child: const Text(
-                                        'Job Card no.',
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ))),
-                            GridColumn(
-                                columnName: 'Location',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: const Text('Location'))),
-                            GridColumn(
-                                columnName: 'Job Type',
-                                label: Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    alignment: Alignment.center,
-                                    child: const Text('Job Type'))),
-                          ],
+                                        'Sno',
+                                      ))),
+                              GridColumn(
+                                  columnName: 'date',
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: const Text('Date'))),
+                              GridColumn(
+                                  columnName: 'Job Card no.',
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: const Text(
+                                          'Job Card no.',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ))),
+                              GridColumn(
+                                  columnName: 'Location',
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: const Text('Location'))),
+                              GridColumn(
+                                  columnName: 'Job Type',
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: const Text('Job Type'))),
+                            ],
+                          ),
                         );
                       default:
                         return SizedBox();

@@ -5,7 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../inits/init.dart';
+import '../models/services.dart';
 import 'custom_widgets/clipped_buttons.dart';
+import 'custom_widgets/textformfield.dart';
 import 'jobcard_details.dart';
 
 class DashboardView extends StatefulWidget {
@@ -208,8 +210,8 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                 offset: Offset(0, 0)),
         clipper: BackgroundWaveClipper(),
         child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 100,
+          width: size.width,
+          height: size.height * 0.13,
           decoration: const BoxDecoration(
             color: Colors.black,
           ),
@@ -246,73 +248,69 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
 class SliverHeader extends SliverPersistentHeaderDelegate {
   SliverHeader();
 
+  TextEditingController controller = TextEditingController();
+  FocusNode focusNode = FocusNode();
+
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final size = MediaQuery.of(context).size;
+    print(size.height);
+    print('shrink offset $shrinkOffset');
 
-    return Stack(
-      fit: StackFit.expand,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Card(
-            margin: EdgeInsets.only(
-                left: size.width * 0.026,
-                right: size.width * 0.026,
-                bottom: size.height * 0.005),
-            color: Colors.white,
-            elevation: 4,
-            shadowColor: const Color.fromARGB(255, 145, 19, 19),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    height: size.height * 0.068,
-                    width: size.width * 0.3,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black38),
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            bottomLeft: Radius.circular(10))),
-                    child: const Text(
-                      textAlign: TextAlign.center,
-                      'Job Card No.',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: size.height * 0.068,
-                    width: size.width * 0.398,
-                    decoration: const BoxDecoration(
-                        border: Border.symmetric(
-                            horizontal: BorderSide(color: Colors.black38)),
-                        borderRadius: BorderRadius.only()),
-                    child: const Text(
-                      textAlign: TextAlign.center,
-                      'Registration No.',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: size.height * 0.068,
-                    width: size.width * 0.25,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black38),
-                        borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    child: const Text(
-                      textAlign: TextAlign.center,
-                      'Status',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ]))
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(left: size.width * 0.03),
+          padding: EdgeInsets.only(top: size.height * 0.033),
+          height: size.height * 0.06,
+          width: size.width * 0.8,
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10)),
+              color: Colors.white60),
+          child: TextFormField(
+            controller: controller,
+            focusNode: focusNode,
+            style: const TextStyle(color: Colors.black),
+            onTapOutside: (event) => focusNode.unfocus(),
+            onChanged: (value) {
+              controller.text = value;
+              context
+                  .read<ServiceBloc>()
+                  .add(SearchJobCards(searchText: value));
+            },
+            cursorColor: Colors.black,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+              hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
+              hintText: 'Vehicle Registration Number',
+            ),
+          ),
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: () => focusNode.requestFocus(),
+            child: Container(
+              margin: EdgeInsets.only(right: size.width * 0.03),
+              height: size.height * 0.06,
+              decoration: const BoxDecoration(
+                  color: Colors.black38,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10))),
+              child: const Icon(
+                Icons.search_rounded,
+                color: Colors.white60,
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
@@ -409,11 +407,11 @@ class JobCardPage extends StatelessWidget {
                 // Set this param so that it won't go off the screen when scrolling
                 pinned: true,
               ),
-              // SliverPersistentHeader(
-              //   delegate: SliverHeader(),
-              //   // Set this param so that it won't go off the screen when scrolling
-              //   pinned: true,
-              // ),
+              SliverPersistentHeader(
+                delegate: SliverHeader(),
+                // Set this param so that it won't go off the screen when scrolling
+                pinned: false,
+              ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                 return Skeletonizer(
@@ -467,7 +465,8 @@ class JobCardPage extends StatelessWidget {
                                             enableFeedback: true,
                                             onTap: () {
                                               state.jobCardNo = state
-                                                  .jobCards![index].jobCardNo!;
+                                                  .filteredJobCards![index]
+                                                  .jobCardNo!;
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -481,7 +480,8 @@ class JobCardPage extends StatelessWidget {
                                               textAlign: TextAlign.center,
                                               state.getJobCardStatus ==
                                                       GetJobCardStatus.success
-                                                  ? state.jobCards![index]
+                                                  ? state
+                                                      .filteredJobCards![index]
                                                       .jobCardNo!
                                                   : 'JC-MAD-633',
                                               style: const TextStyle(
@@ -510,7 +510,9 @@ class JobCardPage extends StatelessWidget {
                                                 textAlign: TextAlign.center,
                                                 state.getJobCardStatus ==
                                                         GetJobCardStatus.success
-                                                    ? state.jobCards![index]
+                                                    ? state
+                                                        .filteredJobCards![
+                                                            index]
                                                         .registrationNo!
                                                     : 'TS09ED7884',
                                                 style: const TextStyle(
@@ -543,7 +545,8 @@ class JobCardPage extends StatelessWidget {
                                             textAlign: TextAlign.center,
                                             state.getJobCardStatus ==
                                                     GetJobCardStatus.success
-                                                ? state.jobCards![index].status!
+                                                ? state.filteredJobCards![index]
+                                                    .status!
                                                 : 'Work in Progress',
                                             style:
                                                 const TextStyle(fontSize: 13),
@@ -579,10 +582,11 @@ class JobCardPage extends StatelessWidget {
                                             child: Text(
                                               state.getJobCardStatus ==
                                                       GetJobCardStatus.success
-                                                  ? state.jobCards![index]
+                                                  ? state
+                                                      .filteredJobCards![index]
                                                       .customerName!
                                                   : 'Customer Name',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -605,11 +609,13 @@ class JobCardPage extends StatelessWidget {
                                             child: Text(
                                               state.getJobCardStatus ==
                                                       GetJobCardStatus.success
-                                                  ? state.jobCards![index]
+                                                  ? state
+                                                          .filteredJobCards![
+                                                              index]
                                                           .customerContact ??
                                                       '-'
                                                   : 'Contact Number',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -628,10 +634,10 @@ class JobCardPage extends StatelessWidget {
               },
                       childCount:
                           state.getJobCardStatus == GetJobCardStatus.success
-                              ? state.jobCards!.length
+                              ? state.filteredJobCards!.length
                               : 7)),
               if (state.getJobCardStatus == GetJobCardStatus.success &&
-                  state.jobCards!.isEmpty)
+                  state.filteredJobCards!.isEmpty)
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                       (context, index) => Stack(

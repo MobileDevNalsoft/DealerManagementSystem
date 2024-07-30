@@ -16,7 +16,7 @@ enum JsonStatus { initial, loading, success, failure }
 
 enum InspectionJsonUploadStatus { initial, loading, success, failure }
 
-enum GatePassStatus {initial, loading, success, failure }
+enum GatePassStatus { initial, loading, success, failure }
 
 final class ServiceState {
   ServiceState(
@@ -38,7 +38,9 @@ final class ServiceState {
       this.jobCardNo,
       this.bottomNavigationBarActiveIndex,
       this.inspectionDetails,
-      this.serviceLocationsStatus,this.gatePassStatus,
+      this.serviceLocationsStatus,
+      this.filteredJobCards,
+      this.gatePassStatus,
       this.gatePassno});
 
   GetServiceStatus? getServiceStatus;
@@ -62,23 +64,24 @@ final class ServiceState {
   GetInspectionStatus? getInspectionStatus;
   GatePassStatus? gatePassStatus;
   String? gatePassno;
+  List<Service>? filteredJobCards;
 
   factory ServiceState.initial() {
     return ServiceState(
-        getServiceStatus: GetServiceStatus.initial,
-        getJobCardStatus: GetJobCardStatus.initial,
-        serviceLocationsStatus: GetServiceLocationsStatus.initial,
-        inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial,
-        serviceUploadStatus: ServiceUploadStatus.initial,
-        jobCardStatusUpdate: JobCardStatusUpdate.initial,
-        getInspectionStatus: GetInspectionStatus.initial,
-        sliderPosition: Position.middle,
-        jsonStatus: JsonStatus.initial,
-        bottomNavigationBarActiveIndex: 0,
-        index: 0,
-        json: null,
-        dropDownOpen: false,
-        );
+      getServiceStatus: GetServiceStatus.initial,
+      getJobCardStatus: GetJobCardStatus.initial,
+      serviceLocationsStatus: GetServiceLocationsStatus.initial,
+      inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial,
+      serviceUploadStatus: ServiceUploadStatus.initial,
+      jobCardStatusUpdate: JobCardStatusUpdate.initial,
+      getInspectionStatus: GetInspectionStatus.initial,
+      sliderPosition: Position.middle,
+      jsonStatus: JsonStatus.initial,
+      bottomNavigationBarActiveIndex: 0,
+      index: 0,
+      json: null,
+      dropDownOpen: false,
+    );
   }
 
   ServiceState copyWith(
@@ -93,6 +96,7 @@ final class ServiceState {
       ServiceUploadStatus? serviceUploadStatus,
       JobCardStatusUpdate? jobCardStatusUpdate,
       Map<String, dynamic>? json,
+      List<Service>? filteredJobCards,
       String? jobCardNo,
       bool? dropDownOpen,
       Map<String, dynamic>? inspectionDetails,
@@ -109,6 +113,7 @@ final class ServiceState {
         jobCardStatusUpdate: jobCardStatusUpdate ?? jobCardStatusUpdate,
         inspectionDetails: inspectionDetails ?? this.inspectionDetails,
         jobCardNo: jobCardNo ?? this.jobCardNo,
+        filteredJobCards: filteredJobCards ?? this.filteredJobCards,
         inspectionJsonUploadStatus:
             inspectionJsonUploadStatus ?? this.inspectionJsonUploadStatus,
         json: json ?? this.json,
@@ -126,8 +131,7 @@ final class ServiceState {
         dropDownOpen: dropDownOpen ?? this.dropDownOpen,
         jobCards: jobCards ?? this.jobCards,
         locations: locations ?? this.locations,
-        gatePassStatus: gatePassStatus??this.gatePassStatus,
-        gatePassno: gatePassno??this.gatePassno
-        );
+        gatePassStatus: gatePassStatus ?? this.gatePassStatus,
+        gatePassno: gatePassno ?? this.gatePassno);
   }
 }

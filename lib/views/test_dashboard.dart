@@ -1,6 +1,8 @@
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/sample/service_main.dart';
+import 'package:dms/views/service_history.dart';
 import 'package:dms/views/service_main.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -32,12 +34,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Gap(size.height * 0.1),
-                const Text(
-                  'DMS',
-                  style: TextStyle(fontSize: 25),
-                ),
-                Gap(size.height * 0.08),
+                Gap(size.height * 0.18),
                 Image.asset(
                   'assets/images/dashboard_car.png',
                   height: 200,
@@ -46,8 +43,8 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                 Gap(size.height * 0.3),
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => HomeView()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ServiceMain()));
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -144,40 +141,48 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                   ),
                   Transform.flip(
                     flipX: true,
-                    child: ClippedButton(
-                      size: Size(size.width * 0.2, size.height * 0.2),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Colors.black45,
-                              Colors.black87,
-                              Colors.black
-                            ],
-                            stops: [
-                              0.05,
-                              0.5,
-                              1
-                            ]),
-                      ),
-                      shadow: BoxShadow(
-                          blurRadius: 20,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 25,
-                          color: Colors.orange.shade200,
-                          offset: Offset(0, 0)),
-                      clipper: ButtonClipper(),
-                      child: Image.asset(
-                        'assets/images/person_icon.png',
-                        color: Colors.orange.shade200,
-                        opacity: AnimationController(
-                          vsync: this,
-                          value: 0.7,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ServiceMainSample()));
+                      },
+                      child: ClippedButton(
+                        size: Size(size.width * 0.2, size.height * 0.2),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Colors.black45,
+                                Colors.black87,
+                                Colors.black
+                              ],
+                              stops: [
+                                0.05,
+                                0.5,
+                                1
+                              ]),
                         ),
-                        alignment: Alignment.center,
-                        height: size.height * 0.07,
-                        width: size.width * 0.07,
+                        shadow: BoxShadow(
+                            blurRadius: 20,
+                            blurStyle: BlurStyle.outer,
+                            spreadRadius: 25,
+                            color: Colors.orange.shade200,
+                            offset: Offset(0, 0)),
+                        clipper: ButtonClipper(),
+                        child: Image.asset(
+                          'assets/images/person_icon.png',
+                          color: Colors.orange.shade200,
+                          opacity: AnimationController(
+                            vsync: this,
+                            value: 0.7,
+                          ),
+                          alignment: Alignment.center,
+                          height: size.height * 0.07,
+                          width: size.width * 0.07,
+                        ),
                       ),
                     ),
                   ),
@@ -302,44 +307,53 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                     flipY: true,
                     child: Transform.flip(
                         flipX: true,
-                        child: ClippedButton(
-                            size: Size(size.width * 0.2, size.height * 0.2),
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
-                                  colors: [
-                                    Colors.black45,
-                                    Colors.black87,
-                                    Colors.black
-                                  ],
-                                  stops: [
-                                    0.05,
-                                    0.5,
-                                    1
-                                  ]),
-                            ),
-                            shadow: BoxShadow(
-                                blurRadius: 20,
-                                blurStyle: BlurStyle.outer,
-                                spreadRadius: 25,
-                                color: Colors.orange.shade200,
-                                offset: Offset(0, 0)),
-                            clipper: ButtonClipper(),
-                            child: Transform.flip(
-                              flipY: true,
-                              child: Image.asset(
-                                'assets/images/history_icon.png',
-                                color: Colors.orange.shade200,
-                                opacity: AnimationController(
-                                  vsync: this,
-                                  value: 0.7,
-                                ),
-                                alignment: Alignment.center,
-                                height: size.height * 0.08,
-                                width: size.width * 0.08,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const ServiceHistoryView()));
+                          },
+                          child: ClippedButton(
+                              size: Size(size.width * 0.2, size.height * 0.2),
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    colors: [
+                                      Colors.black45,
+                                      Colors.black87,
+                                      Colors.black
+                                    ],
+                                    stops: [
+                                      0.05,
+                                      0.5,
+                                      1
+                                    ]),
                               ),
-                            ))),
+                              shadow: BoxShadow(
+                                  blurRadius: 20,
+                                  blurStyle: BlurStyle.outer,
+                                  spreadRadius: 25,
+                                  color: Colors.orange.shade200,
+                                  offset: Offset(0, 0)),
+                              clipper: ButtonClipper(),
+                              child: Transform.flip(
+                                flipY: true,
+                                child: Image.asset(
+                                  'assets/images/history_icon.png',
+                                  color: Colors.orange.shade200,
+                                  opacity: AnimationController(
+                                    vsync: this,
+                                    value: 0.7,
+                                  ),
+                                  alignment: Alignment.center,
+                                  height: size.height * 0.08,
+                                  width: size.width * 0.08,
+                                ),
+                              )),
+                        )),
                   ),
                 ],
               ),

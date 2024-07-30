@@ -58,7 +58,7 @@ void main() async {
             ? const LoginView()
             : DribbleUI(),
         routes: {
-          '/home': (context) => HomeView(),
+          '/home': (context) => ServiceMain(),
           '/dashboard': (context) => DashboardView(),
           '/jobCardDetails': (context) => JobCardDetails(),
         },

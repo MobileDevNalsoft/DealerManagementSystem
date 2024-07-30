@@ -15,18 +15,18 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../logger/logger.dart';
+import '../../logger/logger.dart';
 
-class ServiceProceed extends StatefulWidget {
+class ServiceProceedSample extends StatefulWidget {
   @override
   Map<String, dynamic> homeData;
   Function? clearFields;
 
-  ServiceProceed({super.key, required this.homeData, this.clearFields});
-  State<ServiceProceed> createState() => _ServiceProceed();
+  ServiceProceedSample({super.key, required this.homeData, this.clearFields});
+  State<ServiceProceedSample> createState() => _ServiceProceedSample();
 }
 
-class _ServiceProceed extends State<ServiceProceed> {
+class _ServiceProceedSample extends State<ServiceProceedSample> {
   FocusNode bookingFocus = FocusNode();
   FocusNode altContFocus = FocusNode();
   FocusNode altContPhoneNoFocus = FocusNode();
@@ -110,62 +110,25 @@ class _ServiceProceed extends State<ServiceProceed> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: false,
         appBar: AppBar(
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          backgroundColor: Colors.black45,
-          leadingWidth: size.width * 0.14,
-          leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 10,
-                      blurStyle: BlurStyle.outer,
-                      spreadRadius: 0,
-                      color: Colors.orange.shade200,
-                      offset: const Offset(0, 0))
-                ]),
-            child: Transform(
-              transform: Matrix4.translationValues(-3, 0, 0),
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded,
-                      color: Colors.white)),
-            ),
+          elevation: 0.0,
+          backgroundColor: const Color.fromARGB(255, 145, 19, 19),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+          title: const Text(
+            "Service",
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
-          title: Container(
-              height: size.height * 0.05,
-              width: size.width * 0.45,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 0,
-                        color: Colors.orange.shade200,
-                        offset: const Offset(0, 0))
-                  ]),
-              child: const Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'Service Proceed',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 16),
-                ),
-              )),
           centerTitle: true,
         ),
-        body: GestureDetector(
+        body:
+            // Stack(
+            //   children: [
+
+            GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
           },
@@ -174,10 +137,15 @@ class _ServiceProceed extends State<ServiceProceed> {
               width: size.width,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.black45, Colors.black26, Colors.black45],
+                    colors: [
+                      // Color.fromARGB(255, 255, 231, 231),
+                      Color.fromARGB(255, 241, 193, 193),
+                      Color.fromARGB(255, 235, 136, 136),
+                      Color.fromARGB(255, 226, 174, 174)
+                    ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    stops: [0.1, 0.5, 1]),
+                    stops: [0.01, 0.35, 1]),
               ),
               child: ListView(
                 controller: scrollController,
@@ -423,7 +391,7 @@ class _ServiceProceed extends State<ServiceProceed> {
                                     ),
                                     icon: const Icon(
                                       Icons.arrow_forward_ios_rounded,
-                                      color: Colors.white,
+                                      color: Color.fromARGB(255, 145, 19, 19),
                                     ),
                                     onDismissed: () async {
                                       bookingFocus.unfocus();
@@ -529,6 +497,81 @@ class _ServiceProceed extends State<ServiceProceed> {
         //   ),
         //   ],
         // ),
+        floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
+            ? Padding(
+                padding: EdgeInsets.only(
+                    right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
+                child: CustomWidgets.CustomExpandableFAB(
+                    horizontalAlignment: isMobile ? -17 : -38,
+                    verticalAlignment: -15,
+                    rotational: false,
+                    angle: 90,
+                    distance: isMobile ? 50 : 70,
+                    color: const Color.fromARGB(255, 145, 19, 19),
+                    iconColor: Colors.white,
+                    children: [
+                      SizedBox(
+                        height: size.height * 0.08,
+                        width: size.width * (isMobile ? 0.24 : 0.1),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const AddVehicleView()));
+                          },
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/car.png',
+                                color: Colors.white,
+                                fit: BoxFit.cover,
+                                scale: isMobile ? 22 : 15,
+                              ),
+                              Text(
+                                'Add Vehicle',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: isMobile ? 11 : 14),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.09,
+                        width: size.width * (isMobile ? 0.24 : 0.1),
+                        child: GestureDetector(
+                          onTap: () {
+                            context.read<VehicleBloc>().add(UpdateState(
+                                status: VehicleStatus.initial,
+                                vehicle: Vehicle()));
+                            widget.clearFields!();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const AddVehicleView()));
+                          },
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.history,
+                                size: isMobile ? 28 : 40,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                'History',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: isMobile ? 11 : 14),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]),
+              )
+            : const SizedBox(),
       ),
     );
   }
@@ -668,15 +711,15 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             alignment: Alignment.center,
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.white60,
+                borderRadius: BorderRadius.circular(20),
+                color: const Color.fromARGB(255, 235, 136, 136),
               ),
               width: widget.size.width * 0.58,
               height: 45,
               child: Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 40),
+                  padding: const EdgeInsets.only(left: 16.0),
                   child: Shimmer.fromColors(
                       baseColor: Colors.black,
                       highlightColor: Colors.grey.shade100,
@@ -692,12 +735,14 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             child: Container(
               width: 42,
               height: 42,
-              decoration: const BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.circle,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(40),
               ),
               child: Center(
-                  child: Center(
+                  child: Stack(
+                children: [
+                  Center(
                       child: (context
                                       .watch<ServiceBloc>()
                                       .state
@@ -706,7 +751,18 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                               _position == _endPosition)
                           ? Lottie.asset("assets/lottie/success.json",
                               repeat: false)
-                          : widget.icon)),
+                          : widget.icon),
+                  if (context.watch<ServiceBloc>().state.serviceUploadStatus ==
+                      ServiceUploadStatus.loading)
+                    Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        strokeWidth: widget.size.width * 0.008,
+                        strokeCap: StrokeCap.round,
+                      ),
+                    )
+                ],
+              )),
             ),
           ),
         ],

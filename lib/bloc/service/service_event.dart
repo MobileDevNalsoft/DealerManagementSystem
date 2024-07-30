@@ -65,7 +65,14 @@ class GetInspectionDetails extends ServiceEvent {
   GetInspectionDetails({this.jobCardNo});
 }
 
-class GetGatePass extends ServiceEvent{
+class GetGatePass extends ServiceEvent {
   final String jobCardNo;
   GetGatePass({required this.jobCardNo});
 }
+
+class SearchJobCards extends ServiceEvent {
+  final String searchText;
+  SearchJobCards({required this.searchText});
+}
+
+class DropDownOpen extends ServiceEvent {}
