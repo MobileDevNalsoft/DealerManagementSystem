@@ -1,9 +1,13 @@
+import 'dart:math';
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:ticket_clippers/ticket_clippers.dart';
 // import 'package:ticket_widget/ticket_widget.dart' hide TicketClipper;
 import 'package:widgets_to_image/widgets_to_image.dart';
@@ -114,27 +118,101 @@ class _GatePassState extends State<GatePass> {
                       // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Gap(size.height * 0.04),
-                        TicketClipper(
+                        ClipShadowPath(
                           clipper: RoundedEdgeClipper(
                             points: 8,
-                            depth: 16,
+                            depth: 20,
                             edge: Edge.vertical,
                           ),
-                          // shadow: const BoxShadow(color: Colors.black, spreadRadius: 1, blurRadius: 2.5),
+                          shadow: Shadow(color: Colors.black, blurRadius: 1.5),
                           child: Container(
                             alignment: Alignment.center,
-                            height: size.height * 0.2,
-                            width: size.width * 0.7,
+                            height: size.height * 0.4,
+                            width: size.width * 0.8,
                             decoration: BoxDecoration(color: Colors.white),
-                            child: Text(
-                                context.read<ServiceBloc>().state.gatePassno ??
-                                    "",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 18)),
+                            child: Column(
+                              children: [
+                                Gap(20),
+                                Text(
+                                  "Gate Pass",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: size.width * 0.06),
+                                ),
+                                Gap(8),
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromRGBO(
+                                          217, 217, 217, 1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: size.height * 0.005,
+                                        horizontal: size.width * 0.02),
+                                    child: Text(
+                                        context
+                                                .read<ServiceBloc>()
+                                                .state
+                                                .gatePassno ??
+                                            "",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 18))),
+                                Gap(36),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: const Color.fromRGBO(
+                                          217, 217, 217, 1),
+                                      border: Border.symmetric(
+                                        vertical:
+                                            BorderSide(color: Colors.black),
+                                        horizontal: BorderSide(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      borderRadius: BorderRadius.circular(16)),
+                                  child: QrImageView(
+                                    backgroundColor: Colors.white,
+                                    data: context
+                                            .read<ServiceBloc>()
+                                            .state
+                                            .gatePassno ??
+                                        "",
+                                    version: QrVersions.auto,
+                                    size: size.width * 0.4,
+                                    // embeddedImage: ,
+                                    eyeStyle: QrEyeStyle(
+                                        color: Colors.black,
+                                        eyeShape: QrEyeShape.circle),
+                                    gapless: true,
+                                    // embeddedImage: AssetImage('assets/images/dashboard_car.png'),
+                                    embeddedImageStyle: QrEmbeddedImageStyle(
+                                      size: Size(80, 80),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                        // ClipPath(
+
+                        //   clipper: RoundedEdgeClipper(
+                        //     points: 8,
+                        //     depth: 20,
+                        //     edge: Edge.vertical,
+                        //   ),
+                        //   // shadow: const BoxShadow(color: Colors.black, spreadRadius: 1, blurRadius: 2.5),
+                        //   child: Container(
+                        //     alignment: Alignment.center,
+                        //     height: size.height * 0.4,
+                        //     width: size.width * 0.7,
+                        //     decoration: BoxDecoration(color: Colors.white),
+                        //     child: Text(context.read<ServiceBloc>().state.gatePassno??"",style:TextStyle(color: Colors.black,fontWeight: FontWeight.w800,fontSize: 18)),
+                        //   ),
+                        // ),
                         // Gap(size.height*0.035),
                         // DottedLine(dashLength: 10,alignment: WrapAlignment.center,),
                         // Gap(size.height*0.025),
@@ -197,7 +275,7 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
     Path path = Path();
 
     // Left or Horizontal
-    path.moveTo(0, 0);
+    path.moveTo(0, 30);
     double x = 0;
     double y = h / 3;
     double c = w - depth;
@@ -213,60 +291,72 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
     }
 
     // Bottom or Vertical
-    path.lineTo(0, h - 20);
-    path.arcToPoint(Offset(20, h),
-        radius: Radius.circular(-20), clockwise: false);
+    path.lineTo(0, size.height * 0.26);
+    path.quadraticBezierTo(
+        25, (size.height * 0.26) + 20, 0, size.height * 0.26 + 40);
+    path.lineTo(0, h - 30);
+    path.arcToPoint(Offset(30, h),
+        radius: Radius.circular(-30), clockwise: false);
+    path.lineTo(40, h);
 
-    x = 20;
+    x = 40;
     y = h;
     c = h - depth;
     i = w / points;
 
     if (edge == Edge.bottom || edge == Edge.vertical || edge == Edge.all) {
-      while (x < w - 40) {
+      while (x < w * 0.85) {
         path.lineTo(x + 8, y);
         x = x + 8;
         path.quadraticBezierTo(x + i / 2, c, x + i, y);
         x += i;
       }
-    }
-// path.lineTo(w, y);
-    // Right or Horizontal
-    path.arcToPoint(Offset(w, h - 20),
-        radius: Radius.circular(40), clockwise: false);
-    path.lineTo(w, h / 1.5);
-    x = w;
-    y = h / 1.5;
-    c = w - depth;
-    i = h / points;
-
-    if (edge == Edge.right || edge == Edge.horizontal || edge == Edge.all) {
-      while (y > 0) {
-        path.lineTo(x, y - 8);
-        y = y - 8;
-        path.quadraticBezierTo(c, y - i / 2, w, y - i);
-        y -= i;
-      }
+      path.lineTo(w - 30, y);
+      path.arcToPoint(Offset(w, h - 30),
+          radius: Radius.circular(30), clockwise: false);
     }
 
+    path.lineTo(w, size.height * 0.26 + 40);
+    path.quadraticBezierTo(
+        w - 25, (size.height * 0.26) + 20, w, size.height * 0.26);
     // Top or Vertical
-    path.lineTo(w, 0);
-    path.lineTo(w / 2, 0);
-    x = w / 2;
+    path.lineTo(w, 30);
+    path.arcToPoint(Offset(w - 30, 0),
+        radius: Radius.circular(30), clockwise: false);
+
+    // path.lineTo(w / 2, 0);
+    x = w - 30;
     y = 0;
     c = h - depth;
     i = w / points;
 
     if (edge == Edge.top || edge == Edge.vertical || edge == Edge.all) {
-      while (x > 0) {
+      while (x > w * 0.25) {
         path.lineTo(x - 8, y);
         x = x - 8;
         path.quadraticBezierTo(x - i / 2, depth, x - i, 0);
         x -= i;
       }
+      path.lineTo(30, 0);
     }
-    path.lineTo(0, 0);
+    path.arcToPoint(Offset(0, 30),
+        radius: Radius.circular(30), clockwise: false);
 
+    // path.addOval(Rect.fromCircle(center: Offset(0,size.height*0.25), radius: 14));
+    // path.addOval(Rect.fromCircle(center: Offset(w,size.height*0.25), radius: 14));
+    // var distance=0.0;
+    //  double dashWidth = 10.0;
+    // double dashSpace = 5.0;
+    // for (PathMetric pathMetric in path.computeMetrics()) {
+    //   while (distance < pathMetric.length) {
+    //     path.addPath(
+    //       pathMetric.extractPath(distance, distance + dashWidth),
+    //       Offset.zero,
+    //     );
+    //     distance += dashWidth;
+    //     distance += dashSpace;
+    //   }
+    // }
     path.close();
     return path;
   }
@@ -274,5 +364,48 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     return false;
+  }
+}
+
+@immutable
+class ClipShadowPath extends StatelessWidget {
+  final Shadow shadow;
+  final CustomClipper<Path> clipper;
+  final Widget child;
+
+  ClipShadowPath({
+    required this.shadow,
+    required this.clipper,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _ClipShadowShadowPainter(
+        clipper: this.clipper,
+        shadow: this.shadow,
+      ),
+      child: ClipPath(child: child, clipper: this.clipper),
+    );
+  }
+}
+
+class _ClipShadowShadowPainter extends CustomPainter {
+  final Shadow shadow;
+  final CustomClipper<Path> clipper;
+
+  _ClipShadowShadowPainter({required this.shadow, required this.clipper});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = shadow.toPaint();
+    var clipPath = clipper.getClip(size).shift(shadow.offset);
+    canvas.drawPath(clipPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
   }
 }
