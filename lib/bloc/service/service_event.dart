@@ -11,7 +11,8 @@ class ServiceAdded extends ServiceEvent {
 
 class GetServiceHistory extends ServiceEvent {
   final String? query;
-  GetServiceHistory({this.query});
+  final String? vehicleRegNo;
+  GetServiceHistory({this.query,this.vehicleRegNo,});
 }
 
 class PageChange extends ServiceEvent {
@@ -81,3 +82,8 @@ class SearchJobCards extends ServiceEvent {
 }
 
 class DropDownOpen extends ServiceEvent {}
+class ModifyGatePassStatus extends ServiceEvent{
+  final GatePassStatus status;
+  ModifyGatePassStatus({required this.status});
+}
+

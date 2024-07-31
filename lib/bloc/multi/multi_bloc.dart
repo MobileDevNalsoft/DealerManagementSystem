@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/salesPerson.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/views/custom_widgets/clipped_buttons.dart';
+import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../logger/logger.dart';
@@ -21,6 +23,8 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<CheckBoxTapped>(_onCheckBoxTapped);
     on<RadioOptionChanged>(_onRadioOptionChanged);
     on<OnFocusChange>(_onFocusChanged);
+    on<AddClippedWidgets>(_onAddClippedWidgets);
+    on<MultiBlocStatusChange>(_onMultiBlocStatusChange);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -92,4 +96,16 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
       RadioOptionChanged event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(selectedRadioOption: event.selectedRadioOption));
   }
+
+  void _onAddClippedWidgets(
+      AddClippedWidgets event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(reverseClippedWidgets: event.reverseClippedWidgets));
+  }
+
+  void _onMultiBlocStatusChange(MultiBlocStatusChange event, Emitter<MultiBlocState> emit){
+    
+    emit(state.copyWith(status: event.status));
+  }
+
+
 }

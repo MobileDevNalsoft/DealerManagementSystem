@@ -279,7 +279,8 @@ class _CommentsViewState extends State<CommentsView>
                               )),
                             ),
                           ),
-                        Text("Upload",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w600),),
+                      if (widget.vehiclePartMedia.images != null &&
+                            widget.vehiclePartMedia.images!.isNotEmpty)  Text("Upload",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w600),),
                         Gap(2)
                       ],
                     ),

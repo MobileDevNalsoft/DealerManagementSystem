@@ -69,9 +69,9 @@ class Repository {
     }
   }
 
-  Future<Map<String, dynamic>> getHistory(String query, int pageNo) async {
+  Future<Map<String, dynamic>> getHistory(String query, int pageNo,{ String? vehicleRegNo}) async {
     ApiResponse apiResponse = await _api
-        .get('getHistory', queryParameters: {"param": query, "pageNo": pageNo});
+        .get('getHistory', queryParameters: {"param": query, "pageNo": pageNo, "vehicleRegNo":vehicleRegNo??""});
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
