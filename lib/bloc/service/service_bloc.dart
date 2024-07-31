@@ -35,6 +35,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<GetGatePass>(_onGetGatePass);
     on<SearchJobCards>(_onSearchJobCards);
     on<DropDownOpen>(_onDropDownOpen);
+    on<GetMyJobCards>(_onGetMyJobCards);
   }
 
   final Repository _repo;
@@ -128,7 +129,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 .where((e) => e.jobCardNo == event.jobCardNo)
                 .first
                 .copyWith(
-                    scheduleDate:
+                    scheduledDate:
                         DateFormat('dd-mm-yyyy').format(DateTime.now())));
             state.jobCards!.removeWhere((e) => e.jobCardNo == event.jobCardNo);
           }
@@ -194,7 +195,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
                 sNo: service['s_no'],
                 registrationNo: service['vehicle_registration_number'],
                 location: service['location'],
-                scheduleDate: service['schedule_date'],
+                scheduledDate: service['schedule_date'],
                 jobCardNo: service['job_card_no'],
                 jobType: service['job_type']));
           }
@@ -220,16 +221,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         if (json['response_code'] == 200) {
           List<Service> jobCards = [];
           for (Map<String, dynamic> service in json['data']) {
-            jobCards.add(Service(
-                sNo: int.parse(service['s_no']),
-                registrationNo: service['vehicle_registration_number'],
-                location: service['location'],
-                scheduleDate: service['schedule_date'],
-                jobCardNo: service['job_card_no'],
-                status: service['status'],
-                jobType: service['job_type'],
-                customerName: service['customer_name'],
-                customerContact: service['contact_no']));
+            jobCards.add(Service.fromJson(service));
           }
           emit(state.copyWith(
               getJobCardStatus: GetJobCardStatus.success,
@@ -243,6 +235,33 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     ).onError(
       (error, stackTrace) {
         emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
+      },
+    );
+  }
+
+  Future<void> _onGetMyJobCards(
+      GetMyJobCards event, Emitter<ServiceState> emit) async {
+    emit(state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.loading));
+    print(event.query);
+    await _repo.getHistory(event.query!, 0).then(
+      (json) {
+        print('json $json');
+        if (json['response_code'] == 200) {
+          List<Service> jobCards = [];
+          for (Map<String, dynamic> service in json['data']) {
+            jobCards.add(Service.fromJson(service));
+          }
+          emit(state.copyWith(
+              getMyJobCardsStatus: GetMyJobCardsStatus.success,
+              myJobCards: jobCards));
+        } else {
+          emit(
+              state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.failure));
+        }
+      },
+    ).onError(
+      (error, stackTrace) {
+        emit(state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.failure));
       },
     );
   }
@@ -277,6 +296,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     }
     await _repo.getLocations().then(
       (json) {
+        print('json $json');
         if (json['response_code'] == 200) {
           emit(state.copyWith(
               serviceLocationsStatus: GetServiceLocationsStatus.success,

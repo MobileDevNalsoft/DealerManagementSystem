@@ -99,6 +99,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     yearPickerController = FixedExtentScrollController(initialItem: index);
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
     customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
+    context.read<VehicleBloc>().state.status = VehicleStatus.initial;
   }
 
   @override

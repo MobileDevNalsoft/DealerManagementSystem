@@ -42,6 +42,11 @@ class GetJobCards extends ServiceEvent {
   GetJobCards({this.query});
 }
 
+class GetMyJobCards extends ServiceEvent {
+  final String? query;
+  GetMyJobCards({this.query});
+}
+
 class JobCardStatusUpdated extends ServiceEvent {
   final String? jobCardStatus;
   final String? jobCardNo;

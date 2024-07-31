@@ -266,7 +266,7 @@ class ServiceHistoryDataSource extends DataGridSource {
                 columnName: 'sno',
                 value: serviceHistoryData.indexOf(e),
               ),
-              DataGridCell<String>(columnName: 'date', value: e.scheduleDate),
+              DataGridCell<String>(columnName: 'date', value: e.scheduledDate),
               DataGridCell<String>(
                   columnName: 'Job Card no.', value: e.jobCardNo),
               DataGridCell<String>(columnName: 'Location', value: e.location),

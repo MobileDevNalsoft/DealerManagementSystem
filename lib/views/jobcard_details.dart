@@ -32,7 +32,7 @@ class JobCardDetails extends StatelessWidget {
     ];
 
     List<String> statusLines = [
-      'JC created on "Creation Date"',
+      'JC created on ${service!.creationDate}',
       'Vehicle Service is done',
       'Quality Check is done',
       'Inpection out is done',
@@ -141,8 +141,8 @@ class JobCardDetails extends StatelessWidget {
                     buildDetailRow(
                         'Job Type', service!.jobType.toString(), size),
                     Gap(size.height * 0.03),
-                    buildDetailRow(
-                        'Schedule Date', service!.scheduleDate.toString(), size)
+                    buildDetailRow('Scheduled Date',
+                        service!.scheduledDate.toString(), size)
                   ],
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
+import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,22 +12,22 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DMSCustomWidgets {
   static Widget SearchableDropDown(
-      {required size,
-      required hint,
+      {required Size size,
+      required String hint,
       required List<dynamic> items,
       required FocusNode focus,
-      required TextEditingController textcontroller,
       required TextEditingController typeAheadController,
       required bool isMobile,
       required ScrollController scrollController,
-      Function(String?)? onChanged,
       Function(String?)? suggestionCall,
+      void Function(String)? onChanged,
       SuggestionsController? suggestionsController,
       bool isLoading = false,
       Icon? icon}) {
     if (suggestionsController != null) {
       suggestionsController.refresh();
     }
+
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
@@ -36,11 +37,11 @@ class DMSCustomWidgets {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
           suggestionsController: suggestionsController,
+          controller: typeAheadController,
+          focusNode: focus,
           builder: (context, controller, focusNode) {
-            // focus = focusNode;
-            typeAheadController = controller;
-            return Transform(
-              transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
+            return Padding(
+              padding: EdgeInsets.only(top: size.height * 0.005),
               child: TextFormField(
                 onChanged: onChanged,
                 onTap: () {
@@ -49,6 +50,7 @@ class DMSCustomWidgets {
                       scrollController: scrollController,
                       context: context));
                 },
+                onTapOutside: (event) => focusNode.unfocus(),
                 cursorColor: Colors.black,
                 inputFormatters: [
                   FilteringTextInputFormatter.deny(RegExp(r'\d'))
@@ -57,7 +59,9 @@ class DMSCustomWidgets {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(
                       left: 16, right: 16, bottom: size.height * 0.016),
-                  suffixIcon: icon,
+                  suffixIcon: Transform(
+                      transform: Matrix4.translationValues(0, -2, 0),
+                      child: icon),
                   hintText: hint,
                   hintStyle: const TextStyle(
                     color: Colors.black38,
@@ -65,8 +69,8 @@ class DMSCustomWidgets {
                   ),
                   border: InputBorder.none, // Removes all borders
                 ),
-                controller: textcontroller,
-                focusNode: focus,
+                controller: controller,
+                focusNode: focusNode,
               ),
             );
           },
@@ -79,21 +83,30 @@ class DMSCustomWidgets {
             }
             return items;
           },
-          itemBuilder: (context, suggestion) => Skeletonizer(
-            enabled: isLoading,
-            child: Container(
-              height: size.height * 0.038,
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Text(
-                suggestion,
-                style: TextStyle(fontSize: isMobile ? 13 : 14),
-              ),
+          hideOnUnfocus: true,
+          emptyBuilder: (context) => Container(
+            height: size.height * 0.038,
+            width: size.width,
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            child: Text(
+              'no items found',
+              style: TextStyle(fontSize: isMobile ? 13 : 14),
             ),
           ),
           onSelected: (suggestion) {
-            textcontroller.text = suggestion;
+            FocusManager.instance.primaryFocus?.unfocus();
+            typeAheadController.text = suggestion;
           },
+          itemBuilder: (context, suggestion) => Container(
+            height: size.height * 0.038,
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            child: Text(
+              suggestion,
+              style: TextStyle(fontSize: isMobile ? 13 : 14),
+            ),
+          ),
         ),
       ),
     );
@@ -176,6 +189,8 @@ class DMSCustomWidgets {
       required String hint,
       TextEditingController? textcontroller,
       FocusNode? focusNode,
+      required BuildContext context,
+      required ScrollController scrollController,
       Widget? icon,
       required bool isMobile}) {
     return SizedBox(
@@ -191,6 +206,12 @@ class DMSCustomWidgets {
           style: TextStyle(fontSize: isMobile ? 13 : 14),
           controller: textcontroller,
           focusNode: focusNode,
+          onTap: () {
+            context.read<MultiBloc>().add(OnFocusChange(
+                focusNode: focusNode!,
+                scrollController: scrollController,
+                context: context));
+          },
           minLines: 1,
           maxLines: 5,
           maxLength: 200,
@@ -210,7 +231,6 @@ class DMSCustomWidgets {
   // ignore: non_constant_identifier_names
   static Widget ScheduleDateCalendar(
       {context, required Size size, required bool isMobile, DateTime? date}) {
-    DateTime? initialDate = date;
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
@@ -227,13 +247,6 @@ class DMSCustomWidgets {
                     child: SfDateRangePicker(
                       enablePastDates: false,
                       view: DateRangePickerView.month,
-                      onSelectionChanged:
-                          (dateRangePickerSelectionChangedArgs) {
-                        date = dateRangePickerSelectionChangedArgs.value;
-                        context
-                            .read<MultiBloc>()
-                            .add(DateChanged(date: date ?? DateTime.now()));
-                      },
                       allowViewNavigation: true,
                       todayHighlightColor: Colors.black,
                       selectionColor: Colors.black,
@@ -243,12 +256,9 @@ class DMSCustomWidgets {
                       initialSelectedDate: date ?? DateTime.now(),
                       showActionButtons: true,
                       onCancel: () {
-                        date = initialDate;
-
                         Navigator.pop(context);
                       },
                       onSubmit: (p0) {
-                        print("scheduled data $p0");
                         context
                             .read<MultiBloc>()
                             .add(DateChanged(date: p0 as DateTime));

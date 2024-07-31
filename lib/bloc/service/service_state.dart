@@ -6,6 +6,8 @@ enum ServiceUploadStatus { initial, loading, success, failure }
 
 enum GetJobCardStatus { initial, loading, success, failure }
 
+enum GetMyJobCardsStatus { initial, loading, success, failure }
+
 enum JobCardStatusUpdate { initial, loading, success, failure }
 
 enum GetServiceLocationsStatus { initial, loading, success, failure }
@@ -26,6 +28,7 @@ final class ServiceState {
       this.jobCards,
       this.locations,
       this.getJobCardStatus,
+      this.getMyJobCardsStatus,
       this.serviceUploadStatus,
       this.jobCardStatusUpdate,
       this.jsonStatus,
@@ -36,6 +39,7 @@ final class ServiceState {
       this.index,
       this.getInspectionStatus,
       this.jobCardNo,
+      this.myJobCards,
       this.bottomNavigationBarActiveIndex,
       this.inspectionDetails,
       this.serviceLocationsStatus,
@@ -45,6 +49,7 @@ final class ServiceState {
 
   GetServiceStatus? getServiceStatus;
   GetJobCardStatus? getJobCardStatus;
+  GetMyJobCardsStatus? getMyJobCardsStatus;
   GetServiceLocationsStatus? serviceLocationsStatus;
   JobCardStatusUpdate? jobCardStatusUpdate;
   InspectionJsonUploadStatus? inspectionJsonUploadStatus;
@@ -53,6 +58,7 @@ final class ServiceState {
   final Service? service;
   final List<Service>? services;
   final List<Service>? jobCards;
+  final List<Service>? myJobCards;
   final List<dynamic>? locations;
   final Map<String, dynamic>? inspectionDetails;
   final bool? dropDownOpen;
@@ -75,6 +81,7 @@ final class ServiceState {
       serviceUploadStatus: ServiceUploadStatus.initial,
       jobCardStatusUpdate: JobCardStatusUpdate.initial,
       getInspectionStatus: GetInspectionStatus.initial,
+      getMyJobCardsStatus: GetMyJobCardsStatus.initial,
       sliderPosition: Position.middle,
       jsonStatus: JsonStatus.initial,
       bottomNavigationBarActiveIndex: 0,
@@ -89,11 +96,13 @@ final class ServiceState {
       GetJobCardStatus? getJobCardStatus,
       GetServiceLocationsStatus? serviceLocationsStatus,
       GetInspectionStatus? getInspectionStatus,
+      List<Service>? myJobCards,
       Service? service,
       List<Service>? services,
       int? bottomNavigationBarActiveIndex,
       JsonStatus? jsonStatus,
       ServiceUploadStatus? serviceUploadStatus,
+      GetMyJobCardsStatus? getMyJobCardsStatus,
       JobCardStatusUpdate? jobCardStatusUpdate,
       Map<String, dynamic>? json,
       List<Service>? filteredJobCards,
@@ -112,8 +121,10 @@ final class ServiceState {
         getJobCardStatus: getJobCardStatus ?? this.getJobCardStatus,
         jobCardStatusUpdate: jobCardStatusUpdate ?? jobCardStatusUpdate,
         inspectionDetails: inspectionDetails ?? this.inspectionDetails,
+        getMyJobCardsStatus: getMyJobCardsStatus ?? this.getMyJobCardsStatus,
         jobCardNo: jobCardNo ?? this.jobCardNo,
         filteredJobCards: filteredJobCards ?? this.filteredJobCards,
+        myJobCards: myJobCards ?? this.myJobCards,
         inspectionJsonUploadStatus:
             inspectionJsonUploadStatus ?? this.inspectionJsonUploadStatus,
         json: json ?? this.json,

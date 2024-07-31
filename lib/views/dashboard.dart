@@ -29,12 +29,10 @@ class _DashboardViewState extends State<DashboardView> {
     _serviceBloc = context.read<ServiceBloc>();
 
     // setting initial statuses of service and job card status to initial
-    _serviceBloc.state.getServiceStatus = GetServiceStatus.initial;
     _serviceBloc.state.getJobCardStatus = GetJobCardStatus.initial;
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
     _serviceBloc.add(GetJobCards(query: 'Quick Fit Center Abu Dhabi'));
-    // _serviceBloc.add(GetServiceHistory(query: '2022'));
 
     // set default orientation to portrait up
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -101,86 +99,6 @@ class _DashboardViewState extends State<DashboardView> {
                 return JobCardPage();
               },
             )),
-        // bottomNavigationBar: BlocBuilder<ServiceBloc, ServiceState>(
-        //   builder: (context, state) {
-        //     return CircleNavBar(
-        //       activeIcons: [
-        //         Icon(
-        //           Icons.home,
-        //           color: const Color.fromARGB(255, 145, 19, 19),
-        //           size: size.height * 0.04,
-        //         ),
-        //         Icon(
-        //           Icons.add,
-        //           color: const Color.fromARGB(255, 145, 19, 19),
-        //           size: size.height * 0.04,
-        //         ),
-        //         Icon(
-        //           Icons.history,
-        //           color: const Color.fromARGB(255, 145, 19, 19),
-        //           size: size.height * 0.04,
-        //         ),
-        //       ],
-        //       inactiveIcons: [
-        //         Icon(
-        //           Icons.home,
-        //           size: size.height * 0.04,
-        //           color: const Color.fromARGB(255, 145, 19, 19),
-        //         ),
-        //         Icon(
-        //           Icons.add,
-        //           size: size.height * 0.04,
-        //           color: const Color.fromARGB(255, 145, 19, 19),
-        //         ),
-        //         Icon(
-        //           Icons.history,
-        //           size: size.height * 0.04,
-        //           color: const Color.fromARGB(255, 145, 19, 19),
-        //         ),
-        //       ],
-        //       iconCurve: Curves.easeIn,
-        //       iconDurationMillSec: 1000,
-        //       tabCurve: Curves.easeIn,
-        //       tabDurationMillSec: 1000,
-        //       color: const Color.fromARGB(255, 236, 224, 224),
-        //       height: size.height * 0.07,
-        //       circleWidth: size.height * 0.06,
-        //       activeIndex: state.bottomNavigationBarActiveIndex!,
-        //       onTap: (index) {
-        //         _serviceBloc.add(BottomNavigationBarClicked(index: index));
-        //         if (index == 0) {
-        //           pageController.animateToPage(0,
-        //               duration: const Duration(seconds: 1), curve: Curves.ease);
-        //         } else if (index == 1) {
-        //           // added delay to show the button flow animation in bottom navigation bar
-        //           Future.delayed(const Duration(seconds: 1), () {
-        //             Navigator.push(
-        //                 context,
-        //                 MaterialPageRoute(
-        //                     builder: (context) => HomeView(
-        //                           pageController: pageController,
-        //                         )));
-        //           });
-        //         } else {
-        //           pageController.animateToPage(1,
-        //               duration: const Duration(seconds: 1), curve: Curves.ease);
-        //         }
-        //       },
-        //       padding: EdgeInsets.only(
-        //           left: size.width * 0.02,
-        //           right: size.width * 0.02,
-        //           bottom: size.width * 0.02),
-        //       cornerRadius: const BorderRadius.only(
-        //         topLeft: Radius.circular(8),
-        //         topRight: Radius.circular(8),
-        //         bottomRight: Radius.circular(30),
-        //         bottomLeft: Radius.circular(30),
-        //       ),
-        //       shadowColor: const Color.fromARGB(255, 201, 94, 94),
-        //       elevation: 5,
-        //     );
-        //   },
-        // ),
       ),
     ));
   }
@@ -418,8 +336,7 @@ class JobCardPage extends StatelessWidget {
                     enableSwitchAnimation: true,
                     enabled:
                         state.getJobCardStatus == GetJobCardStatus.loading ||
-                            state.jobCardStatusUpdate ==
-                                JobCardStatusUpdate.loading,
+                            state.getJobCardStatus == GetJobCardStatus.initial,
                     child: SizedBox(
                       height: size.height * 0.15,
                       width: size.width * 0.95,

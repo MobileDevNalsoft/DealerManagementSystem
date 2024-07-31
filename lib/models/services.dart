@@ -4,7 +4,7 @@ final class Service {
   String? jobCardNo;
   String? location;
   String? customerName;
-  String? scheduleDate;
+  String? scheduledDate;
   int? kms;
   String? bookingSource;
   String? alternateContactPerson;
@@ -16,6 +16,7 @@ final class Service {
   String? remarks;
   String? status;
   String? customerContact;
+  String? creationDate;
 
   Service(
       {this.sNo,
@@ -24,7 +25,7 @@ final class Service {
       this.location,
       this.customerName,
       this.customerContact,
-      this.scheduleDate,
+      this.scheduledDate,
       this.kms,
       this.bookingSource,
       this.alternateContactPerson,
@@ -34,14 +35,37 @@ final class Service {
       this.jobType,
       this.status,
       this.customerConcerns,
+      this.creationDate,
       this.remarks});
 
+  factory Service.initial() {
+    return Service(
+        location: '',
+        alternateContactPerson: '',
+        alternatePersonContactNo: 0,
+        bay: '',
+        bookingSource: '',
+        creationDate: '',
+        customerConcerns: '',
+        customerContact: '',
+        customerName: '',
+        jobCardNo: '',
+        jobType: '',
+        kms: 0,
+        registrationNo: '',
+        remarks: '',
+        sNo: 0,
+        salesPerson: '',
+        scheduledDate: '',
+        status: '');
+  }
+
   Service.fromJson(Map<String, dynamic> json) {
-    registrationNo = json['vehicle_registration_no'];
+    registrationNo = json['vehicle_registration_number'];
     location = json['location'];
     customerName = json['customer_name'];
     customerContact = json['contact_no'];
-    scheduleDate = json['schedule_date'];
+    scheduledDate = json['scheduled_date'];
     kms = json['kms'];
     bookingSource = json['booking_source'];
     alternateContactPerson = json['alternate_contact_person'];
@@ -53,6 +77,7 @@ final class Service {
     customerConcerns = json['customer_concerns'];
     status = json['status'];
     remarks = json['remarks'];
+    creationDate = json['creation_date'];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,7 +85,7 @@ final class Service {
     data['vehicle_registration_no'] = registrationNo;
     data['location'] = location;
     data['customer_name'] = customerName;
-    data['schedule_date'] = scheduleDate;
+    data['schedule_date'] = scheduledDate;
     data['kms'] = kms;
     data['booking_source'] = bookingSource;
     data['alternate_contact_person'] = alternateContactPerson;
@@ -78,7 +103,7 @@ final class Service {
       {String? registrationNo,
       String? location,
       String? customerName,
-      String? scheduleDate,
+      String? scheduledDate,
       int? kms,
       String? bookingSource,
       String? alternateContactPerson,
@@ -93,7 +118,7 @@ final class Service {
         registrationNo: registrationNo ?? this.registrationNo,
         location: location ?? this.location,
         customerName: customerName ?? this.customerName,
-        scheduleDate: scheduleDate ?? this.scheduleDate,
+        scheduledDate: scheduledDate ?? this.scheduledDate,
         kms: kms ?? this.kms,
         bookingSource: bookingSource ?? this.bookingSource,
         alternateContactPerson:

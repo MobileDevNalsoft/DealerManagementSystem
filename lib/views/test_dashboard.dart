@@ -1,11 +1,13 @@
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/my_jobcards.dart';
 import 'package:dms/views/sample/service_main.dart';
 import 'package:dms/views/service_history.dart';
-import 'package:dms/views/service_main.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
+import 'service_booking.dart';
 
 class DribbleUI extends StatefulWidget {
   const DribbleUI({super.key});
@@ -143,10 +145,14 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                     flipX: true,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ServiceMainSample()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => MyJobcards()));
+                      },
+                      onDoubleTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => ServiceMainSample()));
                       },
                       child: ClippedButton(
                         size: Size(size.width * 0.2, size.height * 0.2),
