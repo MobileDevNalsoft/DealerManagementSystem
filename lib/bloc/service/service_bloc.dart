@@ -31,6 +31,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<DropDownOpenClose>(_onDropDownOpenClose);
     on<GetInspectionDetails>(_onGetInspectionDetails);
     on<GetGatePass>(_onGetGatePass);
+    on<ModifyGatePassStatus>(_onModifyGatePassStatus);
   }
 
   final Repository _repo;
@@ -167,7 +168,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   Future<void> _onGetServiceHistory(
       GetServiceHistory event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getServiceStatus: GetServiceStatus.loading));
-    await _repo.getHistory(event.query!, 0).then(
+    await _repo.getHistory(event.query!, 0  ,vehicleRegNo: event.vehicleRegNo).then(
       (json) {
         print('json $json');
         if (json['response_code'] == 200) {
@@ -328,5 +329,8 @@ void _onGetGatePass(  GetGatePass event, Emitter<ServiceState> emit) async {
     );
 
 }
+void _onModifyGatePassStatus( ModifyGatePassStatus event, Emitter<ServiceState> emit){
+  emit(state.copyWith(gatePassStatus: event.status));
 
+}
 }

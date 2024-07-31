@@ -133,375 +133,381 @@ class _HomeProceedView extends State<HomeProceedView> {
             // Stack(
             //   children: [
 
-            GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Container(
-              height: size.height,
-              width: size.width,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [
-                      // Color.fromARGB(255, 255, 231, 231),
-                      Color.fromARGB(255, 241, 193, 193),
-                      Color.fromARGB(255, 235, 136, 136),
-                      Color.fromARGB(255, 226, 174, 174)
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.01, 0.35, 1]),
-              ),
-              child: ListView(
-                controller: scrollController,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+            Stack(
+              children: [
+                GestureDetector(
+                          onTap: () {
+                FocusScope.of(context).unfocus();
+                          },
+                          child: Container(
+                  height: size.height,
+                  width: size.width,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [
+                          // Color.fromARGB(255, 255, 231, 231),
+                          Color.fromARGB(255, 241, 193, 193),
+                          Color.fromARGB(255, 235, 136, 136),
+                          Color.fromARGB(255, 226, 174, 174)
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.01, 0.35, 1]),
+                  ),
+                  child: ListView(
+                    controller: scrollController,
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: size.height * (0.05),
-                          ),
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              DMSCustomWidgets.SearchableDropDown(
-                                  items: ["Online", "Walk-in"],
-                                  size: size,
-                                  hint: 'Booking Source',
-                                  onChanged: (p0) {
-                                    if (p0 != null) {
-                                      bookingTypeAheadController.text = p0;
-                                    }
-                                  },
-                                  isMobile: isMobile,
-                                  focus: bookingFocus,
-                                  textcontroller: bookingController,
-                                  typeAheadController:
-                                      bookingTypeAheadController,
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  scrollController: scrollController),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (0.05),
                               ),
-                              DMSCustomWidgets.CustomDataCard(
-                                  context: context,
-                                  size: size,
-                                  hint: 'Alternate Contact Person',
-                                  inputFormatters: [InitCapCaseTextFormatter()],
-                                  isMobile: isMobile,
-                                  focusNode: altContFocus,
-                                  textcontroller: altContController,
-                                  scrollController: scrollController),
-                              SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
-                              ),
-                              DMSCustomWidgets.CustomDataCard(
-                                  context: context,
-                                  size: size,
-                                  hint: 'Alternate Person Contact No.',
-                                  isMobile: isMobile,
-                                  focusNode: altContPhoneNoFocus,
-                                  textcontroller: altContPhoneNoController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    LengthLimitingTextInputFormatter(10)
-                                  ],
-                                  scrollController: scrollController),
-                              SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
-                              ),
-                              BlocBuilder<MultiBloc, MultiBlocState>(
-                                builder: (context, state) {
-                                  return DMSCustomWidgets.SearchableDropDown(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  DMSCustomWidgets.SearchableDropDown(
+                                      items: ["Online", "Walk-in"],
+                                      size: size,
+                                      hint: 'Booking Source',
                                       onChanged: (p0) {
                                         if (p0 != null) {
-                                          spTypeAheadController.text = p0;
-                                        }
-                                        if (p0!.length >= 3) {
-                                          context.read<MultiBloc>().add(
-                                              GetSalesPersons(searchText: p0));
-                                        } else {
-                                          context
-                                              .read<MultiBloc>()
-                                              .state
-                                              .salesPersons = null;
+                                          bookingTypeAheadController.text = p0;
                                         }
                                       },
-                                      size: size,
-                                      items: state.salesPersons == null
-                                          ? []
-                                          : state.salesPersons!
-                                              .map((e) =>
-                                                  "${e.empName}-${e.empId}")
-                                              .toList(),
-                                      hint: 'Sales Person',
-                                      // icon: const Icon(Icons.arrow_drop_down),
                                       isMobile: isMobile,
-                                      isLoading: state.status ==
-                                              MultiStateStatus.loading
-                                          ? true
-                                          : false,
-                                      focus: spFocus,
-                                      textcontroller: spController,
+                                      focus: bookingFocus,
+                                      textcontroller: bookingController,
                                       typeAheadController:
-                                          spTypeAheadController,
-                                      suggestionsController:
-                                          suggestionsController,
-                                      scrollController: scrollController);
+                                          bookingTypeAheadController,
+                                      icon: const Icon(Icons.arrow_drop_down),
+                                      scrollController: scrollController),
+                                  SizedBox(
+                                    height:
+                                        size.height * (isMobile ? 0.005 : 0.015),
+                                  ),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      context: context,
+                                      size: size,
+                                      hint: 'Alternate Contact Person',
+                                      inputFormatters: [InitCapCaseTextFormatter()],
+                                      isMobile: isMobile,
+                                      focusNode: altContFocus,
+                                      textcontroller: altContController,
+                                      scrollController: scrollController),
+                                  SizedBox(
+                                    height:
+                                        size.height * (isMobile ? 0.005 : 0.015),
+                                  ),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      context: context,
+                                      size: size,
+                                      hint: 'Alternate Person Contact No.',
+                                      isMobile: isMobile,
+                                      focusNode: altContPhoneNoFocus,
+                                      textcontroller: altContPhoneNoController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        LengthLimitingTextInputFormatter(10)
+                                      ],
+                                      scrollController: scrollController),
+                                  SizedBox(
+                                    height:
+                                        size.height * (isMobile ? 0.005 : 0.015),
+                                  ),
+                                  BlocBuilder<MultiBloc, MultiBlocState>(
+                                    builder: (context, state) {
+                                      return DMSCustomWidgets.SearchableDropDown(
+                                          onChanged: (p0) {
+                                            if (p0 != null) {
+                                              spTypeAheadController.text = p0;
+                                            }
+                                            if (p0!.length >= 3) {
+                                              context.read<MultiBloc>().add(
+                                                  GetSalesPersons(searchText: p0));
+                                            } else {
+                                              context
+                                                  .read<MultiBloc>()
+                                                  .state
+                                                  .salesPersons = null;
+                                            }
+                                          },
+                                          size: size,
+                                          items: state.salesPersons == null
+                                              ? []
+                                              : state.salesPersons!
+                                                  .map((e) =>
+                                                      "${e.empName}-${e.empId}")
+                                                  .toList(),
+                                          hint: 'Sales Person',
+                                          // icon: const Icon(Icons.arrow_drop_down),
+                                          isMobile: isMobile,
+                                          isLoading: state.status ==
+                                                  MultiStateStatus.loading
+                                              ? true
+                                              : false,
+                                          focus: spFocus,
+                                          textcontroller: spController,
+                                          typeAheadController:
+                                              spTypeAheadController,
+                                          suggestionsController:
+                                              suggestionsController,
+                                          scrollController: scrollController);
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height:
+                                        size.height * (isMobile ? 0.005 : 0.015),
+                                  ),
+                                  DMSCustomWidgets.SearchableDropDown(
+                                      items: bayList,
+                                      size: size,
+                                      hint: 'Bay',
+                                      isMobile: isMobile,
+                                      onChanged: (p0) {
+                                        if (p0 != null) {
+                                          bayTypeAheadController.text = p0;
+                                        }
+                                      },
+                                      focus: bayFocus,
+                                      textcontroller: bayController,
+                                      typeAheadController: bayTypeAheadController,
+                                      scrollController: scrollController),
+                                  SizedBox(
+                                    height:
+                                        size.height * (isMobile ? 0.005 : 0.015),
+                                  ),
+                                  DMSCustomWidgets.SearchableDropDown(
+                                      size: size,
+                                      hint: 'Job Type',
+                                      items: jobTypeList,
+                                      onChanged: (p0) {
+                                        if (p0 != null) {
+                                          jobTypeAheadController.text = p0;
+                                        }
+                                      },
+                                      // icon: const Icon(Icons.arrow_drop_down),
+                                      focus: jobTypeFocus,
+                                      textcontroller: jobTypeController,
+                                      typeAheadController: jobTypeAheadController,
+                                      // provider: provider,
+                                      isMobile: isMobile,
+                                      scrollController: scrollController),
+                                  SizedBox(
+                                    height:
+                                        size.height * (isMobile ? 0.005 : 0.015),
+                                  ),
+                                  DMSCustomWidgets.CustomTextFieldCard(
+                                      size: size,
+                                      hint: 'Customer Concerns',
+                                      isMobile: isMobile,
+                                      focusNode: custConcernsFocus,
+                                      textcontroller: custConcernsController),
+                                  SizedBox(
+                                    height:
+                                        size.height * (isMobile ? 0.005 : 0.015),
+                                  ),
+                                  DMSCustomWidgets.CustomTextFieldCard(
+                                      size: size,
+                                      hint: 'Remarks',
+                                      isMobile: isMobile,
+                                      focusNode: remarksFocus,
+                                      textcontroller: remarksController),
+                                  SizedBox(
+                                    height: size.height * (isMobile ? 0.05 : 0.015),
+                                  ),
+                                ],
+                              ),
+                              BlocConsumer<ServiceBloc, ServiceState>(
+                                listener: (context, state) {
+                                  switch (state.serviceUploadStatus) {
+                                    case ServiceUploadStatus.success:
+                                      widget.clearFields!();
+                                      bookingController.text = "";
+                                      altContController.text = "";
+                                      altContPhoneNoController.text = "";
+                                      spController.text = "";
+                                      bayController.text = "";
+                                      jobTypeController.text = "";
+                                      custConcernsController.text = "";
+                                      remarksController.text = "";
+                                      Flushbar(
+                                              flushbarPosition:
+                                                  FlushbarPosition.TOP,
+                                              backgroundColor: Colors.green,
+                                              message: 'Service Added Successfully',
+                                              duration: const Duration(seconds: 2),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              margin: EdgeInsets.only(
+                                                  top: 24,
+                                                  left: isMobile
+                                                      ? 10
+                                                      : size.width * 0.8,
+                                                  right: 10))
+                                          .show(context);
+                                      context.read<MultiBloc>().state.date = null;
+                                      Future.delayed(Duration(seconds: 3)).then((value){
+                
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  const InspectionView()));
+                                      });
+                                    case ServiceUploadStatus.failure:
+                                      Flushbar(
+                                              flushbarPosition:
+                                                  FlushbarPosition.TOP,
+                                              backgroundColor: Colors.red,
+                                              message: 'Some error occured',
+                                              duration: const Duration(seconds: 2),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              margin: EdgeInsets.only(
+                                                  top: 24,
+                                                  left: isMobile
+                                                      ? 10
+                                                      : size.width * 0.8,
+                                                  right: 10))
+                                          .show(context);
+                
+                                    default:
+                                      null;
+                                  }
                                 },
-                              ),
-                              SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
-                              ),
-                              DMSCustomWidgets.SearchableDropDown(
-                                  items: bayList,
-                                  size: size,
-                                  hint: 'Bay',
-                                  isMobile: isMobile,
-                                  onChanged: (p0) {
-                                    if (p0 != null) {
-                                      bayTypeAheadController.text = p0;
-                                    }
-                                  },
-                                  focus: bayFocus,
-                                  textcontroller: bayController,
-                                  typeAheadController: bayTypeAheadController,
-                                  scrollController: scrollController),
-                              SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
-                              ),
-                              DMSCustomWidgets.SearchableDropDown(
-                                  size: size,
-                                  hint: 'Job Type',
-                                  items: jobTypeList,
-                                  onChanged: (p0) {
-                                    if (p0 != null) {
-                                      jobTypeAheadController.text = p0;
-                                    }
-                                  },
-                                  // icon: const Icon(Icons.arrow_drop_down),
-                                  focus: jobTypeFocus,
-                                  textcontroller: jobTypeController,
-                                  typeAheadController: jobTypeAheadController,
-                                  // provider: provider,
-                                  isMobile: isMobile,
-                                  scrollController: scrollController),
-                              SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
-                              ),
-                              DMSCustomWidgets.CustomTextFieldCard(
-                                  size: size,
-                                  hint: 'Customer Concerns',
-                                  isMobile: isMobile,
-                                  focusNode: custConcernsFocus,
-                                  textcontroller: custConcernsController),
-                              SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
-                              ),
-                              DMSCustomWidgets.CustomTextFieldCard(
-                                  size: size,
-                                  hint: 'Remarks',
-                                  isMobile: isMobile,
-                                  focusNode: remarksFocus,
-                                  textcontroller: remarksController),
-                              SizedBox(
-                                height: size.height * (isMobile ? 0.05 : 0.015),
-                              ),
-                            ],
-                          ),
-                          BlocConsumer<ServiceBloc, ServiceState>(
-                            listener: (context, state) {
-                              switch (state.serviceUploadStatus) {
-                                case ServiceUploadStatus.success:
-                                  widget.clearFields!();
-                                  bookingController.text = "";
-                                  altContController.text = "";
-                                  altContPhoneNoController.text = "";
-                                  spController.text = "";
-                                  bayController.text = "";
-                                  jobTypeController.text = "";
-                                  custConcernsController.text = "";
-                                  remarksController.text = "";
-                                  Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.green,
-                                          message: 'Service Added Successfully',
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: 24,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: 10))
-                                      .show(context);
-                                  context.read<MultiBloc>().state.date = null;
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const InspectionView()));
-                                case ServiceUploadStatus.failure:
-                                  Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.red,
-                                          message: 'Some error occured',
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: 24,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: 10))
-                                      .show(context);
-
-                                default:
-                                  null;
-                              }
-                            },
-                            builder: (context, state) {
-                              return BlocBuilder<MultiBloc, MultiBlocState>(
                                 builder: (context, state) {
-                                  return CustomSliderButton(
-                                    context: context,
-                                    size: size,
-                                    sliderStatus: context
-                                        .watch<ServiceBloc>()
-                                        .state
-                                        .serviceUploadStatus!,
-                                    label: Text(
-                                      "Proceed to receive",
-                                      style: TextStyle(
-                                          color: Color(0xff4a4a4a),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 17),
-                                    ),
-                                    icon: Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: Color.fromARGB(255, 145, 19, 19),
-                                    ),
-                                    onDismissed: () async {
-                                      bookingFocus.unfocus();
-                                      altContFocus.unfocus();
-                                      spFocus.unfocus();
-                                      bayFocus.unfocus();
-                                      jobTypeFocus.unfocus();
-                                      custConcernsFocus.unfocus();
-                                      remarksFocus.unfocus();
-                                      print(jobTypeController.text);
-
-                                      String? message = _bookingSourceValidator(
-                                              bookingController.text) ??
-                                          (altContController.text.isEmpty
-                                              ? "Alternate Contact Person cannot be empty"
-                                              : null) ??
-                                          _altPersonContactNoValidation(
-                                              altContPhoneNoController.text) ??
-                                          _salesPersonValidator(
-                                              spController.text,
-                                              (state.salesPersons ?? [])
-                                                  .map((e) => e.empName)
-                                                  .toList()) ??
-                                          _bayValidator(
-                                              bayController.text, bayList) ??
-                                          _jobTypeValidator(
-                                              jobTypeController.text,
-                                              jobTypeList);
-
-                                      if (message != null) {
-                                        Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.red,
-                                          message: message,
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: size.height * 0.01,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: size.width * 0.03),
-                                        ).show(context);
-                                      } else {
-                                        Service service =
-                                            Service.fromJson(widget.homeData);
-
-                                        Service finalService = Service(
-                                            registrationNo:
-                                                service.registrationNo,
-                                            location: service.location,
-                                            customerName: service.customerName,
-                                            scheduleDate: service.scheduleDate,
-                                            kms: service.kms,
-                                            bookingSource:
-                                                bookingController.text,
-                                            alternateContactPerson:
-                                                altContController.text,
-                                            alternatePersonContactNo: int.parse(
-                                                altContPhoneNoController.text),
-                                            salesPerson:
-                                                spController.text.split('-')[0],
-                                            bay: bayController.text,
-                                            jobType: jobTypeController.text,
-                                            jobCardNo:
-                                                'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
-                                            customerConcerns:
-                                                custConcernsController.text,
-                                            remarks: remarksController.text);
-
-                                        Log.d(finalService.toJson());
-                                        context.read<ServiceBloc>().add(
-                                            ServiceAdded(
-                                                service: finalService));
-                                      }
+                                  return BlocBuilder<MultiBloc, MultiBlocState>(
+                                    builder: (context, state) {
+                                      return CustomSliderButton(
+                                        context: context,
+                                        size: size,
+                                        sliderStatus: context
+                                            .watch<ServiceBloc>()
+                                            .state
+                                            .serviceUploadStatus!,
+                                        label: Text(
+                                          "Proceed to receive",
+                                          style: TextStyle(
+                                              color: Color(0xff4a4a4a),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 17),
+                                        ),
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: Color.fromARGB(255, 145, 19, 19),
+                                        ),
+                                        onDismissed: () async {
+                                          bookingFocus.unfocus();
+                                          altContFocus.unfocus();
+                                          spFocus.unfocus();
+                                          bayFocus.unfocus();
+                                          jobTypeFocus.unfocus();
+                                          custConcernsFocus.unfocus();
+                                          remarksFocus.unfocus();
+                                          print(jobTypeController.text);
+                
+                                          String? message = _bookingSourceValidator(
+                                                  bookingController.text) ??
+                                              (altContController.text.isEmpty
+                                                  ? "Alternate Contact Person cannot be empty"
+                                                  : null) ??
+                                              _altPersonContactNoValidation(
+                                                  altContPhoneNoController.text) ??
+                                              _salesPersonValidator(
+                                                  spController.text,
+                                                  (state.salesPersons ?? [])
+                                                      .map((e) => e.empName)
+                                                      .toList()) ??
+                                              _bayValidator(
+                                                  bayController.text, bayList) ??
+                                              _jobTypeValidator(
+                                                  jobTypeController.text,
+                                                  jobTypeList);
+                
+                                          if (message != null) {
+                                            Flushbar(
+                                              flushbarPosition:
+                                                  FlushbarPosition.TOP,
+                                              backgroundColor: Colors.red,
+                                              message: message,
+                                              duration: const Duration(seconds: 2),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              margin: EdgeInsets.only(
+                                                  top: size.height * 0.01,
+                                                  left: isMobile
+                                                      ? 10
+                                                      : size.width * 0.8,
+                                                  right: size.width * 0.03),
+                                            ).show(context);
+                                          } else {
+                                            Service service =
+                                                Service.fromJson(widget.homeData);
+                
+                                            Service finalService = Service(
+                                                registrationNo:
+                                                    service.registrationNo,
+                                                location: service.location,
+                                                customerName: service.customerName,
+                                                scheduleDate: service.scheduleDate,
+                                                kms: service.kms,
+                                                bookingSource:
+                                                    bookingController.text,
+                                                alternateContactPerson:
+                                                    altContController.text,
+                                                alternatePersonContactNo: int.parse(
+                                                    altContPhoneNoController.text),
+                                                salesPerson:
+                                                    spController.text.split('-')[0],
+                                                bay: bayController.text,
+                                                jobType: jobTypeController.text,
+                                                jobCardNo:
+                                                    'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
+                                                customerConcerns:
+                                                    custConcernsController.text,
+                                                remarks: remarksController.text);
+                
+                                            Log.d(finalService.toJson());
+                                            context.read<ServiceBloc>().add(
+                                                ServiceAdded(
+                                                    service: finalService));
+                                          }
+                                        },
+                                      );
                                     },
                                   );
                                 },
-                              );
-                            },
+                              ),
+                              if (MediaQuery.of(context).viewInsets.bottom != 0)
+                                SizedBox(
+                                  height: size.height * (isMobile ? 0.4 : 0.5),
+                                ),
+                            ],
                           ),
-                          if (MediaQuery.of(context).viewInsets.bottom != 0)
-                            SizedBox(
-                              height: size.height * (isMobile ? 0.4 : 0.5),
-                            ),
                         ],
                       ),
                     ],
-                  ),
-                ],
-              )),
-        ),
+                  )),
+                        ),
+                        if(context.watch<ServiceBloc>().state.serviceUploadStatus ==
+            ServiceUploadStatus.success)
+          Container(
+            color: Colors.black54,
+            child: Center(
+                child: Lottie.asset('assets/lottie/hands.json',
+                    height: size.height * 0.5, width: size.width * 0.8)),
+          ),
+          ],
+            ),
 
-        // if(context.watch<ServiceBloc>().state.serviceUploadStatus ==
-        //     ServiceUploadStatus.loading)
-        //   Container(
-        //     color: Colors.black54,
-        //     child: Center(
-        //         child: Lottie.asset('assets/lottie/car_loading.json',
-        //             height: size.height * 0.5, width: size.width * 0.6)),
-        //   ),
-        //   ],
-        // ),
+        
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
             ? Padding(
                 padding: EdgeInsets.only(

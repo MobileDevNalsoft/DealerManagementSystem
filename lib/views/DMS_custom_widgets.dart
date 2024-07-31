@@ -291,7 +291,7 @@ class DMSCustomWidgets {
 
   static Widget CustomDataFields(
       {required BuildContext context,
-      contentPadding,
+      double? contentPadding,
       double? propertyFontSize,
       double? valueFontSize,
       double? spaceBetweenFields,
@@ -318,7 +318,7 @@ class DMSCustomWidgets {
                     ])
                 .toList(),
           ),
-          const Gap(20),
+          Gap(contentPadding??20),
           Column(
             children: propertyList
                 .expand((element) => [
@@ -330,7 +330,7 @@ class DMSCustomWidgets {
                     ])
                 .toList(),
           ),
-          const Gap(20),
+          Gap(contentPadding??20),
           Column(
             children: valueList
                 .expand((element) => [
