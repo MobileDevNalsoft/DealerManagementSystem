@@ -1,12 +1,10 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/customer/customer_bloc.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
-import 'package:dms/models/vehicle.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/models/vehicle.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/service_history.dart';
 import 'package:flutter/material.dart';
-import 'package:customs/src.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -101,6 +99,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     yearPickerController = FixedExtentScrollController(initialItem: index);
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
     customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
+    context.read<VehicleBloc>().state.status = VehicleStatus.initial;
   }
 
   @override
@@ -152,21 +151,60 @@ class _AddVehicleViewState extends State<AddVehicleView> {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Scaffold(
-            backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: false,
+            extendBodyBehindAppBar: false,
             appBar: AppBar(
-              elevation: 0.0,
-              backgroundColor: const Color.fromARGB(255, 145, 19, 19),
-              leading: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded,
-                      color: Colors.white)),
-              title: const Text(
-                "Add Vehicle",
-                style: TextStyle(color: Colors.white, fontSize: 18),
+              scrolledUnderElevation: 0,
+              elevation: 0,
+              backgroundColor: Colors.black45,
+              leadingWidth: size.width * 0.14,
+              leading: Container(
+                margin: EdgeInsets.only(left: size.width * 0.045),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black,
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 10,
+                          blurStyle: BlurStyle.outer,
+                          spreadRadius: 0,
+                          color: Colors.orange.shade200,
+                          offset: const Offset(0, 0))
+                    ]),
+                child: Transform(
+                  transform: Matrix4.translationValues(-3, 0, 0),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.arrow_back_rounded,
+                          color: Colors.white)),
+                ),
               ),
+              title: Container(
+                  height: size.height * 0.05,
+                  width: size.width * 0.45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 10,
+                            blurStyle: BlurStyle.outer,
+                            spreadRadius: 0,
+                            color: Colors.orange.shade200,
+                            offset: const Offset(0, 0))
+                      ]),
+                  child: const Center(
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      'Add Vehicle',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontSize: 16),
+                    ),
+                  )),
               centerTitle: true,
             ),
             body: Container(
@@ -174,14 +212,10 @@ class _AddVehicleViewState extends State<AddVehicleView> {
               width: size.width,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 241, 193, 193),
-                      Color.fromARGB(255, 235, 136, 136),
-                      Color.fromARGB(255, 226, 174, 174)
-                    ],
+                    colors: [Colors.black45, Colors.black26, Colors.black45],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    stops: [0.01, 0.35, 1]),
+                    stops: [0.1, 0.5, 1]),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -211,6 +245,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                             size: size,
                             hint: "Vehicle Reg. No.",
                             isMobile: isMobile,
+                            inputFormatters: [UpperCaseTextFormatter()],
                             scrollController: scrollController,
                             textcontroller: vehicleRegNumberController,
                             context: context),
@@ -632,8 +667,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(4)),
                               minimumSize: const Size(10, 36),
-                              backgroundColor:
-                                  const Color.fromARGB(255, 145, 19, 19),
+                              backgroundColor: Colors.black,
                               foregroundColor: Colors.white),
                           child: const Text("Submit"),
                         );

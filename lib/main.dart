@@ -6,20 +6,20 @@ import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/repository/repository.dart';
-import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
-import 'package:dms/views/dashboard.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/views/quality_check.dart';
-import 'package:dms/views/service_main.dart';
+import 'package:dms/views/add_vehicle.dart';
+import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/jobcard_details.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dynamic_ui_src/Entry/json_to_widget.dart';
 import 'views/login.dart';
+import 'views/service_booking.dart';
+import 'views/test_dashboard.dart';
 
 void main() async {
   // debugPaintSizeEnabled = true;
@@ -30,9 +30,11 @@ void main() async {
 
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
-  //sharedPreferences.setBool('isLogged', true);
-   List<GeneralBodyPart> generalBodyPart = await  loadSvgImage(svgImage:'assets/images/image.svg');
-   List<GeneralBodyPart> acceptedParts = await  loadSvgImage(svgImage:'assets/images/image_accept.svg');
+  // sharedPreferences.setBool('isLogged', false);
+  List<GeneralBodyPart> generalBodyPart =
+      await loadSvgImage(svgImage: 'assets/images/image.svg');
+  List<GeneralBodyPart> acceptedParts =
+      await loadSvgImage(svgImage: 'assets/images/image_accept.svg');
 
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
@@ -55,9 +57,12 @@ void main() async {
         home: !sharedPreferences.containsKey('isLogged') ||
                 sharedPreferences.getBool('isLogged') == false
             ? const LoginView()
-            : DashboardView(),
+            : DribbleUI(),
         routes: {
-          '/home': (context) => HomeView(),
+          '/home': (context) => ServiceMain(),
+          '/dashboard': (context) => DashboardView(),
+          '/jobCardDetails': (context) => JobCardDetails(),
+          '/addVehicle': (context) => AddVehicleView(),
         },
       ),
     ),

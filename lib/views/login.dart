@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/test_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -116,7 +117,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const DashboardView(),
+                          builder: (context) => const DribbleUI(),
                         ),
                         (route) => false,
                       );

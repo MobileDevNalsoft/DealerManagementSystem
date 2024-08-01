@@ -99,16 +99,13 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
               vehicle: Vehicle(
                   customerName: json['data']['customer_name'],
                   customerAddress: json['data']['customer_address'])));
-          emit(state.copyWith(status: VehicleStatus.initial));
         } else {
           emit(state.copyWith(status: VehicleStatus.newCustomer));
-          emit(state.copyWith(status: VehicleStatus.initial));
         }
       },
     ).onError(
       (error, stackTrace) {
         emit(state.copyWith(status: VehicleStatus.failure));
-        emit(state.copyWith(status: VehicleStatus.initial));
       },
     );
   }

@@ -1,35 +1,25 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart'
     hide BoxDecoration, BoxShadow, Stepper, Step;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:easy_stepper/easy_stepper.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
 
 import '../models/services.dart';
 import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatelessWidget {
-  JobCardDetails({super.key, required this.service});
+  JobCardDetails({super.key, this.service});
 
-  Service service;
+  Service? service;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    int activeStep = service.status! == 'N'
-        ? 0
-        : service.status! == 'I'
-            ? 1
-            : 2;
-
     List<String> dmsFlow = [
-      'Initiated',
-      'In Progress',
+      'New',
+      'Work in progress',
       'Quality Check',
-      'Inspection out',
+      'Inspection Out',
       'Completed'
     ];
 
@@ -42,8 +32,8 @@ class JobCardDetails extends StatelessWidget {
     ];
 
     List<String> statusLines = [
-      'Job Card created on "Creation Date"',
-      'Vehicle Service is in progress',
+      'JC created on ${service!.creationDate}',
+      'Vehicle Service is done',
       'Quality Check is done',
       'Inpection out is done',
       'Service Completed'
@@ -51,9 +41,10 @@ class JobCardDetails extends StatelessWidget {
 
     List<String> pendingStatusLines = [
       '',
-      'Vehicle Service needs to be done',
+      'Vehicle Service is in progress',
       'Quality Check needs to be done',
-      'Inpection out needs to be done'
+      'Inpection out needs to be done',
+      'Gate Pass Generated'
     ];
 
     return Scaffold(
@@ -136,23 +127,22 @@ class JobCardDetails extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(25)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: ListView(
                   children: [
                     buildDetailRow(
-                        'Job Card Number', service.jobCardNo.toString()),
+                        'Job Card Number', service!.jobCardNo.toString(), size),
                     Gap(size.height * 0.03),
                     buildDetailRow('Vehicle Registration Number',
-                        service.registrationNo.toString()),
-                    Gap(size.height * 0.03),
-                    buildDetailRow('Location', service.location.toString()),
-                    Gap(size.height * 0.03),
-                    buildDetailRow('Job Type', service.jobType.toString()),
+                        service!.registrationNo.toString(), size),
                     Gap(size.height * 0.03),
                     buildDetailRow(
-                        'Schedule Date', service.scheduleDate.toString())
+                        'Location', service!.location.toString(), size),
+                    Gap(size.height * 0.03),
+                    buildDetailRow(
+                        'Job Type', service!.jobType.toString(), size),
+                    Gap(size.height * 0.03),
+                    buildDetailRow('Scheduled Date',
+                        service!.scheduledDate.toString(), size)
                   ],
                 ),
               ),
@@ -188,14 +178,15 @@ class JobCardDetails extends StatelessWidget {
                             child: Stepper(
                           steps: dmsFlow
                               .map((e) => Step(
-                                    activeStep: activeStep,
+                                    activeStep: dmsFlow.indexWhere(
+                                        (e) => e == service!.status),
                                     currentStep: dmsFlow.indexOf(e),
                                     icons: icons,
                                     stepperLength: dmsFlow.length,
                                     title: e,
                                     statusLines: statusLines,
                                     pendingStatusLines: pendingStatusLines,
-                                    jobCardNo: service.jobCardNo!,
+                                    jobCardNo: service!.jobCardNo!,
                                   ))
                               .toList(),
                         )),
@@ -207,19 +198,31 @@ class JobCardDetails extends StatelessWidget {
         ));
   }
 
-  Widget buildDetailRow(String key, String value) {
+  Widget buildDetailRow(String key, String value, Size size) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            key,
-            style: const TextStyle(fontSize: 13),
+          SizedBox(
+            width: size.width * 0.4,
+            child: Text(
+              key,
+              softWrap: true,
+              style: const TextStyle(fontSize: 13),
+            ),
           ),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+          SizedBox(
+            width: size.width * 0.4,
+            child: Text(
+              textAlign: TextAlign.right,
+              value,
+              softWrap: true,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  overflow: TextOverflow.visible),
+            ),
           )
         ]);
   }

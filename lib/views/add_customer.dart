@@ -191,6 +191,8 @@ class AddCustomerView extends StatelessWidget {
                     DMSCustomWidgets.CustomTextFieldCard(
                         size: size,
                         hint: 'Address',
+                        context: context,
+                        scrollController: scrollController,
                         isMobile: isMobile,
                         focusNode: customerAddressFocus,
                         textcontroller: customerAddressController),

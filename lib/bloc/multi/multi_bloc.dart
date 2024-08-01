@@ -71,15 +71,18 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
       final visibleScreenHeight = screenHeight - keyboardHeight;
 
       print('visible screen height $visibleScreenHeight');
+      print('keyboard height $keyboardHeight');
 
       // Check if the text field is already visible
-      if (textFieldTopPosition > visibleScreenHeight &&
-          textFieldBottomPosition + 30 > keyboardHeight) {
+      if (textFieldBottomPosition < keyboardHeight) {
         return;
       } else {
         // Calculate the amount to scroll
         final scrollOffset = textFieldTopPosition -
-            (visibleScreenHeight - renderBox.size.height) / 2;
+            (visibleScreenHeight - renderBox.size.height * 6);
+        print('render ${renderBox.size.height}');
+        print('present offset ${event.scrollController.offset}');
+        print('scroll offset $scrollOffset');
         await event.scrollController.animateTo(
           math.max(0, event.scrollController.offset + scrollOffset),
           duration: const Duration(milliseconds: 350),

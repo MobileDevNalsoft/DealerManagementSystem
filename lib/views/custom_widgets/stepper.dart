@@ -1,5 +1,8 @@
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:dms/views/gate_pass.dart';
 import 'package:dms/views/inspection_out.dart';
+import 'package:dms/views/quality_check.dart';
 import 'package:flutter/material.dart' hide Stepper, Step;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -47,6 +50,8 @@ class Step extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
+      print('current $currentStep');
+      print('activeStep $activeStep');
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,6 +66,7 @@ class Step extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: EdgeInsets.only(
@@ -74,16 +80,41 @@ class Step extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
+                      if (currentStep == activeStep)
+                        Positioned(
+                          top: -constraints.maxWidth * 0.15,
+                          bottom: -constraints.maxWidth * 0.16,
+                          left: -constraints.maxWidth * 0.137,
+                          right: -constraints.maxWidth * 0.15,
+                          child: Lottie.asset(
+                            'assets/lottie/ripple.json',
+                          ),
+                        ),
                       InkWell(
                         onTap: () {
-                          switch (currentStep) {
-                            case 3:
-                              context.read<ServiceBloc>().add(
-                                  GetInspectionDetails(jobCardNo: jobCardNo));
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => InspectionOut()));
+                          print('current $currentStep');
+                          print('activeStep $activeStep');
+                          if (currentStep == activeStep) {
+                            switch (activeStep) {
+                              case 2:
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => QualityCheck(
+                                            model: BodySelectorViewModel())));
+                              case 3:
+                                context.read<ServiceBloc>().add(
+                                    GetInspectionDetails(jobCardNo: jobCardNo));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => InspectionOut()));
+                              case 4:
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => GatePass()));
+                            }
                           }
                         },
                         child: CircleAvatar(
@@ -100,22 +131,13 @@ class Step extends StatelessWidget {
                             width: 30,
                           ),
                         ),
-                      ),
-                      if (currentStep == activeStep)
-                        Positioned(
-                          top: -constraints.maxWidth * 0.15,
-                          bottom: -constraints.maxWidth * 0.16,
-                          left: -constraints.maxWidth * 0.137,
-                          right: -constraints.maxWidth * 0.15,
-                          child: Lottie.asset(
-                            'assets/lottie/ripple.json',
-                          ),
-                        )
+                      )
                     ],
                   ),
                 ),
               ),
-              if (currentStep <= activeStep)
+              if (currentStep <= activeStep - 1 ||
+                  (activeStep == 0 && currentStep < 1))
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(
@@ -123,8 +145,9 @@ class Step extends StatelessWidget {
                     style: const TextStyle(fontSize: 12),
                   ),
                 ),
-              if (currentStep == activeStep + 1 &&
-                  currentStep < stepperLength - 2)
+              if (currentStep == activeStep &&
+                  currentStep < stepperLength &&
+                  activeStep != 0)
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(

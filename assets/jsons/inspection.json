@@ -13,6 +13,10 @@
                 "label": "Remarks",
                 "value": ""
             }
+        },
+        {
+            "status": "",
+            "reason": ""
         }
     ],
     "Rear Side": [
@@ -41,6 +45,10 @@
                     "Sharp Dents"
                 ]
             }
+        },
+        {
+            "status": "",
+            "reason": ""
         }
     ],
     "Interior Condition": [
@@ -70,6 +78,10 @@
                 "label": "Remarks",
                 "value": ""
             }
+        },
+        {
+            "status": "",
+            "reason": ""
         }
     ],
     "Paint Condition": [
@@ -86,6 +98,10 @@
                 "label": "Remarks",
                 "value": ""
             }
+        },
+        {
+            "status": "",
+            "reason": ""
         }
     ]
 }
