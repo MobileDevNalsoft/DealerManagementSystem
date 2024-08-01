@@ -73,6 +73,7 @@ class _InspectionViewState extends State<InspectionView> {
             ),
           ),
           title: Container(
+              alignment: Alignment.center,
               height: size.height * 0.05,
               width: size.width * 0.45,
               decoration: BoxDecoration(
@@ -86,207 +87,250 @@ class _InspectionViewState extends State<InspectionView> {
                         color: Colors.orange.shade200,
                         offset: const Offset(0, 0))
                   ]),
-              child: const Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'Inspection In',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 16),
-                ),
+              child: const Text(
+                textAlign: TextAlign.center,
+                'Inspection In',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 16),
               )),
           centerTitle: true,
         ),
-        body: Container(
-          height: size.height,
-          width: size.width,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.black45, Colors.black26, Colors.black45],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.1, 0.5, 1]),
-          ),
-          child:
-              BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
-            switch (state.jsonStatus) {
-              case JsonStatus.loading:
-                return Transform(
-                  transform: Matrix4.translationValues(0, -40, 0),
-                  child: Center(
-                    child: Lottie.asset('assets/lottie/car_loading.json',
-                        height: size.height * 0.5, width: size.width * 0.6),
-                  ),
-                );
-              case JsonStatus.success:
-                List<String> buttonsText = [];
-
-                for (var entry in state.json!.entries) {
-                  buttonsText.add(entry.key);
-                }
-
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Gap(size.height * 0.008),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.005),
-                      child: SizedBox(
-                        height: size.height * 0.04,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          controller: _autoScrollController,
-                          children: buttonsText
-                              .map((e) => AutoScrollTag(
-                                    key: ValueKey(buttonsText.indexOf(e)),
-                                    controller: _autoScrollController,
-                                    index: buttonsText.indexOf(e),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: size.width * 0.005),
-                                      child: SizedBox(
-                                        height: size.height * 0.035,
-                                        child: TextButton(
-                                            style: TextButton.styleFrom(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10),
-                                                backgroundColor: state.index ==
-                                                        buttonsText.indexOf(e)
-                                                    ? Colors.black
-                                                    : Colors.grey.shade400,
-                                                foregroundColor: state.index ==
-                                                        buttonsText.indexOf(e)
-                                                    ? Colors.white
-                                                    : const Color.fromARGB(
-                                                        255, 29, 22, 22),
-                                                side: const BorderSide(
-                                                    color: Colors.black)),
-                                            onPressed: () {
-                                              _pageController.jumpToPage(
-                                                  buttonsText.indexOf(e));
-                                            },
-                                            child: Text(e)),
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
-                        ),
+        body: Stack(
+          children: [
+            Container(
+              height: size.height,
+              width: size.width,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.black45, Colors.black26, Colors.black45],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.1, 0.5, 1]),
+              ),
+              child: BlocBuilder<ServiceBloc, ServiceState>(
+                  builder: (context, state) {
+                switch (state.jsonStatus) {
+                  case JsonStatus.loading:
+                    return Transform(
+                      transform: Matrix4.translationValues(0, -40, 0),
+                      child: Center(
+                        child: Lottie.asset('assets/lottie/car_loading.json',
+                            height: size.height * 0.5, width: size.width * 0.6),
                       ),
-                    ),
-                    Gap(size.height * 0.01),
-                    Expanded(
-                      child: SizedBox(
-                        width: size.width,
-                        child: PageView.builder(
-                          itemCount: state.json!.length,
-                          controller: _pageController,
-                          onPageChanged: (value) {
-                            _serviceBloc.add(PageChange(index: value));
-                            _autoScrollController.scrollToIndex(value,
-                                duration: Duration(milliseconds: 500),
-                                preferPosition: AutoScrollPosition.begin);
-                          },
-                          itemBuilder: (context, pageIndex) => ListView.builder(
-                            itemCount:
-                                state.json![buttonsText[pageIndex]].length - 1,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  Gap(size.height * 0.01),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Gap(size.width * 0.05),
-                                      SizedBox(
-                                        width: size.width * 0.2,
-                                        child: Wrap(
-                                          children: [
-                                            Text(state.json![
-                                                    buttonsText[pageIndex]]
-                                                [index]['properties']['label'])
-                                          ],
+                    );
+                  case JsonStatus.success:
+                    List<String> buttonsText = [];
+
+                    for (var entry in state.json!.entries) {
+                      buttonsText.add(entry.key);
+                    }
+
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gap(size.height * 0.008),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.005),
+                          child: SizedBox(
+                            height: size.height * 0.04,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              controller: _autoScrollController,
+                              children: buttonsText
+                                  .map((e) => AutoScrollTag(
+                                        key: ValueKey(buttonsText.indexOf(e)),
+                                        controller: _autoScrollController,
+                                        index: buttonsText.indexOf(e),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: size.width * 0.005),
+                                          child: SizedBox(
+                                            height: size.height * 0.035,
+                                            child: TextButton(
+                                                style: TextButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                    backgroundColor: state
+                                                                .index ==
+                                                            buttonsText
+                                                                .indexOf(e)
+                                                        ? Colors.black
+                                                        : Colors.grey.shade400,
+                                                    foregroundColor: state
+                                                                .index ==
+                                                            buttonsText
+                                                                .indexOf(e)
+                                                        ? Colors.white
+                                                        : const Color.fromARGB(
+                                                            255, 29, 22, 22),
+                                                    side: const BorderSide(
+                                                        color: Colors.black)),
+                                                onPressed: () {
+                                                  _pageController.jumpToPage(
+                                                      buttonsText.indexOf(e));
+                                                },
+                                                child: Text(e)),
+                                          ),
                                         ),
-                                      ),
-                                      Gap(size.width * 0.05),
-                                      getWidget(
-                                          context: context,
-                                          index: index,
-                                          page: buttonsText[pageIndex],
-                                          json: state.json!,
-                                          size: size),
-                                    ],
-                                  ),
-                                  Gap(size.height * 0.02),
-                                  if (pageIndex == buttonsText.length - 1 &&
-                                      index ==
-                                          state.json![buttonsText[pageIndex]]
-                                                  .length -
-                                              2)
-                                    Gap(size.height * 0.05),
-                                  if (pageIndex == buttonsText.length - 1 &&
-                                      index ==
-                                          state.json![buttonsText[pageIndex]]
-                                                  .length -
-                                              2)
-                                    ElevatedButton(
-                                        onPressed: () async {
-                                          context.read<ServiceBloc>().add(
-                                              InspectionJsonAdded(
-                                                  jobCardNo: _serviceBloc.state
-                                                      .service!.jobCardNo!,
-                                                  inspectionIn: 'true'));
-                                          context
-                                              .read<VehicleBloc>()
-                                              .state
-                                              .status = VehicleStatus.initial;
-                                          await loadSvgImage(
-                                                  svgImage:
-                                                      'assets/images/image.svg')
-                                              .then(
-                                            (value) {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CustomDetector(
-                                                      model:
-                                                          BodySelectorViewModel(),
-                                                      generalParts: value,
-                                                    ),
-                                                  ));
-                                            },
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            minimumSize: const Size(70.0, 35.0),
-                                            padding: EdgeInsets.zero,
-                                            backgroundColor: Colors.black,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5))),
-                                        child: const Text(
-                                          'Submit',
-                                          style: TextStyle(color: Colors.white),
-                                        ))
-                                ],
-                              );
-                            },
+                                      ))
+                                  .toList(),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                );
-              default:
-                return const SizedBox();
-            }
-          }),
+                        Gap(size.height * 0.01),
+                        Expanded(
+                          child: SizedBox(
+                            width: size.width,
+                            child: PageView.builder(
+                              itemCount: state.json!.length,
+                              controller: _pageController,
+                              onPageChanged: (value) {
+                                _serviceBloc.add(PageChange(index: value));
+                                _autoScrollController.scrollToIndex(value,
+                                    duration: const Duration(milliseconds: 500),
+                                    preferPosition: AutoScrollPosition.begin);
+                              },
+                              itemBuilder: (context, pageIndex) =>
+                                  ListView.builder(
+                                itemCount:
+                                    state.json![buttonsText[pageIndex]].length -
+                                        1,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    children: [
+                                      Gap(size.height * 0.01),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Gap(size.width * 0.05),
+                                          SizedBox(
+                                            width: size.width * 0.2,
+                                            child: Wrap(
+                                              children: [
+                                                Text(state.json![buttonsText[
+                                                        pageIndex]][index]
+                                                    ['properties']['label'])
+                                              ],
+                                            ),
+                                          ),
+                                          Gap(size.width * 0.05),
+                                          getWidget(
+                                              context: context,
+                                              index: index,
+                                              page: buttonsText[pageIndex],
+                                              json: state.json!,
+                                              size: size),
+                                        ],
+                                      ),
+                                      Gap(size.height * 0.02),
+                                      if (pageIndex == buttonsText.length - 1 &&
+                                          index ==
+                                              state
+                                                      .json![buttonsText[
+                                                          pageIndex]]
+                                                      .length -
+                                                  2)
+                                        Gap(size.height * 0.05),
+                                      if (pageIndex == buttonsText.length - 1 &&
+                                          index ==
+                                              state
+                                                      .json![buttonsText[
+                                                          pageIndex]]
+                                                      .length -
+                                                  2)
+                                        GestureDetector(
+                                          onTap: () async {
+                                            context.read<ServiceBloc>().add(
+                                                InspectionJsonAdded(
+                                                    jobCardNo: _serviceBloc
+                                                        .state
+                                                        .service!
+                                                        .jobCardNo!,
+                                                    inspectionIn: 'true'));
+                                            context
+                                                .read<VehicleBloc>()
+                                                .state
+                                                .status = VehicleStatus.initial;
+                                            _serviceBloc.state
+                                                    .inspectionJsonUploadStatus =
+                                                InspectionJsonUploadStatus
+                                                    .initial;
+                                            await loadSvgImage(
+                                                    svgImage:
+                                                        'assets/images/image.svg')
+                                                .then(
+                                              (value) {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CustomDetector(
+                                                        model:
+                                                            BodySelectorViewModel(),
+                                                        generalParts: value,
+                                                      ),
+                                                    ));
+                                              },
+                                            );
+                                          },
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              height: size.height * 0.045,
+                                              width: size.width * 0.2,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Colors.black,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 10,
+                                                        blurStyle:
+                                                            BlurStyle.outer,
+                                                        spreadRadius: 0,
+                                                        color: Colors
+                                                            .orange.shade200,
+                                                        offset:
+                                                            const Offset(0, 0))
+                                                  ]),
+                                              child: const Text(
+                                                textAlign: TextAlign.center,
+                                                'submit',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              )),
+                                        )
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  default:
+                    return const SizedBox();
+                }
+              }),
+            ),
+            if (_serviceBloc.state.inspectionJsonUploadStatus ==
+                InspectionJsonUploadStatus.loading)
+              Container(
+                color: Colors.black54,
+                child: Center(
+                    child: Lottie.asset('assets/lottie/car_loading.json',
+                        height: size.height * 0.5, width: size.width * 0.6)),
+              )
+          ],
         ),
       ),
     );
@@ -457,8 +501,7 @@ class _InspectionViewState extends State<InspectionView> {
                       splashRadius: 20, // Change the splash radius when clicked
                       onChanged: (value) {
                         json[page][index]['properties']['value'] = value;
-                        context.read<MultiBloc>().add(
-                            RadioOptionChanged(selectedRadioOption: value!));
+                        _serviceBloc.add(InspectionJsonUpdated(json: json));
                       },
                     ),
                   ),

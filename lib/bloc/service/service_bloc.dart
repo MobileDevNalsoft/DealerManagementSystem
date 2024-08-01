@@ -87,7 +87,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       InspectionJsonAdded event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(
         inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
-    print('jc no ${event.jobCardNo}');
     await _repo.addinspection({
       'job_card_no': event.jobCardNo,
       'inspection_details': jsonEncode(state.json).toString(),
@@ -186,7 +185,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   Future<void> _onGetServiceHistory(
       GetServiceHistory event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getServiceStatus: GetServiceStatus.loading));
-    await _repo.getHistory(event.query!, 0  ,vehicleRegNo: event.vehicleRegNo).then(
+    await _repo
+        .getHistory(event.query!, 0, vehicleRegNo: event.vehicleRegNo)
+        .then(
       (json) {
         print('json $json');
         if (json['response_code'] == 200) {
@@ -364,10 +365,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         emit(state.copyWith(gatePassStatus: GatePassStatus.failure));
       },
     );
+  }
 
-}
-void _onModifyGatePassStatus( ModifyGatePassStatus event, Emitter<ServiceState> emit){
-  emit(state.copyWith(gatePassStatus: event.status));
-
-}
+  void _onModifyGatePassStatus(
+      ModifyGatePassStatus event, Emitter<ServiceState> emit) {
+    emit(state.copyWith(gatePassStatus: event.status));
+  }
 }

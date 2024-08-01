@@ -1,4 +1,7 @@
+import 'package:another_flushbar/flushbar.dart';
+import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
+import 'package:dms/views/quality_check.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,6 +74,7 @@ class _InspectionOutState extends State<InspectionOut> {
             ),
           ),
           title: Container(
+              alignment: Alignment.center,
               height: size.height * 0.05,
               width: size.width * 0.45,
               decoration: BoxDecoration(
@@ -84,15 +88,13 @@ class _InspectionOutState extends State<InspectionOut> {
                         color: Colors.orange.shade200,
                         offset: const Offset(0, 0))
                   ]),
-              child: const Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'Inspection Out',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 16),
-                ),
+              child: const Text(
+                textAlign: TextAlign.center,
+                'Inspection Out',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 16),
               )),
           centerTitle: true,
         ),
@@ -111,8 +113,11 @@ class _InspectionOutState extends State<InspectionOut> {
               listener: (context, state) {
             if (state.inspectionJsonUploadStatus ==
                 InspectionJsonUploadStatus.success) {
-              Navigator.pop(context);
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          QualityCheck(model: BodySelectorViewModel())));
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {
@@ -472,7 +477,7 @@ class _InspectionOutState extends State<InspectionOut> {
       required ServiceState state,
       required String page,
       required TextEditingController controller}) {
-    controller.text = state.inspectionDetails![page].last['reason'] ?? ' ';
+    controller.text = state.inspectionDetails![page].last['reason'] ?? '';
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -556,7 +561,21 @@ class _InspectionOutState extends State<InspectionOut> {
                             onPressed: () {
                               state.inspectionDetails![page].last['reason'] =
                                   controller.text;
-                              Navigator.pop(context, false);
+                              if (controller.text.isEmpty) {
+                                Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: Colors.red,
+                                  message: "Reason cannot be empty",
+                                  duration: const Duration(seconds: 1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  margin: EdgeInsets.only(
+                                      top: size.height * 0.01,
+                                      left: 10,
+                                      right: size.width * 0.03),
+                                ).show(context);
+                              } else {
+                                Navigator.pop(context, false);
+                              }
                             },
                             style: TextButton.styleFrom(
                                 fixedSize:

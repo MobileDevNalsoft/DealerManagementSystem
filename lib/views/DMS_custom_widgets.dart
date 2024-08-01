@@ -188,6 +188,7 @@ class DMSCustomWidgets {
       {required Size size,
       required String hint,
       TextEditingController? textcontroller,
+      List<TextInputFormatter>? inputFormatters,
       FocusNode? focusNode,
       required BuildContext context,
       required ScrollController scrollController,
@@ -206,6 +207,7 @@ class DMSCustomWidgets {
           style: TextStyle(fontSize: isMobile ? 13 : 14),
           controller: textcontroller,
           focusNode: focusNode,
+          inputFormatters: inputFormatters,
           onTap: () {
             context.read<MultiBloc>().add(OnFocusChange(
                 focusNode: focusNode!,
@@ -328,7 +330,7 @@ class DMSCustomWidgets {
                     ])
                 .toList(),
           ),
-          Gap(contentPadding??20),
+          Gap(contentPadding ?? 20),
           Column(
             children: propertyList
                 .expand((element) => [
@@ -340,7 +342,7 @@ class DMSCustomWidgets {
                     ])
                 .toList(),
           ),
-          Gap(contentPadding??20),
+          Gap(contentPadding ?? 20),
           Column(
             children: valueList
                 .expand((element) => [
@@ -368,7 +370,6 @@ class DMSCustomWidgets {
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
         onTap: () {
-          print(now - (year ?? 0));
           yearPickerController =
               FixedExtentScrollController(initialItem: now - (year ?? 0));
           showCupertinoModalPopup(
@@ -389,15 +390,17 @@ class DMSCustomWidgets {
                       },
                       useMagnifier: true,
                       magnification: 1.2,
-                      backgroundColor: const Color.fromARGB(255, 245, 202, 202),
+                      backgroundColor: Colors.black,
                       selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-                        background: const Color.fromARGB(255, 145, 19, 19)
-                            .withOpacity(0.2),
+                        background: Colors.white30,
                       ),
                       children: List.generate(
                         now - 1980,
-                        (index) =>
-                            Center(child: Text((now - index).toString())),
+                        (index) => Center(
+                            child: Text(
+                          (now - index).toString(),
+                          style: TextStyle(color: Colors.white),
+                        )),
                       )),
                 )
               ],
@@ -405,7 +408,7 @@ class DMSCustomWidgets {
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
                   'Set',
-                  style: TextStyle(color: Color.fromARGB(255, 145, 19, 19)),
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),

@@ -38,17 +38,16 @@ class OnFocusChange extends MultiBlocEvent {
       required this.context});
 }
 
-
-class AddClippedWidgets extends MultiBlocEvent{
+class AddClippedWidgets extends MultiBlocEvent {
   final bool reverseClippedWidgets;
   AddClippedWidgets({required this.reverseClippedWidgets});
 }
-class SwapVehicleInfoClipper extends MultiBlocEvent{
-  
+
+class SwapVehicleInfoClipper extends MultiBlocEvent {
   SwapVehicleInfoClipper();
 }
 
-class MultiBlocStatusChange extends MultiBlocEvent{
- MultiStateStatus status; 
+class MultiBlocStatusChange extends MultiBlocEvent {
+  MultiStateStatus status;
   MultiBlocStatusChange({required this.status});
 }

@@ -31,7 +31,9 @@ class _MyJobcardsState extends State<MyJobcards> {
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
     _serviceBloc.add(GetMyJobCards(
-        query: getIt<SharedPreferences>().getString('service_advisor_id')));
+        query: getIt<SharedPreferences>()
+            .getInt('service_advisor_id')
+            .toString()));
   }
 
   @override
@@ -69,6 +71,7 @@ class _MyJobcardsState extends State<MyJobcards> {
           ),
         ),
         title: Container(
+            alignment: Alignment.center,
             height: size.height * 0.05,
             width: size.width * 0.45,
             decoration: BoxDecoration(
@@ -82,15 +85,13 @@ class _MyJobcardsState extends State<MyJobcards> {
                       color: Colors.orange.shade200,
                       offset: const Offset(0, 0))
                 ]),
-            child: const Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                'My Job Cards',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 16),
-              ),
+            child: const Text(
+              textAlign: TextAlign.center,
+              'My Job Cards',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontSize: 16),
             )),
         centerTitle: true,
       ),

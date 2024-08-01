@@ -107,6 +107,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                 ),
               ),
               title: Container(
+                  alignment: Alignment.center,
                   height: size.height * 0.05,
                   width: size.width * 0.45,
                   decoration: BoxDecoration(
@@ -120,15 +121,13 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                             color: Colors.orange.shade200,
                             offset: const Offset(0, 0))
                       ]),
-                  child: const Center(
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      'Service History',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          fontSize: 16),
-                    ),
+                  child: const Text(
+                    textAlign: TextAlign.center,
+                    'Service History',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 16),
                   )),
               centerTitle: true,
             ),
@@ -138,7 +137,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
               margin: EdgeInsets.zero,
               padding: EdgeInsets.only(
                   top: size.height * 0.01, left: size.width * 0.01),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     colors: [Colors.black45, Colors.black26, Colors.black45],
                     begin: Alignment.topCenter,
@@ -232,7 +231,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                           ],
                         );
                       default:
-                        return SizedBox();
+                        return const SizedBox();
                     }
                   },
                 ),

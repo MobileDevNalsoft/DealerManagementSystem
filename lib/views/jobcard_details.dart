@@ -79,6 +79,7 @@ class JobCardDetails extends StatelessWidget {
             ),
           ),
           title: Container(
+              alignment: Alignment.center,
               height: size.height * 0.05,
               width: size.width * 0.45,
               decoration: BoxDecoration(
@@ -92,15 +93,13 @@ class JobCardDetails extends StatelessWidget {
                         color: Colors.orange.shade200,
                         offset: const Offset(0, 0))
                   ]),
-              child: const Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'JobCard Details',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 16),
-                ),
+              child: const Text(
+                textAlign: TextAlign.center,
+                'JobCard Details',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 16),
               )),
           centerTitle: true,
         ),

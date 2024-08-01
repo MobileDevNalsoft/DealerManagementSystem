@@ -263,6 +263,7 @@ class _ServiceMain extends State<ServiceMain> {
                     ),
                   ),
                   title: Container(
+                      alignment: Alignment.center,
                       height: size.height * 0.05,
                       width: size.width * 0.45,
                       decoration: BoxDecoration(
@@ -276,15 +277,13 @@ class _ServiceMain extends State<ServiceMain> {
                                 color: Colors.orange.shade200,
                                 offset: const Offset(0, 0))
                           ]),
-                      child: Center(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          index == 0 ? 'Service Main' : 'Service proceed',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              fontSize: 16),
-                        ),
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        index == 0 ? 'Service Main' : 'Service proceed',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 16),
                       )),
                   centerTitle: true,
                 ),
@@ -596,84 +595,90 @@ class _ServiceMain extends State<ServiceMain> {
                                                 )
                                               ],
                                             ),
-                                            ElevatedButton(
-                                                onPressed: () {
-                                                  FocusManager
-                                                      .instance.primaryFocus
-                                                      ?.unfocus();
+                                            GestureDetector(
+                                              onTap: () {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
 
-                                                  String? message = _locationValidator(
-                                                          locTypeAheadController
-                                                              .text) ??
-                                                      (vehRegNumController
-                                                              .text.isEmpty
-                                                          ? "vehicle registration number cannot be empty"
-                                                          : null) ??
-                                                      (context
-                                                                  .read<
-                                                                      MultiBloc>()
-                                                                  .state
-                                                                  .date ==
-                                                              null
-                                                          ? "schedule date cannot be empty"
-                                                          : null) ??
-                                                      (kmsController
-                                                              .text.isEmpty
-                                                          ? "lms cannot be empty"
-                                                          : null);
+                                                String? message = _locationValidator(
+                                                        locTypeAheadController
+                                                            .text) ??
+                                                    (vehRegNumController
+                                                            .text.isEmpty
+                                                        ? "vehicle registration number cannot be empty"
+                                                        : null) ??
+                                                    (context
+                                                                .read<
+                                                                    MultiBloc>()
+                                                                .state
+                                                                .date ==
+                                                            null
+                                                        ? "schedule date cannot be empty"
+                                                        : null) ??
+                                                    (kmsController.text.isEmpty
+                                                        ? "lms cannot be empty"
+                                                        : null);
 
-                                                  if (message != null) {
-                                                    Flushbar(
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      blockBackgroundInteraction:
-                                                          true,
-                                                      message: message,
-                                                      flushbarPosition:
-                                                          FlushbarPosition.TOP,
+                                                if (message != null) {
+                                                  Flushbar(
+                                                    backgroundColor: Colors.red,
+                                                    blockBackgroundInteraction:
+                                                        true,
+                                                    message: message,
+                                                    flushbarPosition:
+                                                        FlushbarPosition.TOP,
+                                                    duration: const Duration(
+                                                        seconds: 2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    margin: EdgeInsets.only(
+                                                        top: size.height * 0.01,
+                                                        left: isMobile
+                                                            ? 10
+                                                            : size.width * 0.8,
+                                                        right:
+                                                            size.width * 0.03),
+                                                  ).show(context);
+                                                  return;
+                                                } else {
+                                                  pageController.animateToPage(
+                                                      1,
                                                       duration: const Duration(
-                                                          seconds: 2),
+                                                          milliseconds: 500),
+                                                      curve: Curves.ease);
+                                                }
+                                              },
+                                              child: Container(
+                                                  alignment: Alignment.center,
+                                                  height: size.height * 0.045,
+                                                  width: size.width * 0.2,
+                                                  decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              12),
-                                                      margin: EdgeInsets.only(
-                                                          top: size.height *
-                                                              0.01,
-                                                          left: isMobile
-                                                              ? 10
-                                                              : size.width *
-                                                                  0.8,
-                                                          right: size.width *
-                                                              0.03),
-                                                    ).show(context);
-                                                    return;
-                                                  } else {
-                                                    pageController.animateToPage(
-                                                        1,
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    500),
-                                                        curve: Curves.ease);
-                                                  }
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                    minimumSize:
-                                                        const Size(70.0, 35.0),
-                                                    padding: EdgeInsets.zero,
-                                                    backgroundColor:
-                                                        Colors.black,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5))),
-                                                child: const Text(
-                                                  'next',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                )),
+                                                              10),
+                                                      color: Colors.black,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            blurRadius: 10,
+                                                            blurStyle:
+                                                                BlurStyle.outer,
+                                                            spreadRadius: 0,
+                                                            color: Colors.orange
+                                                                .shade200,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 0))
+                                                      ]),
+                                                  child: Text(
+                                                    textAlign: TextAlign.center,
+                                                    'next',
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16),
+                                                  )),
+                                            ),
                                             if (MediaQuery.of(context)
                                                     .viewInsets
                                                     .bottom !=
@@ -778,11 +783,9 @@ class _ServiceMain extends State<ServiceMain> {
                                                   return DMSCustomWidgets
                                                       .SearchableDropDown(
                                                           onChanged: (p0) {
-                                                            if (p0 != null) {
-                                                              spTypeAheadController
-                                                                  .text = p0;
-                                                            }
-                                                            if (p0!.length >=
+                                                            spTypeAheadController
+                                                                .text = p0;
+                                                            if (p0.length >=
                                                                 3) {
                                                               context
                                                                   .read<
@@ -1113,7 +1116,9 @@ class _ServiceMain extends State<ServiceMain> {
                                 ],
                               )),
                     if (context.watch<VehicleBloc>().state.status ==
-                        VehicleStatus.loading)
+                            VehicleStatus.loading ||
+                        _serviceBloc.state.serviceUploadStatus ==
+                            ServiceUploadStatus.loading)
                       Container(
                         color: Colors.black54,
                         child: Center(
@@ -1205,7 +1210,7 @@ class _ServiceMain extends State<ServiceMain> {
                   Padding(
                     padding: EdgeInsets.only(left: size.width * 0.03),
                     child: const Text(
-                      'Oops! This Vehicle not Registered with us.',
+                      'Oops! This Vehicle not registered with us.',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),

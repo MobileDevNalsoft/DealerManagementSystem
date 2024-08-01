@@ -4,6 +4,7 @@ import 'package:dms/views/dashboard.dart';
 import 'package:dms/views/my_jobcards.dart';
 import 'package:dms/views/sample/service_main.dart';
 import 'package:dms/views/service_history.dart';
+import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -126,7 +127,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                           blurStyle: BlurStyle.outer,
                           spreadRadius: 25,
                           color: Colors.orange.shade200,
-                          offset: Offset(0, 0)),
+                          offset: const Offset(0, 0)),
                       clipper: ButtonClipper(),
                       child: Image.asset(
                         'assets/images/add_vehicle_icon.png',
@@ -145,14 +146,16 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                     flipX: true,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => MyJobcards()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const MyJobcards()));
                       },
                       onDoubleTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => ServiceMainSample()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ServiceMainSample()));
                       },
                       child: ClippedButton(
                         size: Size(size.width * 0.2, size.height * 0.2),
@@ -176,7 +179,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                             blurStyle: BlurStyle.outer,
                             spreadRadius: 25,
                             color: Colors.orange.shade200,
-                            offset: Offset(0, 0)),
+                            offset: const Offset(0, 0)),
                         clipper: ButtonClipper(),
                         child: Image.asset(
                           'assets/images/person_icon.png',
@@ -203,26 +206,34 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ClippedButton(
-                    size: Size(size.width * 0.23, size.height * 0.2),
-                    decoration: const BoxDecoration(color: Colors.black),
-                    shadow: BoxShadow(
-                        blurRadius: 20,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 25,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const VehicleInfo()));
+                    },
+                    child: ClippedButton(
+                      size: Size(size.width * 0.23, size.height * 0.2),
+                      decoration: const BoxDecoration(color: Colors.black),
+                      shadow: BoxShadow(
+                          blurRadius: 20,
+                          blurStyle: BlurStyle.outer,
+                          spreadRadius: 25,
+                          color: Colors.orange.shade200,
+                          offset: const Offset(0, 0)),
+                      clipper: ButtonClipperMid(),
+                      child: Image.asset(
+                        'assets/images/vehicle_search_icon.png',
                         color: Colors.orange.shade200,
-                        offset: Offset(0, 0)),
-                    clipper: ButtonClipperMid(),
-                    child: Image.asset(
-                      'assets/images/vehicle_search_icon.png',
-                      color: Colors.orange.shade200,
-                      opacity: AnimationController(
-                        vsync: this,
-                        value: 0.7,
+                        opacity: AnimationController(
+                          vsync: this,
+                          value: 0.7,
+                        ),
+                        alignment: Alignment.center,
+                        height: size.height * 0.095,
+                        width: size.width * 0.095,
                       ),
-                      alignment: Alignment.center,
-                      height: size.height * 0.095,
-                      width: size.width * 0.095,
                     ),
                   ),
                   Transform.flip(
@@ -235,7 +246,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                             blurStyle: BlurStyle.outer,
                             spreadRadius: 25,
                             color: Colors.orange.shade200,
-                            offset: Offset(0, 0)),
+                            offset: const Offset(0, 0)),
                         clipper: ButtonClipperMid(),
                         child: Image.asset(
                           'assets/images/home_icon.png',
@@ -291,7 +302,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                               blurStyle: BlurStyle.outer,
                               spreadRadius: 25,
                               color: Colors.orange.shade200,
-                              offset: Offset(0, 0)),
+                              offset: const Offset(0, 0)),
                           clipper: ButtonClipper(),
                           child: Transform.flip(
                             flipY: true,
@@ -343,7 +354,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                                   blurStyle: BlurStyle.outer,
                                   spreadRadius: 25,
                                   color: Colors.orange.shade200,
-                                  offset: Offset(0, 0)),
+                                  offset: const Offset(0, 0)),
                               clipper: ButtonClipper(),
                               child: Transform.flip(
                                 flipY: true,

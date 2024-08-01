@@ -57,12 +57,13 @@ void main() async {
         home: !sharedPreferences.containsKey('isLogged') ||
                 sharedPreferences.getBool('isLogged') == false
             ? const LoginView()
-            : DribbleUI(),
+            : const DribbleUI(),
         routes: {
           '/home': (context) => ServiceMain(),
-          '/dashboard': (context) => DashboardView(),
+          '/dashboard': (context) => const DashboardView(),
           '/jobCardDetails': (context) => JobCardDetails(),
-          '/addVehicle': (context) => AddVehicleView(),
+          '/addVehicle': (context) => const AddVehicleView(),
+          '/serviceBooking': (context) => ServiceMain(),
         },
       ),
     ),

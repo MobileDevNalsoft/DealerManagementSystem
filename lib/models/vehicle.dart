@@ -1,3 +1,6 @@
+import 'package:dms/inits/init.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Vehicle {
   String? vehicleType;
   String? chassisNumber;
@@ -69,9 +72,7 @@ class Vehicle {
     data['make'] = make;
     data['variant'] = varient;
     data['color'] = color;
-    data['customer_no'] = customerNumber;
     data['customer_name'] = cusotmerName;
-    // data['customerPhoneNumber'] = customerPhoneNumber;
     data['vehicle_registration_no'] = vehicleRegNumber;
     data['mfg_year'] = mfgYear;
     data['financial_details'] = financialDetails;
@@ -79,6 +80,8 @@ class Vehicle {
     data['customer_contact_no'] = customerContactNo;
     data['customer_name'] = customerName;
     data['customer_address'] = customerAddress;
+    data['employee_id'] =
+        getIt<SharedPreferences>().getInt('service_advisor_id');
     return data;
   }
 }

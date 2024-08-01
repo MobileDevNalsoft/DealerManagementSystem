@@ -495,7 +495,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                 ),
                                               ),
                                               Gap(8),
-                                              CustomSliderButton(
+                                              CustomSliderButton1(
                                                   size: size,
                                                   context: context,
                                                   rightLabel: Text(
@@ -678,7 +678,7 @@ class _QualityCheckState extends State<QualityCheck>
   }
 }
 
-class CustomSliderButton extends StatefulWidget {
+class CustomSliderButton1 extends StatefulWidget {
   final Size size;
   final BuildContext context;
   final Widget leftLabel;
@@ -686,7 +686,7 @@ class CustomSliderButton extends StatefulWidget {
   final Widget icon;
   final onDismissed;
   ServiceUploadStatus sliderStatus;
-  CustomSliderButton(
+  CustomSliderButton1(
       {Key? key,
       required this.size,
       required this.context,
@@ -698,10 +698,10 @@ class CustomSliderButton extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CustomSliderButtonState createState() => _CustomSliderButtonState();
+  _CustomSliderButton1State createState() => _CustomSliderButton1State();
 }
 
-class _CustomSliderButtonState extends State<CustomSliderButton> {
+class _CustomSliderButton1State extends State<CustomSliderButton1> {
   late double _position;
   late double _startPosition;
   late double _rightPosition;

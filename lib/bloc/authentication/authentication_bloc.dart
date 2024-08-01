@@ -27,7 +27,7 @@ class AuthenticationBloc
           emit(state.copyWith(
               authenticationStatus: AuthenticationStatus.success));
           getIt<SharedPreferences>()
-              .setString('service_advisor_id', event.username);
+              .setInt('service_advisor_id', int.parse(event.username));
         } else if (json['response_code'] == 404) {
           emit(state.copyWith(
               authenticationStatus: AuthenticationStatus.invalidCredentials));
