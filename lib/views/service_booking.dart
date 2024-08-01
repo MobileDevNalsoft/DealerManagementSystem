@@ -4,6 +4,7 @@ import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/inspection.dart';
@@ -27,7 +28,7 @@ class ServiceMain extends StatefulWidget {
   State<ServiceMain> createState() => _ServiceMain();
 }
 
-class _ServiceMain extends State<ServiceMain> {
+class _ServiceMain extends State<ServiceMain> with ConnectivityMixin{
   //page 1
   // focusnodes
   FocusNode locFocus = FocusNode();
@@ -52,7 +53,7 @@ class _ServiceMain extends State<ServiceMain> {
   late ServiceBloc _serviceBloc;
   late VehicleBloc _vehicleBloc;
   late MultiBloc _multiBloc;
-
+  late Size size;
   bool dropDownUp = false;
 
   //page 2
@@ -159,11 +160,15 @@ class _ServiceMain extends State<ServiceMain> {
   }
 
   void _onVehRegNumUnfocused() {
+    if(isConnected()){
     if (!vehRegNumFocus.hasFocus && vehRegNumController.text.isNotEmpty) {
       _vehicleBloc.state.status = VehicleStatus.initial;
       context
           .read<VehicleBloc>()
           .add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
+    }}
+    else{
+      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
     }
   }
 
@@ -185,7 +190,7 @@ class _ServiceMain extends State<ServiceMain> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
     // Set preferred orientations based on device type
@@ -598,6 +603,11 @@ class _ServiceMain extends State<ServiceMain> {
                                             ),
                                             ElevatedButton(
                                                 onPressed: () {
+                                                  if(!isConnected())
+                                                  {
+                                            DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                            return;
+                                                  }
                                                   FocusManager
                                                       .instance.primaryFocus
                                                       ?.unfocus();
@@ -778,6 +788,10 @@ class _ServiceMain extends State<ServiceMain> {
                                                   return DMSCustomWidgets
                                                       .SearchableDropDown(
                                                           onChanged: (p0) {
+                                                            if(!isConnected()){
+                                                                  DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                                                  return;
+                                                            }
                                                             if (p0 != null) {
                                                               spTypeAheadController
                                                                   .text = p0;
@@ -979,6 +993,7 @@ class _ServiceMain extends State<ServiceMain> {
                                                   return CustomSliderButton(
                                                     context: context,
                                                     size: size,
+                                                    resetPosition: state.status==MultiStateStatus.failure|| state.status==MultiStateStatus.initial,
                                                     sliderStatus: context
                                                         .watch<ServiceBloc>()
                                                         .state
@@ -998,6 +1013,10 @@ class _ServiceMain extends State<ServiceMain> {
                                                       color: Colors.white,
                                                     ),
                                                     onDismissed: () async {
+                                                      if(!isConnected()){
+                                                          DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                                          return;
+                                                      }
                                                       FocusManager
                                                           .instance.primaryFocus
                                                           ?.unfocus();
@@ -1275,6 +1294,7 @@ class CustomSliderButton extends StatefulWidget {
   final Widget label;
   final Widget icon;
   final onDismissed;
+  final resetPosition;
   ServiceUploadStatus sliderStatus;
   CustomSliderButton(
       {Key? key,
@@ -1283,6 +1303,7 @@ class CustomSliderButton extends StatefulWidget {
       required this.label,
       required this.icon,
       required this.onDismissed,
+      required this.resetPosition,
       this.sliderStatus = ServiceUploadStatus.initial})
       : super(key: key);
 
@@ -1346,6 +1367,9 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   @override
   Widget build(BuildContext context) {
     print("status ${widget.sliderStatus}");
+    if(widget.resetPosition==true){
+      _position= _startPosition;
+    }
     return GestureDetector(
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,

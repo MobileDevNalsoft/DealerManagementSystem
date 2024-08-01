@@ -3,8 +3,10 @@ import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/vehicle.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
+import 'package:dms/views/dashboard.dart';
 import 'package:dms/views/jobcard_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,7 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:ticket_widget/ticket_widget.dart';
 
 class VehicleInfo extends StatefulWidget {
   const VehicleInfo({super.key});
@@ -22,8 +23,9 @@ class VehicleInfo extends StatefulWidget {
   State<VehicleInfo> createState() => _VehicleInfoState();
 }
 
-class _VehicleInfoState extends State<VehicleInfo> {
+class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin{
   TextEditingController vehicleRegNoController = TextEditingController();
+  FocusNode focusNode = FocusNode();
   late List<Widget> clipperWidgets;
   late Size size;
   @override
@@ -77,7 +79,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                         Padding(
                           padding: EdgeInsets.only(
                               top: size.height * 0.05,
-                              right: size.width * 0.08),
+                              right: size.width * 0.07),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +121,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                               ),
                             ),
                           ),
-                        Gap(size.height * 0.02),
+                        Gap(size.height * 0.025),
                         SizedBox(
                           width: size.width * 0.9,
                           height: size.height * 0.3,
@@ -263,7 +265,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                                                 .success
                                                                         ? state
                                                                             .services![index]
-                                                                            .scheduleDate!
+                                                                            .scheduledDate!
                                                                         : '12022004',
                                                                     style: const TextStyle(
                                                                         fontSize:
@@ -471,6 +473,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                     fontWeight: FontWeight.w800, fontSize: 18),
                                 valueFontStyle: TextStyle(
                                     fontWeight: FontWeight.w400, fontSize: 18),
+                                    showColonsBetween: false,
                                 propertyList: [
                                   "Vehicle Reg. no.",
                                   "Chassis no.",
@@ -597,47 +600,72 @@ class _VehicleInfoState extends State<VehicleInfo> {
                 child: Column(
                   children: [
                     Gap(8),
-                    Container(
-                      width: size.width * 0.85,
-                      height: size.height * 0.05,
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(14)),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 2.2),
-                        child: Container(
-
-                            width: size.width * 0.6,
-                            height: size.height * 0.2,
+                    InkWell(
+                      onTap: () => focusNode.requestFocus(),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
                             alignment: Alignment.center,
+                            margin: EdgeInsets.only(left: size.width * 0.03),
+                            padding: EdgeInsets.only(top: size.height * 0.033),
+                            height: size.height * 0.06,
+                            width: size.width * 0.8,
+                            decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)),
+                                color: Colors.white60),
                             child: TextFormField(
                               controller: vehicleRegNoController,
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.search_rounded,
-                                    color: Colors.white,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(top:size.height*0.006),
-                                  hintText: "Vehicle Reg. no....",
-                                  hintStyle: TextStyle(color: Colors.white70)),
+                              focusNode: focusNode,
+                              style: const TextStyle(color: Colors.black),
+                              onTapOutside: (event) => focusNode.unfocus(),
                               onChanged: (value) {
-                                vehicleRegNoController.text =
-                                    vehicleRegNoController.text.toUpperCase();
-                                // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
-                                context.read<VehicleBloc>().add(
-                                    FetchVehicleCustomer(
-                                        registrationNo:
-                                            vehicleRegNoController.text));
-                                context.read<ServiceBloc>().add(
-                                    GetServiceHistory(
-                                        query: 'vehicle_history',
-                                        vehicleRegNo:
-                                            vehicleRegNoController.text));
-                                // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.success));
+                              vehicleRegNoController.text =
+                              vehicleRegNoController.text.toUpperCase();
+                                 if(!isConnected()){
+                                 DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                 return;
+                              }
+                          // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
+                          context.read<VehicleBloc>().add(
+                              FetchVehicleCustomer(
+                                  registrationNo:
+                                      vehicleRegNoController.text));
+                          context.read<ServiceBloc>().add(
+                              GetServiceHistory(
+                                  query: 'vehicle_history',
+                                  vehicleRegNo:
+                                      vehicleRegNoController.text));
+                          // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.success));
                               },
-                            )),
+                              cursorColor: Colors.black,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                                hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
+                                hintText: 'Vehicle Registration Number',
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: size.width * 0.03),
+                              height: size.height * 0.06,
+                              decoration: const BoxDecoration(
+                                  color: Colors.black38,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      bottomRight: Radius.circular(10))),
+                              child: const Icon(
+                                Icons.search_rounded,
+                                color: Colors.white60,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     BlocConsumer<VehicleBloc, VehicleState>(
@@ -660,6 +688,11 @@ class _VehicleInfoState extends State<VehicleInfo> {
                               width: size.width * 0.6,
                             );
                           default:
+                          if(vehicleRegNoController.text.isEmpty){
+                            return  Lottie.asset(
+                              "assets/lottie/car_search.json",
+                              width: size.width * 0.6,);
+                          }
                             return Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Column(

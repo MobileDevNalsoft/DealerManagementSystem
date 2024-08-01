@@ -1,11 +1,17 @@
+import 'package:another_flushbar/flushbar.dart';
+import 'package:customs/src.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:dms/views/my_jobcards.dart';
 import 'package:dms/views/sample/service_main.dart';
 import 'package:dms/views/service_history.dart';
+import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import 'service_booking.dart';
 
@@ -16,19 +22,18 @@ class DribbleUI extends StatefulWidget {
   State<DribbleUI> createState() => _DribbleUIState();
 }
 
-class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
+class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin, ConnectivityMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
 
     return Scaffold(
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.black45, Colors.black26, Colors.black45],
-                stops: [0.1, 0.5, 1])),
+        decoration: const BoxDecoration(gradient: LinearGradient(colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1])),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -45,8 +50,11 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                 Gap(size.height * 0.3),
                 InkWell(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => ServiceMain()));
+                    if(isConnected()){
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceMain()));}
+                    else{
+                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                    }
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -54,18 +62,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                     height: size.height * 0.08,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.black45,
-                            Colors.black87,
-                            Colors.black
-                          ],
-                          stops: [
-                            0.05,
-                            0.5,
-                            1
-                          ]),
+                          begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Colors.black45, Colors.black87, Colors.black], stops: [0.05, 0.5, 1]),
                       shape: BoxShape.circle,
                       boxShadow: [
                         const BoxShadow(
@@ -99,10 +96,11 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const AddVehicleView()));
+                      if (isConnected()) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const AddVehicleView()));
+                      } else {
+                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                      }
                     },
                     child: ClippedButton(
                       size: Size(size.width * 0.2, size.height * 0.2),
@@ -110,23 +108,10 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                         gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [
-                              Colors.black45,
-                              Colors.black87,
-                              Colors.black
-                            ],
-                            stops: [
-                              0.05,
-                              0.5,
-                              1
-                            ]),
+                            colors: [Colors.black45, Colors.black87, Colors.black],
+                            stops: [0.05, 0.5, 1]),
                       ),
-                      shadow: BoxShadow(
-                          blurRadius: 20,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 25,
-                          color: Colors.orange.shade200,
-                          offset: Offset(0, 0)),
+                      shadow: BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: Offset(0, 0)),
                       clipper: ButtonClipper(),
                       child: Image.asset(
                         'assets/images/add_vehicle_icon.png',
@@ -145,8 +130,11 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                     flipX: true,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => MyJobcards()));
+                        if(isConnected()){
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => MyJobcards()));}
+                        else{
+                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                        }
                       },
                       onDoubleTap: () {
                         // Navigator.push(
@@ -160,23 +148,10 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                           gradient: LinearGradient(
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft,
-                              colors: [
-                                Colors.black45,
-                                Colors.black87,
-                                Colors.black
-                              ],
-                              stops: [
-                                0.05,
-                                0.5,
-                                1
-                              ]),
+                              colors: [Colors.black45, Colors.black87, Colors.black],
+                              stops: [0.05, 0.5, 1]),
                         ),
-                        shadow: BoxShadow(
-                            blurRadius: 20,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 25,
-                            color: Colors.orange.shade200,
-                            offset: Offset(0, 0)),
+                        shadow: BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: Offset(0, 0)),
                         clipper: ButtonClipper(),
                         child: Image.asset(
                           'assets/images/person_icon.png',
@@ -203,26 +178,35 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ClippedButton(
-                    size: Size(size.width * 0.23, size.height * 0.2),
-                    decoration: const BoxDecoration(color: Colors.black),
-                    shadow: BoxShadow(
-                        blurRadius: 20,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 25,
+                  InkWell(
+                    onTap: () {
+                      if(isConnected()){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VehicleInfo(),
+                          ));}
+                          else{
+                            
+                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                          }
+                    },
+                    child: ClippedButton(
+                      size: Size(size.width * 0.23, size.height * 0.2),
+                      decoration: const BoxDecoration(color: Colors.black),
+                      shadow: BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: Offset(0, 0)),
+                      clipper: ButtonClipperMid(),
+                      child: Image.asset(
+                        'assets/images/vehicle_search_icon.png',
                         color: Colors.orange.shade200,
-                        offset: Offset(0, 0)),
-                    clipper: ButtonClipperMid(),
-                    child: Image.asset(
-                      'assets/images/vehicle_search_icon.png',
-                      color: Colors.orange.shade200,
-                      opacity: AnimationController(
-                        vsync: this,
-                        value: 0.7,
+                        opacity: AnimationController(
+                          vsync: this,
+                          value: 0.7,
+                        ),
+                        alignment: Alignment.center,
+                        height: size.height * 0.095,
+                        width: size.width * 0.095,
                       ),
-                      alignment: Alignment.center,
-                      height: size.height * 0.095,
-                      width: size.width * 0.095,
                     ),
                   ),
                   Transform.flip(
@@ -230,12 +214,7 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                       child: ClippedButton(
                         size: Size(size.width * 0.23, size.height * 0.2),
                         decoration: const BoxDecoration(color: Colors.black),
-                        shadow: BoxShadow(
-                            blurRadius: 20,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 25,
-                            color: Colors.orange.shade200,
-                            offset: Offset(0, 0)),
+                        shadow: BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: Offset(0, 0)),
                         clipper: ButtonClipperMid(),
                         child: Image.asset(
                           'assets/images/home_icon.png',
@@ -264,10 +243,13 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                       flipY: true,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const DashboardView()));
+                          if(isConnected()){
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const DashboardView()));}
+                          else{
+                            
+
+                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                          }
                         },
                         child: ClippedButton(
                           size: Size(size.width * 0.2, size.height * 0.2),
@@ -275,23 +257,10 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                             gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.black45,
-                                  Colors.black87,
-                                  Colors.black
-                                ],
-                                stops: [
-                                  0.05,
-                                  0.5,
-                                  1
-                                ]),
+                                colors: [Colors.black45, Colors.black87, Colors.black],
+                                stops: [0.05, 0.5, 1]),
                           ),
-                          shadow: BoxShadow(
-                              blurRadius: 20,
-                              blurStyle: BlurStyle.outer,
-                              spreadRadius: 25,
-                              color: Colors.orange.shade200,
-                              offset: Offset(0, 0)),
+                          shadow: BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: Offset(0, 0)),
                           clipper: ButtonClipper(),
                           child: Transform.flip(
                             flipY: true,
@@ -315,11 +284,11 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                         flipX: true,
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ServiceHistoryView()));
+                            if(isConnected()){
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const ServiceHistoryView()));}
+                            else{
+                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                            }
                           },
                           child: ClippedButton(
                               size: Size(size.width * 0.2, size.height * 0.2),
@@ -327,23 +296,11 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                                 gradient: LinearGradient(
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
-                                    colors: [
-                                      Colors.black45,
-                                      Colors.black87,
-                                      Colors.black
-                                    ],
-                                    stops: [
-                                      0.05,
-                                      0.5,
-                                      1
-                                    ]),
+                                    colors: [Colors.black45, Colors.black87, Colors.black],
+                                    stops: [0.05, 0.5, 1]),
                               ),
-                              shadow: BoxShadow(
-                                  blurRadius: 20,
-                                  blurStyle: BlurStyle.outer,
-                                  spreadRadius: 25,
-                                  color: Colors.orange.shade200,
-                                  offset: Offset(0, 0)),
+                              shadow:
+                                  BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: Offset(0, 0)),
                               clipper: ButtonClipper(),
                               child: Transform.flip(
                                 flipY: true,
@@ -379,8 +336,7 @@ class ButtonClipper extends CustomClipper<Path> {
     path.lineTo(size.width - 33.5, 20);
     path.quadraticBezierTo(size.width - 18, 28, size.width - 13.4, 40.2);
     path.lineTo(size.width - 5, size.height - 70);
-    path.quadraticBezierTo(size.width + 3.35, size.height - 30.15,
-        size.width - 20.1, size.height - 20.1);
+    path.quadraticBezierTo(size.width + 3.35, size.height - 30.15, size.width - 20.1, size.height - 20.1);
     path.lineTo(0, size.height);
     path.lineTo(0, 0);
     path.close();
@@ -388,8 +344,7 @@ class ButtonClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
 }
 
 class ButtonClipperMid extends CustomClipper<Path> {
@@ -400,10 +355,8 @@ class ButtonClipperMid extends CustomClipper<Path> {
     path.lineTo(0, 25);
     path.lineTo(size.width - 40, 5);
     path.quadraticBezierTo(size.width - 10, -5, size.width - 5, 20);
-    path.cubicTo(size.width, size.height * 0.4, size.width, size.height * 0.6,
-        size.width - 5, size.height - 20);
-    path.quadraticBezierTo(
-        size.width - 10, size.height + 5, size.width - 40, size.height - 5);
+    path.cubicTo(size.width, size.height * 0.4, size.width, size.height * 0.6, size.width - 5, size.height - 20);
+    path.quadraticBezierTo(size.width - 10, size.height + 5, size.width - 40, size.height - 5);
     path.lineTo(0, size.height - 25);
     path.lineTo(0, 0);
     path.close();
@@ -411,6 +364,5 @@ class ButtonClipperMid extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
 }

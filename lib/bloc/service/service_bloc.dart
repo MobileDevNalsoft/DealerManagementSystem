@@ -97,9 +97,15 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         if (value == 200) {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
+              
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         } else {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
+              
+          emit(state.copyWith(
+              inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         }
       },
     ).onError(

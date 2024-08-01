@@ -1,4 +1,6 @@
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -17,14 +19,14 @@ class DashboardView extends StatefulWidget {
   State<DashboardView> createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends State<DashboardView> {
+class _DashboardViewState extends State<DashboardView> with ConnectivityMixin{
   late ServiceBloc _serviceBloc;
   PageController pageController = PageController();
-
+  late bool _isConnected;
   @override
   void initState() {
     super.initState();
-
+   
     // initiating service bloc variable
     _serviceBloc = context.read<ServiceBloc>();
 
@@ -41,6 +43,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     // responsive UI
+    _isConnected = isConnected();
     Size size = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -96,7 +99,7 @@ class _DashboardViewState extends State<DashboardView> {
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
-                return JobCardPage();
+                return JobCardPage(isConnected:  _isConnected,);
               },
             )),
       ),
@@ -164,8 +167,8 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
 }
 
 class SliverHeader extends SliverPersistentHeaderDelegate {
-  SliverHeader();
-
+  bool? isConnected;
+  SliverHeader({this.isConnected});
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
 
@@ -196,6 +199,10 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
             style: const TextStyle(color: Colors.black),
             onTapOutside: (event) => focusNode.unfocus(),
             onChanged: (value) {
+              if(isConnected!){
+                DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                return;
+              }
               controller.text = value;
               context
                   .read<ServiceBloc>()
@@ -308,7 +315,8 @@ class TicketClipper extends CustomClipper<Path> {
 }
 
 class JobCardPage extends StatelessWidget {
-  JobCardPage({super.key});
+  bool isConnected;
+  JobCardPage({super.key,required this.isConnected});
 
   @override
   Widget build(BuildContext context) {
@@ -326,7 +334,7 @@ class JobCardPage extends StatelessWidget {
                 pinned: true,
               ),
               SliverPersistentHeader(
-                delegate: SliverHeader(),
+                delegate: SliverHeader(isConnected:isConnected ),
                 // Set this param so that it won't go off the screen when scrolling
                 pinned: false,
               ),

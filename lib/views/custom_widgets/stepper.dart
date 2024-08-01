@@ -1,5 +1,9 @@
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_parser.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/gate_pass.dart';
 import 'package:dms/views/inspection_out.dart';
 import 'package:dms/views/quality_check.dart';
@@ -26,7 +30,7 @@ class _StepperState extends State<Stepper> {
   }
 }
 
-class Step extends StatelessWidget {
+class Step extends StatefulWidget {
   Step(
       {super.key,
       required this.title,
@@ -48,10 +52,16 @@ class Step extends StatelessWidget {
   List<String> pendingStatusLines;
 
   @override
+  State<Step> createState() => _StepState();
+}
+
+class _StepState extends State<Step> with ConnectivityMixin{
+  @override
   Widget build(BuildContext context) {
+  Size size = MediaQuery.of(context).size;
     return LayoutBuilder(builder: (context, constraints) {
-      print('current $currentStep');
-      print('activeStep $activeStep');
+      print('current ${widget.currentStep}');
+      print('activeStep ${widget.activeStep}');
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +69,7 @@ class Step extends StatelessWidget {
           SizedBox(
               width: constraints.maxWidth * 0.4,
               child: Text(
-                title,
+                widget.title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12),
               )),
@@ -69,18 +79,14 @@ class Step extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                    left: constraints.minWidth * 0.095,
-                    top: constraints.minWidth *
-                        (currentStep == activeStep ? 0 : 0.01)),
+                padding: EdgeInsets.only(left: constraints.minWidth * 0.095, top: constraints.minWidth * (widget.currentStep == widget.activeStep ? 0 : 0.01)),
                 child: SizedBox(
-                  height: constraints.maxWidth *
-                      (currentStep == activeStep ? 0.2 : 0.15),
+                  height: constraints.maxWidth * (widget.currentStep == widget.activeStep ? 0.2 : 0.15),
                   width: constraints.maxWidth * 0.2,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      if (currentStep == activeStep)
+                      if (widget.currentStep == widget.activeStep)
                         Positioned(
                           top: -constraints.maxWidth * 0.15,
                           bottom: -constraints.maxWidth * 0.16,
@@ -91,41 +97,56 @@ class Step extends StatelessWidget {
                           ),
                         ),
                       InkWell(
-                        onTap: () {
-                          print('current $currentStep');
-                          print('activeStep $activeStep');
-                          if (currentStep == activeStep) {
-                            switch (activeStep) {
-                              case 2:
+                        onTap: () async {
+                          print('current ${widget.currentStep}');
+                          print('activeStep ${widget.activeStep}');
+                          if (widget.currentStep == widget.activeStep) {
+                            switch (widget.activeStep) {
+                              case 2: 
+                              if(!isConnected()){
+                                 DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                 return;
+                              }
+                                List<GeneralBodyPart> generalParts = await loadSvgImage(svgImage: 'assets/images/image.svg');
+                                List<GeneralBodyPart> rejectedParts = await loadSvgImage(svgImage: 'assets/images/image_reject.svg');
+                                List<GeneralBodyPart> acceptedParts = await loadSvgImage(svgImage: 'assets/images/image_accept.svg');
+                                List<GeneralBodyPart> pendingParts = await loadSvgImage(svgImage: 'assets/images/image_pending.svg');
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (_) => QualityCheck(
-                                            model: BodySelectorViewModel())));
+                                              model: BodySelectorViewModel(),
+                                              generalParts: generalParts,
+                                              rejectedParts: rejectedParts,
+                                              acceptedParts: acceptedParts,
+                                              pendingParts: pendingParts,
+                                              jobCardNo: widget.jobCardNo
+                                            )));
                               case 3:
-                                context.read<ServiceBloc>().add(
-                                    GetInspectionDetails(jobCardNo: jobCardNo));
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => InspectionOut()));
+                               if(!isConnected()){
+                                 DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                 return;
+                              }
+                                context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => InspectionOut()));
                               case 4:
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => GatePass()));
+                               if(!isConnected()){
+                                 DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                 return;
+                              }
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => GatePass()));
                             }
                           }
                         },
                         child: CircleAvatar(
-                          backgroundColor: currentStep < activeStep
+                          backgroundColor: widget.currentStep < widget.activeStep
                               ? Colors.green.shade300
-                              : currentStep == activeStep
+                              : widget.currentStep == widget.activeStep
                                   ? Colors.green.shade100
                                   : Colors.grey.shade300,
                           maxRadius: 25,
                           child: Image.asset(
-                            'assets/images/${icons[currentStep]}.png',
+                            'assets/images/${widget.icons[widget.currentStep]}.png',
                             fit: BoxFit.cover,
                             height: 30,
                             width: 30,
@@ -136,43 +157,40 @@ class Step extends StatelessWidget {
                   ),
                 ),
               ),
-              if (currentStep <= activeStep - 1 ||
-                  (activeStep == 0 && currentStep < 1))
+              if (widget.currentStep <= widget.activeStep - 1 || (widget.activeStep == 0 && widget.currentStep < 1))
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(
-                    statusLines[currentStep],
+                    widget.statusLines[widget.currentStep],
                     style: const TextStyle(fontSize: 12),
                   ),
                 ),
-              if (currentStep == activeStep &&
-                  currentStep < stepperLength &&
-                  activeStep != 0)
+              if (widget.currentStep == widget.activeStep && widget.currentStep < widget.stepperLength && widget.activeStep != 0)
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(
-                    pendingStatusLines[currentStep],
+                    widget.pendingStatusLines[widget.currentStep],
                     style: const TextStyle(fontSize: 12),
                   ),
                 )
             ],
           ),
-          if (currentStep < stepperLength - 1)
+          if (widget.currentStep < widget.stepperLength - 1)
             Padding(
               padding: EdgeInsets.only(left: constraints.maxWidth * 0.173),
               child: SizedBox(
                 height: constraints.maxWidth * 0.1,
                 child: VerticalDivider(
                   thickness: 2,
-                  color: currentStep < activeStep
+                  color: widget.currentStep < widget.activeStep
                       ? Colors.green.shade300
-                      : currentStep == activeStep
+                      : widget.currentStep == widget.activeStep
                           ? Colors.green.shade100
                           : Colors.grey.shade300,
                 ),
               ),
             ),
-          if (currentStep == stepperLength - 1) Gap(constraints.maxWidth * 0.1)
+          if (widget.currentStep == widget.stepperLength - 1) Gap(constraints.maxWidth * 0.1)
         ],
       );
     });

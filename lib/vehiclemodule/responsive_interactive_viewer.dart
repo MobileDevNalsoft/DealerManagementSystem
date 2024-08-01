@@ -129,6 +129,7 @@ class _CustomDetectorState extends State<CustomDetector>
                     bottom: 100,
                     left: 155,
                     child: ElevatedButton(
+
                         onPressed: () {
                           if (!Provider.of<BodySelectorViewModel>(context,
                                   listen: false)
@@ -141,18 +142,15 @@ class _CustomDetectorState extends State<CustomDetector>
                           //     .add(SubmitVehicleMediaEvent());
                         },
                         style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.white,
-                                                  minimumSize: isMobile
-                                                      ? const Size(80, 25)
-                                                      : const Size(80.0, 20.0),
-                                                  padding: EdgeInsets.zero,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5))),
+                                shadowColor: Colors.orange.shade200,
+                                
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6),),
+                                minimumSize: const Size(8, 24),
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white),
                         child: const Text(
                           'Save',
-                          style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         )),
                   ),
                 ],

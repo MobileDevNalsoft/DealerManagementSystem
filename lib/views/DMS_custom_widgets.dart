@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,10 +90,10 @@ class DMSCustomWidgets {
             width: size.width,
             color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            child: Text(
+            child: typeAheadController.text.isNotEmpty? Text(
               'no items found',
               style: TextStyle(fontSize: isMobile ? 13 : 14),
-            ),
+            ):null,
           ),
           onSelected: (suggestion) {
             FocusManager.instance.primaryFocus?.unfocus();
@@ -309,6 +310,7 @@ class DMSCustomWidgets {
       TextStyle? valueFontStyle,
       String? propertyFontFamily,
       String? valueFontFamily,
+      bool showColonsBetween = true,
       required List<String> propertyList,
       required List<String> valueList}) {
     return Row(
@@ -329,7 +331,7 @@ class DMSCustomWidgets {
                 .toList(),
           ),
           Gap(contentPadding??20),
-          Column(
+         if(showColonsBetween) Column(
             children: propertyList
                 .expand((element) => [
                       Text(
@@ -340,7 +342,7 @@ class DMSCustomWidgets {
                     ])
                 .toList(),
           ),
-          Gap(contentPadding??20),
+         if(showColonsBetween) Gap(contentPadding??20),
           Column(
             children: valueList
                 .expand((element) => [
@@ -426,6 +428,21 @@ class DMSCustomWidgets {
       ),
     );
   }
+static Future<Widget> NetworkCheckFlushbar(Size size,BuildContext context) async{
+      bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+  return  await  Flushbar(
+                           flushbarPosition: FlushbarPosition.TOP,
+                          icon: Icon(Icons.signal_wifi_statusbar_connected_no_internet_4_rounded,color: Colors.white,),
+                          message: "Please check the internet connectivity",
+                            duration: const Duration(seconds: 1),
+                          borderRadius: BorderRadius.circular(12),
+                          margin: EdgeInsets.only(
+                              top: size.height * 0.01,
+                              left: isMobile ? 10 : size.width * 0.8,
+                              right: size.width * 0.03),
+                        ).show(context);
+}
+
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {

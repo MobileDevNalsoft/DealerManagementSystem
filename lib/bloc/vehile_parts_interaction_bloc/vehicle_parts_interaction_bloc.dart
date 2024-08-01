@@ -99,7 +99,15 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
 
   void _onFetchVehicleMedia(FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState> emit) async {
     emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.loading));
-    Map<String, dynamic> imageMedia = jsonDecode(await _repo.getImage(event.jobCardNo));
+    late Map<String, dynamic> imageMedia;
+    try{
+      imageMedia = jsonDecode(await _repo.getImage(event.jobCardNo));
+    }
+    catch(e){
+    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure));
+    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
+    return;
+    }
     for (var entry in imageMedia.entries)  {
         List<XFile> images = [];
         if (entry.value != {} && entry.value["images"] != null && entry.value["images"] != []) {
@@ -116,8 +124,6 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
         }
         state.mapMedia.putIfAbsent(entry.key, () => VehiclePartMedia(name: entry.key, images: images, comments: entry.value["comments"], isUploaded: false,isAccepted: entry.value["isAccepted"]!=null?entry.value["isAccepted"]=="true"?true:false:null ,reasonForRejection: entry.value["rejectedReason"]));
       }
-    
-    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
     emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
   }
 
@@ -138,8 +144,9 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
       });
   }
     await _repo.addQualityStatus(qualityCheckJson: {"id":event.jobCardNo,"data":qualityCheckJson}).then((onValue){
+      print("after api call");
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
-      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
+      // emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
     }).onError((e,s){
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure));
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
