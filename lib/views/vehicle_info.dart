@@ -628,7 +628,6 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                       size, context);
                                   return;
                                 }
-                                // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
                                 context.read<VehicleBloc>().add(
                                     FetchVehicleCustomer(
                                         registrationNo:
@@ -638,7 +637,6 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                         query: 'vehicle_history',
                                         vehicleRegNo:
                                             vehicleRegNoController.text));
-                                // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.success));
                               },
                               cursorColor: Colors.black,
                               decoration: const InputDecoration(
@@ -690,9 +688,12 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                             );
                           default:
                             if (vehicleRegNoController.text.isEmpty) {
-                              return Lottie.asset(
-                                "assets/lottie/car_search.json",
-                                width: size.width * 0.6,
+                              return Transform(
+                                transform: Matrix4.translationValues(0, size.height*0.2, 0),
+                                child: Lottie.asset(
+                                  "assets/lottie/car_search.json",
+                                  width: size.width * 0.5,
+                                ),
                               );
                             }
                             return Padding(

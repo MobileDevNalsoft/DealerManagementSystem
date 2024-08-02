@@ -1,7 +1,6 @@
 part of 'multi_bloc.dart';
 
 enum MultiStateStatus { initial, loading, success, failure }
-
 class MultiBlocState {
   MultiBlocState(
       {this.date,
@@ -10,7 +9,7 @@ class MultiBlocState {
       this.salesPersons,
       this.selectedRadioOption,
       this.status,
-      this.reverseClippedWidgets=false
+      this.reverseClippedWidgets=false,
       });
 
   DateTime? date;
@@ -45,7 +44,8 @@ class MultiBlocState {
           15: false,
           16: false,
           17: false
-        });
+        },
+        );
   }
 
   MultiBlocState copyWith(
@@ -64,7 +64,8 @@ class MultiBlocState {
         checkBoxStates: checkBoxStates ?? this.checkBoxStates,
         salesPersons: salesPersons ?? this.salesPersons,
         status: status ?? this.status,
-        reverseClippedWidgets: reverseClippedWidgets??this.reverseClippedWidgets
+        reverseClippedWidgets: reverseClippedWidgets??this.reverseClippedWidgets,
+
         );
   }
 }

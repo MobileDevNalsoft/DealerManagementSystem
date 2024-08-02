@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
+import 'package:dms/views/service_booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -377,4 +378,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       ModifyGatePassStatus event, Emitter<ServiceState> emit) {
     emit(state.copyWith(gatePassStatus: event.status));
   }
+  
+
 }
+
+

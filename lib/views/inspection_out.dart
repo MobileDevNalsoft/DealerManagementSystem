@@ -1,9 +1,6 @@
-import 'package:another_flushbar/flushbar.dart';
-import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
-import 'package:dms/views/quality_check.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +17,7 @@ class InspectionOut extends StatefulWidget {
   State<InspectionOut> createState() => _InspectionOutState();
 }
 
-class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
+class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin{
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
   final SliderButtonController _sliderButtonController =
@@ -76,7 +73,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
             ),
           ),
           title: Container(
-              alignment: Alignment.center,
               height: size.height * 0.05,
               width: size.width * 0.45,
               decoration: BoxDecoration(
@@ -90,13 +86,15 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                         color: Colors.orange.shade200,
                         offset: const Offset(0, 0))
                   ]),
-              child: const Text(
-                textAlign: TextAlign.center,
-                'Inspection Out',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 16),
+              child: const Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'Inspection Out',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 16),
+                ),
               )),
           centerTitle: true,
         ),
@@ -115,15 +113,12 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
               listener: (context, state) {
             if (state.inspectionJsonUploadStatus ==
                 InspectionJsonUploadStatus.success) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          QualityCheck(model: BodySelectorViewModel())));
+              Navigator.pop(context);
+              Navigator.pop(context);
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {
-              case GetInspectionStatus.loading:
+              case GetInspectionStatus.loading :
                 return Transform(
                   transform: Matrix4.translationValues(0, -40, 0),
                   child: Center(
@@ -216,7 +211,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                               .length -
                                           1,
                                       itemBuilder: (context, index) {
-                                        state.sliderPosition = state
+                                        
+                                        _sliderButtonController.position =
+                                           state
                                                     .inspectionDetails![
                                                         buttonsText[pageIndex]]
                                                     .last['status'] ==
@@ -230,8 +227,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                     "Rejected"
                                                 ? Position.left
                                                 : Position.middle;
-                                        _sliderButtonController.position =
-                                            state.sliderPosition;
                                         return Column(
                                           children: [
                                             Gap(size.height * 0.01),
@@ -363,9 +358,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                   InspectionJsonUploadStatus.loading)
                                 Center(
                                   child: Lottie.asset(
-                                      'assets/lottie/car_loading.json',
-                                      height: size.height * 0.5,
-                                      width: size.width * 0.6),
+                                    'assets/lottie/car_loading.json',
+                                    height: size.height * 0.5, width: size.width * 0.6
+                                  ),
                                 ),
                             ],
                           ),
@@ -445,10 +440,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              if (!isConnected()) {
-                                DMSCustomWidgets.NetworkCheckFlushbar(
-                                    size, context);
-                                return;
+                               if(!isConnected()){
+                                 DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                 return;
                               }
                               state.json = state.inspectionDetails!;
                               _serviceBloc.add(InspectionJsonAdded(
@@ -482,7 +476,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
       required ServiceState state,
       required String page,
       required TextEditingController controller}) {
-    controller.text = state.inspectionDetails![page].last['reason'] ?? '';
+    controller.text = state.inspectionDetails![page].last['reason'] ?? ' ';
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -566,21 +560,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                             onPressed: () {
                               state.inspectionDetails![page].last['reason'] =
                                   controller.text;
-                              if (controller.text.isEmpty) {
-                                Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
-                                  backgroundColor: Colors.red,
-                                  message: "Reason cannot be empty",
-                                  duration: const Duration(seconds: 1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  margin: EdgeInsets.only(
-                                      top: size.height * 0.01,
-                                      left: 10,
-                                      right: size.width * 0.03),
-                                ).show(context);
-                              } else {
-                                Navigator.pop(context, false);
-                              }
+                              Navigator.pop(context, false);
                             },
                             style: TextButton.styleFrom(
                                 fixedSize:

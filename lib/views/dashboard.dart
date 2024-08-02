@@ -199,10 +199,10 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
             style: const TextStyle(color: Colors.black),
             onTapOutside: (event) => focusNode.unfocus(),
             onChanged: (value) {
-              if(isConnected!){
-                DMSCustomWidgets.NetworkCheckFlushbar(size, context);
-                return;
-              }
+              // if(isConnected!){
+              //   DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+              //   return;
+              // }
               controller.text = value;
               context
                   .read<ServiceBloc>()

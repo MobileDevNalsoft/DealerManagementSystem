@@ -32,7 +32,7 @@ class QualityCheck extends StatefulWidget {
       this.acceptedParts,
       this.rejectedParts,
       this.pendingParts,
-      this.jobCardNo = "JC-LOC-49"});
+      this.jobCardNo = "JC-LOC-12"});
   @override
   State<QualityCheck> createState() => _QualityCheckState();
 }
@@ -321,7 +321,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                     Provider.of<BodySelectorViewModel>(
                                                             context,
                                                             listen: true)
-                                                        .selectedGeneralBodyPart
+                                                        .selectedGeneralBodyPart.replaceAll('_', ' ')
                                                         .toUpperCase(),
                                                     style: TextStyle(
                                                         fontWeight:
@@ -606,12 +606,13 @@ class _QualityCheckState extends State<QualityCheck>
                                                                   context:
                                                                       context));
                                                         },
-
+                                                            cursorColor:  Colors.white,
                                                         decoration: InputDecoration(
                                                             hintStyle:
                                                                 TextStyle(
                                                                     fontSize:
-                                                                        14),
+                                                                        14,
+                                                                        color: Colors.white60),
                                                             fillColor:
                                                                 Color.fromRGBO(
                                                                     38,
@@ -625,7 +626,14 @@ class _QualityCheckState extends State<QualityCheck>
                                                                     top: 14),
                                                             hintText:
                                                                 "Reasons for rejection",
+                                                           focusedBorder:  OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(
+                    color: Color.fromARGB(255, 145, 95, 22),
+                  ),
+                ),
                                                             border: OutlineInputBorder(
+                                                                
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(

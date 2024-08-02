@@ -51,3 +51,4 @@ class MultiBlocStatusChange extends MultiBlocEvent {
   MultiStateStatus status;
   MultiBlocStatusChange({required this.status});
 }
+
