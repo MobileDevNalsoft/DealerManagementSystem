@@ -1,3 +1,7 @@
+import 'package:another_flushbar/flushbar.dart';
+import 'package:customs/src.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/dashboard.dart';
@@ -7,6 +11,7 @@ import 'package:dms/views/service_history.dart';
 import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import 'service_booking.dart';
 
@@ -17,10 +22,12 @@ class DribbleUI extends StatefulWidget {
   State<DribbleUI> createState() => _DribbleUIState();
 }
 
-class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
+class _DribbleUIState extends State<DribbleUI>
+    with TickerProviderStateMixin, ConnectivityMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     return Scaffold(
       body: Container(
@@ -46,8 +53,12 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                 Gap(size.height * 0.3),
                 InkWell(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => ServiceMain()));
+                    if (isConnected()) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => ServiceMain()));
+                    } else {
+                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                    }
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -100,10 +111,14 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const AddVehicleView()));
+                      if (isConnected()) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const AddVehicleView()));
+                      } else {
+                        DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                      }
                     },
                     child: ClippedButton(
                       size: Size(size.width * 0.2, size.height * 0.2),
@@ -146,10 +161,14 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                     flipX: true,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const MyJobcards()));
+                        if (isConnected()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const MyJobcards()));
+                        } else {
+                          DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                        }
                       },
                       onDoubleTap: () {
                         Navigator.push(
@@ -208,10 +227,15 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const VehicleInfo()));
+                      if (isConnected()) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const VehicleInfo(),
+                            ));
+                      } else {
+                        DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                      }
                     },
                     child: ClippedButton(
                       size: Size(size.width * 0.23, size.height * 0.2),
@@ -275,10 +299,15 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                       flipY: true,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const DashboardView()));
+                          if (isConnected()) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const DashboardView()));
+                          } else {
+                            DMSCustomWidgets.NetworkCheckFlushbar(
+                                size, context);
+                          }
                         },
                         child: ClippedButton(
                           size: Size(size.width * 0.2, size.height * 0.2),
@@ -326,11 +355,16 @@ class _DribbleUIState extends State<DribbleUI> with TickerProviderStateMixin {
                         flipX: true,
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ServiceHistoryView()));
+                            if (isConnected()) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const ServiceHistoryView()));
+                            } else {
+                              DMSCustomWidgets.NetworkCheckFlushbar(
+                                  size, context);
+                            }
                           },
                           child: ClippedButton(
                               size: Size(size.width * 0.2, size.height * 0.2),

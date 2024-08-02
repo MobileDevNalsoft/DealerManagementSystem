@@ -1,5 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
 import 'package:dms/views/quality_check.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -18,7 +20,7 @@ class InspectionOut extends StatefulWidget {
   State<InspectionOut> createState() => _InspectionOutState();
 }
 
-class _InspectionOutState extends State<InspectionOut> {
+class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
   final SliderButtonController _sliderButtonController =
@@ -359,13 +361,11 @@ class _InspectionOutState extends State<InspectionOut> {
                               ),
                               if (state.inspectionJsonUploadStatus ==
                                   InspectionJsonUploadStatus.loading)
-                                Container(
-                                  height: size.height,
-                                  width: size.width,
-                                  color: Colors.black54,
+                                Center(
                                   child: Lottie.asset(
-                                    'assets/lottie/car_loading.json',
-                                  ),
+                                      'assets/lottie/car_loading.json',
+                                      height: size.height * 0.5,
+                                      width: size.width * 0.6),
                                 ),
                             ],
                           ),
@@ -445,6 +445,11 @@ class _InspectionOutState extends State<InspectionOut> {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
+                              if (!isConnected()) {
+                                DMSCustomWidgets.NetworkCheckFlushbar(
+                                    size, context);
+                                return;
+                              }
                               state.json = state.inspectionDetails!;
                               _serviceBloc.add(InspectionJsonAdded(
                                   jobCardNo: state.jobCardNo!,

@@ -5,7 +5,9 @@ import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,8 +26,8 @@ class CommentsView extends StatefulWidget {
   State<CommentsView> createState() => _CommentsViewState();
 }
 
-class _CommentsViewState extends State<CommentsView>
-    with SingleTickerProviderStateMixin {
+class _CommentsViewState extends State<CommentsView> 
+    with SingleTickerProviderStateMixin, ConnectivityMixin {
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
@@ -240,6 +242,10 @@ class _CommentsViewState extends State<CommentsView>
                             radius: size.width * 0.06,
                             borderRadius: BorderRadius.circular(20),
                             onTap: () {
+                               if(!isConnected()){
+                                 DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                 return;
+                              }
                               commentsFocus.unfocus();
                               if (commentsController.text.trim().isEmpty) {
                                 commentsFocus.requestFocus();

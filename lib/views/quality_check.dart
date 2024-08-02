@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
+import 'package:dms/views/inspection_out.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -21,19 +24,21 @@ class QualityCheck extends StatefulWidget {
   final List<GeneralBodyPart>? acceptedParts;
   final List<GeneralBodyPart>? rejectedParts;
   final List<GeneralBodyPart>? pendingParts;
+  final String jobCardNo;
   QualityCheck(
       {super.key,
       required this.model,
       this.generalParts,
       this.acceptedParts,
       this.rejectedParts,
-      this.pendingParts});
+      this.pendingParts,
+      this.jobCardNo = "JC-LOC-49"});
   @override
   State<QualityCheck> createState() => _QualityCheckState();
 }
 
 class _QualityCheckState extends State<QualityCheck>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ConnectivityMixin {
   TextEditingController rejectionController = TextEditingController();
   FocusNode rejectionFocus = FocusNode();
   late DraggableScrollableController draggableScrollableController;
@@ -105,6 +110,11 @@ class _QualityCheckState extends State<QualityCheck>
                         // width: size.width*0.2,
                         child: ElevatedButton(
                             onPressed: () {
+                              if (!isConnected()) {
+                                DMSCustomWidgets.NetworkCheckFlushbar(
+                                    size, context);
+                                return;
+                              }
                               String message = "";
                               for (var entry in context
                                   .read<VehiclePartsInteractionBloc>()
@@ -139,13 +149,15 @@ class _QualityCheckState extends State<QualityCheck>
                               }
                               context.read<VehiclePartsInteractionBloc>().add(
                                   SubmitQualityCheckStatusEvent(
-                                      jobCardNo: "JC-LOC-12"));
+                                      jobCardNo: widget.jobCardNo));
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 145, 19, 19),
+                                shadowColor: Colors.orange.shade200,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18))),
+                                    borderRadius: BorderRadius.circular(4)),
+                                minimumSize: const Size(10, 36),
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white),
                             child: const Text(
                               'Save',
                               style: TextStyle(color: Colors.white),
@@ -548,9 +560,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                 BlocConsumer<
                                                     VehiclePartsInteractionBloc,
                                                     VehiclePartsInteractionBlocState>(
-                                                  listener: (context, state) {
-                                                    print("listening");
-                                                  },
+                                                  listener: (context, state) {},
                                                   builder: (context, state) {
                                                     if (state
                                                             .mapMedia[Provider.of<
@@ -660,6 +670,34 @@ class _QualityCheckState extends State<QualityCheck>
                         },
                       ),
                     ),
+                  BlocListener<VehiclePartsInteractionBloc,
+                      VehiclePartsInteractionBlocState>(
+                    listener: (context, state) {
+                      switch (state.status) {
+                        case VehiclePartsInteractionStatus.success:
+                          context.read<ServiceBloc>().add(GetInspectionDetails(
+                              jobCardNo: widget.jobCardNo));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => InspectionOut()));
+                        case VehiclePartsInteractionStatus.failure:
+                          Flushbar(
+                                  flushbarPosition: FlushbarPosition.TOP,
+                                  backgroundColor: Colors.red,
+                                  message: "Some error has occured",
+                                  duration: const Duration(seconds: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                  margin: EdgeInsets.only(
+                                      top: 24,
+                                      left: isMobile ? 10 : size.width * 0.8,
+                                      right: 10))
+                              .show(context);
+                        default:
+                      }
+                    },
+                    child: SizedBox(),
+                  )
                 ],
               ),
               if (context.watch<VehiclePartsInteractionBloc>().state.status ==

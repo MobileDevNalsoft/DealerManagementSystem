@@ -1,11 +1,12 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/vehicle.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
+import 'package:dms/views/dashboard.dart';
 import 'package:dms/views/jobcard_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:ticket_widget/ticket_widget.dart';
 
 class VehicleInfo extends StatefulWidget {
   const VehicleInfo({super.key});
@@ -23,8 +23,9 @@ class VehicleInfo extends StatefulWidget {
   State<VehicleInfo> createState() => _VehicleInfoState();
 }
 
-class _VehicleInfoState extends State<VehicleInfo> {
+class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
   TextEditingController vehicleRegNoController = TextEditingController();
+  FocusNode focusNode = FocusNode();
   late List<Widget> clipperWidgets;
   late Size size;
   @override
@@ -41,50 +42,85 @@ class _VehicleInfoState extends State<VehicleInfo> {
             flipX: true,
             child: ClippedButton(
               shadow: Shadow(
-                  offset: const Offset(0, 0),
+                  offset: Offset(0, 0),
                   color: context.watch<MultiBloc>().state.reverseClippedWidgets!
                       ? Colors.black
                       : Colors.transparent),
               clipper: VehicleInfoClipper(
-                  sizeConstraints: Size(size.width * 0.95, size.height * 0.6)),
-              size: Size.copy(Size(size.width * 0.95, size.height * 0.6)),
+                  sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
+              size: Size.copy(Size(size.width * 0.95, size.height * 0.5)),
               child: Transform.flip(
                 flipX: true,
                 child: Container(
                     width: size.width * 0.95,
                     decoration: BoxDecoration(
+                        // gradient: context
+                        //         .watch<MultiBloc>()
+                        //         .state
+                        //         .reverseClippedWidgets!
+                        //     ? LinearGradient(
+                        //         colors: [
+                        //             Color.fromARGB(135, 200, 198, 198),
+                        //             Colors.white,
+                        //             Color.fromRGBO(138, 136, 136, 0.529),
+                        //           ],
+                        //         begin: Alignment.topCenter,
+                        //         end: Alignment.bottomCenter)
+                        //     : null,
                         color: context
                                 .watch<MultiBloc>()
                                 .state
                                 .reverseClippedWidgets!
-                            ? const Color.fromARGB(136, 109, 108, 108)
+                            ? Color.fromARGB(136, 109, 108, 108)
                             : null),
                     child: Column(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
                               top: size.height * 0.05,
-                              right: size.width * 0.09),
-                          child: const Row(
+                              right: size.width * 0.07),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Spacer(),
-                              Icon(
-                                Icons.history,
-                                color: Colors.white,
-                              ),
+                              Icon(Icons.history,
+                                  color: context
+                                          .watch<MultiBloc>()
+                                          .state
+                                          .reverseClippedWidgets!
+                                      ? Colors.white
+                                      : Colors.black),
                               Gap(4),
                               Text(
                                 "Service History",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
-                                    color: Colors.white),
+                                    color: context
+                                            .watch<MultiBloc>()
+                                            .state
+                                            .reverseClippedWidgets!
+                                        ? Colors.white
+                                        : Colors.black),
                               ),
                             ],
                           ),
                         ),
-                        Gap(size.height * 0.04),
+                        if (context
+                            .watch<MultiBloc>()
+                            .state
+                            .reverseClippedWidgets!)
+                          Padding(
+                            padding: EdgeInsets.only(left: size.width * 0.45),
+                            child: SizedBox(
+                              width: size.width * 0.2,
+                              child: Divider(
+                                color: Colors.orange.shade200,
+                              ),
+                            ),
+                          ),
+                        Gap(size.height * 0.025),
                         SizedBox(
                           width: size.width * 0.9,
                           height: size.height * 0.3,
@@ -106,16 +142,20 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                 JobCardStatusUpdate.loading,
                                         child: SizedBox(
                                           width: size.width * 0.9,
-                                          height: size.height * 0.15,
+                                          height: size.height * 0.14,
                                           child: ClipPath(
                                             clipper: TicketClipper(),
                                             clipBehavior: Clip.antiAlias,
                                             child: Card(
+                                              elevation: 5,
+                                              surfaceTintColor:
+                                                  Colors.orange.shade200,
+                                              shadowColor:
+                                                  Colors.orange.shade200,
                                               margin: EdgeInsets.symmetric(
                                                 vertical: size.height * 0.006,
                                               ),
                                               color: Colors.white,
-                                              elevation: 3,
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -126,6 +166,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
+                                                      Gap(size.width * 0.03),
                                                       Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -202,7 +243,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                             children: [
                                                               Gap(size.width *
                                                                   0.055),
-                                                              const Icon(Icons
+                                                              Icon(Icons
                                                                   .calendar_month_outlined),
                                                               Gap(size.width *
                                                                   0.02),
@@ -256,7 +297,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                             children: [
                                                               Gap(size.width *
                                                                   0.058),
-                                                              const Icon(Icons
+                                                              Icon(Icons
                                                                   .mark_unread_chat_alt_outlined),
                                                               // Image.asset('assets/images/status.png', scale: size.width * 0.058),
                                                               Gap(size.width *
@@ -290,7 +331,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                             children: [
                                                               Gap(size.width *
                                                                   0.058),
-                                                              const Icon(Icons
+                                                              Icon(Icons
                                                                   .location_on_outlined),
                                                               Gap(size.width *
                                                                   0.02),
@@ -318,64 +359,6 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                       )
                                                     ],
                                                   ),
-                                                  // Container(
-                                                  //   height: size.height * 0.05,
-                                                  //   width: size.width * 0.94,
-                                                  //   decoration: BoxDecoration(
-                                                  //       color: Colors.orange.shade200,
-                                                  //       borderRadius:
-                                                  //           const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-                                                  //   child: Row(
-                                                  //     mainAxisAlignment: MainAxisAlignment.center,
-                                                  //     children: [
-                                                  //       Row(
-                                                  //         children: [
-                                                  //           Image.asset(
-                                                  //             'assets/images/customer.png',
-                                                  //             scale: size.width * 0.06,
-                                                  //           ),
-                                                  //           Gap(size.width * 0.02),
-                                                  //           SizedBox(
-                                                  //             width: size.width * 0.36,
-                                                  //             child: SingleChildScrollView(
-                                                  //               scrollDirection: Axis.horizontal,
-                                                  //               child: Text(
-                                                  //                 'Customer Name',
-                                                  //                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                                                  //               ),
-                                                  //             ),
-                                                  //           ),
-                                                  //         ],
-                                                  //       ),
-                                                  //       Gap(size.width * 0.1),
-                                                  //       Row(
-                                                  //         children: [
-                                                  //           Image.asset(
-                                                  //             'assets/images/call.png',
-                                                  //             scale: size.width * 0.06,
-                                                  //           ),
-                                                  //           Gap(size.width * 0.02),
-                                                  //           SizedBox(
-                                                  //             width: size.width * 0.25,
-                                                  //             child: SingleChildScrollView(
-                                                  //               scrollDirection: Axis.horizontal,
-                                                  //               child: Text(
-                                                  //                 // state.getJobCardStatus ==
-                                                  //                 //         GetJobCardStatus.success
-                                                  //                 //     ? state.jobCards![index]
-                                                  //                 //             .customerContact ??
-                                                  //                 // '-'
-                                                  //                 // :
-                                                  //                 'Contact Number',
-                                                  //                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                                                  //               ),
-                                                  //             ),
-                                                  //           ),
-                                                  //         ],
-                                                  //       )
-                                                  //     ],
-                                                  //   ),
-                                                  // )
                                                 ],
                                               ),
                                             ),
@@ -418,13 +401,13 @@ class _VehicleInfoState extends State<VehicleInfo> {
         children: [
           ClippedButton(
             shadow: Shadow(
-                offset: const Offset(0, 0),
+                offset: Offset(0, 0),
                 color: !context.watch<MultiBloc>().state.reverseClippedWidgets!
                     ? Colors.black
                     : Colors.transparent),
             clipper: VehicleInfoClipper(
-                sizeConstraints: Size(size.width * 0.95, size.height * 0.6)),
-            size: Size.copy(Size(size.width * 0.95, size.height * 0.6)),
+                sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
+            size: Size.copy(Size(size.width * 0.95, size.height * 0.5)),
             child: Container(
                 decoration: BoxDecoration(
                     color:
@@ -439,14 +422,14 @@ class _VehicleInfoState extends State<VehicleInfo> {
                             top: size.height * 0.05, right: size.width * 0.45),
                         child: Row(
                           children: [
-                            const Gap(16),
+                            Gap(24),
                             Image.asset(
                               'assets/images/registration_no.png',
                               scale: size.width * 0.055,
                               color: Colors.black,
                             ),
-                            const Gap(4),
-                            const Text(
+                            Gap(6),
+                            Text(
                               "Vehicle Details",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18),
@@ -456,6 +439,19 @@ class _VehicleInfoState extends State<VehicleInfo> {
                         // ),
                       ),
                     ),
+                    if (!context
+                        .watch<MultiBloc>()
+                        .state
+                        .reverseClippedWidgets!)
+                      Padding(
+                        padding: EdgeInsets.only(right: size.width * 0.45),
+                        child: SizedBox(
+                          width: size.width * 0.2,
+                          child: Divider(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
                     Padding(
                       padding: EdgeInsets.only(
                           top: size.height * 0.08, left: size.width * 0.1),
@@ -472,10 +468,11 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                 context: context,
                                 contentPadding: size.width * 0.08,
                                 spaceBetweenFields: size.width * 0.03,
-                                propertyFontStyle: const TextStyle(
-                                    fontWeight: FontWeight.w800, fontSize: 16),
-                                valueFontStyle: const TextStyle(
-                                    fontWeight: FontWeight.w800, fontSize: 16),
+                                propertyFontStyle: TextStyle(
+                                    fontWeight: FontWeight.w800, fontSize: 18),
+                                valueFontStyle: TextStyle(
+                                    fontWeight: FontWeight.w400, fontSize: 18),
+                                showColonsBetween: false,
                                 propertyList: [
                                   "Vehicle Reg. no.",
                                   "Chassis no.",
@@ -577,13 +574,15 @@ class _VehicleInfoState extends State<VehicleInfo> {
                               color: Colors.orange.shade200,
                               offset: const Offset(0, 0))
                         ]),
-                    child: const Text(
-                      textAlign: TextAlign.center,
-                      'Vehicle Info',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          fontSize: 16),
+                    child: Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        'Vehicle Info',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 16),
+                      ),
                     )),
                 centerTitle: true,
               ),
@@ -599,34 +598,36 @@ class _VehicleInfoState extends State<VehicleInfo> {
                 ),
                 child: Column(
                   children: [
-                    const Gap(8),
-                    Container(
-                      width: size.width * 0.85,
-                      height: size.height * 0.05,
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(14)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2.2),
-                        child: Container(
-                            width: size.width * 0.6,
-                            height: size.height * 0.2,
+                    Gap(8),
+                    InkWell(
+                      onTap: () => focusNode.requestFocus(),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
                             alignment: Alignment.center,
+                            margin: EdgeInsets.only(left: size.width * 0.03),
+                            padding: EdgeInsets.only(top: size.height * 0.033),
+                            height: size.height * 0.06,
+                            width: size.width * 0.8,
+                            decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)),
+                                color: Colors.white60),
                             child: TextFormField(
                               controller: vehicleRegNoController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: const InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.search_rounded,
-                                    color: Colors.white,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.zero,
-                                  hintText: "Vehicle Reg. no....",
-                                  hintStyle: TextStyle(color: Colors.white70)),
+                              focusNode: focusNode,
+                              style: const TextStyle(color: Colors.black),
+                              onTapOutside: (event) => focusNode.unfocus(),
                               onChanged: (value) {
                                 vehicleRegNoController.text =
                                     vehicleRegNoController.text.toUpperCase();
+                                if (!isConnected()) {
+                                  DMSCustomWidgets.NetworkCheckFlushbar(
+                                      size, context);
+                                  return;
+                                }
                                 // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
                                 context.read<VehicleBloc>().add(
                                     FetchVehicleCustomer(
@@ -639,7 +640,33 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                             vehicleRegNoController.text));
                                 // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.success));
                               },
-                            )),
+                              cursorColor: Colors.black,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 16),
+                                hintStyle: TextStyle(
+                                    color: Colors.black38, fontSize: 14),
+                                hintText: 'Vehicle Registration Number',
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: size.width * 0.03),
+                              height: size.height * 0.06,
+                              decoration: const BoxDecoration(
+                                  color: Colors.black38,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      bottomRight: Radius.circular(10))),
+                              child: const Icon(
+                                Icons.search_rounded,
+                                color: Colors.white60,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     BlocConsumer<VehicleBloc, VehicleState>(
@@ -662,6 +689,12 @@ class _VehicleInfoState extends State<VehicleInfo> {
                               width: size.width * 0.6,
                             );
                           default:
+                            if (vehicleRegNoController.text.isEmpty) {
+                              return Lottie.asset(
+                                "assets/lottie/car_search.json",
+                                width: size.width * 0.6,
+                              );
+                            }
                             return Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Column(
@@ -670,7 +703,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                     Icons.car_crash_rounded,
                                     size: size.width * 0.11,
                                   ),
-                                  const Text(
+                                  Text(
                                     "Vehicle not found",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
@@ -699,7 +732,7 @@ class VehicleInfoClipper extends CustomClipper<Path> {
     // TODO: implement getClip
     print(size.height);
     double x1 = 0;
-    double y1 = 20;
+    double y1 = 30;
     double x = sizeConstraints.width;
     double y = sizeConstraints.height;
 
@@ -707,22 +740,22 @@ class VehicleInfoClipper extends CustomClipper<Path> {
     path.moveTo(x1, y1);
     path.lineTo(x1, y - 20);
     path.arcToPoint(Offset(x1 + 20, y),
-        radius: const Radius.circular(20), clockwise: false);
+        radius: Radius.circular(20), clockwise: false);
     path.lineTo(x - 20, y);
     path.arcToPoint(Offset(x, y - 20),
-        radius: const Radius.circular(20), clockwise: false);
+        radius: Radius.circular(20), clockwise: false);
     path.lineTo(x, y1 + 80);
     path.arcToPoint(Offset(x - 20, y1 + 60),
-        radius: const Radius.circular(20), clockwise: false);
-    path.lineTo(x - 150, y1 + 60);
-    path.arcToPoint(Offset(x - 170, y1 + 40),
-        radius: const Radius.circular(20), clockwise: true);
-    path.lineTo(x - 170, y1 + 20);
-    path.arcToPoint(Offset(x - 190, y1),
-        radius: const Radius.circular(20), clockwise: false);
+        radius: Radius.circular(20), clockwise: false);
+    path.lineTo(x - (size.width * 0.45), y1 + 60);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40),
+        radius: Radius.circular(20), clockwise: true);
+    path.lineTo(x - (size.width * 0.45 + 20), y1 + 20);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1),
+        radius: Radius.circular(20), clockwise: false);
     path.lineTo(x1 + 20, y1);
     path.arcToPoint(Offset(x1, y1 + 20),
-        radius: const Radius.circular(20), clockwise: false);
+        radius: Radius.circular(20), clockwise: false);
     path.close();
     return path;
   }

@@ -1,6 +1,8 @@
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +20,8 @@ class InspectionView extends StatefulWidget {
   State<InspectionView> createState() => _InspectionViewState();
 }
 
-class _InspectionViewState extends State<InspectionView> {
+class _InspectionViewState extends State<InspectionView>
+    with ConnectivityMixin {
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
 
@@ -66,7 +69,8 @@ class _InspectionViewState extends State<InspectionView> {
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.popUntil(
+                        context, (route) => route.settings.name == '/');
                   },
                   icon: const Icon(Icons.arrow_back_rounded,
                       color: Colors.white)),
@@ -248,6 +252,12 @@ class _InspectionViewState extends State<InspectionView> {
                                                   2)
                                         GestureDetector(
                                           onTap: () async {
+                                            if (!isConnected()) {
+                                              DMSCustomWidgets
+                                                  .NetworkCheckFlushbar(
+                                                      size, context);
+                                              return;
+                                            }
                                             context.read<ServiceBloc>().add(
                                                 InspectionJsonAdded(
                                                     jobCardNo: _serviceBloc
