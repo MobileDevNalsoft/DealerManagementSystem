@@ -113,8 +113,6 @@ class JobCardDetails extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   stops: [0.1, 0.5, 1])),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 margin: EdgeInsets.only(top: size.height * 0.04),
@@ -164,8 +162,6 @@ class JobCardDetails extends StatelessWidget {
                               spreadRadius: 10)
                         ]),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(

@@ -49,11 +49,11 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     _rightPosition = widget.width * 1.12;
 
     if (_sliderButtonController.position == Position.middle) {
-      _sliderButtonController.currentPosition = _startPosition;
+      _sliderButtonController.setCurrentPosition = _startPosition;
     } else if (_sliderButtonController.position == Position.right) {
-      _sliderButtonController.currentPosition = _rightPosition;
+      _sliderButtonController.setCurrentPosition = _rightPosition;
     } else if (_sliderButtonController.position == Position.left) {
-      _sliderButtonController.currentPosition = _leftPosition;
+      _sliderButtonController.setCurrentPosition = _leftPosition;
     }
   }
 
@@ -63,16 +63,16 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      _sliderButtonController.currentPosition = details.localPosition.dx;
+      _sliderButtonController.setCurrentPosition = details.localPosition.dx;
       if (_sliderButtonController.currentPosition >= _rightPosition * 0.9) {
-        _sliderButtonController.position = Position.right;
-        _sliderButtonController.currentPosition = _rightPosition;
+        _sliderButtonController.setPosition = Position.right;
+        _sliderButtonController.setCurrentPosition = _rightPosition;
       } else if (_sliderButtonController.currentPosition <=
           _leftPosition * 1.3) {
-        _sliderButtonController.position = Position.left;
-        _sliderButtonController.currentPosition = _leftPosition;
+        _sliderButtonController.setPosition = Position.left;
+        _sliderButtonController.setCurrentPosition = _leftPosition;
       } else {
-        _sliderButtonController.position = Position.moving;
+        _sliderButtonController.setPosition = Position.moving;
       }
     });
   }
@@ -86,8 +86,8 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
         widget.onLeftLabelReached();
         return;
       } else {
-        _sliderButtonController.currentPosition = _startPosition;
-        _sliderButtonController.position = Position.middle;
+        _sliderButtonController.setCurrentPosition = _startPosition;
+        _sliderButtonController.setPosition = Position.middle;
         widget.onNoStatus();
       }
     });
@@ -97,11 +97,11 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   Widget build(BuildContext context) {
     if (_sliderButtonController.position != Position.moving) {
       if (_sliderButtonController.position == Position.middle) {
-        _sliderButtonController.currentPosition = _startPosition;
+        _sliderButtonController.setCurrentPosition = _startPosition;
       } else if (_sliderButtonController.position == Position.right) {
-        _sliderButtonController.currentPosition = _rightPosition;
+        _sliderButtonController.setCurrentPosition = _rightPosition;
       } else if (_sliderButtonController.position == Position.left) {
-        _sliderButtonController.currentPosition = _leftPosition;
+        _sliderButtonController.setCurrentPosition = _leftPosition;
       }
     }
 
@@ -181,25 +181,21 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
 }
 
 class SliderButtonController extends ChangeNotifier {
-  Position _position;
-  double? _currentPosition;
+  Position position;
+  double currentPosition;
 
-  SliderButtonController({Position position = Position.middle})
-      : _position = position;
+  SliderButtonController(
+      {this.position = Position.middle, this.currentPosition = 0});
 
-  set position(position) {
-    _position = position;
+  set setPosition(newPosition) {
+    position = newPosition;
     notifyListeners();
   }
 
-  get position => _position;
-
-  set currentPosition(currentPosition) {
-    _currentPosition = currentPosition;
+  set setCurrentPosition(newCurrentPosition) {
+    currentPosition = newCurrentPosition;
     notifyListeners();
   }
-
-  get currentPosition => _currentPosition;
 }
 
 enum Position { left, middle, right, moving }

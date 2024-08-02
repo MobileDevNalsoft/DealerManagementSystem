@@ -20,6 +20,7 @@ class Vehicle {
   String? customerContactNo;
   String? customerName;
   String? customerAddress;
+  String? inspectionIN;
 
   Vehicle(
       {this.vehicleType,
@@ -38,6 +39,7 @@ class Vehicle {
       this.insuranceCompany,
       this.engineNumber,
       this.customerContactNo,
+      this.inspectionIN,
       this.customerName,
       this.customerAddress});
 
@@ -59,6 +61,7 @@ class Vehicle {
     customerContactNo = json['customer_contact_no'];
     customerName = json['customer_name'];
     customerAddress = json['customer_address'];
+    inspectionIN = json['inspection_in'];
   }
 
   Map<String, dynamic> toJson() {

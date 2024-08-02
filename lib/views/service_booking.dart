@@ -7,7 +7,7 @@ import 'package:dms/models/services.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
-import 'package:dms/views/inspection.dart';
+import 'package:dms/views/inspection_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -167,7 +167,9 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
             FetchVehicleCustomer(registrationNo: vehRegNumController.text));
       }
     } else {
-      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+      DMSCustomWidgets.DMSFlushbar(size, context,
+          message: 'Please check the internet connectivity',
+          icon: Icon(Icons.error));
     }
   }
 
@@ -327,10 +329,6 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                       controller: page1ScrollController,
                                       children: [
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
                                           children: [
                                             Gap(size.height * 0.13),
                                             Column(
@@ -602,9 +600,11 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                             GestureDetector(
                                               onTap: () {
                                                 if (!isConnected()) {
-                                                  DMSCustomWidgets
-                                                      .NetworkCheckFlushbar(
-                                                          size, context);
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          'Please check the internet connectivity',
+                                                      icon: Icon(Icons.error));
                                                   return;
                                                 }
                                                 FocusManager
@@ -709,15 +709,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                 controller: page2ScrollController,
                                 children: [
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
                                     children: [
                                       Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         children: [
                                           SizedBox(
                                             height: size.height * (0.05),
@@ -795,9 +788,14 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                           onChanged: (p0) {
                                                             if (!isConnected()) {
                                                               DMSCustomWidgets
-                                                                  .NetworkCheckFlushbar(
+                                                                  .DMSFlushbar(
                                                                       size,
-                                                                      context);
+                                                                      context,
+                                                                      message:
+                                                                          'Please check the internet connectivity',
+                                                                      icon: Icon(
+                                                                          Icons
+                                                                              .error));
                                                               return;
                                                             }
                                                             spTypeAheadController
@@ -1027,8 +1025,12 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                     onDismissed: () async {
                                                       if (!isConnected()) {
                                                         DMSCustomWidgets
-                                                            .NetworkCheckFlushbar(
-                                                                size, context);
+                                                            .DMSFlushbar(
+                                                                size, context,
+                                                                message:
+                                                                    'Please check the internet connectivity',
+                                                                icon: Icon(Icons
+                                                                    .error));
                                                         return;
                                                       }
                                                       FocusManager
@@ -1259,17 +1261,15 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              Navigator.popUntil(
-                                context,
-                                (route) => route.settings.name == '/',
-                              );
+                              Navigator.pop(context);
+                              vehRegNumFocus.requestFocus();
                             },
                             style: TextButton.styleFrom(
                                 fixedSize:
                                     Size(size.width * 0.3, size.height * 0.1),
                                 foregroundColor: Colors.white),
                             child: const Text(
-                              'Exit',
+                              'retry',
                             ),
                           ),
                         ),
@@ -1289,7 +1289,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                     Size(size.width * 0.3, size.height * 0.1),
                                 foregroundColor: Colors.white),
                             child: const Text(
-                              'Register Now',
+                              'register Now',
                             ),
                           ),
                         ),

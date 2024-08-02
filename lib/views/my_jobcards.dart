@@ -1,4 +1,6 @@
 import 'package:dms/inits/init.dart';
+import 'package:dms/views/login.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -6,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../bloc/service/service_bloc.dart';
-import 'dashboard.dart';
+import 'list_of_jobcards.dart';
 import 'jobcard_details.dart';
 
 class MyJobcards extends StatefulWidget {
@@ -18,6 +20,8 @@ class MyJobcards extends StatefulWidget {
 
 class _MyJobcardsState extends State<MyJobcards> {
   late ServiceBloc _serviceBloc;
+
+  SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   @override
   void initState() {
@@ -94,6 +98,90 @@ class _MyJobcardsState extends State<MyJobcards> {
                   fontSize: 16),
             )),
         centerTitle: true,
+        actions: [
+          DropdownButtonHideUnderline(
+            child: DropdownButton2<String>(
+              isExpanded: true,
+              hint: const SizedBox(),
+              items: const [
+                DropdownMenuItem<String>(
+                    value: '0',
+                    child: Text(
+                      'Log out',
+                      style: TextStyle(color: Colors.transparent),
+                    ))
+              ],
+              value: '0',
+              onChanged: (String? value) {
+                sharedPreferences.setBool("isLogged", false);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginView(),
+                  ),
+                  (route) => false,
+                );
+              },
+              buttonStyleData: ButtonStyleData(
+                overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10)),
+                    color: Colors.transparent),
+                height: size.height * 0.05,
+                width: size.width * 0.25,
+                padding: const EdgeInsets.only(left: 14, right: 14),
+              ),
+              iconStyleData: IconStyleData(
+                icon: Container(
+                  height: size.height * 0.1,
+                  width: size.width * 0.09,
+                  margin: EdgeInsets.only(
+                    left: size.width * 0.045,
+                  ),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 10,
+                            blurStyle: BlurStyle.outer,
+                            spreadRadius: 0,
+                            color: Colors.orange.shade200,
+                            offset: const Offset(0, 0))
+                      ]),
+                  child: Transform(
+                    transform: Matrix4.translationValues(0, 0, 0),
+                    child: const Icon(Icons.person, color: Colors.white),
+                  ),
+                ),
+                iconSize: size.height * 0.025,
+                iconEnabledColor: Colors.black,
+                iconDisabledColor: Colors.black,
+              ),
+              dropdownStyleData: DropdownStyleData(
+                  width: size.width * 0.17,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  offset: const Offset(5, 0)),
+              menuItemStyleData: MenuItemStyleData(
+                selectedMenuItemBuilder: (context, child) {
+                  return Padding(
+                    padding: EdgeInsets.only(left: size.width * 0.02),
+                    child: const Text(
+                      'Log out',
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                },
+              ),
+            ),
+          )
+        ],
       ),
       body: Container(
         height: size.height,

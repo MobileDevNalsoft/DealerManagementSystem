@@ -260,8 +260,6 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                       stops: [0.1, 0.5, 1]),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Gap(
                       size.height * 0.05,
@@ -465,18 +463,16 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                   });
                               break;
                             case VehicleStatus.failure:
-                              Flushbar(
-                                backgroundColor: Colors.red,
-                                blockBackgroundInteraction: true,
+                              DMSCustomWidgets.DMSFlushbar(
+                                size,
+                                context,
                                 message: "Some Error has occured",
-                                flushbarPosition: FlushbarPosition.TOP,
-                                duration: const Duration(seconds: 2),
-                                borderRadius: BorderRadius.circular(12),
-                                margin: EdgeInsets.only(
-                                    top: 24,
-                                    left: isMobile ? 10 : size.width * 0.8,
-                                    right: 10),
-                              ).show(context);
+                                icon: const Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ),
+                              );
+
                             case VehicleStatus.vehicleAlreadyAdded:
                               showRegistrationDialog(
                                 size: size,
@@ -512,29 +508,23 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                 _engineNoValidation(
                                     engineNumberController.text) ??
                                 (makeTypeAheadController.text.isEmpty
-                                    ? 'make cannot be empty'
+                                    ? 'Make cannot be empty'
                                     : null) ??
                                 (kmsController.text.isEmpty
-                                    ? 'kms cannot be empty'
+                                    ? 'KMS cannot be empty'
                                     : null) ??
                                 _nameValidation(customerNameController.text) ??
                                 (customerContactNumberController.text.isEmpty
-                                    ? 'customer contact no. cannot be empty'
+                                    ? 'Customer Contact No. cannot be empty'
                                     : null);
 
                             if (message != null) {
-                              Flushbar(
-                                backgroundColor: Colors.red,
-                                blockBackgroundInteraction: true,
-                                message: message,
-                                flushbarPosition: FlushbarPosition.TOP,
-                                duration: const Duration(seconds: 2),
-                                borderRadius: BorderRadius.circular(12),
-                                margin: EdgeInsets.only(
-                                    top: 10,
-                                    left: isMobile ? 10 : size.width * 0.8,
-                                    right: 10),
-                              ).show(context);
+                              DMSCustomWidgets.DMSFlushbar(size, context,
+                                  message: message,
+                                  icon: const Icon(
+                                    Icons.error,
+                                    color: Colors.white,
+                                  ));
                             } else {
                               Vehicle vehicle = Vehicle(
                                   vehicleRegNumber:
@@ -685,7 +675,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
 String? _vehicleRegistrationNoValidator(String value) {
   if (value.isEmpty) {
-    return "Vehicle Registration No. can't be empty!";
+    return "Vehicle Registration No. can't be empty";
   } else if (value.length < 10) {
     return "Vehicle Registration No. should contain 10 characters";
   }
@@ -695,7 +685,7 @@ String? _vehicleRegistrationNoValidator(String value) {
 String? _customerContactNoValidation(String value) {
   RegExp contactNoRegex = RegExp(r'^\d{10}$');
   if (value.isEmpty) {
-    return "Contact Number can't be empty!";
+    return "Contact Number can't be empty";
   } else if (!contactNoRegex.hasMatch(value)) {
     return "Invalid Contact Number";
   }
@@ -705,7 +695,7 @@ String? _customerContactNoValidation(String value) {
 String? _chassisNoValidation(String value) {
   RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
-    return "Chassis No. can't be empty!";
+    return "Chassis No. can't be empty";
   } else if (!chassisNoRegex.hasMatch(value)) {
     return "Invalid Chassis No.";
   }
@@ -715,7 +705,7 @@ String? _chassisNoValidation(String value) {
 String? _engineNoValidation(String value) {
   RegExp engineNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
-    return "Engine No. can't be empty!";
+    return "Engine No. can't be empty";
   } else if (!engineNoRegex.hasMatch(value)) {
     return "Invalid Engine No.";
   }

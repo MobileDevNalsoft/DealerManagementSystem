@@ -5,7 +5,6 @@ import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/practice.dart';
 import 'package:dms/views/sample/service_proceed.dart';
 import 'package:dms/views/service_history.dart';
 import 'package:flutter/material.dart';
@@ -154,12 +153,9 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                         controller: scrollController,
                         children: [
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Gap(size.height * 0.15),
                               Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   DMSCustomWidgets.SearchableDropDown(
                                       size: size,
@@ -195,8 +191,6 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                                 height: size.height * 0.115,
                                                 width: size.width * 0.5,
                                                 child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
@@ -558,8 +552,6 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                             onTap: () {
                               context.read<VehicleBloc>().state.status =
                                   VehicleStatus.initial;
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const MyWidget()));
                             },
                             child: Column(
                               children: [

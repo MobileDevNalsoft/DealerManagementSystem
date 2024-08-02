@@ -4,7 +4,7 @@ import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
-import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/list_of_jobcards.dart';
 import 'package:dms/views/my_jobcards.dart';
 import 'package:dms/views/sample/service_main.dart';
 import 'package:dms/views/service_history.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:stacked/stacked_annotations.dart';
 
+import 'dashboard.dart';
 import 'service_booking.dart';
 
 class DribbleUI extends StatefulWidget {
@@ -41,8 +42,6 @@ class _DribbleUIState extends State<DribbleUI>
           alignment: Alignment.center,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Gap(size.height * 0.18),
                 Image.asset(
@@ -57,7 +56,9 @@ class _DribbleUIState extends State<DribbleUI>
                       Navigator.push(context,
                           MaterialPageRoute(builder: (_) => ServiceMain()));
                     } else {
-                      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                      DMSCustomWidgets.DMSFlushbar(size, context,
+                          message: 'Please check the internet connectivity',
+                          icon: Icon(Icons.error));
                     }
                   },
                   child: Container(
@@ -94,7 +95,7 @@ class _DribbleUIState extends State<DribbleUI>
                     ),
                     child: Icon(
                       Icons.add,
-                      color: Colors.orange.shade200,
+                      color: Colors.white,
                     ),
                   ),
                 )
@@ -117,7 +118,9 @@ class _DribbleUIState extends State<DribbleUI>
                             MaterialPageRoute(
                                 builder: (_) => const AddVehicleView()));
                       } else {
-                        DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                        DMSCustomWidgets.DMSFlushbar(size, context,
+                            message: 'Please check the internet connectivity',
+                            icon: Icon(Icons.error));
                       }
                     },
                     child: ClippedButton(
@@ -146,7 +149,7 @@ class _DribbleUIState extends State<DribbleUI>
                       clipper: ButtonClipper(),
                       child: Image.asset(
                         'assets/images/add_vehicle_icon.png',
-                        color: Colors.orange.shade200,
+                        color: Colors.white,
                         opacity: AnimationController(
                           vsync: this,
                           value: 0.7,
@@ -167,7 +170,9 @@ class _DribbleUIState extends State<DribbleUI>
                               MaterialPageRoute(
                                   builder: (_) => const MyJobcards()));
                         } else {
-                          DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                          DMSCustomWidgets.DMSFlushbar(size, context,
+                              message: 'Please check the internet connectivity',
+                              icon: Icon(Icons.error));
                         }
                       },
                       onDoubleTap: () {
@@ -202,7 +207,7 @@ class _DribbleUIState extends State<DribbleUI>
                         clipper: ButtonClipper(),
                         child: Image.asset(
                           'assets/images/person_icon.png',
-                          color: Colors.orange.shade200,
+                          color: Colors.white,
                           opacity: AnimationController(
                             vsync: this,
                             value: 0.7,
@@ -234,7 +239,9 @@ class _DribbleUIState extends State<DribbleUI>
                               builder: (context) => const VehicleInfo(),
                             ));
                       } else {
-                        DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                        DMSCustomWidgets.DMSFlushbar(size, context,
+                            message: 'Please check the internet connectivity',
+                            icon: Icon(Icons.error));
                       }
                     },
                     child: ClippedButton(
@@ -249,7 +256,7 @@ class _DribbleUIState extends State<DribbleUI>
                       clipper: ButtonClipperMid(),
                       child: Image.asset(
                         'assets/images/vehicle_search_icon.png',
-                        color: Colors.orange.shade200,
+                        color: Colors.white,
                         opacity: AnimationController(
                           vsync: this,
                           value: 0.7,
@@ -262,26 +269,32 @@ class _DribbleUIState extends State<DribbleUI>
                   ),
                   Transform.flip(
                       flipX: true,
-                      child: ClippedButton(
-                        size: Size(size.width * 0.23, size.height * 0.2),
-                        decoration: const BoxDecoration(color: Colors.black),
-                        shadow: BoxShadow(
-                            blurRadius: 20,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 25,
-                            color: Colors.orange.shade200,
-                            offset: const Offset(0, 0)),
-                        clipper: ButtonClipperMid(),
-                        child: Image.asset(
-                          'assets/images/home_icon.png',
-                          color: Colors.orange.shade200,
-                          opacity: AnimationController(
-                            vsync: this,
-                            value: 0.7,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => DashBoard()));
+                        },
+                        child: ClippedButton(
+                          size: Size(size.width * 0.23, size.height * 0.2),
+                          decoration: const BoxDecoration(color: Colors.black),
+                          shadow: BoxShadow(
+                              blurRadius: 20,
+                              blurStyle: BlurStyle.outer,
+                              spreadRadius: 25,
+                              color: Colors.orange.shade200,
+                              offset: const Offset(0, 0)),
+                          clipper: ButtonClipperMid(),
+                          child: Image.asset(
+                            'assets/images/home_icon.png',
+                            color: Colors.white,
+                            opacity: AnimationController(
+                              vsync: this,
+                              value: 0.7,
+                            ),
+                            alignment: Alignment.center,
+                            height: size.height * 0.08,
+                            width: size.width * 0.08,
                           ),
-                          alignment: Alignment.center,
-                          height: size.height * 0.08,
-                          width: size.width * 0.08,
                         ),
                       )),
                 ],
@@ -303,10 +316,12 @@ class _DribbleUIState extends State<DribbleUI>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const DashboardView()));
+                                    builder: (_) => const ListOfJobcards()));
                           } else {
-                            DMSCustomWidgets.NetworkCheckFlushbar(
-                                size, context);
+                            DMSCustomWidgets.DMSFlushbar(size, context,
+                                message:
+                                    'Please check the internet connectivity',
+                                icon: Icon(Icons.error));
                           }
                         },
                         child: ClippedButton(
@@ -337,7 +352,7 @@ class _DribbleUIState extends State<DribbleUI>
                             flipY: true,
                             child: Image.asset(
                               'assets/images/job_cards_icon.png',
-                              color: Colors.orange.shade200,
+                              color: Colors.white,
                               opacity: AnimationController(
                                 vsync: this,
                                 value: 0.7,
@@ -362,8 +377,10 @@ class _DribbleUIState extends State<DribbleUI>
                                       builder: (_) =>
                                           const ServiceHistoryView()));
                             } else {
-                              DMSCustomWidgets.NetworkCheckFlushbar(
-                                  size, context);
+                              DMSCustomWidgets.DMSFlushbar(size, context,
+                                  message:
+                                      'Please check the internet connectivity',
+                                  icon: Icon(Icons.error));
                             }
                           },
                           child: ClippedButton(
@@ -394,7 +411,7 @@ class _DribbleUIState extends State<DribbleUI>
                                 flipY: true,
                                 child: Image.asset(
                                   'assets/images/history_icon.png',
-                                  color: Colors.orange.shade200,
+                                  color: Colors.white,
                                   opacity: AnimationController(
                                     vsync: this,
                                     value: 0.7,

@@ -10,7 +10,7 @@ import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/add_vehicle.dart';
-import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/list_of_jobcards.dart';
 import 'package:dms/views/jobcard_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dynamic_ui_src/Entry/json_to_widget.dart';
 import 'views/login.dart';
 import 'views/service_booking.dart';
-import 'views/test_dashboard.dart';
+import 'views/home_view.dart';
 
 void main() async {
   // debugPaintSizeEnabled = true;
@@ -31,10 +31,6 @@ void main() async {
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   // sharedPreferences.setBool('isLogged', false);
-  List<GeneralBodyPart> generalBodyPart =
-      await loadSvgImage(svgImage: 'assets/images/image.svg');
-  List<GeneralBodyPart> acceptedParts =
-      await loadSvgImage(svgImage: 'assets/images/image_accept.svg');
 
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
@@ -60,7 +56,7 @@ void main() async {
             : const DribbleUI(),
         routes: {
           '/home': (context) => ServiceMain(),
-          '/dashboard': (context) => const DashboardView(),
+          '/listOfJobCards': (context) => const ListOfJobcards(),
           '/jobCardDetails': (context) => JobCardDetails(),
           '/addVehicle': (context) => const AddVehicleView(),
           '/serviceBooking': (context) => ServiceMain(),
