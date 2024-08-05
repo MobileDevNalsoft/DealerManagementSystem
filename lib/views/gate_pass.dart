@@ -132,7 +132,6 @@ class _GatePassState extends State<GatePass> {
                             decoration:
                                 const BoxDecoration(color: Colors.white),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Gap(16.0),
                                 Row(

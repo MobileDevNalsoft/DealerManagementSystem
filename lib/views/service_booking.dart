@@ -7,8 +7,7 @@ import 'package:dms/models/services.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
-import 'package:dms/views/custom_widgets/custom_slider_button.dart';
-import 'package:dms/views/inspection.dart';
+import 'package:dms/views/inspection_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -161,7 +160,9 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
         context.read<VehicleBloc>().add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
       }
     } else {
-      DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+      DMSCustomWidgets.DMSFlushbar(size, context,
+          message: 'Please check the internet connectivity',
+          icon: Icon(Icons.error));
     }
   }
 
@@ -446,7 +447,11 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                             GestureDetector(
                                               onTap: () {
                                                 if (!isConnected()) {
-                                                  DMSCustomWidgets.NetworkCheckFlushbar(size, context);
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          'Please check the internet connectivity',
+                                                      icon: Icon(Icons.error));
                                                   return;
                                                 }
                                                 FocusManager.instance.primaryFocus?.unfocus();
@@ -505,12 +510,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                 controller: page2ScrollController,
                                 children: [
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           SizedBox(
                                             height: size.height * (0.05),
@@ -557,30 +558,68 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                               ),
                                               BlocBuilder<MultiBloc, MultiBlocState>(
                                                 builder: (context, state) {
-                                                  return DMSCustomWidgets.SearchableDropDown(
-                                                      onChanged: (p0) {
-                                                        if (!isConnected()) {
-                                                          DMSCustomWidgets.NetworkCheckFlushbar(size, context);
-                                                          return;
-                                                        }
-                                                        spTypeAheadController.text = p0;
-                                                        if (p0.length >= 3) {
-                                                          context.read<MultiBloc>().add(GetSalesPersons(searchText: p0));
-                                                        } else {
-                                                          context.read<MultiBloc>().state.salesPersons = null;
-                                                        }
-                                                      },
-                                                      size: size,
-                                                      items:
-                                                          state.salesPersons == null ? [] : state.salesPersons!.map((e) => "${e.empName}-${e.empId}").toList(),
-                                                      hint: 'Sales Person',
-                                                      icon: salesPersonDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
-                                                      isMobile: isMobile,
-                                                      isLoading: state.status == MultiStateStatus.loading ? true : false,
-                                                      focus: spFocus,
-                                                      typeAheadController: spTypeAheadController,
-                                                      suggestionsController: suggestionsController,
-                                                      scrollController: page2ScrollController);
+                                                  return DMSCustomWidgets
+                                                      .SearchableDropDown(
+                                                          onChanged: (p0) {
+                                                            if (!isConnected()) {
+                                                              DMSCustomWidgets
+                                                                  .DMSFlushbar(
+                                                                      size,
+                                                                      context,
+                                                                      message:
+                                                                          'Please check the internet connectivity',
+                                                                      icon: Icon(
+                                                                          Icons
+                                                                              .error));
+                                                              return;
+                                                            }
+                                                            spTypeAheadController
+                                                                .text = p0;
+                                                            if (p0.length >=
+                                                                3) {
+                                                              context
+                                                                  .read<
+                                                                      MultiBloc>()
+                                                                  .add(GetSalesPersons(
+                                                                      searchText:
+                                                                          p0));
+                                                            } else {
+                                                              context
+                                                                  .read<
+                                                                      MultiBloc>()
+                                                                  .state
+                                                                  .salesPersons = null;
+                                                            }
+                                                          },
+                                                          size: size,
+                                                          items: state.salesPersons ==
+                                                                  null
+                                                              ? []
+                                                              : state
+                                                                  .salesPersons!
+                                                                  .map((e) =>
+                                                                      "${e.empName}-${e.empId}")
+                                                                  .toList(),
+                                                          hint: 'Sales Person',
+                                                          icon: salesPersonDropDownUp
+                                                              ? const Icon(Icons
+                                                                  .arrow_drop_up)
+                                                              : const Icon(Icons
+                                                                  .arrow_drop_down),
+                                                          isMobile: isMobile,
+                                                          isLoading: state
+                                                                      .status ==
+                                                                  MultiStateStatus
+                                                                      .loading
+                                                              ? true
+                                                              : false,
+                                                          focus: spFocus,
+                                                          typeAheadController:
+                                                              spTypeAheadController,
+                                                          suggestionsController:
+                                                              suggestionsController,
+                                                          scrollController:
+                                                              page2ScrollController);
                                                 },
                                               ),
                                               SizedBox(
@@ -665,26 +704,51 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                               }
                                             },
                                             builder: (context, state) {
-                                              print("rebuilt ${sliderButtonController.position}");
-                                              return CustomSliderButton(
-                                                context: context,
-                                                size: size,
-                                                sliderController: sliderButtonController,
-                                                label: const Text(
-                                                  "Proceed to receive",
-                                                  style: TextStyle(color: Color(0xff4a4a4a), fontWeight: FontWeight.w500, fontSize: 17),
-                                                ),
-                                                icon: const Icon(
-                                                  Icons.arrow_forward_ios_rounded,
-                                                  color: Colors.white,
-                                                ),
-                                                onDismissed: () async {
-                                                  unFocusFields();  
-                                                  if (!isConnected()) {
-                                                    DMSCustomWidgets.NetworkCheckFlushbar(size, context);
-                                                    return;
-                                                  }
-                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                              return BlocBuilder<MultiBloc,
+                                                  MultiBlocState>(
+                                                builder: (context, state) {
+                                                  return CustomSliderButton(
+                                                    context: context,
+                                                    size: size,
+                                                    resetPosition:
+                                                        state.status ==
+                                                                MultiStateStatus
+                                                                    .failure ||
+                                                            state.status ==
+                                                                MultiStateStatus
+                                                                    .initial,
+                                                    sliderStatus: context
+                                                        .watch<ServiceBloc>()
+                                                        .state
+                                                        .serviceUploadStatus!,
+                                                    label: const Text(
+                                                      "Proceed to receive",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(0xff4a4a4a),
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 17),
+                                                    ),
+                                                    icon: const Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_rounded,
+                                                      color: Colors.white,
+                                                    ),
+                                                    onDismissed: () async {
+                                                      if (!isConnected()) {
+                                                        DMSCustomWidgets
+                                                            .DMSFlushbar(
+                                                                size, context,
+                                                                message:
+                                                                    'Please check the internet connectivity',
+                                                                icon: Icon(Icons
+                                                                    .error));
+                                                        return;
+                                                      }
+                                                      FocusManager
+                                                          .instance.primaryFocus
+                                                          ?.unfocus();
 
                                                   _vehicleBloc.state.status = VehicleStatus.initial;
 
@@ -730,7 +794,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                 },
                                               );
                                             },
-                                          ),
+                                          );},),
                                           if (MediaQuery.of(context).viewInsets.bottom != 0)
                                             SizedBox(
                                               height: size.height * (isMobile ? 0.4 : 0.5),
@@ -843,14 +907,12 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              Navigator.popUntil(
-                                context,
-                                (route) => route.settings.name == '/',
-                              );
+                              Navigator.pop(context);
+                              vehRegNumFocus.requestFocus();
                             },
                             style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: const Text(
-                              'Exit',
+                              'retry',
                             ),
                           ),
                         ),
@@ -867,7 +929,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                             },
                             style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: const Text(
-                              'Register Now',
+                              'register Now',
                             ),
                           ),
                         ),

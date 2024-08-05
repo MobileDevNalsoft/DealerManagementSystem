@@ -140,7 +140,6 @@ class AddCustomerView extends StatelessWidget {
             children: [
               Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: isMobile ? size.height * 0.05 : size.height * 0.1,

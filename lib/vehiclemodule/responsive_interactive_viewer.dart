@@ -6,8 +6,9 @@ import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/comments.dart';
-import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/list_of_jobcards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -50,17 +51,13 @@ class _CustomDetectorState extends State<CustomDetector>
                     listener: (context, state) async {
                       if (state.status ==
                           VehiclePartsInteractionStatus.success) {
-                        await Flushbar(
-                          flushbarPosition: FlushbarPosition.TOP,
-                          backgroundColor: Colors.green,
-                          message: "Successfully uploaded",
-                          duration: const Duration(seconds: 1),
-                          borderRadius: BorderRadius.circular(12),
-                          margin: EdgeInsets.only(
-                              top: size.height * 0.01,
-                              left: isMobile ? 10 : size.width * 0.8,
-                              right: size.width * 0.03),
-                        ).show(context);
+                        await DMSCustomWidgets.DMSFlushbar(size, context,
+                            message: "Successfully uploaded",
+                            icon: const Icon(
+                              Icons.cloud_upload_rounded,
+                              color: Colors.white,
+                            ));
+
                         Provider.of<BodySelectorViewModel>(context,
                                 listen: false)
                             .isTapped = false;
@@ -89,12 +86,19 @@ class _CustomDetectorState extends State<CustomDetector>
                             //     image: AssetImage("assets/images/road.jpg"),
                             //     fit: BoxFit.fill),
                             // color:  Colors.black45,
-                        gradient: LinearGradient(
-                colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
-                // begin: Alignment.topCenter,
-                // end: Alignment.bottomCenter,
-                stops: [0.1, 0.5, 1])
-                        ),
+                            gradient: LinearGradient(
+                                colors: [
+                              Colors.black45,
+                              ui.Color.fromARGB(40, 104, 103, 103),
+                              Colors.black45
+                            ],
+                                // begin: Alignment.topCenter,
+                                // end: Alignment.bottomCenter,
+                                stops: [
+                              0.1,
+                              0.5,
+                              1
+                            ])),
                         child: BodyCanvas(
                           generalParts: widget.generalParts,
                         ),
@@ -129,25 +133,25 @@ class _CustomDetectorState extends State<CustomDetector>
                     bottom: 100,
                     left: 155,
                     child: ElevatedButton(
-
                         onPressed: () {
                           if (!Provider.of<BodySelectorViewModel>(context,
                                   listen: false)
                               .isTapped) {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => DashboardView()));
+                                builder: (_) => ListOfJobcards()));
                           }
                           // context
                           //     .read<VehiclePartsInteractionBloc>()
                           //     .add(SubmitVehicleMediaEvent());
                         },
                         style: ElevatedButton.styleFrom(
-                                shadowColor: Colors.orange.shade200,
-                                
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6),),
-                                minimumSize: const Size(8, 24),
-                                backgroundColor: Colors.black,
-                                foregroundColor: Colors.white),
+                            shadowColor: Colors.orange.shade200,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            minimumSize: const Size(8, 24),
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white),
                         child: const Text(
                           'Save',
                           style: TextStyle(fontWeight: FontWeight.bold),

@@ -111,8 +111,10 @@ class _QualityCheckState extends State<QualityCheck>
                         child: ElevatedButton(
                             onPressed: () {
                               if (!isConnected()) {
-                                DMSCustomWidgets.NetworkCheckFlushbar(
-                                    size, context);
+                                DMSCustomWidgets.DMSFlushbar(size, context,
+                                    message:
+                                        'Please check the internet connectivity',
+                                    icon: Icon(Icons.error));
                                 return;
                               }
                               String message = "";
@@ -129,21 +131,16 @@ class _QualityCheckState extends State<QualityCheck>
                                       'Please add rejection reasons for ${entry.key.toUpperCase()}';
                                 }
                                 if (message.isNotEmpty) {
-                                  Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.red,
-                                          message: message,
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: 24,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: 10))
-                                      .show(context);
+                                  DMSCustomWidgets.DMSFlushbar(
+                                    size,
+                                    context,
+                                    message: message,
+                                    icon: const Icon(
+                                      Icons.error,
+                                      color: Colors.white,
+                                    ),
+                                  );
+
                                   return;
                                 }
                               }
@@ -308,8 +305,6 @@ class _QualityCheckState extends State<QualityCheck>
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 18.0),
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
@@ -690,17 +685,16 @@ class _QualityCheckState extends State<QualityCheck>
                               MaterialPageRoute(
                                   builder: (_) => InspectionOut()));
                         case VehiclePartsInteractionStatus.failure:
-                          Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
-                                  backgroundColor: Colors.red,
-                                  message: "Some error has occured",
-                                  duration: const Duration(seconds: 2),
-                                  borderRadius: BorderRadius.circular(12),
-                                  margin: EdgeInsets.only(
-                                      top: 24,
-                                      left: isMobile ? 10 : size.width * 0.8,
-                                      right: 10))
-                              .show(context);
+                          DMSCustomWidgets.DMSFlushbar(
+                            size,
+                            context,
+                            message: "Some error has occured",
+                            icon: const Icon(
+                              Icons.error,
+                              color: Colors.white,
+                            ),
+                          );
+
                         default:
                       }
                     },
@@ -834,6 +828,7 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ServiceBloc>().state.index = 0;
     print("status ${widget.sliderStatus}");
     return GestureDetector(
       onPanUpdate: _onPanUpdate,

@@ -134,7 +134,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin{
                 }
 
                 return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Gap(size.height * 0.008),
@@ -200,8 +199,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin{
                           itemBuilder: (context, pageIndex) => Stack(
                             children: [
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     child: ListView.builder(
@@ -227,6 +224,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin{
                                                     "Rejected"
                                                 ? Position.left
                                                 : Position.middle;
+                                        _sliderButtonController.position =
+                                            state.sliderPosition!;
                                         return Column(
                                           children: [
                                             Gap(size.height * 0.01),
@@ -440,9 +439,12 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin{
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                               if(!isConnected()){
-                                 DMSCustomWidgets.NetworkCheckFlushbar(size, context);
-                                 return;
+                              if (!isConnected()) {
+                                DMSCustomWidgets.DMSFlushbar(size, context,
+                                    message:
+                                        'Please check the internet connectivity',
+                                    icon: Icon(Icons.error));
+                                return;
                               }
                               state.json = state.inspectionDetails!;
                               _serviceBloc.add(InspectionJsonAdded(
@@ -726,7 +728,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin{
           height: size.height * 0.25,
           width: size.width * 0.6,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: options
                 .map(

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/inits/init.dart';
-import 'package:dms/views/dashboard.dart';
-import 'package:dms/views/test_dashboard.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
+import 'package:dms/views/custom_widgets/clipped_buttons.dart';
+import 'package:dms/views/list_of_jobcards.dart';
+import 'package:dms/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -10,7 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../bloc/authentication/authentication_bloc.dart';
 import '../network_handler_mixin/network_handler.dart';
-import 'custom_widgets/textformfield.dart';
+import 'custom_widgets/loginformfield.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -60,238 +62,306 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SizedBox(
-              height: size.height * 0.03,
-              child: AlertDialog(
-                backgroundColor: const Color.fromARGB(255, 245, 216, 216),
-                contentPadding: EdgeInsets.only(
-                    left: size.width * 0.04, top: size.height * 0.02),
-                content: const Text('Are you sure you want to exit the app?'),
-                actionsPadding: EdgeInsets.zero,
-                buttonPadding: EdgeInsets.zero,
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context, false); // Don't exit
-                    },
-                    style: TextButton.styleFrom(
-                        foregroundColor:
-                            const Color.fromARGB(255, 145, 19, 19)),
-                    child: const Text('No'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      exit(0); // Exit
-                    },
-                    style: TextButton.styleFrom(
-                        foregroundColor:
-                            const Color.fromARGB(255, 145, 19, 19)),
-                    child: const Text('Yes'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+      onPopInvoked: (didPop) {
+        showConfirmationDialog(size: size);
       },
-      child: SafeArea(
-        child: AspectRatio(
-          aspectRatio: size.height / size.width,
-          child: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-                listener: (context, state) {
-                  String? message;
+      child: AspectRatio(
+        aspectRatio: size.height / size.width,
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+              listener: (context, state) {
+                String? message;
 
-                  switch (state.authenticationStatus) {
-                    case AuthenticationStatus.success:
-                      message = "Login Successful";
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      sharedPreferences.setBool("isLogged", true);
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DribbleUI(),
-                        ),
-                        (route) => false,
-                      );
-                      break;
-                    case AuthenticationStatus.invalidCredentials:
-                      message = "Invalid Credentials";
-                      break;
-                    case AuthenticationStatus.failure:
-                      message = "Some error has occurred";
-                    default:
-                      message = null;
-                  }
+                switch (state.authenticationStatus) {
+                  case AuthenticationStatus.success:
+                    message = "Login Successful";
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    sharedPreferences.setBool("isLogged", true);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DribbleUI(),
+                      ),
+                      (route) => false,
+                    );
+                    break;
+                  case AuthenticationStatus.invalidCredentials:
+                    message = "Invalid Credentials";
+                    break;
+                  case AuthenticationStatus.failure:
+                    message = "Some error has occurred";
+                  default:
+                    message = null;
+                }
 
-                  if (message != null) {
-                    Flushbar(
-                      flushbarPosition: FlushbarPosition.TOP,
-                      backgroundColor: message == "Login Successful"
-                          ? Colors.green
-                          : Colors.red,
+                if (message != null) {
+                  DMSCustomWidgets.DMSFlushbar(size, context,
                       message: message,
-                      duration: const Duration(seconds: 2),
-                      borderRadius: BorderRadius.circular(12),
-                      margin: EdgeInsets.only(
-                          top: size.height * 0.01,
-                          left: isMobile ? 10 : size.width * 0.8,
-                          right: size.width * 0.03),
-                    ).show(context);
-                  }
-                },
-                builder: (context, state) {
-                  return Stack(
-                    children: [
-                      Container(
-                        width: size.width,
-                        height: size.height,
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage('assets/images/login.png'),
-                                alignment: Alignment.topCenter,
-                                isAntiAlias: true),
-                            gradient: LinearGradient(
-                                colors: [
-                                  Colors.black45,
-                                  Colors.black26,
-                                  Colors.black45
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                stops: [0.1, 0.5, 1])),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                      icon: Icon(
+                        message == "Login Successful"
+                            ? Icons.check_circle_rounded
+                            : Icons.error,
+                        color: Colors.white,
+                      ));
+                }
+              },
+              builder: (context, state) {
+                return Stack(
+                  children: [
+                    Container(
+                      width: size.width,
+                      height: size.height,
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                Colors.black45,
+                                Colors.black26,
+                                Colors.black45
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0.1, 0.5, 1])),
+                      child: Stack(children: [
+                        ClipShadowPath(
+                          shadow: BoxShadow(
+                              blurRadius: 20,
+                              blurStyle: BlurStyle.outer,
+                              spreadRadius: 25,
+                              color: Colors.orange.shade200,
+                              offset: const Offset(0, 0)),
+                          clipper: ImageClipper(),
+                          child: Container(
+                            height: size.height * 0.4,
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              image: DecorationImage(
+                                  image: AssetImage('assets/images/login.png'),
+                                  alignment: Alignment.topCenter,
+                                  isAntiAlias: true),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: size.height * 0.35,
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Gap(size.height * 0.27),
                               Padding(
-                                padding: EdgeInsets.all(size.width * 0.08),
+                                padding: EdgeInsets.only(
+                                    left: size.width * 0.09,
+                                    bottom: size.width * 0.03),
                                 child: const Text(
                                   "Log in",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w900,
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 28),
+                                      fontSize: 25),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: size.width * 0.08),
-                                child: CustomTextFormField(
-                                  hintText: 'employee id',
-                                  controller: _emailController,
-                                  prefixIcon: const Icon(Icons.person),
+                              CustomTextFormField(
+                                hintText: 'employee id',
+                                controller: _emailController,
+                                prefixIcon: const Icon(Icons.person),
+                              ),
+                              Gap(
+                                size.height * 0.02,
+                              ),
+                              CustomTextFormField(
+                                hintText: 'password',
+                                controller: _passwordController,
+                                prefixIcon: const Icon(Icons.key),
+                                obscureText: state.obscure,
+                                obscureChar: '*',
+                                suffixIcon: IconButton(
+                                  iconSize: 20,
+                                  onPressed: () => {
+                                    context
+                                        .read<AuthenticationBloc>()
+                                        .add(ObscurePasswordTapped())
+                                  },
+                                  icon: state.obscure!
+                                      ? const Icon(Icons.visibility_off)
+                                      : const Icon(Icons.visibility),
                                 ),
                               ),
                               Gap(
                                 size.height * 0.02,
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: size.width * 0.08),
-                                child: CustomTextFormField(
-                                  hintText: 'password',
-                                  controller: _passwordController,
-                                  prefixIcon: const Icon(Icons.key),
-                                  obscureText: state.obscure,
-                                  obscureChar: '*',
-                                  suffixIcon: IconButton(
-                                    iconSize: 20,
-                                    onPressed: () => {
-                                      context
-                                          .read<AuthenticationBloc>()
-                                          .add(ObscurePasswordTapped())
-                                    },
-                                    icon: state.obscure!
-                                        ? const Icon(Icons.visibility_off)
-                                        : const Icon(Icons.visibility),
-                                  ),
-                                ),
-                              ),
-                              Gap(
-                                size.height * 0.035,
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: size.width * 0.08),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      String? message =
-                                          (_emailController.text.isEmpty
-                                                  ? "username cannot be empty"
-                                                  : null) ??
-                                              _passwordValidator(
-                                                  _passwordController.text);
+                              GestureDetector(
+                                onTap: () {
+                                  String? message =
+                                      (_emailController.text.isEmpty
+                                              ? "username cannot be empty"
+                                              : null) ??
+                                          _passwordValidator(
+                                              _passwordController.text);
 
-                                      if (message != null) {
-                                        Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.red,
-                                          message: message,
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: size.height * 0.01,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: size.width * 0.03),
-                                        ).show(context);
-                                      } else {
-                                        _authBloc.add(LoginButtonPressed(
-                                            username: _emailController.text,
-                                            password:
-                                                _passwordController.text));
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        elevation: 10,
-                                        shadowColor: Colors.orange.shade200,
-                                        backgroundColor: Colors.black,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        minimumSize: Size(
-                                            size.width, size.height * 0.06)),
+                                  if (message != null) {
+                                    DMSCustomWidgets.DMSFlushbar(
+                                      size,
+                                      context,
+                                      message: message,
+                                      icon: const Icon(
+                                        Icons.error,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  } else {
+                                    _authBloc.add(LoginButtonPressed(
+                                        username: _emailController.text,
+                                        password: _passwordController.text));
+                                  }
+                                },
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: size.width * 0.08),
+                                    height: size.height * 0.05,
+                                    width: size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Colors.black,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 10,
+                                              blurStyle: BlurStyle.outer,
+                                              spreadRadius: 0,
+                                              color: Colors.orange.shade200,
+                                              offset: const Offset(0, 0))
+                                        ]),
                                     child: const Text(
-                                      "Login",
+                                      textAlign: TextAlign.center,
+                                      'log in',
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ))
-                            ]),
-                      ),
-                      if (state.authenticationStatus ==
-                          AuthenticationStatus.loading)
-                        Container(
-                          color: Colors.white54,
-                          child: Center(
-                              child: Lottie.asset(
-                                  'assets/lottie/login_loading.json',
-                                  height: size.height * 0.4,
-                                  width: size.width * 0.4)),
+                                          color: Colors.white, fontSize: 16),
+                                    )),
+                              )
+                            ],
+                          ),
                         )
-                    ],
-                  );
-                },
-              ),
+                      ]),
+                    ),
+                    if (state.authenticationStatus ==
+                        AuthenticationStatus.loading)
+                      Container(
+                        color: Colors.white54,
+                        child: Center(
+                            child: Lottie.asset(
+                                'assets/lottie/login_loading.json',
+                                height: size.height * 0.4,
+                                width: size.width * 0.4)),
+                      )
+                  ],
+                );
+              },
             ),
           ),
         ),
       ),
     );
   }
+
+  void showConfirmationDialog({required Size size}) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              contentPadding: EdgeInsets.only(top: size.height * 0.01),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: size.width * 0.03),
+                    child: const Text(
+                      'Are you sure you want to exit the app ?',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Gap(size.height * 0.01),
+                  Container(
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(size.height * 0.001),
+                    decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: TextButton.styleFrom(
+                                fixedSize:
+                                    Size(size.width * 0.3, size.height * 0.1),
+                                foregroundColor: Colors.white),
+                            child: const Text(
+                              'no',
+                            ),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.white,
+                          thickness: 0.5,
+                        ),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              exit(0);
+                            },
+                            style: TextButton.styleFrom(
+                                fixedSize:
+                                    Size(size.width * 0.3, size.height * 0.1),
+                                foregroundColor: Colors.white),
+                            child: const Text(
+                              'yes',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              actionsPadding: EdgeInsets.zero,
+              buttonPadding: EdgeInsets.zero);
+        });
+  }
+}
+
+class ImageClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    print('height ${size.height} width ${size.width}');
+    Path path = Path();
+    path.lineTo(0, size.height - 100);
+    path.quadraticBezierTo(size.width * 0.25, size.height - 120,
+        size.width * 0.5, size.height - 50);
+    path.quadraticBezierTo(
+        size.width * 0.75, size.height + 15, size.width, size.height - 50);
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
+      oldClipper != this;
 }
 
 String? _passwordValidator(String value) {

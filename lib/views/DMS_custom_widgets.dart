@@ -317,49 +317,45 @@ class DMSCustomWidgets {
       bool showColonsBetween = true,
       required List<String> propertyList,
       required List<String> valueList}) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: propertyList
-                .expand((element) => [
-                      Text(
-                        element,
-                        style: propertyFontStyle,
-                      ),
-                      Gap(spaceBetweenFields ?? 0)
-                    ])
-                .toList(),
-          ),
-          Gap(contentPadding ?? 20),
-          if (showColonsBetween)
-            Column(
-              children: propertyList
-                  .expand((element) => [
-                        Text(
-                          ":",
-                          style: propertyFontStyle,
-                        ),
-                        Gap(spaceBetweenFields ?? 0)
-                      ])
-                  .toList(),
-            ),
-          if (showColonsBetween) Gap(contentPadding ?? 20),
-          Column(
-            children: valueList
-                .expand((element) => [
-                      Text(
-                        element,
-                        style: valueFontStyle,
-                      ),
-                      Gap(spaceBetweenFields ?? 0)
-                    ])
-                .toList(),
-          )
-        ]);
+        children: propertyList
+            .expand((element) => [
+                  Text(
+                    element,
+                    style: propertyFontStyle,
+                  ),
+                  Gap(spaceBetweenFields ?? 0)
+                ])
+            .toList(),
+      ),
+      Gap(contentPadding ?? 20),
+      if (showColonsBetween)
+        Column(
+          children: propertyList
+              .expand((element) => [
+                    Text(
+                      ":",
+                      style: propertyFontStyle,
+                    ),
+                    Gap(spaceBetweenFields ?? 0)
+                  ])
+              .toList(),
+        ),
+      if (showColonsBetween) Gap(contentPadding ?? 20),
+      Column(
+        children: valueList
+            .expand((element) => [
+                  Text(
+                    element,
+                    style: valueFontStyle,
+                  ),
+                  Gap(spaceBetweenFields ?? 0)
+                ])
+            .toList(),
+      )
+    ]);
   }
 
   static Widget CustomYearPicker(
@@ -375,6 +371,7 @@ class DMSCustomWidgets {
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
         onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
           yearPickerController =
               FixedExtentScrollController(initialItem: now - (year ?? 0));
           showCupertinoModalPopup(
@@ -435,22 +432,29 @@ class DMSCustomWidgets {
     );
   }
 
-  static Future<Widget> NetworkCheckFlushbar(
-      Size size, BuildContext context) async {
+  static Future<Widget> DMSFlushbar(Size size, BuildContext context,
+      {String message = 'message', Widget? icon}) async {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     return await Flushbar(
+      backgroundColor: Colors.black,
+      blockBackgroundInteraction: true,
+      message: message,
       flushbarPosition: FlushbarPosition.TOP,
-      icon: Icon(
-        Icons.signal_wifi_statusbar_connected_no_internet_4_rounded,
-        color: Colors.white,
-      ),
-      message: "Please check the internet connectivity",
-      duration: const Duration(seconds: 1),
-      borderRadius: BorderRadius.circular(12),
+      duration: const Duration(seconds: 2),
+      borderRadius: BorderRadius.circular(5),
+      icon: icon,
+      boxShadows: [
+        BoxShadow(
+            blurRadius: 10,
+            blurStyle: BlurStyle.outer,
+            spreadRadius: 0,
+            color: Colors.orange.shade200,
+            offset: const Offset(0, 0))
+      ],
       margin: EdgeInsets.only(
           top: size.height * 0.01,
-          left: isMobile ? 10 : size.width * 0.8,
-          right: size.width * 0.03),
+          left: isMobile ? size.width * 0.04 : size.width * 0.8,
+          right: isMobile ? size.width * 0.04 : size.width * 0.8),
     ).show(context);
   }
 }

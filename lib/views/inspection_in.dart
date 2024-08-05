@@ -132,7 +132,6 @@ class _InspectionViewState extends State<InspectionView>
                     }
 
                     return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Gap(size.height * 0.008),
@@ -253,9 +252,11 @@ class _InspectionViewState extends State<InspectionView>
                                         GestureDetector(
                                           onTap: () async {
                                             if (!isConnected()) {
-                                              DMSCustomWidgets
-                                                  .NetworkCheckFlushbar(
-                                                      size, context);
+                                              DMSCustomWidgets.DMSFlushbar(
+                                                  size, context,
+                                                  message:
+                                                      'Please check the internet connectivity',
+                                                  icon: Icon(Icons.error));
                                               return;
                                             }
                                             context.read<ServiceBloc>().add(
@@ -490,7 +491,6 @@ class _InspectionViewState extends State<InspectionView>
           height: size.height * 0.25,
           width: size.width * 0.6,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: options
                 .map(

@@ -7,7 +7,7 @@ import 'package:dms/models/services.dart';
 import 'package:dms/models/vehicle.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
-import 'package:dms/views/inspection.dart';
+import 'package:dms/views/inspection_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,18 +147,13 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                 controller: scrollController,
                 children: [
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             height: size.height * (0.05),
                           ),
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               DMSCustomWidgets.SearchableDropDown(
                                   items: ["Online", "Walk-in"],

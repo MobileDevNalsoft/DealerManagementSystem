@@ -6,7 +6,7 @@ import 'package:dms/models/vehicle.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
-import 'package:dms/views/dashboard.dart';
+import 'package:dms/views/list_of_jobcards.dart';
 import 'package:dms/views/jobcard_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -80,7 +80,6 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               top: size.height * 0.05,
                               right: size.width * 0.07),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Spacer(),
@@ -624,8 +623,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 vehicleRegNoController.text =
                                     vehicleRegNoController.text.toUpperCase();
                                 if (!isConnected()) {
-                                  DMSCustomWidgets.NetworkCheckFlushbar(
-                                      size, context);
+                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                      message:
+                                          'Please check the internet connectivity',
+                                      icon: Icon(Icons.error));
                                   return;
                                 }
                                 context.read<VehicleBloc>().add(
