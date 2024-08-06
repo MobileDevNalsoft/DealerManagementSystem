@@ -83,7 +83,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const DribbleUI(),
+                        builder: (context) => const HomeView(),
                       ),
                       (route) => false,
                     );
@@ -225,6 +225,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                       ),
                                     );
                                   } else {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                     _authBloc.add(LoginButtonPressed(
                                         username: _emailController.text,
                                         password: _passwordController.text));

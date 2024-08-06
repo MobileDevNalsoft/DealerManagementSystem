@@ -269,8 +269,11 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                       ]),
                       child: Text(
                         textAlign: TextAlign.center,
-                        index == 0 ? 'Service Main' : 'Service proceed',
-                        style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                        'Service Booking',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 16),
                       )),
                   centerTitle: true,
                 ),
@@ -738,45 +741,103 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                       FocusManager
                                                           .instance.primaryFocus
                                                           ?.unfocus();
-                                                  _vehicleBloc.state.status = VehicleStatus.initial;
-                                                  String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
-                                                      _altPersonContactNoValidation(altContPhoneNoController.text) ??
-                                                      _salesPersonValidator(spTypeAheadController.text,
-                                                          (context.read<MultiBloc>().state.salesPersons ?? []).map((e) => e.empName).toList()) ??
-                                                      _bayValidator(bayTypeAheadController.text, bayList) ??
-                                                      _jobTypeValidator(jobTypeTypeAheadController.text, jobTypeList);
-                                                  if (message != null) {
-                                                    Flushbar(
-                                                      flushbarPosition: FlushbarPosition.TOP,
-                                                      backgroundColor: Colors.red,
-                                                      message: message,
-                                                      duration: const Duration(seconds: 2),
-                                                      borderRadius: BorderRadius.circular(12),
-                                                      margin: EdgeInsets.only(
-                                                          top: size.height * 0.01, left: isMobile ? 10 : size.width * 0.8, right: size.width * 0.03),
-                                                    ).show(context);
-                                                  } else {
-                                                    Service service = Service(
-                                                        registrationNo: vehRegNumController.text,
-                                                        location: locTypeAheadController.text,
-                                                        customerName: customerController.text,
-                                                        scheduledDate: context.read<MultiBloc>().state.date.toString().substring(0, 10),
-                                                        kms: int.parse(kmsController.text),
-                                                        bookingSource: bookingTypeAheadController.text,
-                                                        alternateContactPerson: altContController.text,
-                                                        alternatePersonContactNo:
-                                                            altContPhoneNoController.text.isNotEmpty ? int.parse(altContPhoneNoController.text) : null,
-                                                        salesPerson: spTypeAheadController.text.split('-')[0],
-                                                        bay: bayTypeAheadController.text,
-                                                        jobType: jobTypeTypeAheadController.text,
-                                                        jobCardNo:
-                                                            'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${kmsController.text.toString().substring(0, 2)}',
-                                                        customerConcerns: custConcernsController.text,
-                                                        remarks: remarksController.text);
-                                                    Log.d(service.toJson());
-                                                    context.read<ServiceBloc>().add(ServiceAdded(service: service));
-                                                  }
-                                                }, sliderController: sliderButtonController,
+
+                                                      _vehicleBloc
+                                                              .state.status =
+                                                          VehicleStatus.initial;
+
+                                                      String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
+                                                          _altPersonContactNoValidation(
+                                                              altContPhoneNoController
+                                                                  .text) ??
+                                                          _salesPersonValidator(
+                                                              spTypeAheadController
+                                                                  .text,
+                                                              (state.salesPersons ??
+                                                                      [])
+                                                                  .map((e) =>
+                                                                      e.empName)
+                                                                  .toList()) ??
+                                                          _bayValidator(
+                                                              bayTypeAheadController
+                                                                  .text,
+                                                              bayList) ??
+                                                          _jobTypeValidator(
+                                                              jobTypeTypeAheadController
+                                                                  .text,
+                                                              jobTypeList);
+
+                                                      if (message != null) {
+                                                        Flushbar(
+                                                          flushbarPosition:
+                                                              FlushbarPosition
+                                                                  .TOP,
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          message: message,
+                                                          duration:
+                                                              const Duration(
+                                                                  seconds: 2),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
+                                                          margin: EdgeInsets.only(
+                                                              top: size.height *
+                                                                  0.01,
+                                                              left: isMobile
+                                                                  ? 10
+                                                                  : size.width *
+                                                                      0.8,
+                                                              right:
+                                                                  size.width *
+                                                                      0.03),
+                                                        ).show(context);
+                                                      } else {
+                                                        Service service = Service(
+                                                            registrationNo:
+                                                                vehRegNumController
+                                                                    .text,
+                                                            location: locTypeAheadController
+                                                                .text,
+                                                            customerName:
+                                                                customerController
+                                                                    .text,
+                                                            scheduledDate: state.date
+                                                                .toString()
+                                                                .substring(
+                                                                    0, 10),
+                                                            kms: int.parse(kmsController
+                                                                .text),
+                                                            bookingSource:
+                                                                bookingTypeAheadController
+                                                                    .text,
+                                                            alternateContactPerson:
+                                                                altContController
+                                                                    .text,
+                                                            alternatePersonContactNo:
+                                                                altContPhoneNoController.text.isNotEmpty
+                                                                    ? int.parse(altContPhoneNoController.text)
+                                                                    : null,
+                                                            salesPerson: spTypeAheadController.text.split('-')[0],
+                                                            bay: bayTypeAheadController.text,
+                                                            jobType: jobTypeTypeAheadController.text,
+                                                            jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
+                                                            customerConcerns: custConcernsController.text,
+                                                            remarks: remarksController.text);
+                                                        _serviceBloc.state
+                                                                .jobCardNo =
+                                                            service.jobCardNo!;
+
+                                                        Log.d(service.toJson());
+                                                        context
+                                                            .read<ServiceBloc>()
+                                                            .add(ServiceAdded(
+                                                                service:
+                                                                    service));
+                                                      }
+                                                    },
+                                                  );
+                                                },
                                               );
                                             },
                                           );},),
@@ -790,8 +851,13 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                   ),
                                 ],
                               )),
-                    if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading ||
-                        _serviceBloc.state.serviceUploadStatus == ServiceUploadStatus.loading)
+                    if (context.watch<VehicleBloc>().state.status ==
+                            VehicleStatus.loading ||
+                        context
+                                .watch<ServiceBloc>()
+                                .state
+                                .serviceUploadStatus ==
+                            ServiceUploadStatus.loading)
                       Container(
                         color: Colors.black54,
                         child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6)),

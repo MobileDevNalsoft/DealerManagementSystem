@@ -98,13 +98,13 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         if (value == 200) {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
-              
+
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         } else {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
-              
+
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         }
@@ -284,7 +284,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         print('json ${jsonDecode(json["data"]).runtimeType}');
         if (json['response_code'] == 200) {
           emit(state.copyWith(
-              inspectionDetails: jsonDecode(json["data"]),
+              json: jsonDecode(json["data"]),
               getInspectionStatus: GetInspectionStatus.success));
         } else {
           emit(

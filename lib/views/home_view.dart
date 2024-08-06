@@ -1,5 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
-import 'package:customs/src.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
@@ -11,19 +9,17 @@ import 'package:dms/views/service_history.dart';
 import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:stacked/stacked_annotations.dart';
-
 import 'dashboard.dart';
 import 'service_booking.dart';
 
-class DribbleUI extends StatefulWidget {
-  const DribbleUI({super.key});
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  State<DribbleUI> createState() => _DribbleUIState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _DribbleUIState extends State<DribbleUI>
+class _HomeViewState extends State<HomeView>
     with TickerProviderStateMixin, ConnectivityMixin {
   @override
   Widget build(BuildContext context) {
@@ -31,6 +27,7 @@ class _DribbleUIState extends State<DribbleUI>
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: double.infinity,
         width: double.infinity,

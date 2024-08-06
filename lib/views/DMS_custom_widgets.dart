@@ -54,7 +54,7 @@ class DMSCustomWidgets {
                 onTapOutside: (event) => focusNode.unfocus(),
                 cursorColor: Colors.black,
                 inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'\d'))
+                  // FilteringTextInputFormatter.deny(RegExp(r'\d'))
                 ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(

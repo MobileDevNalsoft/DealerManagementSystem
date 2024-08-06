@@ -106,7 +106,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                             DMSCustomWidgets.DMSFlushbar(size, context,
                                 message:
                                     'Please check the internet connectivity',
-                                icon: Icon(Icons.error));
+                                icon: const Icon(Icons.error));
                             return;
                           }
                           if (widget.currentStep == widget.activeStep) {
@@ -144,12 +144,12 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => InspectionOut()));
+                                        builder: (_) => const InspectionOut()));
                               case 4:
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => GatePass()));
+                                        builder: (_) => const GatePass()));
                             }
                           }
                         },

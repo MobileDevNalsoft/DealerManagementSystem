@@ -24,11 +24,13 @@ class _GatePassState extends State<GatePass> {
   WidgetsToImageController widgetsToImageController =
       WidgetsToImageController();
   late Uint8List? bytes;
+  late ServiceBloc _serviceBloc;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<ServiceBloc>().add(GetGatePass(jobCardNo: context.read<ServiceBloc>().state.jobCardNo!));
+    _serviceBloc = context.read<ServiceBloc>();
+    _serviceBloc.add(GetGatePass(jobCardNo: _serviceBloc.state.jobCardNo!));
   }
 
   @override

@@ -112,7 +112,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     _multiBloc.state.year = null;
     yearPickerController = FixedExtentScrollController(initialItem: index);
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
-    customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
+    // customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
     _vehicleBloc.state.status = VehicleStatus.initial;
 
     makeFocus.addListener(() {
@@ -153,6 +153,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   void _onRegNoFocusChange() {
     if (!vehicleRegNumberFocus.hasFocus &&
         vehicleRegNumberController.text.isNotEmpty) {
+      _vehicleBloc.state.status = VehicleStatus.initial;
       _vehicleBloc.add(VehicleCheck(
           registrationNo: vehicleRegNumberController
               .text)); // manage this api with customer check in service booking so that this api is no more required.

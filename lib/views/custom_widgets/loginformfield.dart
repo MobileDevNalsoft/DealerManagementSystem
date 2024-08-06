@@ -35,6 +35,7 @@ class CustomTextFormField extends StatelessWidget {
       ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
           boxShadow: const [
             BoxShadow(
                 color: Color.fromARGB(255, 175, 175, 175),

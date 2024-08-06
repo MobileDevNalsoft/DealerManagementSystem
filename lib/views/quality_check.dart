@@ -622,8 +622,17 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                   listener: (context, state) {
                     switch (state.status) {
                       case VehiclePartsInteractionStatus.success:
-                        context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => InspectionOut()));
+                          context.read<ServiceBloc>().add(GetInspectionDetails(
+                              jobCardNo: widget.jobCardNo));
+                          context.read<ServiceBloc>().add(GetJobCards());
+                          Navigator.popUntil(
+                            context,
+                            (route) => route.settings.name == '/listOfJobCards',
+                          );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => InspectionOut()));
                       case VehiclePartsInteractionStatus.failure:
                         DMSCustomWidgets.DMSFlushbar(
                           size,

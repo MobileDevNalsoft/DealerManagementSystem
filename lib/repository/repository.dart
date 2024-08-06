@@ -11,12 +11,18 @@ class Repository {
 
   Repository({required NetworkCalls api}) : _api = api;
 
-  Future<Map<String, dynamic>> addVehicle(Map<String, dynamic> payload) async {
+  Future<int> addVehicle(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addVehicle', data: payload);
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
-      return response;
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
     } else {
       Log.e(apiResponse.error);
       throw Error();
@@ -25,6 +31,7 @@ class Repository {
 
   Future<int> addService(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addService', data: payload);
+
     if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
@@ -247,7 +254,8 @@ class Repository {
 
   Future<int> addQualityStatus({Map<String, dynamic>? qualityCheckJson}) async {
     print(qualityCheckJson);
-    ApiResponse apiResponse = await _api.post('qualityCheckStatus', data: qualityCheckJson);
+    ApiResponse apiResponse =
+        await _api.post('qualityCheckStatus', data: qualityCheckJson);
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
