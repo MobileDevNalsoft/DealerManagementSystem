@@ -39,6 +39,7 @@ class _CommentsViewState extends State<CommentsView>
         AnimationController(vsync: this, duration: Duration(seconds: 2));
     widget.vehiclePartMedia.comments ??= "";
     widget.vehiclePartMedia.images ??= [];
+
     animationController.repeat();
   }
 
@@ -267,6 +268,10 @@ class _CommentsViewState extends State<CommentsView>
                                 );
                               } else {
                                 //use service/jobcard number
+                                print(context
+                                    .read<ServiceBloc>()
+                                    .state
+                                    .jobCardNo);
                                 context.read<VehiclePartsInteractionBloc>().add(
                                     SubmitBodyPartVehicleMediaEvent(
                                         bodyPartName:

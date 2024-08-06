@@ -48,7 +48,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),
       ],
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'Gilroy'),
+        
+        theme: ThemeData(fontFamily: 'Gilroy',colorScheme: ColorScheme.fromSeed(seedColor: Colors.white,primary: Colors.black)),
         debugShowCheckedModeBanner: false,
         home: !sharedPreferences.containsKey('isLogged') ||
                 sharedPreferences.getBool('isLogged') == false

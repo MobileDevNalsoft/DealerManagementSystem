@@ -125,7 +125,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1])),
                       child: Stack(children: [
-                        ClipShadowPath(
+                        if(isMobile)ClipShadowPath(
                           shadow: BoxShadow(
                               blurRadius: 20,
                               blurStyle: BlurStyle.outer,
@@ -145,6 +145,18 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                             ),
                           ),
                         ),
+                       
+                        if(!isMobile)Container(
+                            height: size.height,
+                            width: size.width*0.4,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              image: DecorationImage(
+                                  image: AssetImage('assets/images/login.png'),
+                                  alignment: Alignment.center,
+                                  isAntiAlias: true),
+                            ),
+                          ),
                         Positioned(
                           top: size.height * 0.35,
                           bottom: 0,

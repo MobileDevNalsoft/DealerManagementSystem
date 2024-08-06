@@ -18,7 +18,10 @@ class BodyCanvas extends ViewModelWidget<BodySelectorViewModel> {
   @override
   Widget build(BuildContext context, BodySelectorViewModel model) {
     return CanvasTouchDetector(
-      gesturesToOverride: Provider.of<BodySelectorViewModel>(context, listen: true).isTapped == false ? [GestureType.onTapDown] : [GestureType.onTapUp],
+      gesturesToOverride: 
+      // Provider.of<BodySelectorViewModel>(context, listen: true).isTapped == false ? 
+      [GestureType.onTapDown] ,
+      // : [GestureType.onTapUp],
       builder: (context) => CustomPaint(
         painter: BodyPainter(
             context: context,

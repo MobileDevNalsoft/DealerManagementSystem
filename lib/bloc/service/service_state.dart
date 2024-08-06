@@ -44,7 +44,9 @@ final class ServiceState {
       this.serviceLocationsStatus,
       this.filteredJobCards,
       this.gatePassStatus,
-      this.gatePassno});
+      this.gatePassno,
+      this.serviceProceedButtonPosition
+      });
 
   GetServiceStatus? getServiceStatus;
   GetJobCardStatus? getJobCardStatus;
@@ -69,6 +71,7 @@ final class ServiceState {
   GatePassStatus? gatePassStatus;
   String? gatePassno;
   List<Service>? filteredJobCards;
+  SliderButtonPosition? serviceProceedButtonPosition;
 
   factory ServiceState.initial() {
     return ServiceState(
@@ -85,6 +88,7 @@ final class ServiceState {
       index: 0,
       json: null,
       dropDownOpen: false,
+      serviceProceedButtonPosition: SliderButtonPosition.left
     );
   }
 
@@ -111,7 +115,8 @@ final class ServiceState {
       int? index,
       List<dynamic>? locations,
       GatePassStatus? gatePassStatus,
-      String? gatePassno}) {
+      String? gatePassno,
+      }) {
     return ServiceState(
         getServiceStatus: getServiceStatus ?? this.getServiceStatus,
         getJobCardStatus: getJobCardStatus ?? this.getJobCardStatus,
@@ -138,6 +143,7 @@ final class ServiceState {
         jobCards: jobCards ?? this.jobCards,
         locations: locations ?? this.locations,
         gatePassStatus: gatePassStatus ?? this.gatePassStatus,
-        gatePassno: gatePassno ?? this.gatePassno);
+        gatePassno: gatePassno ?? this.gatePassno,
+        );
   }
 }

@@ -301,7 +301,12 @@ class Repository {
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         if ((apiResponse.response!.data)["count"] == 1) {
-          return (apiResponse.response!.data)["items"][0];
+          if ((apiResponse.response!.data)["items"][0]["gate_pass_out_no"] !=
+              null) {
+            return (apiResponse.response!.data)["items"][0];
+          } else {
+            throw apiResponse.error;
+          }
         } else {
           throw apiResponse.error;
         }

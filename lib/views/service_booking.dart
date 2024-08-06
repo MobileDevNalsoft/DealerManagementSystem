@@ -17,6 +17,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
 import 'package:shimmer/shimmer.dart';
+import 'package:slider_button/slider_button.dart';
 import '../inits/init.dart';
 import '../logger/logger.dart';
 
@@ -78,6 +79,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
   SuggestionsController suggestionsController = SuggestionsController();
 
   ScrollController page2ScrollController = ScrollController();
+  ServiceBookingSliderButtonController sliderButtonController =
+      ServiceBookingSliderButtonController();
 
   bool bookingSourceDropDownUp = false;
   bool salesPersonDropDownUp = false;
@@ -187,6 +190,17 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     jobTypeTypeAheadController.clear();
     custConcernsController.clear();
     remarksController.clear();
+  }
+
+  void unFocusFields() {
+    bookingFocus.unfocus();
+    altContFocus.unfocus();
+    altContPhoneNoFocus.unfocus();
+    spFocus.unfocus();
+    bayFocus.unfocus();
+    jobTypeFocus.unfocus();
+    custConcernsFocus.unfocus();
+    remarksFocus.unfocus();
   }
 
   @override
@@ -329,6 +343,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                       controller: page1ScrollController,
                                       children: [
                                         Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Gap(size.height * 0.13),
                                             Column(
@@ -963,6 +981,9 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                   clearFields();
                                                 case ServiceUploadStatus
                                                       .failure:
+                                                  sliderButtonController
+                                                          .position =
+                                                      SliderButtonPosition.left;
                                                   Flushbar(
                                                           flushbarPosition:
                                                               FlushbarPosition
@@ -985,7 +1006,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                                       0.8,
                                                               right: 10))
                                                       .show(context);
-
+                                                  print("status chagned");
                                                 default:
                                                   null;
                                               }
@@ -996,18 +1017,9 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                 builder: (context, state) {
                                                   return CustomSliderButton(
                                                     context: context,
+                                                    sliderController:
+                                                        sliderButtonController,
                                                     size: size,
-                                                    resetPosition:
-                                                        state.status ==
-                                                                MultiStateStatus
-                                                                    .failure ||
-                                                            state.status ==
-                                                                MultiStateStatus
-                                                                    .initial,
-                                                    sliderStatus: context
-                                                        .watch<ServiceBloc>()
-                                                        .state
-                                                        .serviceUploadStatus!,
                                                     label: const Text(
                                                       "Proceed to receive",
                                                       style: TextStyle(
@@ -1316,8 +1328,8 @@ class CustomSliderButton extends StatefulWidget {
   final Widget label;
   final Widget icon;
   final onDismissed;
-  final resetPosition;
-  ServiceUploadStatus sliderStatus;
+  final ServiceBookingSliderButtonController sliderController;
+
   CustomSliderButton(
       {Key? key,
       required this.size,
@@ -1325,8 +1337,7 @@ class CustomSliderButton extends StatefulWidget {
       required this.label,
       required this.icon,
       required this.onDismissed,
-      required this.resetPosition,
-      this.sliderStatus = ServiceUploadStatus.initial})
+      required this.sliderController})
       : super(key: key);
 
   @override
@@ -1337,15 +1348,26 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   late double _position;
   late double _startPosition;
   late double _endPosition;
-
+  late ServiceBookingSliderButtonController _sliderController;
   @override
   void initState() {
     super.initState();
-    print(
-        "stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus}");
+    _initController();
     _position = widget.size.width * 0.22;
     _startPosition = widget.size.width * 0.22;
     _endPosition = widget.size.width * 0.68;
+    print(
+        "stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus} ${_sliderController._position}");
+    _sliderController.currentPosition = widget.size.width * 0.22;
+    if (_sliderController.position == SliderButtonPosition.right) {
+      _sliderController.currentPosition = _endPosition;
+    } else if (_sliderController.position == SliderButtonPosition.left) {
+      _sliderController.currentPosition = _startPosition;
+    }
+  }
+
+  void _initController() {
+    _sliderController = widget.sliderController;
   }
 
   void _onPanStart(DragStartDetails details) {
@@ -1356,19 +1378,27 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
-      _position = details.localPosition.dx;
-      if (_position > _endPosition) {
-        _position = _endPosition;
-      } else if (_position < _startPosition) {
-        _position = _startPosition;
+      _sliderController.currentPosition = details.localPosition.dx;
+      // _position = details.localPosition.dx;
+      if (_sliderController.currentPosition > _endPosition) {
+        _sliderController._position = SliderButtonPosition.right;
+        _sliderController._currentPosition = _endPosition;
+        // _position = _endPosition;
+      } else if (_sliderController.currentPosition < _startPosition) {
+        _sliderController._position = SliderButtonPosition.left;
+        _sliderController._currentPosition = _startPosition;
+      } else {
+        _sliderController.position = SliderButtonPosition.moving;
       }
     });
   }
 
   void _onPanEnd(DragEndDetails details) async {
-    if (_position <= widget.size.width / 2) {
+    if (_sliderController.currentPosition <= widget.size.width / 2) {
       setState(() {
-        _position = _startPosition;
+        _sliderController.currentPosition = _startPosition;
+        _sliderController.position = SliderButtonPosition.left;
+        // _position = _startPosition;
       });
       return;
     }
@@ -1378,20 +1408,31 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
           "status from state ${context.read<ServiceBloc>().state.serviceUploadStatus}");
       if (context.read<ServiceBloc>().state.serviceUploadStatus ==
           ServiceUploadStatus.initial) {
-        _position = _startPosition;
+        _sliderController.currentPosition = _startPosition;
+        _sliderController.position = SliderButtonPosition.left;
+        // _position = _startPosition;
       } else if (context.read<ServiceBloc>().state.serviceUploadStatus ==
           ServiceUploadStatus.loading) {
-        _position = _endPosition;
+        _sliderController.currentPosition = _endPosition;
+        _sliderController.position = SliderButtonPosition.right;
+        // _position = _endPosition;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("status ${widget.sliderStatus}");
-    if (widget.resetPosition == true) {
-      _position = _startPosition;
+    print("from build ${_sliderController.position}");
+    if (_sliderController.position != SliderButtonPosition.moving) {
+      if (_sliderController.position == SliderButtonPosition.right) {
+        _sliderController.currentPosition = _endPosition;
+      } else if (_sliderController.position == SliderButtonPosition.left) {
+        print("inside left");
+        _sliderController.currentPosition = _startPosition;
+      }
     }
+    print(
+        "from build current position${_sliderController.currentPosition} ${_startPosition} ${_endPosition}");
     return GestureDetector(
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
@@ -1421,13 +1462,19 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             ),
           ),
           Positioned(
-            left: _position,
+            left: _sliderController.currentPosition,
             top: 1.5,
             child: Container(
               width: 42,
               height: 42,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.black,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.orange.shade200,
+                      blurRadius: 20,
+                      spreadRadius: 0)
+                ],
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -1491,3 +1538,28 @@ class RotationRoute extends PageRouteBuilder {
                   child: child,
                 ));
 }
+
+class ServiceBookingSliderButtonController extends ChangeNotifier {
+  SliderButtonPosition _position;
+  double? _currentPosition;
+
+  ServiceBookingSliderButtonController(
+      {SliderButtonPosition position = SliderButtonPosition.left})
+      : _position = position;
+
+  set position(position) {
+    _position = position;
+    notifyListeners();
+  }
+
+  SliderButtonPosition get position => _position;
+
+  set currentPosition(currentPosition) {
+    _currentPosition = currentPosition;
+    notifyListeners();
+  }
+
+  get currentPosition => _currentPosition;
+}
+
+enum SliderButtonPosition { left, right, moving }

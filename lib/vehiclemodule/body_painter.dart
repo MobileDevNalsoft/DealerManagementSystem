@@ -63,7 +63,7 @@ class BodyPainter extends CustomPainter {
       var yScale = contextSize.height * 0.94 / contextSize.height * 0.6;
 
       double translateX = (contextSize.width - contextSize.width * 1.5 * xScale) / 2;
-      double translateY = (contextSize.height * 0.96 - contextSize.height * 0.85 * yScale) / 2;
+      double translateY = (contextSize.height * 0.96 - contextSize.height * yScale) / 2;
 
       matrix4.translate(translateX, translateY);
       matrix4.scale(xScale, yScale);
@@ -106,13 +106,13 @@ class BodyPainter extends CustomPainter {
             Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = true;
           }
         },
-        onTapUp: (details) {
-          print("tap up");
-          if (displayAcceptedStatus) {
-            Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
-            Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
-          }
-        },
+        // onTapUp: (details) {
+        //   print("tap up");
+        //   if (displayAcceptedStatus) {
+        //     Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
+        //     Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
+        //   }
+        // },
       );
       if (displayAcceptedStatus && context.read<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(muscle.name)) {
         if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[muscle.name]!.isAccepted == true) {

@@ -1,5 +1,4 @@
 import 'package:another_flushbar/flushbar.dart';
-import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
@@ -77,7 +76,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
             ),
           ),
           title: Container(
-              alignment: Alignment.center,
               height: size.height * 0.05,
               width: size.width * 0.45,
               decoration: BoxDecoration(
@@ -91,13 +89,15 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                         color: Colors.orange.shade200,
                         offset: const Offset(0, 0))
                   ]),
-              child: const Text(
-                textAlign: TextAlign.center,
-                'Inspection Out',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 16),
+              child: const Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'Inspection Out',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 16),
+                ),
               )),
           centerTitle: true,
         ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
@@ -28,9 +30,16 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
   FocusNode focusNode = FocusNode();
   late List<Widget> clipperWidgets;
   late Size size;
+
+  Timer? _debounce;
+
   @override
   void initState() {
     super.initState();
+    context.read<ServiceBloc>().add(ClearServices());
+    context
+        .read<VehicleBloc>()
+        .add(UpdateState(vehicle: Vehicle(), status: VehicleStatus.initial));
   }
 
   List<Widget> initalizeWidgets() {
@@ -125,248 +134,253 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                           height: size.height * 0.3,
                           child: BlocConsumer<ServiceBloc, ServiceState>(
                             listener: (context, state) {
-                              // TODO: implement listener
+                              if (state.getServiceStatus ==
+                                  GetServiceStatus.success) {
+                                focusNode.unfocus();
+                              }
                             },
                             builder: (context, state) {
+                              print(
+                                  "serevice status ${state.getServiceStatus}");
                               return CustomScrollView(
                                 slivers: [
-                                  SliverList(
-                                      delegate: SliverChildBuilderDelegate(
-                                          (context, index) {
-                                    return Skeletonizer(
-                                        enableSwitchAnimation: true,
-                                        enabled: state.getJobCardStatus ==
-                                                GetJobCardStatus.loading ||
-                                            state.jobCardStatusUpdate ==
-                                                JobCardStatusUpdate.loading,
-                                        child: SizedBox(
-                                          width: size.width * 0.9,
-                                          height: size.height * 0.14,
-                                          child: ClipPath(
-                                            clipper: TicketClipper(),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: Card(
-                                              elevation: 5,
-                                              surfaceTintColor:
-                                                  Colors.orange.shade200,
-                                              shadowColor:
-                                                  Colors.orange.shade200,
-                                              margin: EdgeInsets.symmetric(
-                                                vertical: size.height * 0.006,
-                                              ),
-                                              color: Colors.white,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Gap(size.width * 0.03),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Gap(size.width *
-                                                                  0.05),
-                                                              Image.asset(
-                                                                'assets/images/job_card.png',
-                                                                scale:
-                                                                    size.width *
-                                                                        0.05,
-                                                                color: Colors
-                                                                    .black,
-                                                              ),
-                                                              Gap(size.width *
-                                                                  0.02),
-                                                              InkWell(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                                radius: 100,
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                customBorder: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20)),
-                                                                enableFeedback:
-                                                                    true,
-                                                                onTap: () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (_) =>
-                                                                              JobCardDetails(service: state.jobCards![index])));
-                                                                },
-                                                                child: Text(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  state.getServiceStatus ==
-                                                                          GetServiceStatus
-                                                                              .success
-                                                                      ? state
-                                                                          .services![
-                                                                              index]
-                                                                          .jobCardNo!
-                                                                      : 'JC-MAD-633',
-                                                                  style: const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      fontSize:
-                                                                          12,
+                                  (state.services == null ||
+                                          state.services!.isEmpty)
+                                      ? SliverToBoxAdapter(
+                                          child: Center(
+                                              heightFactor: size.height * 0.01,
+                                              child: Text("No services found !",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          size.width * 0.045,
+                                                      fontWeight:
+                                                          FontWeight.w300))))
+                                      : SliverList(
+                                          delegate: SliverChildBuilderDelegate(
+                                              (context, index) {
+                                          return Skeletonizer(
+                                              enableSwitchAnimation: true,
+                                              enabled: state.getJobCardStatus ==
+                                                      GetJobCardStatus
+                                                          .loading ||
+                                                  state.jobCardStatusUpdate ==
+                                                      JobCardStatusUpdate
+                                                          .loading,
+                                              child: SizedBox(
+                                                width: size.width * 0.9,
+                                                height: size.height * 0.14,
+                                                child: ClipPath(
+                                                  clipper: TicketClipper(),
+                                                  clipBehavior: Clip.antiAlias,
+                                                  child: Card(
+                                                    elevation: 5,
+                                                    surfaceTintColor:
+                                                        Colors.orange.shade200,
+                                                    shadowColor:
+                                                        Colors.orange.shade200,
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                      vertical:
+                                                          size.height * 0.006,
+                                                    ),
+                                                    color: Colors.white,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Gap(size.width *
+                                                                0.03),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Gap(size.width *
+                                                                        0.05),
+                                                                    Image.asset(
+                                                                      'assets/images/job_card.png',
+                                                                      scale: size
+                                                                              .width *
+                                                                          0.05,
                                                                       color: Colors
-                                                                          .blue,
-                                                                      decoration:
-                                                                          TextDecoration
-                                                                              .underline),
+                                                                          .black,
+                                                                    ),
+                                                                    Gap(size.width *
+                                                                        0.02),
+                                                                    InkWell(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20),
+                                                                      radius:
+                                                                          100,
+                                                                      splashColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      customBorder:
+                                                                          RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(20)),
+                                                                      enableFeedback:
+                                                                          true,
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder: (_) => JobCardDetails(service: state.jobCards![index])));
+                                                                      },
+                                                                      child:
+                                                                          Text(
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        state.getServiceStatus ==
+                                                                                GetServiceStatus.success
+                                                                            ? state.services![index].jobCardNo!
+                                                                            : 'JC-MAD-633',
+                                                                        style: const TextStyle(
+                                                                            fontWeight: FontWeight
+                                                                                .w600,
+                                                                            fontSize:
+                                                                                12,
+                                                                            color:
+                                                                                Colors.blue,
+                                                                            decoration: TextDecoration.underline),
+                                                                      ),
+                                                                    )
+                                                                  ],
                                                                 ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                          Gap(size.width *
-                                                              0.01),
-                                                          Row(
-                                                            children: [
-                                                              Gap(size.width *
-                                                                  0.055),
-                                                              Icon(Icons
-                                                                  .calendar_month_outlined),
-                                                              Gap(size.width *
-                                                                  0.02),
-                                                              SizedBox(
-                                                                width:
-                                                                    size.width *
-                                                                        0.28,
-                                                                child:
-                                                                    SingleChildScrollView(
-                                                                  scrollDirection:
-                                                                      Axis.horizontal,
-                                                                  child: Text(
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    state.getServiceStatus ==
-                                                                            GetServiceStatus
-                                                                                .success
-                                                                        ? state
-                                                                            .services![index]
-                                                                            .scheduledDate!
-                                                                        : '12022004',
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            13,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
-                                                                  ),
+                                                                Gap(size.width *
+                                                                    0.01),
+                                                                Row(
+                                                                  children: [
+                                                                    Gap(size.width *
+                                                                        0.055),
+                                                                    Icon(Icons
+                                                                        .calendar_month_outlined),
+                                                                    Gap(size.width *
+                                                                        0.02),
+                                                                    SizedBox(
+                                                                      width: size
+                                                                              .width *
+                                                                          0.28,
+                                                                      child:
+                                                                          SingleChildScrollView(
+                                                                        scrollDirection:
+                                                                            Axis.horizontal,
+                                                                        child:
+                                                                            Text(
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          state.getServiceStatus == GetServiceStatus.success
+                                                                              ? state.services![index].scheduledDate!
+                                                                              : '12022004',
+                                                                          style: const TextStyle(
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Gap(size.width *
-                                                              0.01),
-                                                        ],
-                                                      ),
-                                                      Gap(size.width * 0.01),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          // Gap(size.height * 0.03),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Gap(size.width *
-                                                                  0.058),
-                                                              Icon(Icons
-                                                                  .mark_unread_chat_alt_outlined),
-                                                              // Image.asset('assets/images/status.png', scale: size.width * 0.058),
-                                                              Gap(size.width *
-                                                                  0.02),
-                                                              Text(
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                state.getServiceStatus ==
-                                                                        GetServiceStatus
-                                                                            .success
-                                                                    ? state.services![index]
-                                                                            .jobType ??
-                                                                        '123123123'
-                                                                    : '123123123',
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Gap(size.width *
-                                                              0.01),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Gap(size.width *
-                                                                  0.058),
-                                                              Icon(Icons
-                                                                  .location_on_outlined),
-                                                              Gap(size.width *
-                                                                  0.02),
-                                                              Text(
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                state.getServiceStatus ==
-                                                                        GetServiceStatus
-                                                                            .success
-                                                                    ? state.services![index]
-                                                                            .location ??
-                                                                        'Location27'
-                                                                    : 'Location27',
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      )
-                                                    ],
+                                                                Gap(size.width *
+                                                                    0.01),
+                                                              ],
+                                                            ),
+                                                            Gap(size.width *
+                                                                0.01),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                // Gap(size.height * 0.03),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Gap(size.width *
+                                                                        0.058),
+                                                                    Icon(Icons
+                                                                        .mark_unread_chat_alt_outlined),
+                                                                    // Image.asset('assets/images/status.png', scale: size.width * 0.058),
+                                                                    Gap(size.width *
+                                                                        0.02),
+                                                                    Text(
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      state.getServiceStatus ==
+                                                                              GetServiceStatus
+                                                                                  .success
+                                                                          ? state.services![index].jobType ??
+                                                                              '123123123'
+                                                                          : '123123123',
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              13,
+                                                                          fontWeight:
+                                                                              FontWeight.w600),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Gap(size.width *
+                                                                    0.01),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Gap(size.width *
+                                                                        0.058),
+                                                                    Icon(Icons
+                                                                        .location_on_outlined),
+                                                                    Gap(size.width *
+                                                                        0.02),
+                                                                    Text(
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      state.getServiceStatus ==
+                                                                              GetServiceStatus
+                                                                                  .success
+                                                                          ? state.services![index].location ??
+                                                                              'Location27'
+                                                                          : 'Location27',
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              13,
+                                                                          fontWeight:
+                                                                              FontWeight.w600),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ));
-                                  },
-                                          childCount: state.services != null
-                                              ? state.services!.length
-                                              : 0))
+                                                ),
+                                              ));
+                                        },
+                                              childCount: state.services != null
+                                                  ? state.services!.length
+                                                  : 0))
                                 ],
                               );
                             },
@@ -525,6 +539,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
         child: PopScope(
             canPop: false,
             onPopInvoked: (didPop) async {
+              focusNode.unfocus();
               Navigator.pop(context);
             },
             child: Scaffold(
@@ -552,6 +567,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     transform: Matrix4.translationValues(-3, 0, 0),
                     child: IconButton(
                         onPressed: () {
+                          focusNode.unfocus();
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.arrow_back_rounded,
@@ -622,24 +638,28 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               onChanged: (value) {
                                 vehicleRegNoController.text =
                                     vehicleRegNoController.text.toUpperCase();
-                                if (!isConnected()) {
-                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message:
-                                          'Please check the internet connectivity',
-                                      icon: Icon(Icons.error));
-                                  return;
-                                }
-                                // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
-                                context.read<VehicleBloc>().add(
-                                    FetchVehicleCustomer(
-                                        registrationNo:
-                                            vehicleRegNoController.text));
-                                context.read<ServiceBloc>().add(
-                                    GetServiceHistory(
-                                        query: 'vehicle_history',
-                                        vehicleRegNo:
-                                            vehicleRegNoController.text));
-                                // context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.success));
+                                if (_debounce?.isActive ?? false)
+                                  _debounce!.cancel();
+                                _debounce = Timer(
+                                    const Duration(milliseconds: 300), () {
+                                  print("hello");
+                                  if (!isConnected()) {
+                                    DMSCustomWidgets.DMSFlushbar(size, context,
+                                        message:
+                                            'Please check the internet connectivity',
+                                        icon: Icon(Icons.error));
+                                    return;
+                                  }
+                                  context.read<VehicleBloc>().add(
+                                      FetchVehicleCustomer(
+                                          registrationNo:
+                                              vehicleRegNoController.text));
+                                  context.read<ServiceBloc>().add(
+                                      GetServiceHistory(
+                                          query: 'vehicle_history',
+                                          vehicleRegNo:
+                                              vehicleRegNoController.text));
+                                });
                               },
                               cursorColor: Colors.black,
                               decoration: const InputDecoration(
