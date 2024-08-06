@@ -710,17 +710,6 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                   return CustomSliderButton(
                                                     context: context,
                                                     size: size,
-                                                    resetPosition:
-                                                        state.status ==
-                                                                MultiStateStatus
-                                                                    .failure ||
-                                                            state.status ==
-                                                                MultiStateStatus
-                                                                    .initial,
-                                                    sliderStatus: context
-                                                        .watch<ServiceBloc>()
-                                                        .state
-                                                        .serviceUploadStatus!,
                                                     label: const Text(
                                                       "Proceed to receive",
                                                       style: TextStyle(
@@ -749,16 +738,13 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                       FocusManager
                                                           .instance.primaryFocus
                                                           ?.unfocus();
-
                                                   _vehicleBloc.state.status = VehicleStatus.initial;
-
                                                   String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
                                                       _altPersonContactNoValidation(altContPhoneNoController.text) ??
                                                       _salesPersonValidator(spTypeAheadController.text,
                                                           (context.read<MultiBloc>().state.salesPersons ?? []).map((e) => e.empName).toList()) ??
                                                       _bayValidator(bayTypeAheadController.text, bayList) ??
                                                       _jobTypeValidator(jobTypeTypeAheadController.text, jobTypeList);
-
                                                   if (message != null) {
                                                     Flushbar(
                                                       flushbarPosition: FlushbarPosition.TOP,
@@ -787,11 +773,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                             'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${kmsController.text.toString().substring(0, 2)}',
                                                         customerConcerns: custConcernsController.text,
                                                         remarks: remarksController.text);
-
                                                     Log.d(service.toJson());
                                                     context.read<ServiceBloc>().add(ServiceAdded(service: service));
                                                   }
-                                                },
+                                                }, sliderController: sliderButtonController,
                                               );
                                             },
                                           );},),

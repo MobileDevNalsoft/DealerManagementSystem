@@ -38,6 +38,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<DropDownOpen>(_onDropDownOpen);
     on<GetMyJobCards>(_onGetMyJobCards);
     on<ModifyGatePassStatus>(_onModifyGatePassStatus);
+    on<ClearServices>(_onClearServices);
   }
 
   final Repository _repo;
@@ -368,8 +369,18 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
             gatePassStatus: GatePassStatus.success));
       },
     ).onError(
-      (error, stackTrace) {
+      (error, stackTrace) async{
+        print("generating gatepass number");
+        await _repo.generateGatePass(jobCardNo: event.jobCardNo).then((value){
+          print("$value value");
+           print("gatepassno ${value["gate_pass_out_no"]}");
+        emit(state.copyWith(
+            gatePassno: value["gate_pass_out_no"],
+            gatePassStatus: GatePassStatus.success));
+        }).onError((error, stackTrace) {
+          
         emit(state.copyWith(gatePassStatus: GatePassStatus.failure));
+        },);
       },
     );
   }
@@ -378,7 +389,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       ModifyGatePassStatus event, Emitter<ServiceState> emit) {
     emit(state.copyWith(gatePassStatus: event.status));
   }
-  
+
+  void _onClearServices(ClearServices event, Emitter<ServiceState> emit){
+    emit(state.copyWith(services: [],getServiceStatus: GetServiceStatus.initial));
+  }  
 
 }
 

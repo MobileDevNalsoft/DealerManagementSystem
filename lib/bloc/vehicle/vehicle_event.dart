@@ -29,3 +29,4 @@ class FetchVehicleCustomer extends VehicleEvent{
    final String registrationNo;
   FetchVehicleCustomer({required this.registrationNo});
 }
+

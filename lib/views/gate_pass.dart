@@ -28,7 +28,7 @@ class _GatePassState extends State<GatePass> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<ServiceBloc>().add(GetGatePass(jobCardNo: "JC-MWC-420"));
+    context.read<ServiceBloc>().add(GetGatePass(jobCardNo: context.read<ServiceBloc>().state.jobCardNo!));
   }
 
   @override

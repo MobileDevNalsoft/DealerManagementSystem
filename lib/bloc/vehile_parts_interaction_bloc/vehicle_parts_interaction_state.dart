@@ -3,7 +3,7 @@ part of 'vehicle_parts_interaction_bloc.dart';
 enum VehiclePartsInteractionStatus{initial, loading, success, failure, rebuild}
 
 @immutable
- class VehiclePartsInteractionBlocState {
+ class VehiclePartsInteractionBlocState  {
   Map<String, VehiclePartMedia> mapMedia;
   VehiclePartsInteractionStatus status;
   VehiclePartsInteractionBlocState({required this.mapMedia,this.status = VehiclePartsInteractionStatus.initial});

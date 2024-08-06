@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
@@ -28,9 +30,14 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
   FocusNode focusNode = FocusNode();
   late List<Widget> clipperWidgets;
   late Size size;
+
+  Timer? _debounce;
+
   @override
   void initState() {
     super.initState();
+    context.read<ServiceBloc>().add(ClearServices());
+    context.read<VehicleBloc>().add(UpdateState(vehicle: Vehicle(),status: VehicleStatus.initial));
   }
 
   List<Widget> initalizeWidgets() {
@@ -41,13 +48,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
           Transform.flip(
             flipX: true,
             child: ClippedButton(
-              shadow: Shadow(
-                  offset: Offset(0, 0),
-                  color: context.watch<MultiBloc>().state.reverseClippedWidgets!
-                      ? Colors.black
-                      : Colors.transparent),
-              clipper: VehicleInfoClipper(
-                  sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
+              shadow: Shadow(offset: Offset(0, 0), color: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.black : Colors.transparent),
+              clipper: VehicleInfoClipper(sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
               size: Size.copy(Size(size.width * 0.95, size.height * 0.5)),
               child: Transform.flip(
                 flipX: true,
@@ -67,49 +69,28 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         //         begin: Alignment.topCenter,
                         //         end: Alignment.bottomCenter)
                         //     : null,
-                        color: context
-                                .watch<MultiBloc>()
-                                .state
-                                .reverseClippedWidgets!
-                            ? Color.fromARGB(136, 109, 108, 108)
-                            : null),
+                        color: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Color.fromARGB(136, 109, 108, 108) : null),
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(
-                              top: size.height * 0.05,
-                              right: size.width * 0.07),
+                          padding: EdgeInsets.only(top: size.height * 0.05, right: size.width * 0.07),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Spacer(),
-                              Icon(Icons.history,
-                                  color: context
-                                          .watch<MultiBloc>()
-                                          .state
-                                          .reverseClippedWidgets!
-                                      ? Colors.white
-                                      : Colors.black),
+                              Icon(Icons.history, color: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.white : Colors.black),
                               Gap(4),
                               Text(
                                 "Service History",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
-                                    color: context
-                                            .watch<MultiBloc>()
-                                            .state
-                                            .reverseClippedWidgets!
-                                        ? Colors.white
-                                        : Colors.black),
+                                    color: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.white : Colors.black),
                               ),
                             ],
                           ),
                         ),
-                        if (context
-                            .watch<MultiBloc>()
-                            .state
-                            .reverseClippedWidgets!)
+                        if (context.watch<MultiBloc>().state.reverseClippedWidgets!)
                           Padding(
                             padding: EdgeInsets.only(left: size.width * 0.45),
                             child: SizedBox(
@@ -125,20 +106,20 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                           height: size.height * 0.3,
                           child: BlocConsumer<ServiceBloc, ServiceState>(
                             listener: (context, state) {
-                              // TODO: implement listener
+                              if (state.getServiceStatus == GetServiceStatus.success) {
+                                focusNode.unfocus();
+                              }
                             },
                             builder: (context, state) {
+                              print("serevice status ${state.getServiceStatus }");
                               return CustomScrollView(
                                 slivers: [
+                                  (state.services==null || state.services!.isEmpty)?SliverToBoxAdapter(child:Center(heightFactor: size.height*0.01,child: Text("No services found !", style: TextStyle(color:Colors.white,fontSize: size.width*0.045,fontWeight: FontWeight.w300)))) :
                                   SliverList(
-                                      delegate: SliverChildBuilderDelegate(
-                                          (context, index) {
+                                      delegate: SliverChildBuilderDelegate((context, index) {
                                     return Skeletonizer(
                                         enableSwitchAnimation: true,
-                                        enabled: state.getJobCardStatus ==
-                                                GetJobCardStatus.loading ||
-                                            state.jobCardStatusUpdate ==
-                                                JobCardStatusUpdate.loading,
+                                        enabled: state.getJobCardStatus == GetJobCardStatus.loading || state.jobCardStatusUpdate == JobCardStatusUpdate.loading,
                                         child: SizedBox(
                                           width: size.width * 0.9,
                                           height: size.height * 0.14,
@@ -147,210 +128,115 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                             clipBehavior: Clip.antiAlias,
                                             child: Card(
                                               elevation: 5,
-                                              surfaceTintColor:
-                                                  Colors.orange.shade200,
-                                              shadowColor:
-                                                  Colors.orange.shade200,
+                                              surfaceTintColor: Colors.orange.shade200,
+                                              shadowColor: Colors.orange.shade200,
                                               margin: EdgeInsets.symmetric(
                                                 vertical: size.height * 0.006,
                                               ),
                                               color: Colors.white,
                                               child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 children: [
                                                   Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Gap(size.width * 0.03),
                                                       Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Row(
                                                             children: [
-                                                              Gap(size.width *
-                                                                  0.05),
+                                                              Gap(size.width * 0.05),
                                                               Image.asset(
                                                                 'assets/images/job_card.png',
-                                                                scale:
-                                                                    size.width *
-                                                                        0.05,
-                                                                color: Colors
-                                                                    .black,
+                                                                scale: size.width * 0.05,
+                                                                color: Colors.black,
                                                               ),
-                                                              Gap(size.width *
-                                                                  0.02),
+                                                              Gap(size.width * 0.02),
                                                               InkWell(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
+                                                                borderRadius: BorderRadius.circular(20),
                                                                 radius: 100,
-                                                                splashColor: Colors
-                                                                    .transparent,
-                                                                customBorder: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20)),
-                                                                enableFeedback:
-                                                                    true,
+                                                                splashColor: Colors.transparent,
+                                                                customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                                                enableFeedback: true,
                                                                 onTap: () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (_) =>
-                                                                              JobCardDetails(service: state.jobCards![index])));
+                                                                  Navigator.push(context,
+                                                                      MaterialPageRoute(builder: (_) => JobCardDetails(service: state.jobCards![index])));
                                                                 },
                                                                 child: Text(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  state.getServiceStatus ==
-                                                                          GetServiceStatus
-                                                                              .success
-                                                                      ? state
-                                                                          .services![
-                                                                              index]
-                                                                          .jobCardNo!
+                                                                  textAlign: TextAlign.center,
+                                                                  state.getServiceStatus == GetServiceStatus.success
+                                                                      ? state.services![index].jobCardNo!
                                                                       : 'JC-MAD-633',
                                                                   style: const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      fontSize:
-                                                                          12,
-                                                                      color: Colors
-                                                                          .blue,
-                                                                      decoration:
-                                                                          TextDecoration
-                                                                              .underline),
+                                                                      fontWeight: FontWeight.w600,
+                                                                      fontSize: 12,
+                                                                      color: Colors.blue,
+                                                                      decoration: TextDecoration.underline),
                                                                 ),
                                                               )
                                                             ],
                                                           ),
-                                                          Gap(size.width *
-                                                              0.01),
+                                                          Gap(size.width * 0.01),
                                                           Row(
                                                             children: [
-                                                              Gap(size.width *
-                                                                  0.055),
-                                                              Icon(Icons
-                                                                  .calendar_month_outlined),
-                                                              Gap(size.width *
-                                                                  0.02),
+                                                              Gap(size.width * 0.055),
+                                                              Icon(Icons.calendar_month_outlined),
+                                                              Gap(size.width * 0.02),
                                                               SizedBox(
-                                                                width:
-                                                                    size.width *
-                                                                        0.28,
-                                                                child:
-                                                                    SingleChildScrollView(
-                                                                  scrollDirection:
-                                                                      Axis.horizontal,
+                                                                width: size.width * 0.28,
+                                                                child:SingleChildScrollView(
+                                                                  scrollDirection: Axis.horizontal,
                                                                   child: Text(
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    state.getServiceStatus ==
-                                                                            GetServiceStatus
-                                                                                .success
-                                                                        ? state
-                                                                            .services![index]
-                                                                            .scheduledDate!
+                                                                    textAlign: TextAlign.center,
+                                                                    state.getServiceStatus == GetServiceStatus.success
+                                                                        ? state.services![index].scheduledDate!
                                                                         : '12022004',
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            13,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
+                                                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                                                                   ),
                                                                 ),
                                                               ),
                                                             ],
                                                           ),
-                                                          Gap(size.width *
-                                                              0.01),
+                                                          Gap(size.width * 0.01),
                                                         ],
                                                       ),
                                                       Gap(size.width * 0.01),
                                                       Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           // Gap(size.height * 0.03),
                                                           Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
+                                                            mainAxisAlignment: MainAxisAlignment.start,
                                                             children: [
-                                                              Gap(size.width *
-                                                                  0.058),
-                                                              Icon(Icons
-                                                                  .mark_unread_chat_alt_outlined),
+                                                              Gap(size.width * 0.058),
+                                                              Icon(Icons.mark_unread_chat_alt_outlined),
                                                               // Image.asset('assets/images/status.png', scale: size.width * 0.058),
-                                                              Gap(size.width *
-                                                                  0.02),
+                                                              Gap(size.width * 0.02),
                                                               Text(
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                state.getServiceStatus ==
-                                                                        GetServiceStatus
-                                                                            .success
-                                                                    ? state.services![index]
-                                                                            .jobType ??
-                                                                        '123123123'
+                                                                textAlign: TextAlign.center,
+                                                                state.getServiceStatus == GetServiceStatus.success
+                                                                    ? state.services![index].jobType ?? '123123123'
                                                                     : '123123123',
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
+                                                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                                                               ),
                                                             ],
                                                           ),
-                                                          Gap(size.width *
-                                                              0.01),
+                                                          Gap(size.width * 0.01),
                                                           Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
+                                                            mainAxisAlignment: MainAxisAlignment.start,
                                                             children: [
-                                                              Gap(size.width *
-                                                                  0.058),
-                                                              Icon(Icons
-                                                                  .location_on_outlined),
-                                                              Gap(size.width *
-                                                                  0.02),
+                                                              Gap(size.width * 0.058),
+                                                              Icon(Icons.location_on_outlined),
+                                                              Gap(size.width * 0.02),
                                                               Text(
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                state.getServiceStatus ==
-                                                                        GetServiceStatus
-                                                                            .success
-                                                                    ? state.services![index]
-                                                                            .location ??
-                                                                        'Location27'
+                                                                textAlign: TextAlign.center,
+                                                                state.getServiceStatus == GetServiceStatus.success
+                                                                    ? state.services![index].location ?? 'Location27'
                                                                     : 'Location27',
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
+                                                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                                                               ),
                                                             ],
                                                           ),
@@ -363,10 +249,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                             ),
                                           ),
                                         ));
-                                  },
-                                          childCount: state.services != null
-                                              ? state.services!.length
-                                              : 0))
+                                  }, childCount: state.services != null ? state.services!.length : 0))
                                 ],
                               );
                             },
@@ -384,9 +267,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               splashColor: Colors.transparent,
               onTap: () {
                 print("inside service");
-                context
-                    .read<MultiBloc>()
-                    .add(AddClippedWidgets(reverseClippedWidgets: false));
+                context.read<MultiBloc>().add(AddClippedWidgets(reverseClippedWidgets: false));
               },
               child: Container(
                 width: size.width * 0.4,
@@ -399,26 +280,16 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
       Stack(
         children: [
           ClippedButton(
-            shadow: Shadow(
-                offset: Offset(0, 0),
-                color: !context.watch<MultiBloc>().state.reverseClippedWidgets!
-                    ? Colors.black
-                    : Colors.transparent),
-            clipper: VehicleInfoClipper(
-                sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
+            shadow: Shadow(offset: Offset(0, 0), color: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.black : Colors.transparent),
+            clipper: VehicleInfoClipper(sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
             size: Size.copy(Size(size.width * 0.95, size.height * 0.5)),
             child: Container(
-                decoration: BoxDecoration(
-                    color:
-                        !context.watch<MultiBloc>().state.reverseClippedWidgets!
-                            ? Colors.white
-                            : null),
+                decoration: BoxDecoration(color: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.white : null),
                 child: Column(
                   children: [
                     Align(
                       child: Padding(
-                        padding: EdgeInsets.only(
-                            top: size.height * 0.05, right: size.width * 0.45),
+                        padding: EdgeInsets.only(top: size.height * 0.05, right: size.width * 0.45),
                         child: Row(
                           children: [
                             Gap(24),
@@ -430,18 +301,14 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                             Gap(6),
                             Text(
                               "Vehicle Details",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ],
                         ),
                         // ),
                       ),
                     ),
-                    if (!context
-                        .watch<MultiBloc>()
-                        .state
-                        .reverseClippedWidgets!)
+                    if (!context.watch<MultiBloc>().state.reverseClippedWidgets!)
                       Padding(
                         padding: EdgeInsets.only(right: size.width * 0.45),
                         child: SizedBox(
@@ -452,25 +319,20 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         ),
                       ),
                     Padding(
-                      padding: EdgeInsets.only(
-                          top: size.height * 0.08, left: size.width * 0.1),
+                      padding: EdgeInsets.only(top: size.height * 0.08, left: size.width * 0.1),
                       child: BlocConsumer<VehicleBloc, VehicleState>(
                         listener: (context, state) {
                           // TODO: implement listener
                         },
                         builder: (context, state) {
                           return Skeletonizer(
-                            enabled:
-                                context.watch<VehicleBloc>().state.status ==
-                                    VehicleStatus.loading,
+                            enabled: context.watch<VehicleBloc>().state.status == VehicleStatus.loading,
                             child: DMSCustomWidgets.CustomDataFields(
                                 context: context,
                                 contentPadding: size.width * 0.08,
                                 spaceBetweenFields: size.width * 0.03,
-                                propertyFontStyle: TextStyle(
-                                    fontWeight: FontWeight.w800, fontSize: 18),
-                                valueFontStyle: TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 18),
+                                propertyFontStyle: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+                                valueFontStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
                                 showColonsBetween: false,
                                 propertyList: [
                                   "Vehicle Reg. no.",
@@ -503,9 +365,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               onTap: () {
                 print("inside details");
 
-                context
-                    .read<MultiBloc>()
-                    .add(AddClippedWidgets(reverseClippedWidgets: true));
+                context.read<MultiBloc>().add(AddClippedWidgets(reverseClippedWidgets: true));
               },
               child: Container(
                 width: size.width * 0.4,
@@ -525,6 +385,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
         child: PopScope(
             canPop: false,
             onPopInvoked: (didPop) async {
+              focusNode.unfocus();
               Navigator.pop(context);
             },
             child: Scaffold(
@@ -537,50 +398,31 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 leadingWidth: size.width * 0.14,
                 leading: Container(
                   margin: EdgeInsets.only(left: size.width * 0.045),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 0,
-                            color: Colors.orange.shade200,
-                            offset: const Offset(0, 0))
-                      ]),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+                    BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                  ]),
                   child: Transform(
                     transform: Matrix4.translationValues(-3, 0, 0),
                     child: IconButton(
                         onPressed: () {
+                          focusNode.unfocus();
                           Navigator.pop(context);
                         },
-                        icon: const Icon(Icons.arrow_back_rounded,
-                            color: Colors.white)),
+                        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
                   ),
                 ),
                 title: Container(
                     alignment: Alignment.center,
                     height: size.height * 0.05,
                     width: size.width * 0.45,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black,
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 10,
-                              blurStyle: BlurStyle.outer,
-                              spreadRadius: 0,
-                              color: Colors.orange.shade200,
-                              offset: const Offset(0, 0))
-                        ]),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                    ]),
                     child: Center(
                       child: Text(
                         textAlign: TextAlign.center,
                         'Vehicle Info',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            fontSize: 16),
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
                       ),
                     )),
                 centerTitle: true,
@@ -610,42 +452,30 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                             height: size.height * 0.06,
                             width: size.width * 0.8,
                             decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)),
-                                color: Colors.white60),
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
                             child: TextFormField(
                               controller: vehicleRegNoController,
                               focusNode: focusNode,
                               style: const TextStyle(color: Colors.black),
                               onTapOutside: (event) => focusNode.unfocus(),
                               onChanged: (value) {
-                                vehicleRegNoController.text =
-                                    vehicleRegNoController.text.toUpperCase();
-                                if (!isConnected()) {
-                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message:
-                                          'Please check the internet connectivity',
-                                      icon: Icon(Icons.error));
-                                  return;
-                                }
-                                context.read<VehicleBloc>().add(
-                                    FetchVehicleCustomer(
-                                        registrationNo:
-                                            vehicleRegNoController.text));
-                                context.read<ServiceBloc>().add(
-                                    GetServiceHistory(
-                                        query: 'vehicle_history',
-                                        vehicleRegNo:
-                                            vehicleRegNoController.text));
+                                vehicleRegNoController.text = vehicleRegNoController.text.toUpperCase();
+                                if (_debounce?.isActive ?? false) _debounce!.cancel();
+                                _debounce = Timer(const Duration(milliseconds: 300), () {
+                                  print("hello");
+                                  if (!isConnected()) {
+                                    DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
+                                    return;
+                                  }
+                                  context.read<VehicleBloc>().add(FetchVehicleCustomer(registrationNo: vehicleRegNoController.text));
+                                  context.read<ServiceBloc>().add(GetServiceHistory(query: 'vehicle_history', vehicleRegNo: vehicleRegNoController.text));
+                                });
                               },
                               cursorColor: Colors.black,
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 16),
-                                hintStyle: TextStyle(
-                                    color: Colors.black38, fontSize: 14),
+                                contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                                hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
                                 hintText: 'Vehicle Registration Number',
                               ),
                             ),
@@ -655,10 +485,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               margin: EdgeInsets.only(right: size.width * 0.03),
                               height: size.height * 0.06,
                               decoration: const BoxDecoration(
-                                  color: Colors.black38,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10))),
+                                  color: Colors.black38, borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
                               child: const Icon(
                                 Icons.search_rounded,
                                 color: Colors.white60,
@@ -675,13 +502,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         switch (state.status) {
                           case VehicleStatus.vehicleAlreadyAdded:
                             return Stack(
-                                children: context
-                                            .read<MultiBloc>()
-                                            .state
-                                            .reverseClippedWidgets! ==
-                                        true
-                                    ? clipperWidgets.reversed.toList()
-                                    : clipperWidgets);
+                                children: context.read<MultiBloc>().state.reverseClippedWidgets! == true ? clipperWidgets.reversed.toList() : clipperWidgets);
                           case VehicleStatus.loading:
                             return Lottie.asset(
                               "assets/lottie/steering.json",
@@ -690,7 +511,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                           default:
                             if (vehicleRegNoController.text.isEmpty) {
                               return Transform(
-                                transform: Matrix4.translationValues(0, size.height*0.2, 0),
+                                transform: Matrix4.translationValues(0, size.height * 0.2, 0),
                                 child: Lottie.asset(
                                   "assets/lottie/car_search.json",
                                   width: size.width * 0.5,
@@ -707,9 +528,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                   ),
                                   Text(
                                     "Vehicle not found",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 20),
+                                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
                                   ),
                                 ],
                               ),
@@ -741,23 +560,17 @@ class VehicleInfoClipper extends CustomClipper<Path> {
     Path path = Path();
     path.moveTo(x1, y1);
     path.lineTo(x1, y - 20);
-    path.arcToPoint(Offset(x1 + 20, y),
-        radius: Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x1 + 20, y), radius: Radius.circular(20), clockwise: false);
     path.lineTo(x - 20, y);
-    path.arcToPoint(Offset(x, y - 20),
-        radius: Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x, y - 20), radius: Radius.circular(20), clockwise: false);
     path.lineTo(x, y1 + 80);
-    path.arcToPoint(Offset(x - 20, y1 + 60),
-        radius: Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x - 20, y1 + 60), radius: Radius.circular(20), clockwise: false);
     path.lineTo(x - (size.width * 0.45), y1 + 60);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40),
-        radius: Radius.circular(20), clockwise: true);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40), radius: Radius.circular(20), clockwise: true);
     path.lineTo(x - (size.width * 0.45 + 20), y1 + 20);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1),
-        radius: Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1), radius: Radius.circular(20), clockwise: false);
     path.lineTo(x1 + 20, y1);
-    path.arcToPoint(Offset(x1, y1 + 20),
-        radius: Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x1, y1 + 20), radius: Radius.circular(20), clockwise: false);
     path.close();
     return path;
   }

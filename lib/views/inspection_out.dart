@@ -1,6 +1,7 @@
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
+import 'package:dms/views/gate_pass.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -113,8 +114,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin{
               listener: (context, state) {
             if (state.inspectionJsonUploadStatus ==
                 InspectionJsonUploadStatus.success) {
-              Navigator.pop(context);
-              Navigator.pop(context);
+                Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const GatePass()));
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {

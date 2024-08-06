@@ -51,4 +51,8 @@ class MultiBlocStatusChange extends MultiBlocEvent {
   MultiStateStatus status;
   MultiBlocStatusChange({required this.status});
 }
+class ScaleVehicle extends MultiBlocEvent {
+  double factor;
+  ScaleVehicle({required this.factor});
+}
 

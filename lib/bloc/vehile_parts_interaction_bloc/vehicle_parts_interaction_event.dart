@@ -46,3 +46,4 @@ class SubmitQualityCheckStatusEvent extends VehiclePartsInteractionBlocEvent{
   String jobCardNo;
   SubmitQualityCheckStatusEvent({required this.jobCardNo});
 }
+

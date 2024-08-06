@@ -87,3 +87,6 @@ class ModifyGatePassStatus extends ServiceEvent{
   ModifyGatePassStatus({required this.status});
 }
 
+class ClearServices extends ServiceEvent{
+  ClearServices();
+}

@@ -10,6 +10,7 @@ class MultiBlocState {
       this.selectedRadioOption,
       this.status,
       this.reverseClippedWidgets=false,
+      this.scaleFactor
       });
 
   DateTime? date;
@@ -19,7 +20,7 @@ class MultiBlocState {
   MultiStateStatus? status;
   Map<int, bool>? checkBoxStates;
   bool? reverseClippedWidgets;
-
+  double? scaleFactor;
   factory MultiBlocState.initial() {
     return MultiBlocState(
         date: null,
@@ -56,6 +57,7 @@ class MultiBlocState {
       int? selectedRadioOption,
       Map<int, bool>? checkBoxStates,
       bool? reverseClippedWidgets,
+      double? scaleFactor
       }) {
     return MultiBlocState(
         date: date ?? this.date,
@@ -65,7 +67,7 @@ class MultiBlocState {
         salesPersons: salesPersons ?? this.salesPersons,
         status: status ?? this.status,
         reverseClippedWidgets: reverseClippedWidgets??this.reverseClippedWidgets,
-
+        scaleFactor: scaleFactor??this.scaleFactor,
         );
   }
 }
