@@ -41,7 +41,6 @@ final class ServiceState {
       this.jobCardNo,
       this.myJobCards,
       this.bottomNavigationBarActiveIndex,
-      this.inspectionDetails,
       this.serviceLocationsStatus,
       this.filteredJobCards,
       this.gatePassStatus,
@@ -60,7 +59,6 @@ final class ServiceState {
   final List<Service>? jobCards;
   final List<Service>? myJobCards;
   final List<dynamic>? locations;
-  final Map<String, dynamic>? inspectionDetails;
   final bool? dropDownOpen;
   int? index;
   Position? sliderPosition;
@@ -82,7 +80,6 @@ final class ServiceState {
       jobCardStatusUpdate: JobCardStatusUpdate.initial,
       getInspectionStatus: GetInspectionStatus.initial,
       getMyJobCardsStatus: GetMyJobCardsStatus.initial,
-      sliderPosition: Position.middle,
       jsonStatus: JsonStatus.initial,
       bottomNavigationBarActiveIndex: 0,
       index: 0,
@@ -108,7 +105,6 @@ final class ServiceState {
       List<Service>? filteredJobCards,
       String? jobCardNo,
       bool? dropDownOpen,
-      Map<String, dynamic>? inspectionDetails,
       InspectionJsonUploadStatus? inspectionJsonUploadStatus,
       List<Service>? jobCards,
       Position? sliderPosition,
@@ -120,7 +116,6 @@ final class ServiceState {
         getServiceStatus: getServiceStatus ?? this.getServiceStatus,
         getJobCardStatus: getJobCardStatus ?? this.getJobCardStatus,
         jobCardStatusUpdate: jobCardStatusUpdate ?? jobCardStatusUpdate,
-        inspectionDetails: inspectionDetails ?? this.inspectionDetails,
         getMyJobCardsStatus: getMyJobCardsStatus ?? this.getMyJobCardsStatus,
         jobCardNo: jobCardNo ?? this.jobCardNo,
         filteredJobCards: filteredJobCards ?? this.filteredJobCards,

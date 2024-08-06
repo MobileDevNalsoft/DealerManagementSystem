@@ -4,6 +4,7 @@ import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../inits/init.dart';
@@ -11,6 +12,7 @@ import '../models/services.dart';
 import 'custom_widgets/clipped_buttons.dart';
 import 'custom_widgets/loginformfield.dart';
 import 'jobcard_details.dart';
+import 'dart:math' as math;
 
 class ListOfJobcards extends StatefulWidget {
   const ListOfJobcards({super.key});
@@ -23,7 +25,6 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
     with ConnectivityMixin {
   late ServiceBloc _serviceBloc;
   PageController pageController = PageController();
-  late bool _isConnected;
   @override
   void initState() {
     super.initState();
@@ -35,7 +36,7 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
     _serviceBloc.state.getJobCardStatus = GetJobCardStatus.initial;
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
-    _serviceBloc.add(GetJobCards(query: 'Quick Fit Center Abu Dhabi'));
+    _serviceBloc.add(GetJobCards(query: 'Location27'));
 
     // set default orientation to portrait up
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -44,7 +45,6 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
   @override
   Widget build(BuildContext context) {
     // responsive UI
-    _isConnected = isConnected();
     Size size = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -100,9 +100,7 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
-                return JobCardPage(
-                  isConnected: _isConnected,
-                );
+                return JobCardPage();
               },
             )),
       ),
@@ -133,28 +131,48 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                 color: Colors.transparent,
                 offset: Offset(0, 0)),
         clipper: BackgroundWaveClipper(),
-        child: Container(
-          width: size.width,
-          height: size.height * 0.13,
-          decoration: const BoxDecoration(
-            color: Colors.black,
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: shrinkOffset > 55
-                    ? size.height * 0.02
-                    : 42 - 0.5 * shrinkOffset,
-                left: shrinkOffset > 50
-                    ? size.width * 0.37
-                    : 2.5 * shrinkOffset + 5),
-            child: const Text(
-              'Job Cards',
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  fontSize: 18),
+        child: Stack(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height * 0.13,
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: shrinkOffset > 55
+                        ? size.height * 0.02
+                        : 42 - 0.5 * shrinkOffset,
+                    left: shrinkOffset > 50
+                        ? size.width * 0.37
+                        : 2.5 * shrinkOffset + 8),
+                child: const Text(
+                  'Job Cards',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 18),
+                ),
+              ),
             ),
-          ),
+            Container(
+              margin: const EdgeInsets.only(),
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black,
+              ),
+              child: Transform(
+                transform: Matrix4.translationValues(-5, -3, 0),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back_rounded,
+                        color: Colors.white)),
+              ),
+            )
+          ],
         ));
   }
 
@@ -170,8 +188,6 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
 }
 
 class SliverHeader extends SliverPersistentHeaderDelegate {
-  bool? isConnected;
-  SliverHeader({this.isConnected});
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
 
@@ -202,12 +218,6 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
             style: const TextStyle(color: Colors.black),
             onTapOutside: (event) => focusNode.unfocus(),
             onChanged: (value) {
-              if (isConnected!) {
-                DMSCustomWidgets.DMSFlushbar(size, context,
-                    message: 'Please check the internet connectivity',
-                    icon: Icon(Icons.error));
-                return;
-              }
               controller.text = value;
               context
                   .read<ServiceBloc>()
@@ -304,10 +314,16 @@ class TicketClipper extends CustomClipper<Path> {
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0.0);
 
-    path.addOval(
-        Rect.fromCircle(center: Offset(0.0, size.height / 2), radius: 8.0));
-    path.addOval(Rect.fromCircle(
-        center: Offset(size.width, size.height / 2), radius: 8.0));
+    path.addArc(
+      Rect.fromCircle(center: Offset(0.0, size.height / 2), radius: 8.0),
+      0, // Start angle (0 radians)
+      2 * math.pi,
+    );
+    path.addArc(
+      Rect.fromCircle(center: Offset(size.width, size.height / 2), radius: 8.0),
+      0, // Start angle (0 radians)
+      2 * math.pi,
+    );
     path.close();
 
     return path;
@@ -320,8 +336,7 @@ class TicketClipper extends CustomClipper<Path> {
 }
 
 class JobCardPage extends StatelessWidget {
-  bool isConnected;
-  JobCardPage({super.key, required this.isConnected});
+  JobCardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -339,7 +354,7 @@ class JobCardPage extends StatelessWidget {
                 pinned: true,
               ),
               SliverPersistentHeader(
-                delegate: SliverHeader(isConnected: isConnected),
+                delegate: SliverHeader(),
                 // Set this param so that it won't go off the screen when scrolling
                 pinned: false,
               ),
@@ -353,15 +368,23 @@ class JobCardPage extends StatelessWidget {
                     child: SizedBox(
                       height: size.height * 0.15,
                       width: size.width * 0.95,
-                      child: ClipPath(
+                      child: ClipShadowPath(
                         clipper: TicketClipper(),
-                        clipBehavior: Clip.antiAlias,
-                        child: Card(
+                        shadow: BoxShadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 2),
+                          blurRadius: 5,
+                          blurStyle: BlurStyle.normal,
+                          spreadRadius: 1,
+                        ),
+                        child: Container(
                           margin: EdgeInsets.symmetric(
                             vertical: size.height * 0.006,
                           ),
-                          color: Colors.white,
-                          elevation: 3,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -568,25 +591,17 @@ class JobCardPage extends StatelessWidget {
                               : 7)),
               if (state.getJobCardStatus == GetJobCardStatus.success &&
                   state.filteredJobCards!.isEmpty)
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                      (context, index) => Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              SizedBox(
-                                height: size.height * 1,
-                                child: Transform(
-                                  transform: Matrix4.translationValues(
-                                      0, -size.height * 0.1, 0),
-                                  child: const Center(
-                                    child:
-                                        Text('No Job Cards are in progress.'),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      childCount: 1),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Gap(size.height * 0.25),
+                      Lottie.asset(
+                        'assets/lottie/no_data_found.json',
+                      ),
+                      Gap(size.height * 0.01),
+                      const Text('No Job Cards are in progress.')
+                    ],
+                  ),
                 )
             ],
           );

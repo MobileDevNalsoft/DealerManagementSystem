@@ -685,33 +685,39 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                     ? clipperWidgets.reversed.toList()
                                     : clipperWidgets);
                           case VehicleStatus.loading:
-                            return Lottie.asset(
-                              "assets/lottie/steering.json",
-                              width: size.width * 0.6,
+                            return Transform(
+                              transform: Matrix4.translationValues(
+                                  0, size.height * 0.15, 0),
+                              child: Lottie.asset(
+                                "assets/lottie/steering.json",
+                                width: size.width * 0.6,
+                              ),
                             );
                           default:
                             if (vehicleRegNoController.text.isEmpty) {
-                              return Lottie.asset(
-                                "assets/lottie/car_search.json",
-                                width: size.width * 0.6,
+                              return Transform(
+                                transform: Matrix4.translationValues(
+                                    0, size.height * 0.18, 0),
+                                child: Lottie.asset(
+                                  "assets/lottie/car_search.json",
+                                  width: size.width * 0.6,
+                                ),
                               );
                             }
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.car_crash_rounded,
-                                    size: size.width * 0.11,
-                                  ),
-                                  Text(
-                                    "Vehicle not found",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 20),
-                                  ),
-                                ],
-                              ),
+                            return Column(
+                              children: [
+                                Gap(size.height * 0.25),
+                                Icon(
+                                  Icons.car_crash_rounded,
+                                  size: size.width * 0.11,
+                                ),
+                                Text(
+                                  "Vehicle not found",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 20),
+                                ),
+                              ],
                             );
                         }
                       },

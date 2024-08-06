@@ -11,13 +11,18 @@ class Repository {
 
   Repository({required NetworkCalls api}) : _api = api;
 
-  Future<Map<String, dynamic>> addVehicle(Map<String, dynamic> payload) async {
+  Future<int> addVehicle(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addVehicle', data: payload);
 
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
-      return response;
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
     } else {
       Log.e(apiResponse.error);
       throw Error();
@@ -26,6 +31,7 @@ class Repository {
 
   Future<int> addService(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addService', data: payload);
+
     if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
@@ -44,7 +50,7 @@ class Repository {
   Future<Map<String, dynamic>> getVehicle(String registrationNo) async {
     ApiResponse apiResponse = await _api
         .get('getVehicle', queryParameters: {"registrationNo": registrationNo});
-
+    print(apiResponse.response);
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
@@ -69,9 +75,13 @@ class Repository {
     }
   }
 
-  Future<Map<String, dynamic>> getHistory(String query, int pageNo,{ String? vehicleRegNo}) async {
-    ApiResponse apiResponse = await _api
-        .get('getHistory', queryParameters: {"param": query, "pageNo": pageNo, "vehicleRegNo":vehicleRegNo??""});
+  Future<Map<String, dynamic>> getHistory(String query, int pageNo,
+      {String? vehicleRegNo}) async {
+    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {
+      "param": query,
+      "pageNo": pageNo,
+      "vehicleRegNo": vehicleRegNo ?? ""
+    });
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
@@ -220,7 +230,8 @@ class Repository {
   }
 
   Future getImage(String jobCardNo) async {
-    ApiResponse apiResponse = await _api.get('getImage',queryParameters: {"jobCardNo":jobCardNo});
+    ApiResponse apiResponse =
+        await _api.get('getImage', queryParameters: {"jobCardNo": jobCardNo});
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
@@ -238,7 +249,7 @@ class Repository {
     }
   }
 
- Future<int> addVehiclePartMedia(
+  Future<int> addVehiclePartMedia(
       {Map<String, dynamic>? bodyPartData,
       required String id,
       required String name}) async {
@@ -264,10 +275,10 @@ class Repository {
     }
   }
 
-   Future<int> addQualityStatus(
-      {Map<String, dynamic>? qualityCheckJson}) async {
+  Future<int> addQualityStatus({Map<String, dynamic>? qualityCheckJson}) async {
     print(qualityCheckJson);
-    ApiResponse apiResponse = await _api.post('qualityCheckStatus', data: qualityCheckJson);
+    ApiResponse apiResponse =
+        await _api.post('qualityCheckStatus', data: qualityCheckJson);
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
@@ -284,9 +295,10 @@ class Repository {
     }
   }
 
-  Future getGatePass({required String jobCardNo}) async{
- ApiResponse apiResponse = await _api.get('gatePass', queryParameters: {"jobCardNo":jobCardNo});
-     if (apiResponse.response != null) {
+  Future getGatePass({required String jobCardNo}) async {
+    ApiResponse apiResponse =
+        await _api.get('gatePass', queryParameters: {"jobCardNo": jobCardNo});
+    if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {
         if ((apiResponse.response!.data)["count"] == 1) {
           return (apiResponse.response!.data)["items"][0];
@@ -300,5 +312,4 @@ class Repository {
       throw Error();
     }
   }
-
 }

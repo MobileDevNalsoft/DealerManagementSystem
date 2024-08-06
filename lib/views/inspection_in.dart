@@ -249,76 +249,85 @@ class _InspectionViewState extends State<InspectionView>
                                                           pageIndex]]
                                                       .length -
                                                   2)
-                                        GestureDetector(
-                                          onTap: () async {
-                                            if (!isConnected()) {
-                                              DMSCustomWidgets.DMSFlushbar(
-                                                  size, context,
-                                                  message:
-                                                      'Please check the internet connectivity',
-                                                  icon: Icon(Icons.error));
-                                              return;
-                                            }
-                                            context.read<ServiceBloc>().add(
-                                                InspectionJsonAdded(
-                                                    jobCardNo: _serviceBloc
+                                        BlocListener<ServiceBloc, ServiceState>(
+                                            listener: (context, state) async {
+                                              if (state
+                                                      .inspectionJsonUploadStatus ==
+                                                  InspectionJsonUploadStatus
+                                                      .success) {
+                                                await loadSvgImage(
+                                                        svgImage:
+                                                            'assets/images/image.svg')
+                                                    .then(
+                                                  (value) {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CustomDetector(
+                                                            model:
+                                                                BodySelectorViewModel(),
+                                                            generalParts: value,
+                                                          ),
+                                                        ));
+                                                  },
+                                                );
+                                              }
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                if (!isConnected()) {
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          'Please check the internet connectivity',
+                                                      icon: Icon(Icons.error));
+                                                  return;
+                                                }
+                                                _serviceBloc.add(
+                                                    InspectionJsonAdded(
+                                                        jobCardNo:
+                                                            state.jobCardNo!,
+                                                        inspectionIn: 'true'));
+                                                context
+                                                        .read<VehicleBloc>()
                                                         .state
-                                                        .service!
-                                                        .jobCardNo!,
-                                                    inspectionIn: 'true'));
-                                            context
-                                                .read<VehicleBloc>()
-                                                .state
-                                                .status = VehicleStatus.initial;
-                                            _serviceBloc.state
-                                                    .inspectionJsonUploadStatus =
-                                                InspectionJsonUploadStatus
-                                                    .initial;
-                                            await loadSvgImage(
-                                                    svgImage:
-                                                        'assets/images/image.svg')
-                                                .then(
-                                              (value) {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CustomDetector(
-                                                        model:
-                                                            BodySelectorViewModel(),
-                                                        generalParts: value,
-                                                      ),
-                                                    ));
+                                                        .status =
+                                                    VehicleStatus.initial;
+                                                _serviceBloc.state
+                                                        .inspectionJsonUploadStatus =
+                                                    InspectionJsonUploadStatus
+                                                        .initial;
                                               },
-                                            );
-                                          },
-                                          child: Container(
-                                              alignment: Alignment.center,
-                                              height: size.height * 0.045,
-                                              width: size.width * 0.2,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: Colors.black,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 10,
-                                                        blurStyle:
-                                                            BlurStyle.outer,
-                                                        spreadRadius: 0,
-                                                        color: Colors
-                                                            .orange.shade200,
-                                                        offset:
-                                                            const Offset(0, 0))
-                                                  ]),
-                                              child: const Text(
-                                                textAlign: TextAlign.center,
-                                                'submit',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16),
-                                              )),
-                                        )
+                                              child: Container(
+                                                  alignment: Alignment.center,
+                                                  height: size.height * 0.045,
+                                                  width: size.width * 0.2,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: Colors.black,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            blurRadius: 10,
+                                                            blurStyle:
+                                                                BlurStyle.outer,
+                                                            spreadRadius: 0,
+                                                            color: Colors.orange
+                                                                .shade200,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 0))
+                                                      ]),
+                                                  child: const Text(
+                                                    textAlign: TextAlign.center,
+                                                    'submit',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16),
+                                                  )),
+                                            ))
                                     ],
                                   );
                                 },
@@ -333,7 +342,7 @@ class _InspectionViewState extends State<InspectionView>
                 }
               }),
             ),
-            if (_serviceBloc.state.inspectionJsonUploadStatus ==
+            if (context.watch<ServiceBloc>().state.inspectionJsonUploadStatus ==
                 InspectionJsonUploadStatus.loading)
               Container(
                 color: Colors.black54,

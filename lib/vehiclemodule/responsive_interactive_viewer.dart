@@ -137,6 +137,10 @@ class _CustomDetectorState extends State<CustomDetector>
                           if (!Provider.of<BodySelectorViewModel>(context,
                                   listen: false)
                               .isTapped) {
+                            Navigator.popUntil(
+                              context,
+                              (route) => route.settings.name == '/',
+                            );
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => ListOfJobcards()));
                           }

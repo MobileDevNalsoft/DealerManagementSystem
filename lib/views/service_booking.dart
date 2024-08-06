@@ -285,7 +285,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                           ]),
                       child: Text(
                         textAlign: TextAlign.center,
-                        index == 0 ? 'Service Main' : 'Service proceed',
+                        'Service Booking',
                         style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -1116,9 +1116,12 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                             salesPerson: spTypeAheadController.text.split('-')[0],
                                                             bay: bayTypeAheadController.text,
                                                             jobType: jobTypeTypeAheadController.text,
-                                                            jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${kmsController.text.toString().substring(0, 2)}',
+                                                            jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
                                                             customerConcerns: custConcernsController.text,
                                                             remarks: remarksController.text);
+                                                        _serviceBloc.state
+                                                                .jobCardNo =
+                                                            service.jobCardNo!;
 
                                                         Log.d(service.toJson());
                                                         context
@@ -1149,7 +1152,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                               )),
                     if (context.watch<VehicleBloc>().state.status ==
                             VehicleStatus.loading ||
-                        _serviceBloc.state.serviceUploadStatus ==
+                        context
+                                .watch<ServiceBloc>()
+                                .state
+                                .serviceUploadStatus ==
                             ServiceUploadStatus.loading)
                       Container(
                         color: Colors.black54,

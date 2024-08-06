@@ -672,6 +672,11 @@ class _QualityCheckState extends State<QualityCheck>
                         case VehiclePartsInteractionStatus.success:
                           context.read<ServiceBloc>().add(GetInspectionDetails(
                               jobCardNo: widget.jobCardNo));
+                          context.read<ServiceBloc>().add(GetJobCards());
+                          Navigator.popUntil(
+                            context,
+                            (route) => route.settings.name == '/listOfJobCards',
+                          );
                           Navigator.push(
                               context,
                               MaterialPageRoute(

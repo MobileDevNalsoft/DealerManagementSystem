@@ -3,6 +3,7 @@ import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
+import 'package:dms/views/gate_pass.dart';
 import 'package:dms/views/quality_check.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -115,11 +116,13 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
               listener: (context, state) {
             if (state.inspectionJsonUploadStatus ==
                 InspectionJsonUploadStatus.success) {
+              context.read<ServiceBloc>().add(GetJobCards());
+              Navigator.popUntil(
+                context,
+                (route) => route.settings.name == '/listOfJobCards',
+              );
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          QualityCheck(model: BodySelectorViewModel())));
+                  context, MaterialPageRoute(builder: (_) => GatePass()));
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {
@@ -134,7 +137,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
               case GetInspectionStatus.success:
                 List<String> buttonsText = [];
 
-                for (var entry in state.inspectionDetails!.entries) {
+                for (var entry in state.json!.entries) {
                   buttonsText.add(entry.key);
                 }
 
@@ -193,7 +196,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                       child: SizedBox(
                         width: size.width,
                         child: PageView.builder(
-                          itemCount: state.inspectionDetails!.length,
+                          itemCount: state.json!.length,
                           controller: _pageController,
                           onPageChanged: (value) {
                             _serviceBloc.add(PageChange(index: value));
@@ -208,25 +211,24 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                   Expanded(
                                     child: ListView.builder(
                                       itemCount: state
-                                              .inspectionDetails![
-                                                  buttonsText[pageIndex]]
+                                              .json![buttonsText[pageIndex]]
                                               .length -
                                           1,
                                       itemBuilder: (context, index) {
-                                        state.sliderPosition = state
-                                                    .inspectionDetails![
-                                                        buttonsText[pageIndex]]
-                                                    .last['status'] ==
-                                                "Accepted"
-                                            ? Position.right
-                                            : state
-                                                        .inspectionDetails![
-                                                            buttonsText[
-                                                                pageIndex]]
+                                        state.sliderPosition =
+                                            state.json![buttonsText[pageIndex]]
                                                         .last['status'] ==
-                                                    "Rejected"
-                                                ? Position.left
-                                                : Position.middle;
+                                                    "Accepted"
+                                                ? Position.right
+                                                : state
+                                                            .json![buttonsText[
+                                                                pageIndex]]
+                                                            .last['status'] ==
+                                                        "Rejected"
+                                                    ? Position.left
+                                                    : Position.middle;
+                                        _serviceBloc.add(InspectionJsonUpdated(
+                                            json: state.json!));
                                         _sliderButtonController.position =
                                             state.sliderPosition!;
                                         return Column(
@@ -243,7 +245,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                   width: size.width * 0.2,
                                                   child: Wrap(
                                                     children: [
-                                                      Text(state.inspectionDetails![
+                                                      Text(state.json![
                                                                   buttonsText[
                                                                       pageIndex]]
                                                               [index][
@@ -257,8 +259,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                     index: index,
                                                     page:
                                                         buttonsText[pageIndex],
-                                                    json: state
-                                                        .inspectionDetails!,
+                                                    json: state.json!,
                                                     size: size),
                                               ],
                                             ),
@@ -277,23 +278,26 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                       borderRadius: BorderRadius.circular(22),
                                     ),
                                     onLeftLabelReached: () {
-                                      state
-                                          .inspectionDetails![
-                                              buttonsText[pageIndex]]
+                                      state.json![buttonsText[pageIndex]]
                                           .last['status'] = 'Rejected';
+
                                       state.sliderPosition = Position.left;
+                                      _serviceBloc.add(InspectionJsonUpdated(
+                                          json: state.json!));
                                       showReasonDialog(
                                           size: size,
                                           state: state,
+                                          pageIndex: pageIndex,
+                                          buttonsTextLength: buttonsText.length,
                                           page: buttonsText[pageIndex],
                                           controller: TextEditingController());
                                     },
                                     onRightLabelReached: () {
-                                      state
-                                          .inspectionDetails![
-                                              buttonsText[pageIndex]]
+                                      state.json![buttonsText[pageIndex]]
                                           .last['status'] = 'Accepted';
                                       state.sliderPosition = Position.right;
+                                      _serviceBloc.add(InspectionJsonUpdated(
+                                          json: state.json!));
                                       if (pageIndex == buttonsText.length - 1) {
                                         showSubmitDialog(
                                             size: size,
@@ -303,10 +307,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                       }
                                     },
                                     onNoStatus: () {
-                                      state
-                                          .inspectionDetails![
-                                              buttonsText[pageIndex]]
+                                      state.json![buttonsText[pageIndex]]
                                           .last['status'] = '';
+                                      _serviceBloc.add(InspectionJsonUpdated(
+                                          json: state.json!));
                                     },
                                     leftLabel: const Text(
                                       'Reject',
@@ -389,214 +393,237 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
         context: context,
         barrierDismissible: false,
         builder: (context) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              contentPadding: EdgeInsets.only(top: size.height * 0.01),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: size.width * 0.03),
-                    child: const Text(
-                      'Hey Advisor...\nAre you done with inspection ?',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: size.width * 0.03),
+                      child: const Text(
+                        'Hey Advisor...\nAre you done with inspection ?',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Gap(size.height * 0.01),
-                  Container(
-                    height: size.height * 0.05,
-                    margin: EdgeInsets.all(size.height * 0.001),
-                    decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              state.inspectionDetails![page].last['status'] =
-                                  '';
-                              _serviceBloc.add(UpdateSliderPosition(
-                                  position: Position.middle));
-                              Navigator.pop(context, false);
-                            },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: const Text(
-                              'No',
+                    Gap(size.height * 0.01),
+                    Container(
+                      height: size.height * 0.05,
+                      margin: EdgeInsets.all(size.height * 0.001),
+                      decoration: const BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                state.json![page].last['status'] = '';
+                                _serviceBloc.add(UpdateSliderPosition(
+                                    position: Position.middle));
+                                _serviceBloc.add(
+                                    InspectionJsonUpdated(json: state.json!));
+                                Navigator.pop(context, false);
+                              },
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: const Text(
+                                'No',
+                              ),
                             ),
                           ),
-                        ),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          thickness: 0.5,
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              if (!isConnected()) {
-                                DMSCustomWidgets.DMSFlushbar(size, context,
-                                    message:
-                                        'Please check the internet connectivity',
-                                    icon: Icon(Icons.error));
-                                return;
-                              }
-                              state.json = state.inspectionDetails!;
-                              _serviceBloc.add(InspectionJsonAdded(
-                                  jobCardNo: state.jobCardNo!,
-                                  inspectionIn: 'false'));
-                              _serviceBloc.add(GetJobCards(
-                                  query: 'Quick Fit Center Abu Dhabi'));
-                              Navigator.pop(context);
-                            },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: const Text(
-                              'Yes',
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 0.5,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                if (!isConnected()) {
+                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                      message:
+                                          'Please check the internet connectivity',
+                                      icon: Icon(Icons.error));
+                                  return;
+                                }
+                                state.json = state.json!;
+                                _serviceBloc.add(
+                                    InspectionJsonUpdated(json: state.json!));
+                                _serviceBloc.add(InspectionJsonAdded(
+                                    jobCardNo: state.jobCardNo!,
+                                    inspectionIn: 'false'));
+                                _serviceBloc.add(GetJobCards(
+                                    query: 'Quick Fit Center Abu Dhabi'));
+                                Navigator.pop(context);
+                              },
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: const Text(
+                                'Yes',
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              actionsPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero);
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero),
+          );
         });
   }
 
   void showReasonDialog(
       {required Size size,
       required ServiceState state,
+      required int pageIndex,
+      required int buttonsTextLength,
       required String page,
       required TextEditingController controller}) {
-    controller.text = state.inspectionDetails![page].last['reason'] ?? '';
+    controller.text = state.json![page].last['reason'] ?? '';
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              contentPadding: EdgeInsets.only(top: size.height * 0.01),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.03),
-                      child: Theme(
-                        data: Theme.of(context).copyWith(),
-                        child: TextFormField(
-                          selectionControls: MaterialTextSelectionControls(),
-                          controller: controller,
-                          autofocus: true,
-                          cursorColor: Colors.black,
-                          maxLines: 4,
-                          onTap: () {},
-                          decoration: InputDecoration(
-                              hintStyle: const TextStyle(color: Colors.black26),
-                              fillColor: Colors.white,
-                              filled: true,
-                              focusedBorder: const OutlineInputBorder(),
-                              enabledBorder: const OutlineInputBorder(),
-                              focusColor: Colors.black,
-                              contentPadding:
-                                  const EdgeInsets.only(left: 14, top: 14),
-                              hintText: "Reason for rejection",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              )),
-                          onChanged: (value) {
-                            state.inspectionDetails![page].last['reason'] =
-                                value;
-                          },
-                        ),
-                      )),
-                  Gap(size.height * 0.01),
-                  Container(
-                    height: size.height * 0.05,
-                    margin: EdgeInsets.all(size.height * 0.001),
-                    decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              state.inspectionDetails![page].last['status'] =
-                                  '';
-                              _serviceBloc.add(UpdateSliderPosition(
-                                  position: Position.middle));
-                              Navigator.pop(context, false);
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(),
+                          child: TextFormField(
+                            selectionControls: MaterialTextSelectionControls(),
+                            controller: controller,
+                            autofocus: true,
+                            cursorColor: Colors.black,
+                            maxLines: 4,
+                            onTap: () {},
+                            decoration: InputDecoration(
+                                hintStyle:
+                                    const TextStyle(color: Colors.black26),
+                                fillColor: Colors.white,
+                                filled: true,
+                                focusedBorder: const OutlineInputBorder(),
+                                enabledBorder: const OutlineInputBorder(),
+                                focusColor: Colors.black,
+                                contentPadding:
+                                    const EdgeInsets.only(left: 14, top: 14),
+                                hintText: "Reason for rejection",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                )),
+                            onChanged: (value) {
+                              state.json![page].last['reason'] = value;
+                              _serviceBloc.add(
+                                  InspectionJsonUpdated(json: state.json!));
                             },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: const Text(
-                              'Cancel',
-                            ),
                           ),
-                        ),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          thickness: 0.5,
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              state.inspectionDetails![page].last['reason'] =
-                                  controller.text;
-                              if (controller.text.isEmpty) {
-                                Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
-                                  backgroundColor: Colors.red,
-                                  message: "Reason cannot be empty",
-                                  duration: const Duration(seconds: 1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  margin: EdgeInsets.only(
-                                      top: size.height * 0.01,
-                                      left: 10,
-                                      right: size.width * 0.03),
-                                ).show(context);
-                              } else {
+                        )),
+                    Gap(size.height * 0.01),
+                    Container(
+                      height: size.height * 0.05,
+                      margin: EdgeInsets.all(size.height * 0.001),
+                      decoration: const BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                state.json![page].last['status'] = '';
+                                _serviceBloc.add(UpdateSliderPosition(
+                                    position: Position.middle));
+                                _serviceBloc.add(
+                                    InspectionJsonUpdated(json: state.json!));
                                 Navigator.pop(context, false);
-                              }
-                            },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: const Text(
-                              'Done',
+                              },
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: const Text(
+                                'Cancel',
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              actionsPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero);
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 0.5,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                state.json![page].last['reason'] =
+                                    controller.text;
+                                _serviceBloc.add(
+                                    InspectionJsonUpdated(json: state.json!));
+                                if (controller.text.isEmpty) {
+                                  Flushbar(
+                                    flushbarPosition: FlushbarPosition.TOP,
+                                    backgroundColor: Colors.red,
+                                    message: "Reason cannot be empty",
+                                    duration: const Duration(seconds: 1),
+                                    borderRadius: BorderRadius.circular(12),
+                                    margin: EdgeInsets.only(
+                                        top: size.height * 0.01,
+                                        left: 10,
+                                        right: size.width * 0.03),
+                                  ).show(context);
+                                } else {
+                                  Navigator.pop(context, false);
+                                  if (pageIndex == buttonsTextLength - 1) {
+                                    showSubmitDialog(
+                                        size: size,
+                                        state: state,
+                                        controller: _sliderButtonController,
+                                        page: page);
+                                  }
+                                }
+                              },
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: const Text(
+                                'Done',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero),
+          );
         });
   }
 

@@ -3,6 +3,8 @@ import 'package:dms/models/vehicle.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+
+import '../../logger/logger.dart';
 part 'vehicle_event.dart';
 part 'vehicle_state.dart';
 
@@ -24,11 +26,11 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
   Future<void> _onAddVehicle(
       AddVehicleEvent event, Emitter<VehicleState> emit) async {
     emit(state.copyWith(status: VehicleStatus.loading));
-    await _repo.addVehicle(event.vehicle.toJson()).then((json) {
-      print('json $json');
-      if (json['response_code'] == 200) {
+    await _repo.addVehicle(event.vehicle.toJson()).then((value) {
+      if (value == 200) {
         emit(state.copyWith(status: VehicleStatus.success));
       } else {
+        Log.e(value);
         emit(state.copyWith(status: VehicleStatus.failure));
       }
     }).onError(
@@ -44,15 +46,12 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
     await _repo.getVehicle(event.registrationNo).then((json) {
       if (json['response_code'] == 200) {
         emit(state.copyWith(status: VehicleStatus.vehicleAlreadyAdded));
-        emit(state.copyWith(status: VehicleStatus.initial));
       } else {
         emit(state.copyWith(status: VehicleStatus.newVehicle));
-        emit(state.copyWith(status: VehicleStatus.initial));
       }
     }).onError(
       (error, stackTrace) {
         emit(state.copyWith(status: VehicleStatus.failure));
-        emit(state.copyWith(status: VehicleStatus.initial));
       },
     );
   }
@@ -73,7 +72,6 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
     ).onError(
       (error, stackTrace) {
         emit(state.copyWith(status: VehicleStatus.failure));
-        emit(state.copyWith(status: VehicleStatus.initial));
       },
     );
   }
