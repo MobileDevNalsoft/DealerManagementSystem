@@ -295,6 +295,26 @@ class Repository {
     }
   }
 
+  Future generateGatePass({required String jobCardNo}) async {
+    ApiResponse apiResponse =
+        await _api.post('gatePass', queryParameters: {"jobCardNo": jobCardNo});
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          print(jsonDecode(apiResponse.response!.data));
+          return apiResponse.response!.data;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
   Future getGatePass({required String jobCardNo}) async {
     ApiResponse apiResponse =
         await _api.get('gatePass', queryParameters: {"jobCardNo": jobCardNo});

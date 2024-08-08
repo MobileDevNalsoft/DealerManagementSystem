@@ -111,6 +111,10 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
     _multiBloc.state.year = null;
     yearPickerController = FixedExtentScrollController(initialItem: index);
+    print(_vehicleBloc.state.registrationNo!);
+    if (_vehicleBloc.state.registrationNo != null) {
+      vehicleRegNumberController.text = _vehicleBloc.state.registrationNo!;
+    }
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
     // customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
     _vehicleBloc.state.status = VehicleStatus.initial;
@@ -443,7 +447,6 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                         listener: (context, state) {
                           switch (state.status) {
                             case VehicleStatus.success:
-                              clearFields();
                               showRegistrationDialog(
                                   size: size,
                                   state: state,
@@ -453,6 +456,9 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                   rejectText: 'later',
                                   onAccept: () {
                                     state.status = VehicleStatus.initial;
+                                    state.registrationNo =
+                                        vehicleRegNumberController.text;
+                                    clearFields();
                                     Navigator.pop(context);
                                     Navigator.popAndPushNamed(
                                         context, '/serviceBooking');
@@ -484,6 +490,9 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                 rejectText: 'later',
                                 onAccept: () {
                                   state.status = VehicleStatus.initial;
+                                  state.registrationNo =
+                                      vehicleRegNumberController.text;
+                                  clearFields();
                                   Navigator.pop(context);
                                   Navigator.popAndPushNamed(
                                       context, '/serviceBooking');
@@ -697,9 +706,10 @@ String? _chassisNoValidation(String value) {
   RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
     return "Chassis No. can't be empty";
-  } else if (!chassisNoRegex.hasMatch(value)) {
-    return "Invalid Chassis No.";
   }
+  //  else if (!chassisNoRegex.hasMatch(value)) {
+  //   return "Invalid Chassis No.";
+  // }
   return null;
 }
 
@@ -707,9 +717,10 @@ String? _engineNoValidation(String value) {
   RegExp engineNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
     return "Engine No. can't be empty";
-  } else if (!engineNoRegex.hasMatch(value)) {
-    return "Invalid Engine No.";
   }
+  // else if (!engineNoRegex.hasMatch(value)) {
+  //   return "Invalid Engine No.";
+  // }
   return null;
 }
 

@@ -131,6 +131,11 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
         GetServiceLocationsStatus.success) {
       _serviceBloc.add(GetServiceLocations());
     }
+
+    if (_vehicleBloc.state.registrationNo != null) {
+      print(_vehicleBloc.state.registrationNo!);
+      vehRegNumController.text = _vehicleBloc.state.registrationNo!;
+    }
     _multiBloc.state.date = null;
 
     locFocus.addListener(() {
@@ -973,6 +978,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                       .read<MultiBloc>()
                                                       .state
                                                       .date = null;
+                                                  _vehicleBloc.state
+                                                      .registrationNo = null;
                                                   Navigator.pushReplacement(
                                                       context,
                                                       MaterialPageRoute(
@@ -1299,6 +1306,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                           child: TextButton(
                             onPressed: () {
                               state.status = VehicleStatus.initial;
+                              state.registrationNo = vehRegNumController.text;
                               Navigator.pop(context);
                               Navigator.popAndPushNamed(context, '/addVehicle');
                             },
