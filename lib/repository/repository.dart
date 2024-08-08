@@ -14,7 +14,8 @@ class Repository {
   Future<int> addVehicle(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addVehicle', data: payload);
 
-    if (apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
         Log.d(apiResponse.response);
@@ -50,7 +51,7 @@ class Repository {
   Future<Map<String, dynamic>> getVehicle(String registrationNo) async {
     ApiResponse apiResponse = await _api
         .get('getVehicle', queryParameters: {"registrationNo": registrationNo});
-    print(apiResponse.response);
+
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
@@ -64,24 +65,6 @@ class Repository {
   Future<Map<String, dynamic>> getCustomer(String customerContactNo) async {
     ApiResponse apiResponse = await _api.get('getCustomer',
         queryParameters: {"customerContactNo": customerContactNo});
-
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
-      final response = jsonDecode(apiResponse.response!.data);
-      return response;
-    } else {
-      Log.e(apiResponse.error);
-      throw Error();
-    }
-  }
-
-  Future<Map<String, dynamic>> getHistory(String query, int pageNo,
-      {String? vehicleRegNo}) async {
-    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {
-      "param": query,
-      "pageNo": pageNo,
-      "vehicleRegNo": vehicleRegNo ?? ""
-    });
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
@@ -303,7 +286,7 @@ class Repository {
         Log.d(apiResponse.response);
         if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
           print(jsonDecode(apiResponse.response!.data));
-          return apiResponse.response!.data;
+          return jsonDecode(apiResponse.response!.data);
         } else {
           throw apiResponse.error;
         }

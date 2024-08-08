@@ -3,6 +3,7 @@ import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
 import 'package:dms/views/gate_pass.dart';
+import 'package:dms/views/list_of_jobcards.dart';
 import 'package:dms/views/quality_check.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -119,8 +120,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
               context.read<ServiceBloc>().add(GetJobCards());
               Navigator.popUntil(
                 context,
-                (route) => route.settings.name == '/listOfJobCards',
+                (route) => route.settings.name == '/',
               );
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => ListOfJobcards()));
               Navigator.push(
                   context, MaterialPageRoute(builder: (_) => GatePass()));
             }

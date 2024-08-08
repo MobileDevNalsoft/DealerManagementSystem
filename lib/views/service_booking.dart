@@ -124,7 +124,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
-
+    context.read<MultiBloc>().add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
     if (_serviceBloc.state.serviceLocationsStatus !=
@@ -1023,9 +1023,9 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                   MultiBlocState>(
                                                 builder: (context, state) {
                                                   return CustomSliderButton(
-                                                    context: context,
                                                     sliderController:
                                                         sliderButtonController,
+                                                    context: context,
                                                     size: size,
                                                     label: const Text(
                                                       "Proceed to receive",

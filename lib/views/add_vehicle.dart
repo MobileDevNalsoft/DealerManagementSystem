@@ -148,6 +148,24 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     financialDetailsController.clear();
   }
 
+  void unfocusFields() {
+    vehicleRegNumberFocus.unfocus();
+    vehicleTypeFocus.unfocus();
+    customerContactNumberFocus.unfocus();
+    customerNameFocus.unfocus();
+    customerAddressFocus.unfocus();
+    chassisNumberFocus.unfocus();
+    engineNumberFocus.unfocus();
+    makeFocus.unfocus();
+    modelFocus.unfocus();
+    variantFocus.unfocus();
+    colorFocus.unfocus();
+    kmsFocus.unfocus();
+    mfgYearFocus.unfocus();
+    insuranceCompanyFocus.unfocus();
+    financialDetailsFocus.unfocus();
+  }
+
   @override
   void dispose() {
     yearPickerController.dispose();
@@ -415,6 +433,10 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                   size: size,
                                   hint: "Customer Contact No.",
                                   isMobile: isMobile,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(10)
+                                  ],
                                   textcontroller:
                                       customerContactNumberController,
                                   scrollController: scrollController,
@@ -450,8 +472,27 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               showRegistrationDialog(
                                   size: size,
                                   state: state,
-                                  text:
-                                      'Vehicle Registration is Successful.\nDo you want to book service ?',
+                                  statusWidget: Container(
+                                      alignment: Alignment.centerLeft,
+                                      width: size.width * 0.88,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      child: Row(
+                                        children: [
+                                          Lottie.asset(
+                                              "assets/lottie/success.json",
+                                              repeat: false,
+                                              width: size.width * 0.08),
+                                          Gap(4),
+                                          Text(
+                                            'Vehicle Registration is Successful',
+                                            style: TextStyle(
+                                                color: Colors.black87),
+                                          ),
+                                        ],
+                                      )),
+                                  text: 'Do you want to book service ?',
                                   acceptText: 'book now',
                                   rejectText: 'later',
                                   onAccept: () {
@@ -468,17 +509,6 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                     Navigator.pop(context);
                                     Navigator.pop(context);
                                   });
-                              break;
-                            case VehicleStatus.failure:
-                              DMSCustomWidgets.DMSFlushbar(
-                                size,
-                                context,
-                                message: "Some Error has occured",
-                                icon: const Icon(
-                                  Icons.error,
-                                  color: Colors.white,
-                                ),
-                              );
 
                             case VehicleStatus.vehicleAlreadyAdded:
                               showRegistrationDialog(
@@ -510,7 +540,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                         },
                         child: GestureDetector(
                           onTap: () {
-                            // ignore: prefer_if_null_operators
+                            unfocusFields();
                             String? message = _vehicleRegistrationNoValidator(
                                     vehicleRegNumberController.text) ??
                                 _chassisNoValidation(
@@ -610,6 +640,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       required String text,
       required String acceptText,
       required String rejectText,
+      Widget? statusWidget,
       required void Function()? onAccept,
       required void Function()? onReject}) {
     showDialog(
@@ -623,13 +654,20 @@ class _AddVehicleViewState extends State<AddVehicleView> {
               contentPadding: EdgeInsets.only(top: size.height * 0.01),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: size.width * 0.03),
-                    child: Text(
-                      text,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    child: Column(
+                      children: [
+                        statusWidget ?? SizedBox(),
+                        if (statusWidget != null) Gap(8),
+                        Text(
+                          text,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                   Gap(size.height * 0.01),
@@ -703,9 +741,11 @@ String? _customerContactNoValidation(String value) {
 }
 
 String? _chassisNoValidation(String value) {
-  RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
+  // RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
     return "Chassis No. can't be empty";
+  } else if (value.length > 17) {
+    return "Invalid Chassis No.";
   }
   //  else if (!chassisNoRegex.hasMatch(value)) {
   //   return "Invalid Chassis No.";

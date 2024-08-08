@@ -149,6 +149,8 @@ class _CustomDetectorState extends State<CustomDetector>
                     ),
                   );
                 }),
+
+                //zoom in zoom out buttons
                 Positioned(
                   top: size.height * 0.35,
                   right: size.width * 0.05,
@@ -249,28 +251,25 @@ class _CustomDetectorState extends State<CustomDetector>
                 if (Provider.of<BodySelectorViewModel>(context, listen: true)
                     .isTapped)
                   Positioned(
-                      left: isMobile ? size.width * 0.129 : size.width * 0.365,
-                      // right: size.width * 0.1,
+                      left: isMobile ? size.width * 0.04 : size.width * 0.365,
+                      right: size.width * 0.04,
                       top: isMobile ? 150 : 200,
                       child:
                           // Card()
-                          Transform.scale(
-                        scale: 1.3,
-                        child: CommentsView(
-                          vehiclePartMedia: context
-                                  .read<VehiclePartsInteractionBloc>()
-                                  .state
-                                  .mapMedia[Provider.of<BodySelectorViewModel>(
-                                      context,
-                                      listen: false)
-                                  .selectedGeneralBodyPart] ??
-                              VehiclePartMedia(
-                                  name: Provider.of<BodySelectorViewModel>(
-                                          context,
-                                          listen: false)
-                                      .selectedGeneralBodyPart,
-                                  isUploaded: false),
-                        ),
+                          CommentsView(
+                        vehiclePartMedia: context
+                                .read<VehiclePartsInteractionBloc>()
+                                .state
+                                .mapMedia[Provider.of<BodySelectorViewModel>(
+                                    context,
+                                    listen: false)
+                                .selectedGeneralBodyPart] ??
+                            VehiclePartMedia(
+                                name: Provider.of<BodySelectorViewModel>(
+                                        context,
+                                        listen: false)
+                                    .selectedGeneralBodyPart,
+                                isUploaded: false),
                       )),
                 Positioned(
                   bottom: 100,
@@ -280,10 +279,8 @@ class _CustomDetectorState extends State<CustomDetector>
                       if (!Provider.of<BodySelectorViewModel>(context,
                               listen: false)
                           .isTapped) {
-                        Navigator.popUntil(
-                          context,
-                          (route) => route.settings.name == '/',
-                        );
+                        Navigator.of(context)
+                            .popUntil((route) => route.settings.name == '/');
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => ListOfJobcards()));
                       }

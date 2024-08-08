@@ -30,6 +30,7 @@ class _GatePassState extends State<GatePass> {
     // TODO: implement initState
     super.initState();
     _serviceBloc = context.read<ServiceBloc>();
+    _serviceBloc.state.gatePassno="";
     _serviceBloc.add(GetGatePass(jobCardNo: _serviceBloc.state.jobCardNo!));
   }
 
