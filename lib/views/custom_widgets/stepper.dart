@@ -1,3 +1,4 @@
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
@@ -112,21 +113,28 @@ class _StepState extends State<Step> with ConnectivityMixin {
                           if (widget.currentStep == widget.activeStep) {
                             switch (widget.activeStep) {
                               case 2:
-                                List<GeneralBodyPart> generalParts =
-                                    await loadSvgImage(
-                                        svgImage: 'assets/images/image.svg');
-                                List<GeneralBodyPart> rejectedParts =
-                                    await loadSvgImage(
-                                        svgImage:
-                                            'assets/images/image_reject.svg');
-                                List<GeneralBodyPart> acceptedParts =
-                                    await loadSvgImage(
-                                        svgImage:
-                                            'assets/images/image_accept.svg');
-                                List<GeneralBodyPart> pendingParts =
-                                    await loadSvgImage(
-                                        svgImage:
-                                            'assets/images/image_pending.svg');
+                                context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
+                                List<GeneralBodyPart> generalParts;
+                                    List<GeneralBodyPart> rejectedParts;
+                                    List<GeneralBodyPart> acceptedParts;
+                                    List<GeneralBodyPart> pendingParts;
+                                try{
+                                    generalParts =
+                                        await loadSvgImage(
+                                            svgImage: 'assets/images/image.svg');
+                                    rejectedParts =
+                                        await loadSvgImage(
+                                            svgImage:
+                                                'assets/images/image_reject.svg');
+                                    acceptedParts =
+                                        await loadSvgImage(
+                                            svgImage:
+                                                'assets/images/image_accept.svg');
+                                    pendingParts =
+                                        await loadSvgImage(
+                                            svgImage:
+                                                'assets/images/image_pending.svg');
+                                    context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.initial));
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -137,6 +145,11 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                             acceptedParts: acceptedParts,
                                             pendingParts: pendingParts,
                                             jobCardNo: widget.jobCardNo)));
+                                }
+                                catch(e){
+                                  print(" caught an error $e");
+                                }
+                                
                               case 3:
                                 context.read<ServiceBloc>().add(
                                     GetInspectionDetails(

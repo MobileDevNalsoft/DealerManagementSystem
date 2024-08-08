@@ -1,7 +1,10 @@
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:flutter/material.dart'
     hide BoxDecoration, BoxShadow, Stepper, Step;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 
 import '../models/services.dart';
 import 'custom_widgets/stepper.dart';
@@ -103,93 +106,102 @@ class JobCardDetails extends StatelessWidget {
               )),
           centerTitle: true,
         ),
-        body: Container(
-          height: size.height,
-          width: size.width,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.black45, Colors.black26, Colors.black45],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.1, 0.5, 1])),
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: size.height * 0.04),
-                height: size.height * 0.31,
-                width: size.width * 0.9,
-                padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.05,
-                    vertical: size.height * 0.03),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(25)),
-                child: ListView(
-                  children: [
-                    buildDetailRow(
-                        'Job Card Number', service!.jobCardNo.toString(), size),
-                    Gap(size.height * 0.03),
-                    buildDetailRow('Vehicle Registration Number',
-                        service!.registrationNo.toString(), size),
-                    Gap(size.height * 0.03),
-                    buildDetailRow(
-                        'Location', service!.location.toString(), size),
-                    Gap(size.height * 0.03),
-                    buildDetailRow(
-                        'Job Type', service!.jobType.toString(), size),
-                    Gap(size.height * 0.03),
-                    buildDetailRow('Scheduled Date',
-                        service!.scheduledDate.toString(), size)
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
+        body: Stack(
+          children: [
+            Container(
+              height: size.height,
+              width: size.width,
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.black45, Colors.black26, Colors.black45],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.1, 0.5, 1])),
+              child: Column(
+                children: [
+                  Container(
                     margin: EdgeInsets.only(top: size.height * 0.04),
-                    padding: EdgeInsets.only(top: size.height * 0.01),
-                    width: size.width * 0.93,
-                    decoration: const BoxDecoration(
+                    height: size.height * 0.31,
+                    width: size.width * 0.9,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.05,
+                        vertical: size.height * 0.03),
+                    decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25)),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 10,
-                              blurStyle: BlurStyle.normal,
-                              offset: Offset(1, 1),
-                              spreadRadius: 10)
-                        ]),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                        borderRadius: BorderRadius.circular(25)),
+                    child: ListView(
                       children: [
-                        const Text(
-                          'Status',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Gap(size.height * 0.01),
-                        Expanded(
-                            child: Stepper(
-                          steps: dmsFlow
-                              .map((e) => Step(
-                                    activeStep: dmsFlow.indexWhere(
-                                        (e) => e == service!.status),
-                                    currentStep: dmsFlow.indexOf(e),
-                                    icons: icons,
-                                    stepperLength: dmsFlow.length,
-                                    title: e,
-                                    statusLines: statusLines,
-                                    pendingStatusLines: pendingStatusLines,
-                                    jobCardNo: service!.jobCardNo!,
-                                  ))
-                              .toList(),
-                        )),
+                        buildDetailRow(
+                            'Job Card Number', service!.jobCardNo.toString(), size),
+                        Gap(size.height * 0.03),
+                        buildDetailRow('Vehicle Registration Number',
+                            service!.registrationNo.toString(), size),
+                        Gap(size.height * 0.03),
+                        buildDetailRow(
+                            'Location', service!.location.toString(), size),
+                        Gap(size.height * 0.03),
+                        buildDetailRow(
+                            'Job Type', service!.jobType.toString(), size),
+                        Gap(size.height * 0.03),
+                        buildDetailRow('Scheduled Date',
+                            service!.scheduledDate.toString(), size)
                       ],
-                    )),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                        margin: EdgeInsets.only(top: size.height * 0.04),
+                        padding: EdgeInsets.only(top: size.height * 0.01),
+                        width: size.width * 0.93,
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25)),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 10,
+                                  blurStyle: BlurStyle.normal,
+                                  offset: Offset(1, 1),
+                                  spreadRadius: 10)
+                            ]),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'Status',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Gap(size.height * 0.01),
+                            Expanded(
+                                child: Stepper(
+                              steps: dmsFlow
+                                  .map((e) => Step(
+                                        activeStep: dmsFlow.indexWhere(
+                                            (e) => e == service!.status),
+                                        currentStep: dmsFlow.indexOf(e),
+                                        icons: icons,
+                                        stepperLength: dmsFlow.length,
+                                        title: e,
+                                        statusLines: statusLines,
+                                        pendingStatusLines: pendingStatusLines,
+                                        jobCardNo: service!.jobCardNo!,
+                                      ))
+                                  .toList(),
+                            )),
+                          ],
+                        )),
+                  )
+                ],
+              ),
+            ),
+            if(context.watch<MultiBloc>().state.status==MultiStateStatus.loading)
+                Container(
+                color: Colors.blueGrey.withOpacity(0.25),
+                child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
               )
-            ],
-          ),
+          ],
         ));
   }
 

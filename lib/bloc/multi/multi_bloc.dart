@@ -105,12 +105,12 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
   }
 
   void _onMultiBlocStatusChange(MultiBlocStatusChange event, Emitter<MultiBlocState> emit){
-    
     emit(state.copyWith(status: event.status));
   }
 
-void _onScaleVehicle(ScaleVehicle event, Emitter<MultiBlocState> emit){
-  emit(state.copyWith(scaleFactor:event.factor));
-}
+  void _onScaleVehicle(ScaleVehicle event, Emitter<MultiBlocState> emit){
+    emit(state.copyWith(scaleFactor:event.factor));
+  }
+
 
 }

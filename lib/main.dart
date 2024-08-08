@@ -32,6 +32,7 @@ void main() async {
 
   // sharedPreferences.setBool('isLogged', false);
 
+  print(sharedPreferences.getInt('service_advisor_id'));
   runApp(RepositoryProvider(
     create: (context) => Repository(api: getIt()),
     child: MultiBlocProvider(
@@ -48,7 +49,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),
       ],
       child: MaterialApp(
-        
         theme: ThemeData(fontFamily: 'Gilroy',colorScheme: ColorScheme.fromSeed(seedColor: Colors.white,primary: Colors.black)),
         debugShowCheckedModeBanner: false,
         home: !sharedPreferences.containsKey('isLogged') ||

@@ -279,7 +279,7 @@ class Repository {
         Log.d(apiResponse.response);
         if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
           print(jsonDecode(apiResponse.response!.data));
-          return apiResponse.response!.data;
+          return jsonDecode(apiResponse.response!.data);
         } else {
           throw apiResponse.error;
         }

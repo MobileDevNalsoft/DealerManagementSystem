@@ -116,7 +116,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
-
+  context.read<MultiBloc>().add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
     if (_serviceBloc.state.serviceLocationsStatus != GetServiceLocationsStatus.success) {
@@ -160,9 +160,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
         context.read<VehicleBloc>().add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
       }
     } else {
-      DMSCustomWidgets.DMSFlushbar(size, context,
-          message: 'Please check the internet connectivity',
-          icon: Icon(Icons.error));
+      DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
     }
   }
 
@@ -182,7 +180,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     remarksController.clear();
   }
 
-  void unFocusFields(){
+  void unFocusFields() {
     bookingFocus.unfocus();
     altContFocus.unfocus();
     altContPhoneNoFocus.unfocus();
@@ -191,7 +189,6 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     jobTypeFocus.unfocus();
     custConcernsFocus.unfocus();
     remarksFocus.unfocus();
-
   }
 
   @override
@@ -270,10 +267,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                       child: Text(
                         textAlign: TextAlign.center,
                         'Service Booking',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            fontSize: 16),
+                        style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
                       )),
                   centerTitle: true,
                 ),
@@ -450,11 +444,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                             GestureDetector(
                                               onTap: () {
                                                 if (!isConnected()) {
-                                                  DMSCustomWidgets.DMSFlushbar(
-                                                      size, context,
-                                                      message:
-                                                          'Please check the internet connectivity',
-                                                      icon: Icon(Icons.error));
+                                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                                      message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                                                   return;
                                                 }
                                                 FocusManager.instance.primaryFocus?.unfocus();
@@ -561,68 +552,31 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                               ),
                                               BlocBuilder<MultiBloc, MultiBlocState>(
                                                 builder: (context, state) {
-                                                  return DMSCustomWidgets
-                                                      .SearchableDropDown(
-                                                          onChanged: (p0) {
-                                                            if (!isConnected()) {
-                                                              DMSCustomWidgets
-                                                                  .DMSFlushbar(
-                                                                      size,
-                                                                      context,
-                                                                      message:
-                                                                          'Please check the internet connectivity',
-                                                                      icon: Icon(
-                                                                          Icons
-                                                                              .error));
-                                                              return;
-                                                            }
-                                                            spTypeAheadController
-                                                                .text = p0;
-                                                            if (p0.length >=
-                                                                3) {
-                                                              context
-                                                                  .read<
-                                                                      MultiBloc>()
-                                                                  .add(GetSalesPersons(
-                                                                      searchText:
-                                                                          p0));
-                                                            } else {
-                                                              context
-                                                                  .read<
-                                                                      MultiBloc>()
-                                                                  .state
-                                                                  .salesPersons = null;
-                                                            }
-                                                          },
-                                                          size: size,
-                                                          items: state.salesPersons ==
-                                                                  null
-                                                              ? []
-                                                              : state
-                                                                  .salesPersons!
-                                                                  .map((e) =>
-                                                                      "${e.empName}-${e.empId}")
-                                                                  .toList(),
-                                                          hint: 'Sales Person',
-                                                          icon: salesPersonDropDownUp
-                                                              ? const Icon(Icons
-                                                                  .arrow_drop_up)
-                                                              : const Icon(Icons
-                                                                  .arrow_drop_down),
-                                                          isMobile: isMobile,
-                                                          isLoading: state
-                                                                      .status ==
-                                                                  MultiStateStatus
-                                                                      .loading
-                                                              ? true
-                                                              : false,
-                                                          focus: spFocus,
-                                                          typeAheadController:
-                                                              spTypeAheadController,
-                                                          suggestionsController:
-                                                              suggestionsController,
-                                                          scrollController:
-                                                              page2ScrollController);
+                                                  return DMSCustomWidgets.SearchableDropDown(
+                                                      onChanged: (p0) {
+                                                        if (!isConnected()) {
+                                                          DMSCustomWidgets.DMSFlushbar(size, context,
+                                                              message: 'Please check the internet connectivity', icon: Icon(Icons.error));
+                                                          return;
+                                                        }
+                                                        spTypeAheadController.text = p0;
+                                                        if (p0.length >= 3) {
+                                                          context.read<MultiBloc>().add(GetSalesPersons(searchText: p0));
+                                                        } else {
+                                                          context.read<MultiBloc>().state.salesPersons = null;
+                                                        }
+                                                      },
+                                                      size: size,
+                                                      items:
+                                                          state.salesPersons == null ? [] : state.salesPersons!.map((e) => "${e.empName}-${e.empId}").toList(),
+                                                      hint: 'Sales Person',
+                                                      icon: salesPersonDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                                      isMobile: isMobile,
+                                                      isLoading: state.status == MultiStateStatus.loading ? true : false,
+                                                      focus: spFocus,
+                                                      typeAheadController: spTypeAheadController,
+                                                      suggestionsController: suggestionsController,
+                                                      scrollController: page2ScrollController);
                                                 },
                                               ),
                                               SizedBox(
@@ -707,140 +661,76 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                               }
                                             },
                                             builder: (context, state) {
-                                              return BlocBuilder<MultiBloc,
-                                                  MultiBlocState>(
+                                              return BlocBuilder<MultiBloc, MultiBlocState>(
                                                 builder: (context, state) {
                                                   return CustomSliderButton(
+                                                    sliderController: sliderButtonController,
                                                     context: context,
                                                     size: size,
                                                     label: const Text(
                                                       "Proceed to receive",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Color(0xff4a4a4a),
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 17),
+                                                      style: TextStyle(color: Color(0xff4a4a4a), fontWeight: FontWeight.w500, fontSize: 17),
                                                     ),
                                                     icon: const Icon(
-                                                      Icons
-                                                          .arrow_forward_ios_rounded,
+                                                      Icons.arrow_forward_ios_rounded,
                                                       color: Colors.white,
                                                     ),
                                                     onDismissed: () async {
                                                       if (!isConnected()) {
-                                                        DMSCustomWidgets
-                                                            .DMSFlushbar(
-                                                                size, context,
-                                                                message:
-                                                                    'Please check the internet connectivity',
-                                                                icon: Icon(Icons
-                                                                    .error));
+                                                        DMSCustomWidgets.DMSFlushbar(size, context,
+                                                            message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                                                         return;
                                                       }
-                                                      FocusManager
-                                                          .instance.primaryFocus
-                                                          ?.unfocus();
+                                                      FocusManager.instance.primaryFocus?.unfocus();
 
-                                                      _vehicleBloc
-                                                              .state.status =
-                                                          VehicleStatus.initial;
+                                                      _vehicleBloc.state.status = VehicleStatus.initial;
 
                                                       String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
-                                                          _altPersonContactNoValidation(
-                                                              altContPhoneNoController
-                                                                  .text) ??
+                                                          _altPersonContactNoValidation(altContPhoneNoController.text) ??
                                                           _salesPersonValidator(
-                                                              spTypeAheadController
-                                                                  .text,
-                                                              (state.salesPersons ??
-                                                                      [])
-                                                                  .map((e) =>
-                                                                      e.empName)
-                                                                  .toList()) ??
-                                                          _bayValidator(
-                                                              bayTypeAheadController
-                                                                  .text,
-                                                              bayList) ??
-                                                          _jobTypeValidator(
-                                                              jobTypeTypeAheadController
-                                                                  .text,
-                                                              jobTypeList);
+                                                              spTypeAheadController.text, (state.salesPersons ?? []).map((e) => e.empName).toList()) ??
+                                                          _bayValidator(bayTypeAheadController.text, bayList) ??
+                                                          _jobTypeValidator(jobTypeTypeAheadController.text, jobTypeList);
 
                                                       if (message != null) {
                                                         Flushbar(
-                                                          flushbarPosition:
-                                                              FlushbarPosition
-                                                                  .TOP,
-                                                          backgroundColor:
-                                                              Colors.red,
+                                                          flushbarPosition: FlushbarPosition.TOP,
+                                                          backgroundColor: Colors.red,
                                                           message: message,
-                                                          duration:
-                                                              const Duration(
-                                                                  seconds: 2),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
+                                                          duration: const Duration(seconds: 2),
+                                                          borderRadius: BorderRadius.circular(12),
                                                           margin: EdgeInsets.only(
-                                                              top: size.height *
-                                                                  0.01,
-                                                              left: isMobile
-                                                                  ? 10
-                                                                  : size.width *
-                                                                      0.8,
-                                                              right:
-                                                                  size.width *
-                                                                      0.03),
+                                                              top: size.height * 0.01, left: isMobile ? 10 : size.width * 0.8, right: size.width * 0.03),
                                                         ).show(context);
                                                       } else {
                                                         Service service = Service(
-                                                            registrationNo:
-                                                                vehRegNumController
-                                                                    .text,
-                                                            location: locTypeAheadController
-                                                                .text,
-                                                            customerName:
-                                                                customerController
-                                                                    .text,
-                                                            scheduledDate: state.date
-                                                                .toString()
-                                                                .substring(
-                                                                    0, 10),
-                                                            kms: int.parse(kmsController
-                                                                .text),
-                                                            bookingSource:
-                                                                bookingTypeAheadController
-                                                                    .text,
-                                                            alternateContactPerson:
-                                                                altContController
-                                                                    .text,
+                                                            registrationNo: vehRegNumController.text,
+                                                            location: locTypeAheadController.text,
+                                                            customerName: customerController.text,
+                                                            scheduledDate: state.date.toString().substring(0, 10),
+                                                            kms: int.parse(kmsController.text),
+                                                            bookingSource: bookingTypeAheadController.text,
+                                                            alternateContactPerson: altContController.text,
                                                             alternatePersonContactNo:
-                                                                altContPhoneNoController.text.isNotEmpty
-                                                                    ? int.parse(altContPhoneNoController.text)
-                                                                    : null,
+                                                                altContPhoneNoController.text.isNotEmpty ? int.parse(altContPhoneNoController.text) : null,
                                                             salesPerson: spTypeAheadController.text.split('-')[0],
                                                             bay: bayTypeAheadController.text,
                                                             jobType: jobTypeTypeAheadController.text,
-                                                            jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
+                                                            jobCardNo:
+                                                                'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
                                                             customerConcerns: custConcernsController.text,
                                                             remarks: remarksController.text);
-                                                        _serviceBloc.state
-                                                                .jobCardNo =
-                                                            service.jobCardNo!;
+                                                        _serviceBloc.state.jobCardNo = service.jobCardNo!;
 
                                                         Log.d(service.toJson());
-                                                        context
-                                                            .read<ServiceBloc>()
-                                                            .add(ServiceAdded(
-                                                                service:
-                                                                    service));
+                                                        context.read<ServiceBloc>().add(ServiceAdded(service: service));
                                                       }
                                                     },
                                                   );
                                                 },
                                               );
                                             },
-                                          );},),
+                                          ),
                                           if (MediaQuery.of(context).viewInsets.bottom != 0)
                                             SizedBox(
                                               height: size.height * (isMobile ? 0.4 : 0.5),
@@ -851,13 +741,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                   ),
                                 ],
                               )),
-                    if (context.watch<VehicleBloc>().state.status ==
-                            VehicleStatus.loading ||
-                        context
-                                .watch<ServiceBloc>()
-                                .state
-                                .serviceUploadStatus ==
-                            ServiceUploadStatus.loading)
+                    if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading ||
+                        context.watch<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading)
                       Container(
                         color: Colors.black54,
                         child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6)),
@@ -1125,9 +1010,9 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             child: Container(
               width: 42,
               height: 42,
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.black,
-                boxShadow: [BoxShadow(color: Colors.orange.shade200,blurRadius:20,spreadRadius: 0  )],
+                boxShadow: [BoxShadow(color: Colors.orange.shade200, blurRadius: 20, spreadRadius: 0)],
                 shape: BoxShape.circle,
               ),
               child: Center(

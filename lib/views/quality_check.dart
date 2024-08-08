@@ -7,6 +7,7 @@ import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/inspection_out.dart';
+import 'package:dms/views/list_of_jobcards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -627,8 +628,13 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                           context.read<ServiceBloc>().add(GetJobCards());
                           Navigator.popUntil(
                             context,
-                            (route) => route.settings.name == '/listOfJobCards',
+                            (route) => route.settings.name == '/',
                           );
+                          
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => ListOfJobcards()));
                           Navigator.push(
                               context,
                               MaterialPageRoute(

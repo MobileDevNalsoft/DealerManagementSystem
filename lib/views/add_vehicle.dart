@@ -23,8 +23,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
   TextEditingController vehicleRegNumberController = TextEditingController();
 
-  TextEditingController customerContactNumberController =
-      TextEditingController();
+  TextEditingController customerContactNumberController = TextEditingController();
 
   TextEditingController customerNameController = TextEditingController();
 
@@ -48,8 +47,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
   TextEditingController mfgYearController = TextEditingController();
 
-  TextEditingController insuranceCompanyTypeAheadController =
-      TextEditingController();
+  TextEditingController insuranceCompanyTypeAheadController = TextEditingController();
 
   TextEditingController financialDetailsController = TextEditingController();
 
@@ -144,6 +142,24 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     financialDetailsController.clear();
   }
 
+  void unfocusFields() {
+    vehicleRegNumberFocus.unfocus();
+    vehicleTypeFocus.unfocus();
+    customerContactNumberFocus.unfocus();
+    customerNameFocus.unfocus();
+    customerAddressFocus.unfocus();
+    chassisNumberFocus.unfocus();
+    engineNumberFocus.unfocus();
+    makeFocus.unfocus();
+    modelFocus.unfocus();
+    variantFocus.unfocus();
+    colorFocus.unfocus();
+    kmsFocus.unfocus();
+    mfgYearFocus.unfocus();
+    insuranceCompanyFocus.unfocus();
+    financialDetailsFocus.unfocus();
+  }
+
   @override
   void dispose() {
     yearPickerController.dispose();
@@ -151,20 +167,16 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   }
 
   void _onRegNoFocusChange() {
-    if (!vehicleRegNumberFocus.hasFocus &&
-        vehicleRegNumberController.text.isNotEmpty) {
+    if (!vehicleRegNumberFocus.hasFocus && vehicleRegNumberController.text.isNotEmpty) {
       _vehicleBloc.state.status = VehicleStatus.initial;
       _vehicleBloc.add(VehicleCheck(
-          registrationNo: vehicleRegNumberController
-              .text)); // manage this api with customer check in service booking so that this api is no more required.
+          registrationNo: vehicleRegNumberController.text)); // manage this api with customer check in service booking so that this api is no more required.
     }
   }
 
   void _onCustomerContactNoFocusChange() {
-    if (!customerContactNumberFocus.hasFocus &&
-        customerContactNumberController.text.isNotEmpty) {
-      _vehicleBloc.add(CustomerCheck(
-          customerContactNo: customerContactNumberController.text));
+    if (!customerContactNumberFocus.hasFocus && customerContactNumberController.text.isNotEmpty) {
+      _vehicleBloc.add(CustomerCheck(customerContactNo: customerContactNumberController.text));
     }
   }
 
@@ -182,8 +194,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       fieldWidth = size.width * 0.8;
       fieldHeight = size.height * 0.06;
     } else {
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       fieldWidth = size.width * 0.6;
       fieldHeight = size.height * 0.063;
     }
@@ -202,49 +213,29 @@ class _AddVehicleViewState extends State<AddVehicleView> {
             leadingWidth: size.width * 0.14,
             leading: Container(
               margin: EdgeInsets.only(left: size.width * 0.045),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 0,
-                        color: Colors.orange.shade200,
-                        offset: const Offset(0, 0))
-                  ]),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+              ]),
               child: Transform(
                 transform: Matrix4.translationValues(-3, 0, 0),
                 child: IconButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: Colors.white)),
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
               ),
             ),
             title: Container(
                 alignment: Alignment.center,
                 height: size.height * 0.05,
                 width: size.width * 0.45,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.black,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 0,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0))
-                    ]),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                ]),
                 child: const Text(
                   textAlign: TextAlign.center,
                   'Add Vehicle',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
                 )),
             centerTitle: true,
           ),
@@ -255,10 +246,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                 width: size.width,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Colors.black45, Colors.black26, Colors.black45],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.1, 0.5, 1]),
+                      colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
                 ),
                 child: Column(
                   children: [
@@ -266,8 +254,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                       size.height * 0.05,
                     ),
                     SizedBox(
-                        height:
-                            isMobile ? size.height * 0.62 : size.height * 0.5,
+                        height: isMobile ? size.height * 0.62 : size.height * 0.5,
                         width: fieldWidth,
                         child: SingleChildScrollView(
                           controller: scrollController,
@@ -306,22 +293,12 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               DMSCustomWidgets.SearchableDropDown(
                                 size: size,
                                 hint: "Make",
-                                items: [
-                                  "Maruthi Suzuki",
-                                  "Tata",
-                                  "Mercedes",
-                                  "Hyundai",
-                                  "Kia",
-                                  "Ford",
-                                  "Toyota"
-                                ],
+                                items: ["Maruthi Suzuki", "Tata", "Mercedes", "Hyundai", "Kia", "Ford", "Toyota"],
                                 focus: makeFocus,
                                 typeAheadController: makeTypeAheadController,
                                 isMobile: isMobile,
                                 scrollController: scrollController,
-                                icon: makeDropDownUp
-                                    ? const Icon(Icons.arrow_drop_up)
-                                    : const Icon(Icons.arrow_drop_down),
+                                icon: makeDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
                               ),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: modelFocus,
@@ -365,12 +342,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               BlocBuilder<MultiBloc, MultiBlocState>(
                                 builder: (context, state) {
                                   return DMSCustomWidgets.CustomYearPicker(
-                                      size: size,
-                                      isMobile: isMobile,
-                                      context: context,
-                                      yearPickerController:
-                                          yearPickerController,
-                                      year: state.year);
+                                      size: size, isMobile: isMobile, context: context, yearPickerController: yearPickerController, year: state.year);
                                 },
                               ),
                               DMSCustomWidgets.SearchableDropDown(
@@ -378,13 +350,10 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                 hint: "Insurance Company",
                                 items: ["abc", "xyz", "pqr"],
                                 focus: insuranceCompanyFocus,
-                                typeAheadController:
-                                    insuranceCompanyTypeAheadController,
+                                typeAheadController: insuranceCompanyTypeAheadController,
                                 isMobile: isMobile,
                                 scrollController: scrollController,
-                                icon: insuranceCompanyDropDownUp
-                                    ? const Icon(Icons.arrow_drop_up)
-                                    : const Icon(Icons.arrow_drop_down),
+                                icon: insuranceCompanyDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
                               ),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: financialDetailsFocus,
@@ -405,14 +374,12 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                   context: context),
                               DMSCustomWidgets.CustomDataCard(
                                   focusNode: customerContactNumberFocus,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          signed: true),
+                                  keyboardType: const TextInputType.numberWithOptions(signed: true),
                                   size: size,
                                   hint: "Customer Contact No.",
                                   isMobile: isMobile,
-                                  textcontroller:
-                                      customerContactNumberController,
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+                                  textcontroller: customerContactNumberController,
                                   scrollController: scrollController,
                                   context: context),
                               StaggeredGridTile.extent(
@@ -422,9 +389,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                     focusNode: customerAddressFocus,
                                     size: size,
                                     hint: "Customer Address",
-                                    inputFormatters: [
-                                      InitCapCaseTextFormatter()
-                                    ],
+                                    inputFormatters: [InitCapCaseTextFormatter()],
                                     isMobile: isMobile,
                                     scrollController: scrollController,
                                     textcontroller: customerAddressController,
@@ -447,46 +412,45 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               showRegistrationDialog(
                                   size: size,
                                   state: state,
-                                  text:
-                                      'Vehicle Registration is Successful.\nDo you want to book service ?',
+                                  statusWidget: Container(
+                                      alignment: Alignment.centerLeft,
+                                      width: size.width * 0.88,
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+                                      child: Row(
+                                        children: [
+                                          Lottie.asset("assets/lottie/success.json", repeat: false, width: size.width * 0.08),
+                                          Gap(4),
+                                          Text(
+                                            'Vehicle Registration is Successful',
+                                            style: TextStyle(color: Colors.black87),
+                                          ),
+                                        ],
+                                      )),
+                                  text: 'Do you want to book service ?',
                                   acceptText: 'book now',
                                   rejectText: 'later',
                                   onAccept: () {
                                     state.status = VehicleStatus.initial;
                                     Navigator.pop(context);
-                                    Navigator.popAndPushNamed(
-                                        context, '/serviceBooking');
+                                    Navigator.popAndPushNamed(context, '/serviceBooking');
                                   },
                                   onReject: () {
                                     state.status = VehicleStatus.initial;
                                     Navigator.pop(context);
                                     Navigator.pop(context);
                                   });
-                              break;
-                            case VehicleStatus.failure:
-                              DMSCustomWidgets.DMSFlushbar(
-                                size,
-                                context,
-                                message: "Some Error has occured",
-                                icon: const Icon(
-                                  Icons.error,
-                                  color: Colors.white,
-                                ),
-                              );
 
                             case VehicleStatus.vehicleAlreadyAdded:
                               showRegistrationDialog(
                                 size: size,
                                 state: state,
-                                text:
-                                    'Oops! This Vehicle is already registered with us.\nDo you want to book service ?',
+                                text: 'Oops! This Vehicle is already registered with us.\nDo you want to book service ?',
                                 acceptText: 'book now',
                                 rejectText: 'later',
                                 onAccept: () {
                                   state.status = VehicleStatus.initial;
                                   Navigator.pop(context);
-                                  Navigator.popAndPushNamed(
-                                      context, '/serviceBooking');
+                                  Navigator.popAndPushNamed(context, '/serviceBooking');
                                 },
                                 onReject: () {
                                   state.status = VehicleStatus.initial;
@@ -501,23 +465,14 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                         },
                         child: GestureDetector(
                           onTap: () {
-                            // ignore: prefer_if_null_operators
-                            String? message = _vehicleRegistrationNoValidator(
-                                    vehicleRegNumberController.text) ??
-                                _chassisNoValidation(
-                                    chassisNumberController.text) ??
-                                _engineNoValidation(
-                                    engineNumberController.text) ??
-                                (makeTypeAheadController.text.isEmpty
-                                    ? 'Make cannot be empty'
-                                    : null) ??
-                                (kmsController.text.isEmpty
-                                    ? 'KMS cannot be empty'
-                                    : null) ??
+                            unfocusFields();
+                            String? message = _vehicleRegistrationNoValidator(vehicleRegNumberController.text) ??
+                                _chassisNoValidation(chassisNumberController.text) ??
+                                _engineNoValidation(engineNumberController.text) ??
+                                (makeTypeAheadController.text.isEmpty ? 'Make cannot be empty' : null) ??
+                                (kmsController.text.isEmpty ? 'KMS cannot be empty' : null) ??
                                 _nameValidation(customerNameController.text) ??
-                                (customerContactNumberController.text.isEmpty
-                                    ? 'Customer Contact No. cannot be empty'
-                                    : null);
+                                (customerContactNumberController.text.isEmpty ? 'Customer Contact No. cannot be empty' : null);
 
                             if (message != null) {
                               DMSCustomWidgets.DMSFlushbar(size, context,
@@ -528,32 +483,21 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                   ));
                             } else {
                               Vehicle vehicle = Vehicle(
-                                  vehicleRegNumber:
-                                      vehicleRegNumberController.text,
+                                  vehicleRegNumber: vehicleRegNumberController.text,
                                   chassisNumber: chassisNumberController.text,
                                   engineNumber: engineNumberController.text,
                                   make: makeTypeAheadController.text,
                                   varient: variantController.text,
                                   color: colorController.text,
-                                  mfgYear: mfgYearController.text.isNotEmpty
-                                      ? int.parse(mfgYearController.text)
-                                      : 0,
-                                  kms: kmsController.text.isNotEmpty
-                                      ? int.parse(kmsController.text)
-                                      : 0,
-                                  financialDetails:
-                                      financialDetailsController.text,
+                                  mfgYear: mfgYearController.text.isNotEmpty ? int.parse(mfgYearController.text) : 0,
+                                  kms: kmsController.text.isNotEmpty ? int.parse(kmsController.text) : 0,
+                                  financialDetails: financialDetailsController.text,
                                   model: modelController.text,
-                                  insuranceCompany:
-                                      insuranceCompanyTypeAheadController.text,
-                                  customerContactNo:
-                                      customerContactNumberController.text,
+                                  insuranceCompany: insuranceCompanyTypeAheadController.text,
+                                  customerContactNo: customerContactNumberController.text,
                                   customerName: customerNameController.text,
-                                  customerAddress:
-                                      customerAddressController.text);
-                              context
-                                  .read<VehicleBloc>()
-                                  .add(AddVehicleEvent(vehicle: vehicle));
+                                  customerAddress: customerAddressController.text);
+                              context.read<VehicleBloc>().add(AddVehicleEvent(vehicle: vehicle));
                             }
                           },
                           child: Container(
@@ -561,34 +505,23 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                               margin: EdgeInsets.only(top: size.height * 0.03),
                               height: size.height * 0.045,
                               width: size.width * 0.2,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 10,
-                                        blurStyle: BlurStyle.outer,
-                                        spreadRadius: 0,
-                                        color: Colors.orange.shade200,
-                                        offset: const Offset(0, 0))
-                                  ]),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                              ]),
                               child: const Text(
                                 textAlign: TextAlign.center,
                                 'submit',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
+                                style: TextStyle(color: Colors.white, fontSize: 16),
                               )),
                         )),
                   ],
                 ),
               ),
-              if (context.watch<VehicleBloc>().state.status ==
-                  VehicleStatus.loading)
+              if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading)
                 Container(
                   color: Colors.black54,
-                  child: Center(
-                      child: Lottie.asset('assets/lottie/car_loading.json',
-                          height: size.height * 0.5, width: size.width * 0.6)),
+                  child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6)),
                 )
             ],
           )),
@@ -601,6 +534,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       required String text,
       required String acceptText,
       required String rejectText,
+      Widget? statusWidget,
       required void Function()? onAccept,
       required void Function()? onReject}) {
     showDialog(
@@ -609,18 +543,24 @@ class _AddVehicleViewState extends State<AddVehicleView> {
         builder: (context) {
           return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               contentPadding: EdgeInsets.only(top: size.height * 0.01),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: size.width * 0.03),
-                    child: Text(
-                      text,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    child: Column(
+                      children: [
+                        statusWidget ?? SizedBox(),
+                        if (statusWidget != null) Gap(8),
+                        Text(
+                          text,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                   Gap(size.height * 0.01),
@@ -628,20 +568,14 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                     height: size.height * 0.05,
                     margin: EdgeInsets.all(size.height * 0.001),
                     decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                        color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: TextButton(
                             onPressed: onReject,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: Text(
                               rejectText,
                             ),
@@ -654,10 +588,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                         Expanded(
                           child: TextButton(
                             onPressed: onAccept,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: Text(
                               acceptText,
                             ),
@@ -694,10 +625,10 @@ String? _customerContactNoValidation(String value) {
 }
 
 String? _chassisNoValidation(String value) {
-  RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
+  // RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
     return "Chassis No. can't be empty";
-  } else if (!chassisNoRegex.hasMatch(value)) {
+  } else if (value.length > 17) {
     return "Invalid Chassis No.";
   }
   return null;
