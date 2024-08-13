@@ -1,5 +1,6 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
@@ -12,6 +13,9 @@ import 'package:flutter/material.dart' hide Stepper, Step;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../inits/init.dart';
+import '../../navigations/navigator_service.dart';
 
 class Stepper extends StatefulWidget {
   Stepper({super.key, required this.steps});
@@ -57,6 +61,8 @@ class Step extends StatefulWidget {
 }
 
 class _StepState extends State<Step> with ConnectivityMixin {
+  final NavigatorService navigator = getIt<NavigatorService>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -105,64 +111,56 @@ class _StepState extends State<Step> with ConnectivityMixin {
                           print('activeStep ${widget.activeStep}');
                           if (!isConnected()) {
                             DMSCustomWidgets.DMSFlushbar(size, context,
-                                message:
-                                    'Please check the internet connectivity',
-                                icon: const Icon(Icons.error));
+                                message: 'Looks like you'
+                                    're offline. Please check your connection and try again.',
+                                icon: const Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ));
                             return;
                           }
                           if (widget.currentStep == widget.activeStep) {
                             switch (widget.activeStep) {
                               case 2:
-                                context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
+                                context.read<MultiBloc>().add(
+                                    MultiBlocStatusChange(
+                                        status: MultiStateStatus.loading));
                                 List<GeneralBodyPart> generalParts;
-                                    List<GeneralBodyPart> rejectedParts;
-                                    List<GeneralBodyPart> acceptedParts;
-                                    List<GeneralBodyPart> pendingParts;
-                                try{
-                                    generalParts =
-                                        await loadSvgImage(
-                                            svgImage: 'assets/images/image.svg');
-                                    rejectedParts =
-                                        await loadSvgImage(
-                                            svgImage:
-                                                'assets/images/image_reject.svg');
-                                    acceptedParts =
-                                        await loadSvgImage(
-                                            svgImage:
-                                                'assets/images/image_accept.svg');
-                                    pendingParts =
-                                        await loadSvgImage(
-                                            svgImage:
-                                                'assets/images/image_pending.svg');
-                                    context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.initial));
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => QualityCheck(
-                                            model: BodySelectorViewModel(),
-                                            generalParts: generalParts,
-                                            rejectedParts: rejectedParts,
-                                            acceptedParts: acceptedParts,
-                                            pendingParts: pendingParts,
-                                            jobCardNo: widget.jobCardNo)));
-                                }
-                                catch(e){
+                                List<GeneralBodyPart> rejectedParts;
+                                List<GeneralBodyPart> acceptedParts;
+                                List<GeneralBodyPart> pendingParts;
+                                try {
+                                  generalParts = await loadSvgImage(
+                                      svgImage: 'assets/images/image.svg');
+                                  rejectedParts = await loadSvgImage(
+                                      svgImage:
+                                          'assets/images/image_reject.svg');
+                                  acceptedParts = await loadSvgImage(
+                                      svgImage:
+                                          'assets/images/image_accept.svg');
+                                  pendingParts = await loadSvgImage(
+                                      svgImage:
+                                          'assets/images/image_pending.svg');
+                                  context.read<MultiBloc>().add(
+                                      MultiBlocStatusChange(
+                                          status: MultiStateStatus.initial));
+                                  navigator.push('/qualityCheck',
+                                      arguments: GeneralBodyParts(
+                                          generalParts: generalParts,
+                                          rejectedParts: rejectedParts,
+                                          acceptedParts: acceptedParts,
+                                          pendingParts: pendingParts));
+                                } catch (e) {
                                   print(" caught an error $e");
                                 }
-                                
+
                               case 3:
                                 context.read<ServiceBloc>().add(
                                     GetInspectionDetails(
                                         jobCardNo: widget.jobCardNo));
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const InspectionOut()));
+                                navigator.push('/inspectionOut');
                               case 4:
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const GatePass()));
+                                navigator.push('/gatePass');
                             }
                           }
                         },

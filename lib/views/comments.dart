@@ -263,9 +263,12 @@ class _CommentsViewState extends State<CommentsView>
                           onTap: () {
                             if (!isConnected()) {
                               DMSCustomWidgets.DMSFlushbar(size, context,
-                                  message:
-                                      'Please check the internet connectivity',
-                                  icon: Icon(Icons.error));
+                                  message: 'Looks like you'
+                                      're offline. Please check your connection and try again',
+                                  icon: const Icon(
+                                    Icons.error,
+                                    color: Colors.white,
+                                  ));
                               return;
                             }
                             commentsFocus.unfocus();

@@ -1,4 +1,5 @@
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
     with ConnectivityMixin {
   late ServiceBloc _serviceBloc;
   PageController pageController = PageController();
+
+  final NavigatorService navigator = getIt<NavigatorService>();
   @override
   void initState() {
     super.initState();
@@ -51,7 +54,7 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
         child: PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        Navigator.pop(context);
+        navigator.pop();
         // await showDialog(
         //   context: context,
         //   builder: (BuildContext context) {
@@ -166,7 +169,7 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                 transform: Matrix4.translationValues(-5, -3, 0),
                 child: IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      getIt<NavigatorService>().pop();
                     },
                     icon: const Icon(Icons.arrow_back_rounded,
                         color: Colors.white)),
@@ -417,17 +420,10 @@ class JobCardPage extends StatelessWidget {
                                                             20)),
                                             enableFeedback: true,
                                             onTap: () {
-                                              state.jobCardNo = state
-                                                  .filteredJobCards![index]
-                                                  .jobCardNo!;
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          JobCardDetails(
-                                                              service: state
-                                                                      .jobCards![
-                                                                  index])));
+                                              state.service = state
+                                                  .filteredJobCards![index];
+                                              getIt<NavigatorService>()
+                                                  .push('/jobCardDetails');
                                             },
                                             child: Text(
                                               textAlign: TextAlign.center,

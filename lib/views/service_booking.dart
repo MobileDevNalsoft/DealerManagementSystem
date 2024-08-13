@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
@@ -6,8 +5,6 @@ import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/add_vehicle.dart';
-import 'package:dms/views/inspection_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,19 +14,19 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
 import 'package:shimmer/shimmer.dart';
-import 'package:slider_button/slider_button.dart';
 import '../inits/init.dart';
 import '../logger/logger.dart';
+import '../navigations/navigator_service.dart';
 
-class ServiceMain extends StatefulWidget {
+class ServiceBooking extends StatefulWidget {
   PageController? pageController;
-  ServiceMain({Key? key, this.pageController}) : super(key: key);
+  ServiceBooking({Key? key, this.pageController}) : super(key: key);
 
   @override
-  State<ServiceMain> createState() => _ServiceMain();
+  State<ServiceBooking> createState() => _ServiceBooking();
 }
 
-class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
+class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
   //page 1
   // focusnodes
   FocusNode locFocus = FocusNode();
@@ -82,6 +79,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
   ServiceBookingSliderButtonController sliderButtonController =
       ServiceBookingSliderButtonController();
 
+  final NavigatorService navigator = getIt<NavigatorService>();
+
   bool bookingSourceDropDownUp = false;
   bool salesPersonDropDownUp = false;
   bool bayDropDownUp = false;
@@ -118,22 +117,18 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
   void initState() {
     super.initState();
     //page 1
-    clearFields();
     vehRegNumFocus.addListener(_onVehRegNumUnfocused);
-
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
-    context.read<MultiBloc>().add(GetSalesPersons(searchText: "ab"));
+    _multiBloc.add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
-    if (_serviceBloc.state.serviceLocationsStatus !=
-        GetServiceLocationsStatus.success) {
+    if (_serviceBloc.state.locations == null) {
       _serviceBloc.add(GetServiceLocations());
     }
 
     if (_vehicleBloc.state.registrationNo != null) {
-      print(_vehicleBloc.state.registrationNo!);
       vehRegNumController.text = _vehicleBloc.state.registrationNo!;
     }
     _multiBloc.state.date = null;
@@ -171,13 +166,17 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     if (isConnected()) {
       if (!vehRegNumFocus.hasFocus && vehRegNumController.text.isNotEmpty) {
         _vehicleBloc.state.status = VehicleStatus.initial;
-        context.read<VehicleBloc>().add(
+        _vehicleBloc.add(
             FetchVehicleCustomer(registrationNo: vehRegNumController.text));
       }
     } else {
       DMSCustomWidgets.DMSFlushbar(size, context,
-          message: 'Please check the internet connectivity',
-          icon: Icon(Icons.error));
+          message: 'Looks like you'
+              're offline. Please check your connection and try again.',
+          icon: const Icon(
+            Icons.error,
+            color: Colors.white,
+          ));
     }
   }
 
@@ -206,6 +205,13 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     jobTypeFocus.unfocus();
     custConcernsFocus.unfocus();
     remarksFocus.unfocus();
+  }
+
+  @override
+  void dispose() {
+    _vehicleBloc.state.registrationNo = null;
+    clearFields();
+    super.dispose();
   }
 
   @override
@@ -241,13 +247,12 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
             child: PopScope(
               canPop: false,
               onPopInvoked: (didPop) async {
-                print('tried');
                 if (index == 1) {
                   pageController.animateToPage(0,
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       curve: Curves.ease);
                 } else {
-                  Navigator.of(context).pop();
+                  navigator.pop();
                 }
               },
               child: Scaffold(
@@ -276,7 +281,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                       child: IconButton(
                           onPressed: () {
                             if (index == 0) {
-                              Navigator.pop(context);
+                              navigator.pop();
                             } else {
                               pageController.animateToPage(0,
                                   duration: const Duration(milliseconds: 500),
@@ -302,10 +307,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                 color: Colors.orange.shade200,
                                 offset: const Offset(0, 0))
                           ]),
-                      child: Text(
+                      child: const Text(
                         textAlign: TextAlign.center,
                         'Service Booking',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                             fontSize: 16),
@@ -378,56 +383,44 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                 BlocConsumer<VehicleBloc,
                                                     VehicleState>(
                                                   listener: (context, state) {
-                                                    if (state.status ==
-                                                        VehicleStatus
-                                                            .vehicleAlreadyAdded) {
-                                                      customerController.text =
-                                                          state.vehicle!
-                                                              .cusotmerName!;
-                                                    } else if (state.status ==
-                                                        VehicleStatus
-                                                            .newVehicle) {
-                                                      FocusManager
-                                                          .instance.primaryFocus
-                                                          ?.unfocus();
+                                                    switch (state.status) {
+                                                      case VehicleStatus
+                                                            .vehicleAlreadyAdded:
+                                                        customerController
+                                                                .text =
+                                                            state.vehicle!
+                                                                .cusotmerName!;
+                                                      case VehicleStatus
+                                                            .newVehicle:
+                                                        FocusManager.instance
+                                                            .primaryFocus
+                                                            ?.unfocus();
 
-                                                      showRegistrationDialog(
-                                                          size: size,
-                                                          state: state);
-                                                    } else if (state.status ==
-                                                        VehicleStatus.failure) {
-                                                      Flushbar(
-                                                        backgroundColor:
-                                                            Colors.red,
-                                                        blockBackgroundInteraction:
-                                                            true,
-                                                        message:
-                                                            "Server Failure Please check the internet connectivity",
-                                                        flushbarPosition:
-                                                            FlushbarPosition
-                                                                .TOP,
-                                                        duration:
-                                                            const Duration(
-                                                                seconds: 2),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        margin: EdgeInsets.only(
-                                                            top: size.height *
-                                                                0.01,
-                                                            left: isMobile
-                                                                ? 10
-                                                                : size.width *
-                                                                    0.8,
-                                                            right: size.width *
-                                                                0.03),
-                                                      ).show(context);
+                                                        showRegistrationDialog(
+                                                            size: size,
+                                                            state: state);
+                                                      case VehicleStatus
+                                                            .failure:
+                                                        DMSCustomWidgets
+                                                            .DMSFlushbar(
+                                                                size, context,
+                                                                message:
+                                                                    'Something went wrong. Please try again later',
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ));
+                                                      default:
+                                                        null;
                                                     }
                                                   },
                                                   builder: (context, state) {
                                                     return DMSCustomWidgets.CustomDataCard(
                                                         context: context,
                                                         size: size,
+                                                        autofocus: true,
                                                         hint:
                                                             'Vehicle Registration Number',
                                                         inputFormatters: [
@@ -622,58 +615,43 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                if (!isConnected()) {
-                                                  DMSCustomWidgets.DMSFlushbar(
-                                                      size, context,
-                                                      message:
-                                                          'Please check the internet connectivity',
-                                                      icon: Icon(Icons.error));
-                                                  return;
-                                                }
                                                 FocusManager
                                                     .instance.primaryFocus
                                                     ?.unfocus();
 
-                                                String? message = _locationValidator(
-                                                        locTypeAheadController
-                                                            .text) ??
-                                                    (vehRegNumController
-                                                            .text.isEmpty
-                                                        ? "vehicle registration number cannot be empty"
-                                                        : null) ??
-                                                    (context
-                                                                .read<
-                                                                    MultiBloc>()
-                                                                .state
-                                                                .date ==
-                                                            null
-                                                        ? "schedule date cannot be empty"
-                                                        : null) ??
-                                                    (kmsController.text.isEmpty
-                                                        ? "lms cannot be empty"
-                                                        : null);
+                                                String? message =
+                                                    (!isConnected()
+                                                            ? 'Looks like you'
+                                                                're offline. Please check your connection and try again.'
+                                                            : null) ??
+                                                        _locationValidator(
+                                                            locTypeAheadController
+                                                                .text) ??
+                                                        (vehRegNumController
+                                                                .text.isEmpty
+                                                            ? "vehicle registration number cannot be empty"
+                                                            : null) ??
+                                                        (context
+                                                                    .read<
+                                                                        MultiBloc>()
+                                                                    .state
+                                                                    .date ==
+                                                                null
+                                                            ? "schedule date cannot be empty"
+                                                            : null) ??
+                                                        (kmsController
+                                                                .text.isEmpty
+                                                            ? "lms cannot be empty"
+                                                            : null);
 
                                                 if (message != null) {
-                                                  Flushbar(
-                                                    backgroundColor: Colors.red,
-                                                    blockBackgroundInteraction:
-                                                        true,
-                                                    message: message,
-                                                    flushbarPosition:
-                                                        FlushbarPosition.TOP,
-                                                    duration: const Duration(
-                                                        seconds: 2),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    margin: EdgeInsets.only(
-                                                        top: size.height * 0.01,
-                                                        left: isMobile
-                                                            ? 10
-                                                            : size.width * 0.8,
-                                                        right:
-                                                            size.width * 0.03),
-                                                  ).show(context);
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message: message,
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.white,
+                                                      ));
                                                   return;
                                                 } else {
                                                   pageController.animateToPage(
@@ -704,10 +682,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                                 const Offset(
                                                                     0, 0))
                                                       ]),
-                                                  child: Text(
+                                                  child: const Text(
                                                     textAlign: TextAlign.center,
                                                     'next',
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16),
                                                   )),
@@ -810,15 +788,17 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                       .SearchableDropDown(
                                                           onChanged: (p0) {
                                                             if (!isConnected()) {
-                                                              DMSCustomWidgets
-                                                                  .DMSFlushbar(
-                                                                      size,
-                                                                      context,
-                                                                      message:
-                                                                          'Please check the internet connectivity',
-                                                                      icon: Icon(
-                                                                          Icons
-                                                                              .error));
+                                                              DMSCustomWidgets.DMSFlushbar(
+                                                                  size, context,
+                                                                  message:
+                                                                      'Looks like you'
+                                                                      're offline. Please check your connection and try again.',
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons.error,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ));
                                                               return;
                                                             }
                                                             spTypeAheadController
@@ -952,68 +932,35 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                   state.serviceUploadStatus) {
                                                 case ServiceUploadStatus
                                                       .success:
-                                                  Flushbar(
-                                                          flushbarPosition:
-                                                              FlushbarPosition
-                                                                  .TOP,
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                          message:
-                                                              'Service Added Successfully',
-                                                          duration:
-                                                              const Duration(
-                                                                  seconds: 2),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                          margin: EdgeInsets.only(
-                                                              top: 24,
-                                                              left: isMobile
-                                                                  ? 10
-                                                                  : size.width *
-                                                                      0.8,
-                                                              right: 10))
-                                                      .show(context);
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          'Service Added Successfully');
                                                   context
                                                       .read<MultiBloc>()
                                                       .state
                                                       .date = null;
                                                   _vehicleBloc.state
                                                       .registrationNo = null;
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (_) =>
-                                                              const InspectionView()));
+                                                  navigator.pushAndRemoveUntil(
+                                                      '/inspectionIn', '/home');
+                                                  FocusManager
+                                                      .instance.primaryFocus
+                                                      ?.unfocus();
                                                   clearFields();
                                                 case ServiceUploadStatus
                                                       .failure:
                                                   sliderButtonController
                                                           .position =
                                                       SliderButtonPosition.left;
-                                                  Flushbar(
-                                                          flushbarPosition:
-                                                              FlushbarPosition
-                                                                  .TOP,
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          message:
-                                                              'Some error occured',
-                                                          duration:
-                                                              const Duration(
-                                                                  seconds: 2),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                          margin: EdgeInsets.only(
-                                                              top: 24,
-                                                              left: isMobile
-                                                                  ? 10
-                                                                  : size.width *
-                                                                      0.8,
-                                                              right: 10))
-                                                      .show(context);
-                                                  print("status chagned");
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          'Something went wrong. Please try again later',
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.white,
+                                                      ));
                                                 default:
                                                   null;
                                               }
@@ -1043,22 +990,21 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                     ),
                                                     onDismissed: () async {
                                                       if (!isConnected()) {
-                                                        DMSCustomWidgets
-                                                            .DMSFlushbar(
-                                                                size, context,
-                                                                message:
-                                                                    'Please check the internet connectivity',
-                                                                icon: Icon(Icons
-                                                                    .error));
+                                                        DMSCustomWidgets.DMSFlushbar(
+                                                            size, context,
+                                                            message:
+                                                                'Looks like you'
+                                                                're offline. Please check your connection and try again.',
+                                                            icon: const Icon(
+                                                              Icons.error,
+                                                              color:
+                                                                  Colors.white,
+                                                            ));
                                                         return;
                                                       }
                                                       FocusManager
                                                           .instance.primaryFocus
                                                           ?.unfocus();
-
-                                                      _vehicleBloc
-                                                              .state.status =
-                                                          VehicleStatus.initial;
 
                                                       String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
                                                           _altPersonContactNoValidation(
@@ -1082,30 +1028,17 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                               jobTypeList);
 
                                                       if (message != null) {
-                                                        Flushbar(
-                                                          flushbarPosition:
-                                                              FlushbarPosition
-                                                                  .TOP,
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          message: message,
-                                                          duration:
-                                                              const Duration(
-                                                                  seconds: 2),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                          margin: EdgeInsets.only(
-                                                              top: size.height *
-                                                                  0.01,
-                                                              left: isMobile
-                                                                  ? 10
-                                                                  : size.width *
-                                                                      0.8,
-                                                              right:
-                                                                  size.width *
-                                                                      0.03),
-                                                        ).show(context);
+                                                        DMSCustomWidgets
+                                                            .DMSFlushbar(
+                                                                size, context,
+                                                                message:
+                                                                    message,
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ));
                                                       } else {
                                                         Service service = Service(
                                                             registrationNo:
@@ -1143,9 +1076,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                             service.jobCardNo!;
 
                                                         Log.d(service.toJson());
-                                                        context
-                                                            .read<ServiceBloc>()
-                                                            .add(ServiceAdded(
+                                                        _serviceBloc.add(
+                                                            ServiceAdded(
                                                                 service:
                                                                     service));
                                                       }
@@ -1286,7 +1218,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              navigator.pop();
                               vehRegNumFocus.requestFocus();
                             },
                             style: TextButton.styleFrom(
@@ -1307,8 +1239,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                             onPressed: () {
                               state.status = VehicleStatus.initial;
                               state.registrationNo = vehRegNumController.text;
-                              Navigator.pop(context);
-                              Navigator.popAndPushNamed(context, '/addVehicle');
+                              navigator.pop();
+                              navigator.popAndPush('/addVehicle');
                             },
                             style: TextButton.styleFrom(
                                 fixedSize:

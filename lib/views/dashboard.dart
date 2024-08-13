@@ -1,5 +1,8 @@
+import 'package:dms/inits/init.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
+import '../navigations/navigator_service.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -9,6 +12,8 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  NavigatorService navigator = getIt<NavigatorService>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -37,7 +42,7 @@ class _DashBoardState extends State<DashBoard> {
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  navigator.pop();
                 },
                 icon:
                     const Icon(Icons.arrow_back_rounded, color: Colors.white)),

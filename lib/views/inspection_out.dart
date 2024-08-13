@@ -13,6 +13,8 @@ import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
+import '../inits/init.dart';
+import '../navigations/navigator_service.dart';
 
 class InspectionOut extends StatefulWidget {
   const InspectionOut({super.key});
@@ -28,12 +30,16 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
       SliderButtonController();
 
   late ServiceBloc _serviceBloc;
+  final NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   void initState() {
     super.initState();
 
     _serviceBloc = context.read<ServiceBloc>();
+
+    _serviceBloc.state.inspectionJsonUploadStatus =
+        InspectionJsonUploadStatus.initial;
 
     _serviceBloc.state.index = 0;
   }
@@ -70,7 +76,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    navigator.pop();
                   },
                   icon: const Icon(Icons.arrow_back_rounded,
                       color: Colors.white)),
@@ -118,14 +124,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
             if (state.inspectionJsonUploadStatus ==
                 InspectionJsonUploadStatus.success) {
               context.read<ServiceBloc>().add(GetJobCards());
-              Navigator.popUntil(
-                context,
-                (route) => route.settings.name == '/',
-              );
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => ListOfJobcards()));
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => GatePass()));
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {
@@ -218,7 +216,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                               .length -
                                           1,
                                       itemBuilder: (context, index) {
-                                        state.sliderPosition =
+                                        _sliderButtonController.position =
                                             state.json![buttonsText[pageIndex]]
                                                         .last['status'] ==
                                                     "Accepted"
@@ -230,10 +228,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                         "Rejected"
                                                     ? Position.left
                                                     : Position.middle;
-                                        _serviceBloc.add(InspectionJsonUpdated(
-                                            json: state.json!));
-                                        _sliderButtonController.position =
-                                            state.sliderPosition!;
                                         return Column(
                                           children: [
                                             Gap(size.height * 0.01),
@@ -283,8 +277,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                     onLeftLabelReached: () {
                                       state.json![buttonsText[pageIndex]]
                                           .last['status'] = 'Rejected';
-
-                                      state.sliderPosition = Position.left;
                                       _serviceBloc.add(InspectionJsonUpdated(
                                           json: state.json!));
                                       showReasonDialog(
@@ -298,14 +290,12 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                     onRightLabelReached: () {
                                       state.json![buttonsText[pageIndex]]
                                           .last['status'] = 'Accepted';
-                                      state.sliderPosition = Position.right;
                                       _serviceBloc.add(InspectionJsonUpdated(
                                           json: state.json!));
                                       if (pageIndex == buttonsText.length - 1) {
                                         showSubmitDialog(
                                             size: size,
                                             state: state,
-                                            controller: _sliderButtonController,
                                             page: buttonsText[pageIndex]);
                                       }
                                     },
@@ -388,10 +378,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
   }
 
   void showSubmitDialog(
-      {required Size size,
-      required ServiceState state,
-      required String page,
-      required SliderButtonController controller}) {
+      {required Size size, required ServiceState state, required String page}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -430,11 +417,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                             child: TextButton(
                               onPressed: () {
                                 state.json![page].last['status'] = '';
-                                _serviceBloc.add(UpdateSliderPosition(
-                                    position: Position.middle));
                                 _serviceBloc.add(
                                     InspectionJsonUpdated(json: state.json!));
-                                Navigator.pop(context, false);
+                                navigator.pop();
                               },
                               style: TextButton.styleFrom(
                                   fixedSize:
@@ -454,9 +439,12 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                               onPressed: () {
                                 if (!isConnected()) {
                                   DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message:
-                                          'Please check the internet connectivity',
-                                      icon: Icon(Icons.error));
+                                      message: 'Looks like you'
+                                          're offline. Please check your connection and try again.',
+                                      icon: const Icon(
+                                        Icons.error,
+                                        color: Colors.white,
+                                      ));
                                   return;
                                 }
                                 state.json = state.json!;
@@ -467,7 +455,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                     inspectionIn: 'false'));
                                 _serviceBloc.add(GetJobCards(
                                     query: 'Quick Fit Center Abu Dhabi'));
-                                Navigator.pop(context);
+                                navigator.pop();
+                                navigator.pushAndRemoveUntil(
+                                    '/gatePass', '/listOfJobCards');
                               },
                               style: TextButton.styleFrom(
                                   fixedSize:
@@ -523,7 +513,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                             autofocus: true,
                             cursorColor: Colors.black,
                             maxLines: 4,
-                            onTap: () {},
                             decoration: InputDecoration(
                                 hintStyle:
                                     const TextStyle(color: Colors.black26),
@@ -561,11 +550,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                             child: TextButton(
                               onPressed: () {
                                 state.json![page].last['status'] = '';
-                                _serviceBloc.add(UpdateSliderPosition(
-                                    position: Position.middle));
                                 _serviceBloc.add(
                                     InspectionJsonUpdated(json: state.json!));
-                                Navigator.pop(context, false);
+                                navigator.pop();
                               },
                               style: TextButton.styleFrom(
                                   fixedSize:
@@ -588,25 +575,17 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                 _serviceBloc.add(
                                     InspectionJsonUpdated(json: state.json!));
                                 if (controller.text.isEmpty) {
-                                  Flushbar(
-                                    flushbarPosition: FlushbarPosition.TOP,
-                                    backgroundColor: Colors.red,
-                                    message: "Reason cannot be empty",
-                                    duration: const Duration(seconds: 1),
-                                    borderRadius: BorderRadius.circular(12),
-                                    margin: EdgeInsets.only(
-                                        top: size.height * 0.01,
-                                        left: 10,
-                                        right: size.width * 0.03),
-                                  ).show(context);
+                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                      message: "Reason cannot be empty",
+                                      icon: const Icon(
+                                        Icons.error,
+                                        color: Colors.white,
+                                      ));
                                 } else {
-                                  Navigator.pop(context, false);
+                                  navigator.pop();
                                   if (pageIndex == buttonsTextLength - 1) {
                                     showSubmitDialog(
-                                        size: size,
-                                        state: state,
-                                        controller: _sliderButtonController,
-                                        page: page);
+                                        size: size, state: state, page: page);
                                   }
                                 }
                               },

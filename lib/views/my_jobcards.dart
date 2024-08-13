@@ -1,4 +1,5 @@
 import 'package:dms/inits/init.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/views/login.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../bloc/service/service_bloc.dart';
+import 'custom_widgets/clipped_buttons.dart';
 import 'list_of_jobcards.dart';
 import 'jobcard_details.dart';
 
@@ -22,6 +24,8 @@ class _MyJobcardsState extends State<MyJobcards> {
   late ServiceBloc _serviceBloc;
 
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
+
+  final NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   void initState() {
@@ -68,7 +72,7 @@ class _MyJobcardsState extends State<MyJobcards> {
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  navigator.pop();
                 },
                 icon:
                     const Icon(Icons.arrow_back_rounded, color: Colors.white)),
@@ -114,12 +118,9 @@ class _MyJobcardsState extends State<MyJobcards> {
               value: '0',
               onChanged: (String? value) {
                 sharedPreferences.setBool("isLogged", false);
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginView(),
-                  ),
-                  (route) => false,
+                navigator.pushAndRemoveUntil(
+                  '/login',
+                  '/',
                 );
               },
               buttonStyleData: ButtonStyleData(
@@ -208,15 +209,23 @@ class _MyJobcardsState extends State<MyJobcards> {
                   child: SizedBox(
                     height: size.height * 0.15,
                     width: size.width * 0.95,
-                    child: ClipPath(
+                    child: ClipShadowPath(
                       clipper: TicketClipper(),
-                      clipBehavior: Clip.antiAlias,
-                      child: Card(
+                      shadow: BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                        blurRadius: 5,
+                        blurStyle: BlurStyle.normal,
+                        spreadRadius: 1,
+                      ),
+                      child: Container(
                         margin: EdgeInsets.symmetric(
                           vertical: size.height * 0.006,
                         ),
-                        color: Colors.white,
-                        elevation: 3,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -246,16 +255,9 @@ class _MyJobcardsState extends State<MyJobcards> {
                                                   BorderRadius.circular(20)),
                                           enableFeedback: true,
                                           onTap: () {
-                                            state.jobCardNo = state
-                                                .myJobCards![index].jobCardNo!;
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (_) =>
-                                                        JobCardDetails(
-                                                            service: state
-                                                                    .myJobCards![
-                                                                index])));
+                                            state.service =
+                                                state.myJobCards![index];
+                                            navigator.push('/jobCardDetails');
                                           },
                                           child: Text(
                                             textAlign: TextAlign.center,

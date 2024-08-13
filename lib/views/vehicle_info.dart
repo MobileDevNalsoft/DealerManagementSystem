@@ -4,7 +4,9 @@ import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/vehicle.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
@@ -33,12 +35,18 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
 
   Timer? _debounce;
 
+  late ServiceBloc _serviceBloc;
+  late VehicleBloc _vehicleBloc;
+
+  final NavigatorService navigator = getIt<NavigatorService>();
+
   @override
   void initState() {
     super.initState();
-    context.read<ServiceBloc>().add(ClearServices());
-    context
-        .read<VehicleBloc>()
+    _serviceBloc = context.read<ServiceBloc>();
+    _vehicleBloc = context.read<VehicleBloc>();
+    _serviceBloc.add(ClearServices());
+    _vehicleBloc
         .add(UpdateState(vehicle: Vehicle(), status: VehicleStatus.initial));
   }
 
@@ -140,8 +148,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               }
                             },
                             builder: (context, state) {
-                              print(
-                                  "serevice status ${state.getServiceStatus}");
+                              print("service status ${state.getServiceStatus}");
                               return CustomScrollView(
                                 slivers: [
                                   (state.services == null ||
@@ -235,9 +242,11 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                           true,
                                                                       onTap:
                                                                           () {
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (_) => JobCardDetails(service: state.jobCards![index])));
+                                                                        _serviceBloc
+                                                                            .state
+                                                                            .service = state
+                                                                                .jobCards![
+                                                                            index];
                                                                       },
                                                                       child:
                                                                           Text(
@@ -535,217 +544,207 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
   @override
   Widget build(BuildContext context) {
     clipperWidgets = initalizeWidgets();
-    return SafeArea(
-        child: PopScope(
-            canPop: false,
-            onPopInvoked: (didPop) async {
-              focusNode.unfocus();
-              Navigator.pop(context);
-            },
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              extendBody: false,
-              appBar: AppBar(
-                scrolledUnderElevation: 0,
-                elevation: 0,
-                backgroundColor: Colors.black45,
-                leadingWidth: size.width * 0.14,
-                leading: Container(
-                  margin: EdgeInsets.only(left: size.width * 0.045),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 0,
-                            color: Colors.orange.shade200,
-                            offset: const Offset(0, 0))
-                      ]),
-                  child: Transform(
-                    transform: Matrix4.translationValues(-3, 0, 0),
-                    child: IconButton(
-                        onPressed: () {
-                          focusNode.unfocus();
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back_rounded,
-                            color: Colors.white)),
-                  ),
-                ),
-                title: Container(
-                    alignment: Alignment.center,
-                    height: size.height * 0.05,
-                    width: size.width * 0.45,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black,
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 10,
-                              blurStyle: BlurStyle.outer,
-                              spreadRadius: 0,
-                              color: Colors.orange.shade200,
-                              offset: const Offset(0, 0))
-                        ]),
-                    child: Center(
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        'Vehicle Info',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                            fontSize: 16),
-                      ),
-                    )),
-                centerTitle: true,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      extendBody: false,
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        backgroundColor: Colors.black45,
+        leadingWidth: size.width * 0.14,
+        leading: Container(
+          margin: EdgeInsets.only(left: size.width * 0.045),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.black,
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 10,
+                    blurStyle: BlurStyle.outer,
+                    spreadRadius: 0,
+                    color: Colors.orange.shade200,
+                    offset: const Offset(0, 0))
+              ]),
+          child: Transform(
+            transform: Matrix4.translationValues(-3, 0, 0),
+            child: IconButton(
+                onPressed: () {
+                  focusNode.unfocus();
+                  navigator.pop();
+                },
+                icon:
+                    const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+          ),
+        ),
+        title: Container(
+            alignment: Alignment.center,
+            height: size.height * 0.05,
+            width: size.width * 0.45,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.black,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 10,
+                      blurStyle: BlurStyle.outer,
+                      spreadRadius: 0,
+                      color: Colors.orange.shade200,
+                      offset: const Offset(0, 0))
+                ]),
+            child: Center(
+              child: Text(
+                textAlign: TextAlign.center,
+                'Vehicle Info',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 16),
               ),
-              body: Container(
-                width: size.width,
-                height: size.height,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.black45, Colors.black26, Colors.black45],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Gap(8),
-                    InkWell(
-                      onTap: () => focusNode.requestFocus(),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(left: size.width * 0.03),
-                            padding: EdgeInsets.only(top: size.height * 0.033),
-                            height: size.height * 0.06,
-                            width: size.width * 0.8,
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)),
-                                color: Colors.white60),
-                            child: TextFormField(
-                              controller: vehicleRegNoController,
-                              focusNode: focusNode,
-                              style: const TextStyle(color: Colors.black),
-                              onTapOutside: (event) => focusNode.unfocus(),
-                              onChanged: (value) {
-                                vehicleRegNoController.text =
-                                    vehicleRegNoController.text.toUpperCase();
-                                if (_debounce?.isActive ?? false)
-                                  _debounce!.cancel();
-                                _debounce = Timer(
-                                    const Duration(milliseconds: 300), () {
-                                  print("hello");
-                                  if (!isConnected()) {
-                                    DMSCustomWidgets.DMSFlushbar(size, context,
-                                        message:
-                                            'Please check the internet connectivity',
-                                        icon: Icon(Icons.error));
-                                    return;
-                                  }
-                                  context.read<VehicleBloc>().add(
-                                      FetchVehicleCustomer(
-                                          registrationNo:
-                                              vehicleRegNoController.text));
-                                  context.read<ServiceBloc>().add(
-                                      GetServiceHistory(
-                                          query: 'vehicle_history',
-                                          vehicleRegNo:
-                                              vehicleRegNoController.text));
-                                });
-                              },
-                              cursorColor: Colors.black,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 16),
-                                hintStyle: TextStyle(
-                                    color: Colors.black38, fontSize: 14),
-                                hintText: 'Vehicle Registration Number',
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(right: size.width * 0.03),
-                              height: size.height * 0.06,
-                              decoration: const BoxDecoration(
-                                  color: Colors.black38,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10))),
-                              child: const Icon(
-                                Icons.search_rounded,
-                                color: Colors.white60,
-                              ),
-                            ),
-                          )
-                        ],
+            )),
+        centerTitle: true,
+      ),
+      body: Container(
+        width: size.width,
+        height: size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black45, Colors.black26, Colors.black45],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Column(
+          children: [
+            Gap(8),
+            InkWell(
+              onTap: () => focusNode.requestFocus(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(left: size.width * 0.03),
+                    padding: EdgeInsets.only(top: size.height * 0.033),
+                    height: size.height * 0.06,
+                    width: size.width * 0.8,
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10)),
+                        color: Colors.white60),
+                    child: TextFormField(
+                      controller: vehicleRegNoController,
+                      focusNode: focusNode,
+                      style: const TextStyle(color: Colors.black),
+                      onTapOutside: (event) => focusNode.unfocus(),
+                      onChanged: (value) {
+                        vehicleRegNoController.text =
+                            vehicleRegNoController.text.toUpperCase();
+                        if (_debounce?.isActive ?? false) _debounce!.cancel();
+                        _debounce =
+                            Timer(const Duration(milliseconds: 300), () {
+                          print("hello");
+                          if (!isConnected()) {
+                            DMSCustomWidgets.DMSFlushbar(size, context,
+                                message: 'Looks like you'
+                                    're offline. Please check your connection and try again.',
+                                icon: const Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ));
+                            return;
+                          }
+                          context.read<VehicleBloc>().add(FetchVehicleCustomer(
+                              registrationNo: vehicleRegNoController.text));
+                          context.read<ServiceBloc>().add(GetServiceHistory(
+                              query: 'vehicle_history',
+                              vehicleRegNo: vehicleRegNoController.text));
+                        });
+                      },
+                      cursorColor: Colors.black,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                        hintStyle:
+                            TextStyle(color: Colors.black38, fontSize: 14),
+                        hintText: 'Vehicle Registration Number',
                       ),
                     ),
-                    BlocConsumer<VehicleBloc, VehicleState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        print("building");
-                        switch (state.status) {
-                          case VehicleStatus.vehicleAlreadyAdded:
-                            return Stack(
-                                children: context
-                                            .read<MultiBloc>()
-                                            .state
-                                            .reverseClippedWidgets! ==
-                                        true
-                                    ? clipperWidgets.reversed.toList()
-                                    : clipperWidgets);
-                          case VehicleStatus.loading:
-                            return Transform(
-                              transform: Matrix4.translationValues(
-                                  0, size.height * 0.15, 0),
-                              child: Lottie.asset(
-                                "assets/lottie/steering.json",
-                                width: size.width * 0.6,
-                              ),
-                            );
-                          default:
-                            if (vehicleRegNoController.text.isEmpty) {
-                              return Transform(
-                                transform: Matrix4.translationValues(
-                                    0, size.height * 0.18, 0),
-                                child: Lottie.asset(
-                                  "assets/lottie/car_search.json",
-                                  width: size.width * 0.6,
-                                ),
-                              );
-                            }
-                            return Column(
-                              children: [
-                                Gap(size.height * 0.25),
-                                Icon(
-                                  Icons.car_crash_rounded,
-                                  size: size.width * 0.11,
-                                ),
-                                Text(
-                                  "Vehicle not found",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 20),
-                                ),
-                              ],
-                            );
-                        }
-                      },
-                    )
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: size.width * 0.03),
+                      height: size.height * 0.06,
+                      decoration: const BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: const Icon(
+                        Icons.search_rounded,
+                        color: Colors.white60,
+                      ),
+                    ),
+                  )
+                ],
               ),
-            )));
+            ),
+            BlocConsumer<VehicleBloc, VehicleState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                print("building");
+                switch (state.status) {
+                  case VehicleStatus.vehicleAlreadyAdded:
+                    return Stack(
+                        children: context
+                                    .read<MultiBloc>()
+                                    .state
+                                    .reverseClippedWidgets! ==
+                                true
+                            ? clipperWidgets.reversed.toList()
+                            : clipperWidgets);
+                  case VehicleStatus.loading:
+                    return Transform(
+                      transform:
+                          Matrix4.translationValues(0, size.height * 0.15, 0),
+                      child: Lottie.asset(
+                        "assets/lottie/steering.json",
+                        width: size.width * 0.6,
+                      ),
+                    );
+                  default:
+                    if (vehicleRegNoController.text.isEmpty) {
+                      return Transform(
+                        transform:
+                            Matrix4.translationValues(0, size.height * 0.18, 0),
+                        child: Lottie.asset(
+                          "assets/lottie/car_search.json",
+                          width: size.width * 0.6,
+                        ),
+                      );
+                    }
+                    return Column(
+                      children: [
+                        Gap(size.height * 0.25),
+                        Icon(
+                          Icons.car_crash_rounded,
+                          size: size.width * 0.11,
+                        ),
+                        Text(
+                          "Vehicle not found",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 20),
+                        ),
+                      ],
+                    );
+                }
+              },
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 

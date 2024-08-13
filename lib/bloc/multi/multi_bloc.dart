@@ -9,14 +9,16 @@ import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../logger/logger.dart';
+import '../../navigations/navigator_service.dart';
 
 part 'multi_event.dart';
 part 'multi_state.dart';
 
 class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
+  NavigatorService? navigator;
   final Repository _repo;
-  MultiBloc({required Repository repo})
-      : _repo = repo,
+  MultiBloc({Repository? repo, this.navigator})
+      : _repo = repo!,
         super(MultiBlocState.initial()) {
     on<DateChanged>(_onDateChanged);
     on<YearChanged>(_onYearChanged);
@@ -104,13 +106,12 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     emit(state.copyWith(reverseClippedWidgets: event.reverseClippedWidgets));
   }
 
-  void _onMultiBlocStatusChange(MultiBlocStatusChange event, Emitter<MultiBlocState> emit){
+  void _onMultiBlocStatusChange(
+      MultiBlocStatusChange event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(status: event.status));
   }
 
-  void _onScaleVehicle(ScaleVehicle event, Emitter<MultiBlocState> emit){
-    emit(state.copyWith(scaleFactor:event.factor));
+  void _onScaleVehicle(ScaleVehicle event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(scaleFactor: event.factor));
   }
-
-
 }

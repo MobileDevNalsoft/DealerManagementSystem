@@ -1,9 +1,5 @@
 import 'dart:convert';
-
-import 'package:dio/dio.dart';
-import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/logger/logger.dart';
-import 'package:dms/models/salesPerson.dart';
 import 'package:network_calls/src.dart';
 
 class Repository {
@@ -65,6 +61,24 @@ class Repository {
   Future<Map<String, dynamic>> getCustomer(String customerContactNo) async {
     ApiResponse apiResponse = await _api.get('getCustomer',
         queryParameters: {"customerContactNo": customerContactNo});
+
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> getHistory(String query, int pageNo,
+      {String? vehicleRegNo}) async {
+    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {
+      "param": query,
+      "pageNo": pageNo,
+      "vehicleRegNo": vehicleRegNo ?? ""
+    });
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
@@ -285,7 +299,6 @@ class Repository {
       if (apiResponse.response!.statusCode == 200) {
         Log.d(apiResponse.response);
         if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
-          print(jsonDecode(apiResponse.response!.data));
           return jsonDecode(apiResponse.response!.data);
         } else {
           throw apiResponse.error;

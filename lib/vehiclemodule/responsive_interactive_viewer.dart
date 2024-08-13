@@ -17,6 +17,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../bloc/service/service_bloc.dart';
+import '../inits/init.dart';
+import '../navigations/navigator_service.dart';
 
 class CustomDetector extends StatefulWidget {
   BodySelectorViewModel model;
@@ -29,6 +31,8 @@ class CustomDetector extends StatefulWidget {
 
 class _CustomDetectorState extends State<CustomDetector>
     with SingleTickerProviderStateMixin {
+  NavigatorService navigator = getIt<NavigatorService>();
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +67,7 @@ class _CustomDetectorState extends State<CustomDetector>
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    navigator.pop();
                   },
                   icon: const Icon(Icons.arrow_back_rounded,
                       color: Colors.white)),
@@ -279,10 +283,8 @@ class _CustomDetectorState extends State<CustomDetector>
                       if (!Provider.of<BodySelectorViewModel>(context,
                               listen: false)
                           .isTapped) {
-                        Navigator.of(context)
-                            .popUntil((route) => route.settings.name == '/');
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => ListOfJobcards()));
+                        navigator.pushAndRemoveUntil(
+                            '/listOfJobCards', '/home');
                       }
                       // context
                       //     .read<VehiclePartsInteractionBloc>()

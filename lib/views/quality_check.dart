@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/wrapper_ex.dart';
@@ -17,6 +18,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:provider/provider.dart';
 
 import '../bloc/service/service_bloc.dart';
+import '../inits/init.dart';
 
 class QualityCheck extends StatefulWidget {
   BodySelectorViewModel model;
@@ -24,15 +26,13 @@ class QualityCheck extends StatefulWidget {
   final List<GeneralBodyPart>? acceptedParts;
   final List<GeneralBodyPart>? rejectedParts;
   final List<GeneralBodyPart>? pendingParts;
-  final String jobCardNo;
   QualityCheck(
       {super.key,
       required this.model,
       this.generalParts,
       this.acceptedParts,
       this.rejectedParts,
-      this.pendingParts,
-      this.jobCardNo = "JC-LOC-12"});
+      this.pendingParts});
   @override
   State<QualityCheck> createState() => _QualityCheckState();
 }
@@ -42,9 +42,13 @@ class _QualityCheckState extends State<QualityCheck>
   TextEditingController rejectionController = TextEditingController();
   FocusNode rejectionFocus = FocusNode();
   late DraggableScrollableController draggableScrollableController;
+  final NavigatorService navigator = getIt<NavigatorService>();
+
+  late ServiceBloc _serviceBloc;
   @override
   void initState() {
     super.initState();
+    _serviceBloc = context.read<ServiceBloc>();
     context.read<VehiclePartsInteractionBloc>().state.mapMedia = {};
     context.read<VehiclePartsInteractionBloc>().add(FetchVehicleMediaEvent(
         jobCardNo: context.read<ServiceBloc>().state.jobCardNo!));
@@ -90,7 +94,7 @@ class _QualityCheckState extends State<QualityCheck>
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    navigator.pop();
                   },
                   icon: const Icon(Icons.arrow_back_rounded,
                       color: Colors.white)),
@@ -177,9 +181,12 @@ class _QualityCheckState extends State<QualityCheck>
                         onTap: () {
                           if (!isConnected()) {
                             DMSCustomWidgets.DMSFlushbar(size, context,
-                                message:
-                                    'Please check the internet connectivity',
-                                icon: Icon(Icons.error));
+                                message: 'Looks like you'
+                                    're offline. Please check your connection and try again.',
+                                icon: const Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ));
                             return;
                           }
                           String message = "";
@@ -210,7 +217,8 @@ class _QualityCheckState extends State<QualityCheck>
                           }
                           context.read<VehiclePartsInteractionBloc>().add(
                               SubmitQualityCheckStatusEvent(
-                                  jobCardNo: widget.jobCardNo));
+                                  jobCardNo:
+                                      _serviceBloc.state.service!.jobCardNo!));
                         },
                         child: Container(
                             alignment: Alignment.center,
@@ -651,7 +659,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                                                 10,
                                                                             child: IconButton(
                                                                                 onPressed: () {
-                                                                                  Navigator.of(context).pop();
+                                                                                  navigator.pop();
                                                                                 },
                                                                                 icon: Icon(
                                                                                   Icons.highlight_remove_rounded,
@@ -908,25 +916,16 @@ class _QualityCheckState extends State<QualityCheck>
                   listener: (context, state) {
                     switch (state.status) {
                       case VehiclePartsInteractionStatus.success:
-                        context.read<ServiceBloc>().add(
-                            GetInspectionDetails(jobCardNo: widget.jobCardNo));
+                        context.read<ServiceBloc>().add(GetInspectionDetails(
+                            jobCardNo: _serviceBloc.state.service!.jobCardNo!));
                         context.read<ServiceBloc>().add(GetJobCards());
-                        Navigator.popUntil(
-                          context,
-                          (route) => route.settings.name == '/',
-                        );
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ListOfJobcards()));
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => InspectionOut()));
+                        navigator.pushReplacement('/inspectionOut');
                       case VehiclePartsInteractionStatus.failure:
                         DMSCustomWidgets.DMSFlushbar(
                           size,
                           context,
-                          message: "Some error has occured",
+                          message:
+                              "Something went wrong. Please try again later",
                           icon: const Icon(
                             Icons.error,
                             color: Colors.white,

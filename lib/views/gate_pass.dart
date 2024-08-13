@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
+
+import '../navigations/navigator_service.dart';
 
 class GatePass extends StatefulWidget {
   const GatePass({super.key});
@@ -25,13 +28,17 @@ class _GatePassState extends State<GatePass> {
       WidgetsToImageController();
   late Uint8List? bytes;
   late ServiceBloc _serviceBloc;
+
+  NavigatorService navigator = getIt<NavigatorService>();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _serviceBloc = context.read<ServiceBloc>();
-    _serviceBloc.state.gatePassno="";
-    _serviceBloc.add(GetGatePass(jobCardNo: _serviceBloc.state.jobCardNo!));
+    _serviceBloc.state.gatePassno = "";
+    _serviceBloc
+        .add(GetGatePass(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
   }
 
   @override
@@ -41,7 +48,7 @@ class _GatePassState extends State<GatePass> {
         child: PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        Navigator.pop(context);
+        navigator.pop();
       },
       child: Scaffold(
           extendBody: false,
@@ -67,7 +74,7 @@ class _GatePassState extends State<GatePass> {
                 transform: Matrix4.translationValues(-3, 0, 0),
                 child: IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      navigator.pop();
                     },
                     icon: const Icon(Icons.arrow_back_rounded,
                         color: Colors.white)),

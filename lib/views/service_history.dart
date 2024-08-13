@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
+
+import '../navigations/navigator_service.dart';
 
 class ServiceHistoryView extends StatefulWidget {
   const ServiceHistoryView({super.key});
@@ -22,6 +25,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
   DataGridController dataGridController = DataGridController();
   final ServiceState serviceState = ServiceState();
   final CustomColumnSizer _customColumnSizer = CustomColumnSizer();
+  final NavigatorService navigator = getIt<NavigatorService>();
   @override
   void initState() {
     super.initState();
@@ -100,7 +104,7 @@ class _ServiceHistoryViewState extends State<ServiceHistoryView> {
                   transform: Matrix4.translationValues(-3, 0, 0),
                   child: IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        navigator.pop();
                       },
                       icon: const Icon(Icons.arrow_back_rounded,
                           color: Colors.white)),

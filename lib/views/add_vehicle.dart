@@ -2,7 +2,9 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/vehicle.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,6 +103,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   late VehicleBloc _vehicleBloc;
   late ServiceBloc _serviceBloc;
 
+  NavigatorService navigator = getIt<NavigatorService>();
+
   @override
   void initState() {
     super.initState();
@@ -109,9 +113,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     _vehicleBloc = context.read<VehicleBloc>();
     _serviceBloc = context.read<ServiceBloc>();
 
-    _multiBloc.state.year = null;
+    _multiBloc.state.year = DateTime.now().year;
     yearPickerController = FixedExtentScrollController(initialItem: index);
-    print(_vehicleBloc.state.registrationNo!);
     if (_vehicleBloc.state.registrationNo != null) {
       vehicleRegNumberController.text = _vehicleBloc.state.registrationNo!;
     }
@@ -148,27 +151,44 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     financialDetailsController.clear();
   }
 
-  void unfocusFields() {
-    vehicleRegNumberFocus.unfocus();
-    vehicleTypeFocus.unfocus();
-    customerContactNumberFocus.unfocus();
-    customerNameFocus.unfocus();
-    customerAddressFocus.unfocus();
-    chassisNumberFocus.unfocus();
-    engineNumberFocus.unfocus();
-    makeFocus.unfocus();
-    modelFocus.unfocus();
-    variantFocus.unfocus();
-    colorFocus.unfocus();
-    kmsFocus.unfocus();
-    mfgYearFocus.unfocus();
-    insuranceCompanyFocus.unfocus();
-    financialDetailsFocus.unfocus();
+  void disposeFields() {
+    vehicleRegNumberController.dispose();
+    vehicleTypeController.dispose();
+    customerContactNumberController.dispose();
+    chassisNumberController.dispose();
+    engineNumberController.dispose();
+    customerNameController.dispose();
+    customerAddressController.dispose();
+    makeTypeAheadController.dispose();
+    modelController.dispose();
+    variantController.dispose();
+    colorController.dispose();
+    kmsController.dispose();
+    mfgYearController.dispose();
+    insuranceCompanyTypeAheadController.dispose();
+    financialDetailsController.dispose();
+    vehicleRegNumberFocus.dispose();
+    vehicleTypeFocus.dispose();
+    customerContactNumberFocus.dispose();
+    customerNameFocus.dispose();
+    customerAddressFocus.dispose();
+    chassisNumberFocus.dispose();
+    engineNumberFocus.dispose();
+    makeFocus.dispose();
+    modelFocus.dispose();
+    variantFocus.dispose();
+    colorFocus.dispose();
+    kmsFocus.dispose();
+    mfgYearFocus.dispose();
+    insuranceCompanyFocus.dispose();
+    financialDetailsFocus.dispose();
   }
 
   @override
   void dispose() {
     yearPickerController.dispose();
+    _vehicleBloc.state.registrationNo = null;
+    disposeFields();
     super.dispose();
   }
 
@@ -179,14 +199,6 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       _vehicleBloc.add(VehicleCheck(
           registrationNo: vehicleRegNumberController
               .text)); // manage this api with customer check in service booking so that this api is no more required.
-    }
-  }
-
-  void _onCustomerContactNoFocusChange() {
-    if (!customerContactNumberFocus.hasFocus &&
-        customerContactNumberController.text.isNotEmpty) {
-      _vehicleBloc.add(CustomerCheck(
-          customerContactNo: customerContactNumberController.text));
     }
   }
 
@@ -239,7 +251,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                 transform: Matrix4.translationValues(-3, 0, 0),
                 child: IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      navigator.pop();
                     },
                     icon: const Icon(Icons.arrow_back_rounded,
                         color: Colors.white)),
@@ -469,7 +481,52 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                         listener: (context, state) {
                           switch (state.status) {
                             case VehicleStatus.success:
-                              showRegistrationDialog(
+                              if (navigator
+                                  .navigatorkey.currentState!.mounted) {
+                                showRegistrationDialog(
+                                    size: size,
+                                    state: state,
+                                    statusWidget: Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: size.width * 0.88,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16)),
+                                        child: Row(
+                                          children: [
+                                            Lottie.asset(
+                                                "assets/lottie/success.json",
+                                                repeat: false,
+                                                width: size.width * 0.08),
+                                            const Gap(4),
+                                            const Text(
+                                              'Vehicle Registration is Successful',
+                                              style: TextStyle(
+                                                  color: Colors.black87),
+                                            ),
+                                          ],
+                                        )),
+                                    text: 'Do you want to book service ?',
+                                    acceptText: 'book now',
+                                    rejectText: 'later',
+                                    onAccept: () {
+                                      state.status = VehicleStatus.initial;
+                                      state.registrationNo =
+                                          vehicleRegNumberController.text;
+                                      navigator.pushAndRemoveUntil(
+                                          '/serviceBooking', '/home');
+                                      clearFields();
+                                    },
+                                    onReject: () {
+                                      state.status = VehicleStatus.initial;
+                                      navigator.popUntil('/home');
+                                    });
+                              }
+
+                            case VehicleStatus.vehicleAlreadyAdded:
+                              if (navigator
+                                  .navigatorkey.currentState!.mounted) {
+                                showRegistrationDialog(
                                   size: size,
                                   state: state,
                                   statusWidget: Container(
@@ -479,68 +536,59 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                           borderRadius:
                                               BorderRadius.circular(16)),
                                       child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Lottie.asset(
                                               "assets/lottie/success.json",
                                               repeat: false,
                                               width: size.width * 0.08),
-                                          Gap(4),
-                                          Text(
-                                            'Vehicle Registration is Successful',
-                                            style: TextStyle(
-                                                color: Colors.black87),
+                                          const Gap(4),
+                                          SizedBox(
+                                            width: size.width * 0.58,
+                                            child: const Text(
+                                              'Oops! This Vehicle is already registered with us',
+                                              softWrap: true,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black87),
+                                            ),
                                           ),
                                         ],
                                       )),
                                   text: 'Do you want to book service ?',
                                   acceptText: 'book now',
-                                  rejectText: 'later',
+                                  rejectText: 'retry',
                                   onAccept: () {
                                     state.status = VehicleStatus.initial;
                                     state.registrationNo =
                                         vehicleRegNumberController.text;
+                                    navigator.pushAndRemoveUntil(
+                                        '/serviceBooking', '/home');
                                     clearFields();
-                                    Navigator.pop(context);
-                                    Navigator.popAndPushNamed(
-                                        context, '/serviceBooking');
                                   },
                                   onReject: () {
                                     state.status = VehicleStatus.initial;
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  });
-
-                            case VehicleStatus.vehicleAlreadyAdded:
-                              showRegistrationDialog(
-                                size: size,
-                                state: state,
-                                text:
-                                    'Oops! This Vehicle is already registered with us.\nDo you want to book service ?',
-                                acceptText: 'book now',
-                                rejectText: 'later',
-                                onAccept: () {
-                                  state.status = VehicleStatus.initial;
-                                  state.registrationNo =
-                                      vehicleRegNumberController.text;
-                                  clearFields();
-                                  Navigator.pop(context);
-                                  Navigator.popAndPushNamed(
-                                      context, '/serviceBooking');
-                                },
-                                onReject: () {
-                                  state.status = VehicleStatus.initial;
-                                  Navigator.pop(context);
-                                  vehicleRegNumberFocus.requestFocus();
-                                },
-                              );
+                                    navigator.pop();
+                                    vehicleRegNumberFocus.requestFocus();
+                                  },
+                                );
+                              }
                               break;
+                            case VehicleStatus.failure:
+                              DMSCustomWidgets.DMSFlushbar(size, context,
+                                  message: 'Something went wrong',
+                                  icon: const Icon(
+                                    Icons.error,
+                                    color: Colors.white,
+                                  ));
                             default:
                               break;
                           }
                         },
                         child: GestureDetector(
                           onTap: () {
-                            unfocusFields();
+                            FocusManager.instance.primaryFocus?.unfocus();
                             String? message = _vehicleRegistrationNoValidator(
                                     vehicleRegNumberController.text) ??
                                 _chassisNoValidation(
@@ -555,7 +603,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                                     : null) ??
                                 _nameValidation(customerNameController.text) ??
                                 (customerContactNumberController.text.isEmpty
-                                    ? 'Customer Contact No. cannot be empty'
+                                    ? _customerContactNoValidation(
+                                        customerContactNumberController.text)
                                     : null);
 
                             if (message != null) {
@@ -647,76 +696,79 @@ class _AddVehicleViewState extends State<AddVehicleView> {
         context: context,
         barrierDismissible: false,
         builder: (context) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              contentPadding: EdgeInsets.only(top: size.height * 0.01),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: size.width * 0.03),
-                    child: Column(
-                      children: [
-                        statusWidget ?? SizedBox(),
-                        if (statusWidget != null) Gap(8),
-                        Text(
-                          text,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: size.width * 0.03),
+                      child: Column(
+                        children: [
+                          statusWidget ?? const SizedBox(),
+                          if (statusWidget != null) const Gap(8),
+                          Text(
+                            text,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Gap(size.height * 0.01),
-                  Container(
-                    height: size.height * 0.05,
-                    margin: EdgeInsets.all(size.height * 0.001),
-                    decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: onReject,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: Text(
-                              rejectText,
+                    Gap(size.height * 0.01),
+                    Container(
+                      height: size.height * 0.05,
+                      margin: EdgeInsets.all(size.height * 0.001),
+                      decoration: const BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onReject,
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: Text(
+                                rejectText,
+                              ),
                             ),
                           ),
-                        ),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          thickness: 0.5,
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            onPressed: onAccept,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: Text(
-                              acceptText,
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 0.5,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onAccept,
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: Text(
+                                acceptText,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              actionsPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero);
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero),
+          );
         });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:flutter/material.dart'
     hide BoxDecoration, BoxShadow, Stepper, Step;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,18 +7,20 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
+import '../bloc/service/service_bloc.dart';
 import '../models/services.dart';
+import '../navigations/navigator_service.dart';
 import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatelessWidget {
-  JobCardDetails({super.key, this.service});
+  JobCardDetails({super.key});
 
-  Service? service;
+  final NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    final ServiceBloc _serviceBloc = context.read<ServiceBloc>();
     List<String> dmsFlow = [
       'New',
       'Work in progress',
@@ -35,7 +38,7 @@ class JobCardDetails extends StatelessWidget {
     ];
 
     List<String> statusLines = [
-      'JC created on ${service!.creationDate}',
+      'JC created on ${_serviceBloc.state.service!.creationDate}',
       'Vehicle Service is done',
       'Quality Check is done',
       'Inpection out is done',
@@ -75,7 +78,7 @@ class JobCardDetails extends StatelessWidget {
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    navigator.pop();
                   },
                   icon: const Icon(Icons.arrow_back_rounded,
                       color: Colors.white)),
@@ -132,19 +135,31 @@ class JobCardDetails extends StatelessWidget {
                     child: ListView(
                       children: [
                         buildDetailRow(
-                            'Job Card Number', service!.jobCardNo.toString(), size),
-                        Gap(size.height * 0.03),
-                        buildDetailRow('Vehicle Registration Number',
-                            service!.registrationNo.toString(), size),
-                        Gap(size.height * 0.03),
-                        buildDetailRow(
-                            'Location', service!.location.toString(), size),
+                            'Job Card Number',
+                            _serviceBloc.state.service!.jobCardNo.toString(),
+                            size),
                         Gap(size.height * 0.03),
                         buildDetailRow(
-                            'Job Type', service!.jobType.toString(), size),
+                            'Vehicle Registration Number',
+                            _serviceBloc.state.service!.registrationNo
+                                .toString(),
+                            size),
                         Gap(size.height * 0.03),
-                        buildDetailRow('Scheduled Date',
-                            service!.scheduledDate.toString(), size)
+                        buildDetailRow(
+                            'Location',
+                            _serviceBloc.state.service!.location.toString(),
+                            size),
+                        Gap(size.height * 0.03),
+                        buildDetailRow(
+                            'Job Type',
+                            _serviceBloc.state.service!.jobType.toString(),
+                            size),
+                        Gap(size.height * 0.03),
+                        buildDetailRow(
+                            'Scheduled Date',
+                            _serviceBloc.state.service!.scheduledDate
+                                .toString(),
+                            size)
                       ],
                     ),
                   ),
@@ -178,15 +193,17 @@ class JobCardDetails extends StatelessWidget {
                                 child: Stepper(
                               steps: dmsFlow
                                   .map((e) => Step(
-                                        activeStep: dmsFlow.indexWhere(
-                                            (e) => e == service!.status),
+                                        activeStep: dmsFlow.indexWhere((e) =>
+                                            e ==
+                                            _serviceBloc.state.service!.status),
                                         currentStep: dmsFlow.indexOf(e),
                                         icons: icons,
                                         stepperLength: dmsFlow.length,
                                         title: e,
                                         statusLines: statusLines,
                                         pendingStatusLines: pendingStatusLines,
-                                        jobCardNo: service!.jobCardNo!,
+                                        jobCardNo: _serviceBloc
+                                            .state.service!.jobCardNo!,
                                       ))
                                   .toList(),
                             )),
@@ -196,10 +213,13 @@ class JobCardDetails extends StatelessWidget {
                 ],
               ),
             ),
-            if(context.watch<MultiBloc>().state.status==MultiStateStatus.loading)
-                Container(
+            if (context.watch<MultiBloc>().state.status ==
+                MultiStateStatus.loading)
+              Container(
                 color: Colors.blueGrey.withOpacity(0.25),
-                child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
+                child: Center(
+                    child: Lottie.asset('assets/lottie/car_loading.json',
+                        height: size.height * 0.4, width: size.width * 0.4)),
               )
           ],
         ));
