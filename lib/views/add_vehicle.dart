@@ -521,7 +521,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
               if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading)
                 Container(
                   color: Colors.black54,
-                  child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6)),
+                  child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6,delegates: LottieDelegates())),
                 )
             ],
           )),

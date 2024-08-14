@@ -139,7 +139,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                     context,
                                     MaterialPageRoute(
                                         builder: (_) => QualityCheck(
-                                            model: BodySelectorViewModel(),
+                                            // model: BodySelectorViewModel(),
                                             generalParts: generalParts,
                                             rejectedParts: rejectedParts,
                                             acceptedParts: acceptedParts,

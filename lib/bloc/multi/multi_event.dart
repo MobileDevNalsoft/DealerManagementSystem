@@ -56,3 +56,8 @@ class ScaleVehicle extends MultiBlocEvent {
   ScaleVehicle({required this.factor});
 }
 
+class ModifyVehicleInteractionStatus extends MultiBlocEvent {
+  String selectedBodyPart;
+  bool isTapped;
+  ModifyVehicleInteractionStatus({required this.selectedBodyPart,required this.isTapped});
+}

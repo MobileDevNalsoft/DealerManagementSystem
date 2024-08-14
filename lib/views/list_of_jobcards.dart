@@ -47,64 +47,63 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
     // responsive UI
     Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-        child: PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        Navigator.pop(context);
-        // await showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return SizedBox(
-        //       height: size.height * 0.03,
-        //       child: AlertDialog(
-        //         backgroundColor: const Color.fromARGB(255, 245, 216, 216),
-        //         contentPadding: EdgeInsets.only(
-        //             left: size.width * 0.04, top: size.height * 0.02),
-        //         content: const Text('Are you sure you want to exit the app?'),
-        //         actionsPadding: EdgeInsets.zero,
-        //         buttonPadding: EdgeInsets.zero,
-        //         actions: [
-        //           TextButton(
-        //             onPressed: () {
-        //               Navigator.pop(context, false); // Don't exit
-        //             },
-        //             style: TextButton.styleFrom(
-        //                 foregroundColor:
-        //                     const Color.fromARGB(255, 145, 19, 19)),
-        //             child: const Text('No'),
-        //           ),
-        //           TextButton(
-        //             onPressed: () {
-        //               exit(0); // Exit
-        //             },
-        //             style: TextButton.styleFrom(
-        //                 foregroundColor:
-        //                     const Color.fromARGB(255, 145, 19, 19)),
-        //             child: const Text('Yes'),
-        //           ),
-        //         ],
-        //       ),
-        //     );
-        //   },
-        // );
-      },
-      child: Scaffold(
-        extendBody:
-            false, // restricts the scaffold till above the bottom navigation bar in this case
-        body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.black45, Colors.black26, Colors.black45],
-                  stops: [0.1, 0.5, 1]),
-            ),
-            child: BlocBuilder<ServiceBloc, ServiceState>(
-              builder: (context, state) {
-                return JobCardPage();
-              },
-            )),
-      ),
-    ));
+    return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+    Navigator.pop(context);
+    // await showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return SizedBox(
+    //       height: size.height * 0.03,
+    //       child: AlertDialog(
+    //         backgroundColor: const Color.fromARGB(255, 245, 216, 216),
+    //         contentPadding: EdgeInsets.only(
+    //             left: size.width * 0.04, top: size.height * 0.02),
+    //         content: const Text('Are you sure you want to exit the app?'),
+    //         actionsPadding: EdgeInsets.zero,
+    //         buttonPadding: EdgeInsets.zero,
+    //         actions: [
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.pop(context, false); // Don't exit
+    //             },
+    //             style: TextButton.styleFrom(
+    //                 foregroundColor:
+    //                     const Color.fromARGB(255, 145, 19, 19)),
+    //             child: const Text('No'),
+    //           ),
+    //           TextButton(
+    //             onPressed: () {
+    //               exit(0); // Exit
+    //             },
+    //             style: TextButton.styleFrom(
+    //                 foregroundColor:
+    //                     const Color.fromARGB(255, 145, 19, 19)),
+    //             child: const Text('Yes'),
+    //           ),
+    //         ],
+    //       ),
+    //     );
+    //   },
+    // );
+          },
+          child: Scaffold(
+    extendBody:
+        false, // restricts the scaffold till above the bottom navigation bar in this case
+    body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.black45, Colors.black26, Colors.black45],
+              stops: [0.1, 0.5, 1]),
+        ),
+        child: BlocBuilder<ServiceBloc, ServiceState>(
+          builder: (context, state) {
+            return JobCardPage();
+          },
+        )),
+          ),
+        );
   }
 }
 
@@ -344,6 +343,7 @@ class JobCardPage extends StatelessWidget {
 
     return SizedBox(
       width: size.width,
+      height: size.height,
       child: BlocBuilder<ServiceBloc, ServiceState>(
         builder: (context, state) {
           return CustomScrollView(

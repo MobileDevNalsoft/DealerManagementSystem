@@ -76,6 +76,7 @@ class Repository {
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
+      print(response);
       return response;
     } else {
       Log.e(apiResponse.error);

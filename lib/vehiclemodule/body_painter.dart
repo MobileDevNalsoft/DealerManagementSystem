@@ -1,6 +1,7 @@
 import 'dart:ui' as ui; // Import the 'ui' library
 
 import 'package:another_flushbar/flushbar.dart';
+import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
@@ -17,7 +18,6 @@ import 'package:touchable/touchable.dart';
 
 class BodyPainter extends CustomPainter {
   final BuildContext context;
-  final BodySelectorViewModel model;
   final List<GeneralBodyPart>? generalParts;
   final List<GeneralBodyPart>? acceptedParts;
   final List<GeneralBodyPart>? rejectedParts;
@@ -30,7 +30,6 @@ class BodyPainter extends CustomPainter {
   late double translateY;
   BodyPainter(
       {required this.context,
-      required this.model,
       this.generalParts,
       this.acceptedParts,
       this.rejectedParts,
@@ -53,8 +52,8 @@ class BodyPainter extends CustomPainter {
       var xScale = contextSize.width / contextSize.width * 0.4;
       var yScale = contextSize.height * 0.96 / contextSize.height * 0.7;
 
-      double translateX = (contextSize.width - contextSize.width * 1.6 * xScale) / 2;
-      double translateY = (contextSize.height * 0.96 - contextSize.height * 0.8 * yScale) / 2;
+      double translateX = (contextSize.width - contextSize.width * 1.2 * xScale) / 2;
+      double translateY = (contextSize.height * 0.96 - contextSize.height * 1 * yScale) / 2;
 
       matrix4.translate(translateX, translateY);
       matrix4.scale(xScale, yScale);
@@ -91,7 +90,7 @@ class BodyPainter extends CustomPainter {
       } else if (["front_bumper", "rear_bumper"].contains(muscle.name)) {
         paint.color = Color.fromRGBO(133, 127, 127, 0.612);
       }
-      if (model.selectedGeneralBodyPart == muscle.name) {
+      if (context.read<MultiBloc>().state.selectedGeneralBodyPart == muscle.name) {
         paint.color = Colors.white;
       }
 
@@ -99,11 +98,12 @@ class BodyPainter extends CustomPainter {
         path.transform(matrix4.storage),
         paint,
         onTapDown: (details) {
-          print("details ${details}");
+          print("details ${details.localPosition}");
           if (!muscle.name.startsWith('text')) {
-            print(" name from painter${muscle.name} ${Provider.of<BodySelectorViewModel>(context, listen: false).isTapped}");
-            Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = muscle.name;
-            Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = true;
+            print(" name from painter${muscle.name} ${context.read<MultiBloc>().state.isTapped}");
+            context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: muscle.name, isTapped: true));
+            // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = muscle.name;
+            // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = true;
           }
         },
         // onTapUp: (details) {

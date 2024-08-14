@@ -432,29 +432,30 @@ class DMSCustomWidgets {
     );
   }
 
-  static Future<Widget> DMSFlushbar(Size size, BuildContext context,
+  static Future DMSFlushbar(Size size, BuildContext context,
       {String message = 'message', Widget? icon}) async {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-    return await Flushbar(
+     await Flushbar(
       backgroundColor: Colors.black,
       blockBackgroundInteraction: true,
       message: message,
       flushbarPosition: FlushbarPosition.TOP,
       duration: const Duration(seconds: 2),
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(8),
       icon: icon,
+
       boxShadows: [
         BoxShadow(
-            blurRadius: 10,
+            blurRadius: 12,
             blurStyle: BlurStyle.outer,
             spreadRadius: 0,
             color: Colors.orange.shade200,
             offset: const Offset(0, 0))
       ],
       margin: EdgeInsets.only(
-          top: size.height * 0.01,
-          left: isMobile ? size.width * 0.04 : size.width * 0.8,
-          right: isMobile ? size.width * 0.04 : size.width * 0.8),
+          top: size.height * 0.1,
+          left: isMobile ? size.width * 0.04 : size.width * 0.38,
+          right: isMobile ? size.width * 0.04 : size.width * 0.38),
     ).show(context);
   }
 }

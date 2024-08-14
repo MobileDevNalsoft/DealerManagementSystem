@@ -7,16 +7,16 @@ import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:touchable/touchable.dart';
 
-class BodyCanvas extends ViewModelWidget<BodySelectorViewModel> {
+class BodyCanvas extends StatelessWidget{
   final List<GeneralBodyPart>? generalParts;
   final List<GeneralBodyPart>? acceptedParts;
   final List<GeneralBodyPart>? rejectedParts;
   final List<GeneralBodyPart>? pendingParts;
   final bool displayAcceptedStatus;
-  BodyCanvas({super.key, this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts,this.displayAcceptedStatus=false});
+  BodyCanvas({this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts,this.displayAcceptedStatus=false});
 
   @override
-  Widget build(BuildContext context, BodySelectorViewModel model) {
+  Widget build(BuildContext context) {
     return CanvasTouchDetector(
       gesturesToOverride: 
       // Provider.of<BodySelectorViewModel>(context, listen: true).isTapped == false ? 
@@ -25,7 +25,6 @@ class BodyCanvas extends ViewModelWidget<BodySelectorViewModel> {
       builder: (context) => CustomPaint(
         painter: BodyPainter(
             context: context,
-            model: model, 
             generalParts: generalParts, 
             acceptedParts: acceptedParts, 
             rejectedParts: rejectedParts, 
@@ -37,21 +36,3 @@ class BodyCanvas extends ViewModelWidget<BodySelectorViewModel> {
   }
 }
 
-class BodySelectorViewModel extends ChangeNotifier {
-  String _selectedGeneralBodyPart = '';
-  bool _isTapped = false;
-  bool isSelected = false;
-
-  bool get isTapped => _isTapped;
-  String get selectedGeneralBodyPart => _selectedGeneralBodyPart;
-
-  set isTapped(bool value) {
-    _isTapped = value;
-    notifyListeners();
-  }
-
-  set selectedGeneralBodyPart(String value) {
-    _selectedGeneralBodyPart = value;
-    notifyListeners();
-  }
-}

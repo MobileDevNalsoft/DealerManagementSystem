@@ -9,6 +9,8 @@ import 'package:dms/views/service_history.dart';
 import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:o3d/o3d.dart';
 import 'dashboard.dart';
 import 'service_booking.dart';
 
@@ -19,43 +21,60 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView>
-    with TickerProviderStateMixin, ConnectivityMixin {
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, ConnectivityMixin {
+  late O3DController o3dController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    o3dController = O3DController();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-
+  
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.black45, Colors.black26, Colors.black45],
-                stops: [0.1, 0.5, 1])),
+        decoration: const BoxDecoration(gradient: LinearGradient(colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1])),
         child: Stack(
           alignment: Alignment.center,
           children: [
             Column(
               children: [
                 Gap(size.height * 0.18),
-                Image.asset(
-                  'assets/images/dashboard_car.png',
-                  height: 200,
-                  width: 200,
-                ),
-                Gap(size.height * 0.3),
+                SizedBox(
+                    width: size.width * 0.8,
+                    height: size.height * 0.48,
+                    child: O3D.asset(
+                      src: 'assets/images/cyberpunk_car.glb',
+                      autoPlay: false,
+                      autoRotate: false,
+                      cameraControls: true,
+                      autoRotateDelay: 0,
+                      controller: o3dController, 
+
+                    )
+                   
+                    ),
+                // Image.asset(
+                //   'assets/images/dashboard_car.png',
+                //   height:isMobile?200:size.height*0.32,
+                //   width: isMobile?200:size.width*0.32,
+                // ),
+                Gap(size.height * 0.24),
                 InkWell(
                   onTap: () {
                     if (isConnected()) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => ServiceMain()));
+                      o3dController.autoRotate=false;
+
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceMain()));
                     } else {
-                      DMSCustomWidgets.DMSFlushbar(size, context,
-                          message: 'Please check the internet connectivity',
-                          icon: Icon(Icons.error));
+                      DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                     }
                   },
                   child: Container(
@@ -64,18 +83,7 @@ class _HomeViewState extends State<HomeView>
                     height: size.height * 0.08,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.black45,
-                            Colors.black87,
-                            Colors.black
-                          ],
-                          stops: [
-                            0.05,
-                            0.5,
-                            1
-                          ]),
+                          begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Colors.black45, Colors.black87, Colors.black], stops: [0.05, 0.5, 1]),
                       shape: BoxShape.circle,
                       boxShadow: [
                         const BoxShadow(
@@ -110,39 +118,23 @@ class _HomeViewState extends State<HomeView>
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       if (isConnected()) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const AddVehicleView()));
+                        o3dController.pause();
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const AddVehicleView()));
                       } else {
-                        DMSCustomWidgets.DMSFlushbar(size, context,
-                            message: 'Please check the internet connectivity',
-                            icon: Icon(Icons.error));
+                        DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                       }
                     },
                     child: ClippedButton(
-                      size: Size(size.width * 0.2, size.height * 0.2),
+                      size: Size(isMobile ? size.width * 0.2 : size.width * 0.08, size.height * 0.2),
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [
-                              Colors.black45,
-                              Colors.black87,
-                              Colors.black
-                            ],
-                            stops: [
-                              0.05,
-                              0.5,
-                              1
-                            ]),
+                            colors: [Colors.black45, Colors.black87, Colors.black],
+                            stops: [0.05, 0.5, 1]),
                       ),
-                      shadow: BoxShadow(
-                          blurRadius: 20,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 25,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0)),
+                      shadow:
+                          BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
                       clipper: ButtonClipper(),
                       child: Image.asset(
                         'assets/images/add_vehicle_icon.png',
@@ -152,8 +144,8 @@ class _HomeViewState extends State<HomeView>
                           value: 0.7,
                         ),
                         alignment: Alignment.center,
-                        height: size.height * 0.1,
-                        width: size.width * 0.1,
+                        height: isMobile ? size.height * 0.1 : size.height * 0.08,
+                        width: isMobile ? size.width * 0.1 : size.width * 0.08,
                       ),
                     ),
                   ),
@@ -162,45 +154,25 @@ class _HomeViewState extends State<HomeView>
                     child: GestureDetector(
                       onTap: () {
                         if (isConnected()) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const MyJobcards()));
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const MyJobcards()));
                         } else {
-                          DMSCustomWidgets.DMSFlushbar(size, context,
-                              message: 'Please check the internet connectivity',
-                              icon: Icon(Icons.error));
+                          DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                         }
                       },
                       onDoubleTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ServiceMainSample()));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceMainSample()));
                       },
                       child: ClippedButton(
-                        size: Size(size.width * 0.2, size.height * 0.2),
+                        size: Size(isMobile ? size.width * 0.2 : size.width * 0.08, size.height * 0.2),
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft,
-                              colors: [
-                                Colors.black45,
-                                Colors.black87,
-                                Colors.black
-                              ],
-                              stops: [
-                                0.05,
-                                0.5,
-                                1
-                              ]),
+                              colors: [Colors.black45, Colors.black87, Colors.black],
+                              stops: [0.05, 0.5, 1]),
                         ),
-                        shadow: BoxShadow(
-                            blurRadius: 20,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 25,
-                            color: Colors.orange.shade200,
-                            offset: const Offset(0, 0)),
+                        shadow:
+                            BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
                         clipper: ButtonClipper(),
                         child: Image.asset(
                           'assets/images/person_icon.png',
@@ -210,8 +182,8 @@ class _HomeViewState extends State<HomeView>
                             value: 0.7,
                           ),
                           alignment: Alignment.center,
-                          height: size.height * 0.07,
-                          width: size.width * 0.07,
+                          height: isMobile ? size.height * 0.1 : size.height * 0.06,
+                          width: isMobile ? size.width * 0.1 : size.width * 0.06,
                         ),
                       ),
                     ),
@@ -236,20 +208,14 @@ class _HomeViewState extends State<HomeView>
                               builder: (context) => const VehicleInfo(),
                             ));
                       } else {
-                        DMSCustomWidgets.DMSFlushbar(size, context,
-                            message: 'Please check the internet connectivity',
-                            icon: Icon(Icons.error));
+                        DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                       }
                     },
                     child: ClippedButton(
-                      size: Size(size.width * 0.23, size.height * 0.2),
+                      size: Size(isMobile ? size.width * 0.2 : size.width * 0.08, size.height * 0.2),
                       decoration: const BoxDecoration(color: Colors.black),
-                      shadow: BoxShadow(
-                          blurRadius: 20,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 25,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0)),
+                      shadow:
+                          BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
                       clipper: ButtonClipperMid(),
                       child: Image.asset(
                         'assets/images/vehicle_search_icon.png',
@@ -259,8 +225,8 @@ class _HomeViewState extends State<HomeView>
                           value: 0.7,
                         ),
                         alignment: Alignment.center,
-                        height: size.height * 0.095,
-                        width: size.width * 0.095,
+                        height: isMobile ? size.height * 0.1 : size.height * 0.06,
+                        width: isMobile ? size.width * 0.1 : size.width * 0.06,
                       ),
                     ),
                   ),
@@ -268,18 +234,13 @@ class _HomeViewState extends State<HomeView>
                       flipX: true,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => DashBoard()));
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => DashBoard()));
                         },
                         child: ClippedButton(
-                          size: Size(size.width * 0.23, size.height * 0.2),
+                          size: Size(isMobile ? size.width * 0.2 : size.width * 0.08, size.height * 0.2),
                           decoration: const BoxDecoration(color: Colors.black),
                           shadow: BoxShadow(
-                              blurRadius: 20,
-                              blurStyle: BlurStyle.outer,
-                              spreadRadius: 25,
-                              color: Colors.orange.shade200,
-                              offset: const Offset(0, 0)),
+                              blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
                           clipper: ButtonClipperMid(),
                           child: Image.asset(
                             'assets/images/home_icon.png',
@@ -289,8 +250,8 @@ class _HomeViewState extends State<HomeView>
                               value: 0.7,
                             ),
                             alignment: Alignment.center,
-                            height: size.height * 0.08,
-                            width: size.width * 0.08,
+                            height: isMobile ? size.height * 0.1 : size.height * 0.06,
+                            width: isMobile ? size.width * 0.1 : size.width * 0.06,
                           ),
                         ),
                       )),
@@ -310,40 +271,23 @@ class _HomeViewState extends State<HomeView>
                       child: GestureDetector(
                         onTap: () {
                           if (isConnected()) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const ListOfJobcards()));
+                            o3dController.autoRotate=false;
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const ListOfJobcards()));
                           } else {
-                            DMSCustomWidgets.DMSFlushbar(size, context,
-                                message:
-                                    'Please check the internet connectivity',
-                                icon: Icon(Icons.error));
+                            DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                           }
                         },
                         child: ClippedButton(
-                          size: Size(size.width * 0.2, size.height * 0.2),
+                          size: Size(isMobile ? size.width * 0.2 : size.width * 0.08, size.height * 0.2),
                           decoration: const BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.black45,
-                                  Colors.black87,
-                                  Colors.black
-                                ],
-                                stops: [
-                                  0.05,
-                                  0.5,
-                                  1
-                                ]),
+                                colors: [Colors.black45, Colors.black87, Colors.black],
+                                stops: [0.05, 0.5, 1]),
                           ),
                           shadow: BoxShadow(
-                              blurRadius: 20,
-                              blurStyle: BlurStyle.outer,
-                              spreadRadius: 25,
-                              color: Colors.orange.shade200,
-                              offset: const Offset(0, 0)),
+                              blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
                           clipper: ButtonClipper(),
                           child: Transform.flip(
                             flipY: true,
@@ -355,8 +299,8 @@ class _HomeViewState extends State<HomeView>
                                 value: 0.7,
                               ),
                               alignment: Alignment.center,
-                              height: size.height * 0.085,
-                              width: size.width * 0.085,
+                              height: isMobile ? size.height * 0.1 : size.height * 0.06,
+                              width: isMobile ? size.width * 0.1 : size.width * 0.06,
                             ),
                           ),
                         ),
@@ -368,41 +312,22 @@ class _HomeViewState extends State<HomeView>
                         child: GestureDetector(
                           onTap: () {
                             if (isConnected()) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) =>
-                                          const ServiceHistoryView()));
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const ServiceHistoryView()));
                             } else {
-                              DMSCustomWidgets.DMSFlushbar(size, context,
-                                  message:
-                                      'Please check the internet connectivity',
-                                  icon: Icon(Icons.error));
+                              DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                             }
                           },
                           child: ClippedButton(
-                              size: Size(size.width * 0.2, size.height * 0.2),
+                              size: Size(isMobile ? size.width * 0.2 : size.width * 0.08, size.height * 0.2),
                               decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
-                                    colors: [
-                                      Colors.black45,
-                                      Colors.black87,
-                                      Colors.black
-                                    ],
-                                    stops: [
-                                      0.05,
-                                      0.5,
-                                      1
-                                    ]),
+                                    colors: [Colors.black45, Colors.black87, Colors.black],
+                                    stops: [0.05, 0.5, 1]),
                               ),
                               shadow: BoxShadow(
-                                  blurRadius: 20,
-                                  blurStyle: BlurStyle.outer,
-                                  spreadRadius: 25,
-                                  color: Colors.orange.shade200,
-                                  offset: const Offset(0, 0)),
+                                  blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
                               clipper: ButtonClipper(),
                               child: Transform.flip(
                                 flipY: true,
@@ -414,8 +339,8 @@ class _HomeViewState extends State<HomeView>
                                     value: 0.7,
                                   ),
                                   alignment: Alignment.center,
-                                  height: size.height * 0.08,
-                                  width: size.width * 0.08,
+                                  height: isMobile ? size.height * 0.1 : size.height * 0.06,
+                                  width: isMobile ? size.width * 0.1 : size.width * 0.06,
                                 ),
                               )),
                         )),
@@ -438,8 +363,7 @@ class ButtonClipper extends CustomClipper<Path> {
     path.lineTo(size.width - 33.5, 20);
     path.quadraticBezierTo(size.width - 18, 28, size.width - 13.4, 40.2);
     path.lineTo(size.width - 5, size.height - 70);
-    path.quadraticBezierTo(size.width + 3.35, size.height - 30.15,
-        size.width - 20.1, size.height - 20.1);
+    path.quadraticBezierTo(size.width + 3.35, size.height - 30.15, size.width - 20.1, size.height - 20.1);
     path.lineTo(0, size.height);
     path.lineTo(0, 0);
     path.close();
@@ -447,8 +371,7 @@ class ButtonClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
 }
 
 class ButtonClipperMid extends CustomClipper<Path> {
@@ -459,10 +382,8 @@ class ButtonClipperMid extends CustomClipper<Path> {
     path.lineTo(0, 25);
     path.lineTo(size.width - 40, 5);
     path.quadraticBezierTo(size.width - 10, -5, size.width - 5, 20);
-    path.cubicTo(size.width, size.height * 0.4, size.width, size.height * 0.6,
-        size.width - 5, size.height - 20);
-    path.quadraticBezierTo(
-        size.width - 10, size.height + 5, size.width - 40, size.height - 5);
+    path.cubicTo(size.width, size.height * 0.4, size.width, size.height * 0.6, size.width - 5, size.height - 20);
+    path.quadraticBezierTo(size.width - 10, size.height + 5, size.width - 40, size.height - 5);
     path.lineTo(0, size.height - 25);
     path.lineTo(0, 0);
     path.close();
@@ -470,6 +391,5 @@ class ButtonClipperMid extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
 }
