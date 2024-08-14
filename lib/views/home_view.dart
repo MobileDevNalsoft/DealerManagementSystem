@@ -11,6 +11,7 @@ import 'package:dms/views/sample/service_main.dart';
 import 'package:dms/views/service_history.dart';
 import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
+import 'package:o3d/o3d.dart';
 import 'package:gap/gap.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
@@ -26,6 +27,14 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView>
     with TickerProviderStateMixin, ConnectivityMixin {
+  late O3DController o3dController;
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    o3dController = O3DController();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -68,15 +77,27 @@ class _HomeViewState extends State<HomeView>
                 Column(
                   children: [
                     Gap(size.height * 0.18),
-                    Image.asset(
-                      'assets/images/dashboard_car.png',
-                      height: 200,
-                      width: 200,
-                    ),
+                    SizedBox(
+                        width: size.width * 0.8,
+                        height: size.height * 0.48,
+                        child: O3D.asset(
+                          src: 'assets/images/cyberpunk_car.glb',
+                          autoPlay: false,
+                          autoRotate: false,
+                          cameraControls: true,
+                          autoRotateDelay: 0,
+                          controller: o3dController,
+                        )),
+                    // Image.asset(
+                    //   'assets/images/dashboard_car.png',
+                    //   height: 200,
+                    //   width: 200,
+                    // ),
                     Gap(size.height * 0.3),
                     InkWell(
                       onTap: () {
                         if (isConnected()) {
+                          o3dController.autoRotate = false;
                           navigator.push('/serviceBooking');
                         } else {
                           DMSCustomWidgets.DMSFlushbar(size, context,
@@ -155,7 +176,9 @@ class _HomeViewState extends State<HomeView>
                           tag: 'addVehicle',
                           transitionOnUserGestures: true,
                           child: ClippedButton(
-                            size: Size(size.width * 0.2, size.height * 0.2),
+                            size: Size(
+                                isMobile ? size.width * 0.2 : size.width * 0.08,
+                                size.height * 0.2),
                             decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                   begin: Alignment.topLeft,
@@ -218,7 +241,11 @@ class _HomeViewState extends State<HomeView>
                           child: Transform.flip(
                             flipX: true,
                             child: ClippedButton(
-                              size: Size(size.width * 0.2, size.height * 0.2),
+                              size: Size(
+                                  isMobile
+                                      ? size.width * 0.2
+                                      : size.width * 0.08,
+                                  size.height * 0.2),
                               decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                     begin: Alignment.topRight,
@@ -285,7 +312,9 @@ class _HomeViewState extends State<HomeView>
                           tag: 'vehicleInfo',
                           transitionOnUserGestures: true,
                           child: ClippedButton(
-                            size: Size(size.width * 0.23, size.height * 0.2),
+                            size: Size(
+                                isMobile ? size.width * 0.2 : size.width * 0.08,
+                                size.height * 0.2),
                             decoration:
                                 const BoxDecoration(color: Colors.black),
                             shadow: BoxShadow(
@@ -319,7 +348,11 @@ class _HomeViewState extends State<HomeView>
                           child: Transform.flip(
                             flipX: true,
                             child: ClippedButton(
-                              size: Size(size.width * 0.23, size.height * 0.2),
+                              size: Size(
+                                  isMobile
+                                      ? size.width * 0.2
+                                      : size.width * 0.08,
+                                  size.height * 0.2),
                               decoration:
                                   const BoxDecoration(color: Colors.black),
                               shadow: BoxShadow(
@@ -375,7 +408,11 @@ class _HomeViewState extends State<HomeView>
                           child: Transform.flip(
                             flipY: true,
                             child: ClippedButton(
-                              size: Size(size.width * 0.2, size.height * 0.2),
+                              size: Size(
+                                  isMobile
+                                      ? size.width * 0.2
+                                      : size.width * 0.08,
+                                  size.height * 0.2),
                               decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                     begin: Alignment.topLeft,
@@ -438,8 +475,11 @@ class _HomeViewState extends State<HomeView>
                             child: Transform.flip(
                               flipX: true,
                               child: ClippedButton(
-                                  size:
-                                      Size(size.width * 0.2, size.height * 0.2),
+                                  size: Size(
+                                      isMobile
+                                          ? size.width * 0.2
+                                          : size.width * 0.08,
+                                      size.height * 0.2),
                                   decoration: const BoxDecoration(
                                     gradient: LinearGradient(
                                         begin: Alignment.topRight,

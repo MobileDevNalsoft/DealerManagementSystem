@@ -314,6 +314,7 @@ class JobCardPage extends StatelessWidget {
 
     return SizedBox(
       width: size.width,
+      height: size.height,
       child: BlocBuilder<ServiceBloc, ServiceState>(
         builder: (context, state) {
           return CustomScrollView(

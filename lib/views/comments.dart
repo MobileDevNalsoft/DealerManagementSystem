@@ -70,7 +70,7 @@ class _CommentsViewState extends State<CommentsView>
                 child: Container(
                   padding: EdgeInsets.zero,
                   margin: EdgeInsets.zero,
-                  width: isMobile ? size.width * 0.9 : size.width * 0.4,
+                  width: isMobile ? size.width * 0.9 : size.width * 0.32,
                   decoration: BoxDecoration(
                       color: Color.fromRGBO(26, 26, 27, 1),
                       borderRadius: BorderRadius.circular(24),
@@ -97,12 +97,21 @@ class _CommentsViewState extends State<CommentsView>
                             fontFamily: 'Roboto',
                             fontWeight: FontWeight.w400,
                             color: Colors.white,
-                            fontSize: 16),
+                            fontSize: 20,
+                            shadows: [
+                              BoxShadow(
+                                  blurRadius: 2,
+                                  blurStyle: BlurStyle.outer,
+                                  spreadRadius: 0,
+                                  color: Colors.orange.shade200,
+                                  offset: const Offset(0, 0))
+                            ],
+                            letterSpacing: 0.4),
                       ),
                       Gap(8),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
-                        height: size.height * 0.1,
+                        height: size.height * 0.15,
                         //  width: size.width * 0.65,
                         child: Stack(
                           children: [
@@ -114,7 +123,7 @@ class _CommentsViewState extends State<CommentsView>
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                   hintStyle: TextStyle(
-                                      fontSize: 14, color: Colors.white60),
+                                      fontSize: 16, color: Colors.white60),
                                   fillColor: Color.fromRGBO(38, 38, 40, 1),
                                   filled: true,
                                   contentPadding:
@@ -166,10 +175,16 @@ class _CommentsViewState extends State<CommentsView>
                                         Icons.add_photo_alternate_rounded,
                                         color: Colors.white60,
                                       ),
-                                      Lottie.asset(
+                                      ColorFiltered(
+                                        colorFilter: ColorFilter.mode(
+                                            Colors.orange.shade200,
+                                            BlendMode.srcATop),
+                                        child: Lottie.asset(
                                           "assets/lottie/highlight.json",
                                           width: 50,
-                                          controller: animationController)
+                                          controller: animationController,
+                                        ),
+                                      )
                                     ],
                                   )),
                             ),
@@ -188,19 +203,23 @@ class _CommentsViewState extends State<CommentsView>
                           }
                         },
                         builder: (context, state) {
-                          return SizedBox(
+                          return Container(
+                              padding: isMobile
+                                  ? null
+                                  : EdgeInsets.symmetric(horizontal: 16.0),
                               height: widget.vehiclePartMedia.images == null ||
                                       widget.vehiclePartMedia.images!.length ==
                                           0
                                   ? 0
-                                  : size.height * 0.1,
-                              width: size.width * 0.65,
+                                  : isMobile
+                                      ? size.height * 0.14
+                                      : size.height * 0.18,
                               child: GridView.builder(
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: isMobile ? 3 : 5,
-                                        crossAxisSpacing: 10,
-                                        mainAxisSpacing: 10),
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 16,
+                                        mainAxisSpacing: 16),
                                 itemBuilder: (context, index) {
                                   return Stack(fit: StackFit.expand, children: [
                                     ClipRRect(
@@ -254,11 +273,11 @@ class _CommentsViewState extends State<CommentsView>
                               ));
                         },
                       ),
-                      Gap(8),
                       if (widget.vehiclePartMedia.images != null &&
                           widget.vehiclePartMedia.images!.isNotEmpty)
                         InkWell(
-                          radius: size.width * 0.06,
+                          radius:
+                              isMobile ? size.width * 0.06 : size.width * 0.024,
                           borderRadius: BorderRadius.circular(20),
                           onTap: () {
                             if (!isConnected()) {
@@ -301,8 +320,10 @@ class _CommentsViewState extends State<CommentsView>
                           },
                           child: Container(
                               alignment: Alignment.center,
-                              height: size.height * 0.03,
-                              width: size.width * 0.2,
+                              height: size.height * 0.04,
+                              width: isMobile
+                                  ? size.width * 0.2
+                                  : size.width * 0.08,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.black,
@@ -311,17 +332,17 @@ class _CommentsViewState extends State<CommentsView>
                                         blurRadius: 8,
                                         blurStyle: BlurStyle.outer,
                                         spreadRadius: 0,
-                                        color: Colors.orange.shade200,
+                                        color: Color.fromRGBO(255, 204, 128, 1),
                                         offset: const Offset(0, 0))
                                   ]),
                               child: const Text(
                                 textAlign: TextAlign.center,
                                 'Upload',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 12),
+                                    color: Colors.white, fontSize: 14),
                               )),
                         ),
-                      Gap(8)
+                      Gap(16)
                     ],
                   ),
                 ),
@@ -329,10 +350,11 @@ class _CommentsViewState extends State<CommentsView>
             ],
           ),
           Positioned(
-              top: 0.0,
-              right: 0.0,
+              top: 4.0,
+              right: 4.0,
               child: IconButton(
                 onPressed: () {
+                  print("asdfasdfsdf");
                   if (context
                               .read<VehiclePartsInteractionBloc>()
                               .state
@@ -355,10 +377,12 @@ class _CommentsViewState extends State<CommentsView>
                           .state
                           .mapMedia[widget.vehiclePartMedia.name]!
                           .isUploaded) {
-                    Provider.of<BodySelectorViewModel>(context, listen: false)
-                        .isTapped = false;
-                    Provider.of<BodySelectorViewModel>(context, listen: false)
-                        .selectedGeneralBodyPart = "";
+                    context.read<MultiBloc>().add(
+                        ModifyVehicleInteractionStatus(
+                            selectedBodyPart: "", isTapped: false));
+                    // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
+                    // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
+                    print("git herer");
                     return;
                   }
                   String message = "";
@@ -375,6 +399,7 @@ class _CommentsViewState extends State<CommentsView>
                           .images!
                           .isEmpty) {
                     message = 'Please add atleat one image';
+                    print("git herer 1");
                   } else if (context
                           .read<VehiclePartsInteractionBloc>()
                           .state
@@ -388,6 +413,7 @@ class _CommentsViewState extends State<CommentsView>
                           .images!
                           .isNotEmpty) {
                     message = 'Please add comments';
+                    print("git herer 2 ");
                   } else if (context
                           .read<VehiclePartsInteractionBloc>()
                           .state
@@ -395,12 +421,15 @@ class _CommentsViewState extends State<CommentsView>
                           .isUploaded ==
                       false) {
                     message = 'Upload your files before closing';
+                    print("git herer 3 ");
                   }
+                  print("git herer 4");
                   // else if(widget.vehiclePartMedia.comments!.isNotEmpty &&
                   //     widget.vehiclePartMedia.images!.isNotEmpty){
                   //      message = '';
                   //     }
                   if (message.isNotEmpty) {
+                    print("git herer");
                     animationController.repeat();
                     DMSCustomWidgets.DMSFlushbar(
                       size,
@@ -424,7 +453,7 @@ class _CommentsViewState extends State<CommentsView>
                 icon: Icon(
                   Icons.cancel,
                   // color: Colors.red,
-                  size: size.width * 0.06,
+                  size: 32,
                 ),
                 visualDensity: VisualDensity.compact,
               ))

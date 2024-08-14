@@ -149,7 +149,8 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                           generalParts: generalParts,
                                           rejectedParts: rejectedParts,
                                           acceptedParts: acceptedParts,
-                                          pendingParts: pendingParts));
+                                          pendingParts: pendingParts,
+                                          jobCardNo: widget.jobCardNo));
                                 } catch (e) {
                                   print(" caught an error $e");
                                 }

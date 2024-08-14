@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   IconButton? sffxIcon;
   String? obscChar;
   bool? obscText;
+  bool isMobile;
 
   CustomTextFormField(
       {super.key,
@@ -16,13 +17,15 @@ class CustomTextFormField extends StatelessWidget {
       suffixIcon,
       controller,
       obscureText,
-      obscureChar}) {
+      obscureChar,
+      required this.isMobile}) {
     hntTxt = hintText;
     prfxIcon = prefixIcon;
     sffxIcon = suffixIcon;
     cont = controller;
     obscText = obscureText;
     obscChar = obscureChar;
+    isMobile = isMobile;
   }
 
   @override
@@ -30,6 +33,7 @@ class CustomTextFormField extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.05,
+      width: isMobile?null:size.width*0.3,
       margin: EdgeInsets.symmetric(
         horizontal: size.width * 0.08,
       ),

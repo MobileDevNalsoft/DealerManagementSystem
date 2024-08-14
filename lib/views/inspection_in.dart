@@ -2,7 +2,7 @@ import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/responsive_interactive_viewer.dart';
+import 'package:dms/vehiclemodule/vehicle_examination.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +46,7 @@ class _InspectionViewState extends State<InspectionView>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isMobile = size.shortestSide < 500;
 
     return GestureDetector(
       onTap: () {
@@ -59,7 +60,10 @@ class _InspectionViewState extends State<InspectionView>
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045),
+            margin: EdgeInsets.only(
+                left: size.width * 0.045,
+                top: isMobile ? 0 : size.height * 0.008,
+                bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
@@ -84,7 +88,7 @@ class _InspectionViewState extends State<InspectionView>
           title: Container(
               alignment: Alignment.center,
               height: size.height * 0.05,
-              width: size.width * 0.45,
+              width: isMobile ? size.width * 0.45 : size.width * 0.32,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black,
@@ -126,18 +130,21 @@ class _InspectionViewState extends State<InspectionView>
                       transform: Matrix4.translationValues(0, -40, 0),
                       child: Center(
                         child: Lottie.asset('assets/lottie/car_loading.json',
-                            height: size.height * 0.5, width: size.width * 0.6),
+                            height: isMobile
+                                ? size.height * 0.5
+                                : size.height * 0.32,
+                            width: isMobile
+                                ? size.width * 0.6
+                                : size.width * 0.32),
                       ),
                     );
                   case JsonStatus.success:
                     List<String> buttonsText = [];
-
                     for (var entry in state.json!.entries) {
                       buttonsText.add(entry.key);
                     }
-
                     return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Gap(size.height * 0.008),
                         Padding(
@@ -235,7 +242,8 @@ class _InspectionViewState extends State<InspectionView>
                                               index: index,
                                               page: buttonsText[pageIndex],
                                               json: state.json!,
-                                              size: size),
+                                              size: size,
+                                              isMobile: isMobile),
                                         ],
                                       ),
                                       Gap(size.height * 0.02),
@@ -286,7 +294,9 @@ class _InspectionViewState extends State<InspectionView>
                                               child: Container(
                                                   alignment: Alignment.center,
                                                   height: size.height * 0.045,
-                                                  width: size.width * 0.2,
+                                                  width: isMobile
+                                                      ? size.width * 0.2
+                                                      : size.width * 0.08,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -334,7 +344,10 @@ class _InspectionViewState extends State<InspectionView>
                 color: Colors.black54,
                 child: Center(
                     child: Lottie.asset('assets/lottie/car_loading.json',
-                        height: size.height * 0.5, width: size.width * 0.6)),
+                        height:
+                            isMobile ? size.height * 0.5 : size.height * 0.32,
+                        width:
+                            isMobile ? size.width * 0.6 : size.width * 0.32)),
               )
           ],
         ),
@@ -347,12 +360,13 @@ class _InspectionViewState extends State<InspectionView>
       required String page,
       required int index,
       required Map<String, dynamic> json,
-      required BuildContext context}) {
+      required BuildContext context,
+      required bool isMobile}) {
     switch (json[page][index]['widget']) {
       case "checkBox":
         return SizedBox(
           height: size.height * 0.03,
-          width: size.width * 0.05,
+          width: isMobile ? size.width * 0.05 : size.width * 0.024,
           child: Checkbox(
             checkColor: Colors.white,
             fillColor: json[page][index]['properties']['value'] == true
@@ -376,7 +390,7 @@ class _InspectionViewState extends State<InspectionView>
 
         return Container(
           height: size.height * 0.11,
-          width: size.width * 0.62,
+          width: isMobile ? size.width * 0.62 : size.width * 0.32,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
@@ -436,7 +450,7 @@ class _InspectionViewState extends State<InspectionView>
             },
             buttonStyleData: ButtonStyleData(
               height: size.height * 0.04,
-              width: size.width * 0.5,
+              width: isMobile ? size.width * 0.5 : size.width * 0.32,
               padding: const EdgeInsets.only(left: 14, right: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),

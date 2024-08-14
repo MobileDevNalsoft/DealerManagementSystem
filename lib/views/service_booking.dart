@@ -277,7 +277,10 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                   backgroundColor: Colors.black45,
                   leadingWidth: size.width * 0.14,
                   leading: Container(
-                    margin: EdgeInsets.only(left: size.width * 0.045),
+                    margin: EdgeInsets.only(
+                        left: size.width * 0.045,
+                        top: isMobile ? 0 : size.height * 0.008,
+                        bottom: isMobile ? 0 : size.height * 0.008),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.black,
@@ -308,7 +311,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                   title: Container(
                       alignment: Alignment.center,
                       height: size.height * 0.05,
-                      width: size.width * 0.45,
+                      width: isMobile ? size.width * 0.45 : size.width * 0.32,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.black,
@@ -320,7 +323,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                 color: Colors.orange.shade200,
                                 offset: const Offset(0, 0))
                           ]),
-                      child: const Text(
+                      child: Text(
                         textAlign: TextAlign.center,
                         'Service Booking',
                         style: TextStyle(
@@ -357,8 +360,12 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                       child: Center(
                                         child: Lottie.asset(
                                             'assets/lottie/car_loading.json',
-                                            height: size.height * 0.5,
-                                            width: size.width * 0.6),
+                                            height: isMobile
+                                                ? size.height * 0.5
+                                                : size.height * 0.32,
+                                            width: isMobile
+                                                ? size.width * 0.6
+                                                : size.width * 0.32),
                                       ),
                                     );
                                   case GetServiceLocationsStatus.success:
@@ -680,7 +687,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                               child: Container(
                                                   alignment: Alignment.center,
                                                   height: size.height * 0.045,
-                                                  width: size.width * 0.2,
+                                                  width: isMobile
+                                                      ? size.width * 0.2
+                                                      : size.width * 0.08,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -698,7 +707,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                 const Offset(
                                                                     0, 0))
                                                       ]),
-                                                  child: const Text(
+                                                  child: Text(
                                                     textAlign: TextAlign.center,
                                                     'next',
                                                     style: TextStyle(
@@ -985,119 +994,148 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                               return BlocBuilder<MultiBloc,
                                                   MultiBlocState>(
                                                 builder: (context, state) {
-                                                  return CustomSliderButton(
-                                                    sliderController:
-                                                        sliderButtonController,
-                                                    context: context,
-                                                    size: size,
-                                                    label: const Text(
-                                                      "Proceed to receive",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Color(0xff4a4a4a),
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 17),
+                                                  return SizedBox(
+                                                    width: isMobile
+                                                        ? size.width * 0.56
+                                                        : size.width * 0.2,
+                                                    child: LayoutBuilder(
+                                                      builder: (context,
+                                                          contraints) {
+                                                        return CustomSliderButton(
+                                                          isMobile: isMobile,
+                                                          sliderController:
+                                                              sliderButtonController,
+                                                          context: context,
+                                                          size: contraints,
+                                                          label: const Text(
+                                                            "Proceed to receive",
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    0xff4a4a4a),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 17),
+                                                          ),
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .arrow_forward_ios_rounded,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onDismissed:
+                                                              () async {
+                                                            if (!isConnected()) {
+                                                              DMSCustomWidgets.DMSFlushbar(
+                                                                  size, context,
+                                                                  message:
+                                                                      'Looks like you'
+                                                                      're offline. Please check your connection and try again.',
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons.error,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ));
+                                                              return;
+                                                            }
+                                                            FocusManager
+                                                                .instance
+                                                                .primaryFocus
+                                                                ?.unfocus();
+
+                                                            String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
+                                                                _altPersonContactNoValidation(
+                                                                    altContPhoneNoController
+                                                                        .text) ??
+                                                                _salesPersonValidator(
+                                                                    spTypeAheadController
+                                                                        .text,
+                                                                    (state.salesPersons ??
+                                                                            [])
+                                                                        .map((e) => e
+                                                                            .empName)
+                                                                        .toList()) ??
+                                                                _bayValidator(
+                                                                    bayTypeAheadController
+                                                                        .text,
+                                                                    bayList) ??
+                                                                _jobTypeValidator(
+                                                                    jobTypeTypeAheadController
+                                                                        .text,
+                                                                    jobTypeList);
+
+                                                            if (message !=
+                                                                null) {
+                                                              DMSCustomWidgets
+                                                                  .DMSFlushbar(
+                                                                      size,
+                                                                      context,
+                                                                      message:
+                                                                          message,
+                                                                      icon:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .error,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ));
+                                                            } else {
+                                                              Service service = Service(
+                                                                  registrationNo:
+                                                                      vehRegNumController
+                                                                          .text,
+                                                                  location:
+                                                                      locTypeAheadController
+                                                                          .text,
+                                                                  customerName:
+                                                                      customerController
+                                                                          .text,
+                                                                  scheduledDate: state.date
+                                                                      .toString()
+                                                                      .substring(
+                                                                          0, 10),
+                                                                  kms: int.parse(
+                                                                      kmsController
+                                                                          .text),
+                                                                  bookingSource:
+                                                                      bookingTypeAheadController
+                                                                          .text,
+                                                                  alternateContactPerson:
+                                                                      altContController
+                                                                          .text,
+                                                                  alternatePersonContactNo: altContPhoneNoController
+                                                                          .text
+                                                                          .isNotEmpty
+                                                                      ? int.parse(altContPhoneNoController.text)
+                                                                      : null,
+                                                                  salesPerson: spTypeAheadController.text.split('-')[0],
+                                                                  bay: bayTypeAheadController.text,
+                                                                  jobType: jobTypeTypeAheadController.text,
+                                                                  jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
+                                                                  customerConcerns: custConcernsController.text,
+                                                                  remarks: remarksController.text);
+                                                              _serviceBloc.state
+                                                                      .jobCardNo =
+                                                                  service
+                                                                      .jobCardNo!;
+
+                                                              Log.d(service
+                                                                  .toJson());
+                                                              context
+                                                                  .read<
+                                                                      ServiceBloc>()
+                                                                  .add(ServiceAdded(
+                                                                      service:
+                                                                          service));
+                                                              _vehicleBloc.state
+                                                                      .status =
+                                                                  VehicleStatus
+                                                                      .initial;
+                                                            }
+                                                          },
+                                                        );
+                                                      },
                                                     ),
-                                                    icon: const Icon(
-                                                      Icons
-                                                          .arrow_forward_ios_rounded,
-                                                      color: Colors.white,
-                                                    ),
-                                                    onDismissed: () async {
-                                                      if (!isConnected()) {
-                                                        DMSCustomWidgets.DMSFlushbar(
-                                                            size, context,
-                                                            message:
-                                                                'Looks like you'
-                                                                're offline. Please check your connection and try again.',
-                                                            icon: const Icon(
-                                                              Icons.error,
-                                                              color:
-                                                                  Colors.white,
-                                                            ));
-                                                        return;
-                                                      }
-                                                      FocusManager
-                                                          .instance.primaryFocus
-                                                          ?.unfocus();
-
-                                                      String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
-                                                          _altPersonContactNoValidation(
-                                                              altContPhoneNoController
-                                                                  .text) ??
-                                                          _salesPersonValidator(
-                                                              spTypeAheadController
-                                                                  .text,
-                                                              (state.salesPersons ??
-                                                                      [])
-                                                                  .map((e) =>
-                                                                      e.empName)
-                                                                  .toList()) ??
-                                                          _bayValidator(
-                                                              bayTypeAheadController
-                                                                  .text,
-                                                              bayList) ??
-                                                          _jobTypeValidator(
-                                                              jobTypeTypeAheadController
-                                                                  .text,
-                                                              jobTypeList);
-
-                                                      if (message != null) {
-                                                        DMSCustomWidgets
-                                                            .DMSFlushbar(
-                                                                size, context,
-                                                                message:
-                                                                    message,
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ));
-                                                      } else {
-                                                        Service service = Service(
-                                                            registrationNo:
-                                                                vehRegNumController
-                                                                    .text,
-                                                            location: locTypeAheadController
-                                                                .text,
-                                                            customerName:
-                                                                customerController
-                                                                    .text,
-                                                            scheduledDate: state.date
-                                                                .toString()
-                                                                .substring(
-                                                                    0, 10),
-                                                            kms: int.parse(kmsController
-                                                                .text),
-                                                            bookingSource:
-                                                                bookingTypeAheadController
-                                                                    .text,
-                                                            alternateContactPerson:
-                                                                altContController
-                                                                    .text,
-                                                            alternatePersonContactNo:
-                                                                altContPhoneNoController.text.isNotEmpty
-                                                                    ? int.parse(altContPhoneNoController.text)
-                                                                    : null,
-                                                            salesPerson: spTypeAheadController.text.split('-')[0],
-                                                            bay: bayTypeAheadController.text,
-                                                            jobType: jobTypeTypeAheadController.text,
-                                                            jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
-                                                            customerConcerns: custConcernsController.text,
-                                                            remarks: remarksController.text);
-                                                        _serviceBloc.state
-                                                                .jobCardNo =
-                                                            service.jobCardNo!;
-
-                                                        Log.d(service.toJson());
-                                                        _serviceBloc.add(
-                                                            ServiceAdded(
-                                                                service:
-                                                                    service));
-                                                      }
-                                                    },
                                                   );
                                                 },
                                               );
@@ -1129,8 +1167,12 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                         child: Center(
                             child: Lottie.asset(
                                 'assets/lottie/car_loading.json',
-                                height: size.height * 0.5,
-                                width: size.width * 0.6)),
+                                height: isMobile
+                                    ? size.height * 0.5
+                                    : size.height * 0.32,
+                                width: isMobile
+                                    ? size.width * 0.6
+                                    : size.width * 0.32)),
                       )
                   ],
                 ),
@@ -1282,11 +1324,12 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
 }
 
 class CustomSliderButton extends StatefulWidget {
-  final Size size;
+  final BoxConstraints size;
   final BuildContext context;
   final Widget label;
   final Widget icon;
   final onDismissed;
+  final bool isMobile;
   final ServiceBookingSliderButtonController sliderController;
 
   CustomSliderButton(
@@ -1296,7 +1339,8 @@ class CustomSliderButton extends StatefulWidget {
       required this.label,
       required this.icon,
       required this.onDismissed,
-      required this.sliderController})
+      required this.sliderController,
+      required this.isMobile})
       : super(key: key);
 
   @override
@@ -1312,12 +1356,14 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void initState() {
     super.initState();
     _initController();
-    _position = widget.size.width * 0.22;
-    _startPosition = widget.size.width * 0.22;
-    _endPosition = widget.size.width * 0.68;
+    _position = widget.size.maxWidth * 0.01;
+    _startPosition = widget.size.maxWidth * 0.01;
+    _endPosition = widget.isMobile
+        ? widget.size.maxWidth * 0.8
+        : widget.size.maxWidth * 0.825;
     print(
         "stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus} ${_sliderController._position}");
-    _sliderController.currentPosition = widget.size.width * 0.22;
+    _sliderController.currentPosition = widget.size.maxWidth * 0.01;
     if (_sliderController.position == SliderButtonPosition.right) {
       _sliderController.currentPosition = _endPosition;
     } else if (_sliderController.position == SliderButtonPosition.left) {
@@ -1338,11 +1384,9 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       _sliderController.currentPosition = details.localPosition.dx;
-      // _position = details.localPosition.dx;
       if (_sliderController.currentPosition > _endPosition) {
         _sliderController._position = SliderButtonPosition.right;
         _sliderController._currentPosition = _endPosition;
-        // _position = _endPosition;
       } else if (_sliderController.currentPosition < _startPosition) {
         _sliderController._position = SliderButtonPosition.left;
         _sliderController._currentPosition = _startPosition;
@@ -1353,7 +1397,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   }
 
   void _onPanEnd(DragEndDetails details) async {
-    if (_sliderController.currentPosition <= widget.size.width / 2) {
+    if (_sliderController.currentPosition <= widget.size.maxWidth / 2) {
       setState(() {
         _sliderController.currentPosition = _startPosition;
         _sliderController.position = SliderButtonPosition.left;
@@ -1405,7 +1449,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 borderRadius: BorderRadius.circular(30),
                 color: Colors.white60,
               ),
-              width: widget.size.width * 0.58,
+              width: widget.size.maxWidth,
               height: 45,
               child: Align(
                 alignment: Alignment.center,

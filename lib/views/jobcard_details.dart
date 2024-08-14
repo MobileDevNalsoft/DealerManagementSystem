@@ -124,7 +124,7 @@ class JobCardDetails extends StatelessWidget {
                 children: [
                   Container(
                     margin: EdgeInsets.only(top: size.height * 0.04),
-                    height: size.height * 0.31,
+                    height: size.height * 0.32,
                     width: size.width * 0.9,
                     padding: EdgeInsets.symmetric(
                         horizontal: size.width * 0.05,
@@ -165,7 +165,7 @@ class JobCardDetails extends StatelessWidget {
                   ),
                   Expanded(
                     child: Container(
-                        margin: EdgeInsets.only(top: size.height * 0.04),
+                        margin: EdgeInsets.only(top: size.height * 0.032),
                         padding: EdgeInsets.only(top: size.height * 0.01),
                         width: size.width * 0.93,
                         decoration: const BoxDecoration(

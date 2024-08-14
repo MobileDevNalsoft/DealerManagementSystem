@@ -72,7 +72,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
             body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) {
                 String? message;
-
+    
                 switch (state.authenticationStatus) {
                   case AuthenticationStatus.success:
                     message = "Login Successful";
@@ -87,7 +87,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                   default:
                     message = null;
                 }
-
+    
                 if (message != null) {
                   DMSCustomWidgets.DMSFlushbar(size, context,
                       message: message,
@@ -151,10 +151,10 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                             ),
                           ),
                         Positioned(
-                          top: size.height * 0.35,
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
+                          top: isMobile?size.height * 0.35:size.height*0.24,
+                          bottom: isMobile?0:null,
+                          left: isMobile?0:size.width*0.45,
+                          right:isMobile? 0:null,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -170,6 +170,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                 ),
                               ),
                               CustomTextFormField(
+                                isMobile: isMobile,
                                 hintText: 'employee id',
                                 controller: _emailController,
                                 prefixIcon: const Icon(Icons.person),
@@ -178,6 +179,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                 size.height * 0.02,
                               ),
                               CustomTextFormField(
+                                isMobile: isMobile,
                                 hintText: 'password',
                                 controller: _passwordController,
                                 prefixIcon: const Icon(Icons.key),
@@ -206,7 +208,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                               : null) ??
                                           _passwordValidator(
                                               _passwordController.text);
-
+    
                                   if (message != null) {
                                     DMSCustomWidgets.DMSFlushbar(
                                       size,
@@ -230,7 +232,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                     margin: EdgeInsets.symmetric(
                                         horizontal: size.width * 0.08),
                                     height: size.height * 0.05,
-                                    width: size.width,
+                                    width: isMobile?size.width:size.width*0.3,
+    
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
                                         color: Colors.black,
@@ -261,8 +264,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                         child: Center(
                             child: Lottie.asset(
                                 'assets/lottie/login_loading.json',
-                                height: size.height * 0.4,
-                                width: size.width * 0.4)),
+                                height:isMobile?size.height * 0.4:size.height * 0.24,
+                                width: isMobile?size.width * 0.4:size.width * 0.24)),
                       )
                   ],
                 );
