@@ -124,6 +124,10 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     _multiBloc.add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
+    Future.delayed(Duration(milliseconds: 600), () {
+      vehRegNumFocus.requestFocus();
+    });
+
     if (_serviceBloc.state.locations == null) {
       _serviceBloc.add(GetServiceLocations());
     }
@@ -185,7 +189,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     customerController.clear();
     locTypeAheadController.clear();
     kmsController.clear();
-    context.read<MultiBloc>().add(DateChanged(date: null));
     bookingTypeAheadController.clear();
     altContController.clear();
     altContPhoneNoController.clear();
@@ -196,26 +199,40 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     remarksController.clear();
   }
 
-  void unFocusFields() {
-    bookingFocus.unfocus();
-    altContFocus.unfocus();
-    altContPhoneNoFocus.unfocus();
-    spFocus.unfocus();
-    bayFocus.unfocus();
-    jobTypeFocus.unfocus();
-    custConcernsFocus.unfocus();
-    remarksFocus.unfocus();
+  void disposeFields() {
+    vehRegNumController.dispose();
+    customerController.dispose();
+    locTypeAheadController.dispose();
+    kmsController.dispose();
+    bookingTypeAheadController.dispose();
+    altContController.dispose();
+    altContPhoneNoController.dispose();
+    spTypeAheadController.dispose();
+    bayTypeAheadController.dispose();
+    jobTypeTypeAheadController.dispose();
+    custConcernsController.dispose();
+    remarksController.dispose();
+    vehRegNumFocus.dispose();
+    bookingFocus.dispose();
+    altContFocus.dispose();
+    altContPhoneNoFocus.dispose();
+    spFocus.dispose();
+    bayFocus.dispose();
+    jobTypeFocus.dispose();
+    custConcernsFocus.dispose();
+    remarksFocus.dispose();
   }
 
   @override
   void dispose() {
     _vehicleBloc.state.registrationNo = null;
-    clearFields();
+    disposeFields();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
     size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
@@ -232,27 +249,23 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
       ]);
     }
 
-    return SizedBox(
-      height: size.height,
-      width: size.width,
-      child: PageView.builder(
-        controller: pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            child: PopScope(
-              canPop: false,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: SizedBox(
+        height: size.height,
+        width: size.width,
+        child: PageView.builder(
+          controller: pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 2,
+          itemBuilder: (context, index) {
+            return PopScope(
+              canPop: index == 1 ? false : true,
               onPopInvoked: (didPop) async {
                 if (index == 1) {
                   pageController.animateToPage(0,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.ease);
-                } else {
-                  navigator.pop();
                 }
               },
               child: Scaffold(
@@ -395,10 +408,14 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                         FocusManager.instance
                                                             .primaryFocus
                                                             ?.unfocus();
-
-                                                        showRegistrationDialog(
-                                                            size: size,
-                                                            state: state);
+                                                        if (navigator
+                                                            .navigatorkey
+                                                            .currentState!
+                                                            .mounted) {
+                                                          showRegistrationDialog(
+                                                              size: size,
+                                                              state: state);
+                                                        }
                                                       case VehicleStatus
                                                             .failure:
                                                         DMSCustomWidgets
@@ -420,7 +437,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                     return DMSCustomWidgets.CustomDataCard(
                                                         context: context,
                                                         size: size,
-                                                        autofocus: true,
                                                         hint:
                                                             'Vehicle Registration Number',
                                                         inputFormatters: [
@@ -1119,9 +1135,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                   ],
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -1187,77 +1203,80 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
         context: context,
         barrierDismissible: false,
         builder: (context) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              contentPadding: EdgeInsets.only(top: size.height * 0.01),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: size.width * 0.03),
-                    child: const Text(
-                      'Oops! This Vehicle not registered with us.',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: size.width * 0.03),
+                      child: const Text(
+                        'Oops! This Vehicle not registered with us.',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Gap(size.height * 0.01),
-                  Container(
-                    height: size.height * 0.05,
-                    margin: EdgeInsets.all(size.height * 0.001),
-                    decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              navigator.pop();
-                              vehRegNumFocus.requestFocus();
-                            },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: const Text(
-                              'retry',
+                    Gap(size.height * 0.01),
+                    Container(
+                      height: size.height * 0.05,
+                      margin: EdgeInsets.all(size.height * 0.001),
+                      decoration: const BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                navigator.pop();
+                                vehRegNumFocus.requestFocus();
+                              },
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: const Text(
+                                'retry',
+                              ),
                             ),
                           ),
-                        ),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          thickness: 0.5,
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              state.status = VehicleStatus.initial;
-                              state.registrationNo = vehRegNumController.text;
-                              navigator.pop();
-                              navigator.popAndPush('/addVehicle');
-                            },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
-                            child: const Text(
-                              'register Now',
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 0.5,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                state.status = VehicleStatus.initial;
+                                state.registrationNo = vehRegNumController.text;
+                                navigator.pop();
+                                navigator.popAndPush('/addVehicle');
+                              },
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: const Text(
+                                'register Now',
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              actionsPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero);
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero),
+          );
         });
   }
 }

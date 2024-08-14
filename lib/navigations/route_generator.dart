@@ -23,11 +23,35 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/home':
-        return MaterialPageRoute(builder: (_) => HomeView());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const HomeView(),
+          transitionDuration: const Duration(seconds: 1),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween<double>(begin: 0, end: 1)
+                .chain(CurveTween(curve: Curves.easeInOut));
+            final fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
       case '/dashboard':
-        return MaterialPageRoute(builder: (_) => DashBoard());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const DashBoard(),
+          transitionDuration: const Duration(milliseconds: 500),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+        );
       case '/addVehicle':
-        return MaterialPageRoute(builder: (_) => AddVehicleView());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const AddVehicleView(),
+          transitionDuration: const Duration(milliseconds: 500),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+        );
       case '/customDetector':
         final args = settings.arguments as GeneralBodyParts;
         return MaterialPageRoute(
@@ -36,19 +60,43 @@ class RouteGenerator {
                   generalParts: args.generalParts,
                 ));
       case '/gatePass':
-        return MaterialPageRoute(builder: (_) => GatePass());
+        return MaterialPageRoute(builder: (_) => const GatePass());
       case '/inspectionIn':
-        return MaterialPageRoute(builder: (_) => InspectionView());
+        return MaterialPageRoute(builder: (_) => const InspectionView());
       case '/inspectionOut':
-        return MaterialPageRoute(builder: (_) => InspectionOut());
+        return MaterialPageRoute(builder: (_) => const InspectionOut());
       case '/jobCardDetails':
-        return MaterialPageRoute(builder: (_) => JobCardDetails());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              JobCardDetails(),
+          transitionDuration: const Duration(milliseconds: 500),
+          reverseTransitionDuration: const Duration(milliseconds: 300),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween(begin: const Offset(1, 0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeIn));
+            final offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
       case '/login':
-        return MaterialPageRoute(builder: (_) => LoginView());
+        return MaterialPageRoute(builder: (_) => const LoginView());
       case '/listOfJobCards':
-        return MaterialPageRoute(builder: (_) => ListOfJobcards());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const ListOfJobcards(),
+          transitionDuration: const Duration(milliseconds: 600),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+        );
       case '/myJobCards':
-        return MaterialPageRoute(builder: (_) => MyJobcards());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const MyJobcards(),
+          transitionDuration: const Duration(milliseconds: 600),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+        );
       case '/qualityCheck':
         final args = settings.arguments as GeneralBodyParts;
         return MaterialPageRoute(
@@ -60,11 +108,35 @@ class RouteGenerator {
                   pendingParts: args.pendingParts,
                 ));
       case '/serviceBooking':
-        return MaterialPageRoute(builder: (_) => ServiceBooking());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              ServiceBooking(),
+          transitionDuration: const Duration(milliseconds: 500),
+          reverseTransitionDuration: const Duration(milliseconds: 200),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween(begin: const Offset(0, 1), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeIn));
+            final offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        );
       case '/vehicleInfo':
-        return MaterialPageRoute(builder: (_) => VehicleInfo());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const VehicleInfo(),
+          transitionDuration: const Duration(milliseconds: 500),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+        );
       case '/serviceHistory':
-        return MaterialPageRoute(builder: (_) => ServiceHistoryView());
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const ServiceHistoryView(),
+          transitionDuration: const Duration(milliseconds: 500),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+        );
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

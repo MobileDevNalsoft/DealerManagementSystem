@@ -123,7 +123,6 @@ class DMSCustomWidgets {
       required ScrollController scrollController,
       Function(String?)? onChange,
       String? Function(String?)? validator,
-      bool? autofocus,
       GlobalKey? key,
       TextEditingController? textcontroller,
       Widget? icon,
@@ -146,7 +145,6 @@ class DMSCustomWidgets {
           child: TextFormField(
             onChanged: onChange,
             initialValue: initialValue,
-            autofocus: autofocus ?? false,
             keyboardType: keyboardType,
             inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
