@@ -160,8 +160,6 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final size = MediaQuery.of(context).size;
-    print(size.height);
-    print('shrink offset $shrinkOffset');
 
     return InkWell(
       onTap: () => focusNode.requestFocus(),
@@ -242,7 +240,6 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     // size will be of the container's
-    // print('height ${size.height} width ${size.width}');
     Path path = Path();
 
     const minSize = 50.0;
@@ -255,7 +252,6 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
     final controlPoint2 =
         Offset(size.width * 0.8, minSize + (minSize - size.height * 0.75) * 2);
 
-    print('control point 1 $controlPoint1 control point 2 $controlPoint2');
     final endPoint = Offset(size.width, minSize);
 
     // used to difine two arcs according to the two control points
@@ -278,7 +274,6 @@ class TicketClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     // size will be of the container's
-    print('height ${size.height} width ${size.width}');
     Path path = Path();
     path.lineTo(0.0, size.height);
     path.lineTo(size.width, size.height);
@@ -306,7 +301,7 @@ class TicketClipper extends CustomClipper<Path> {
 }
 
 class JobCardPage extends StatelessWidget {
-  JobCardPage({super.key});
+  const JobCardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -337,11 +332,10 @@ class JobCardPage extends StatelessWidget {
                         state.getJobCardStatus == GetJobCardStatus.loading ||
                             state.getJobCardStatus == GetJobCardStatus.initial,
                     child: SizedBox(
-                      height: size.height * 0.15,
                       width: size.width * 0.95,
                       child: ClipShadowPath(
                         clipper: TicketClipper(),
-                        shadow: BoxShadow(
+                        shadow: const BoxShadow(
                           color: Colors.black26,
                           offset: Offset(0, 2),
                           blurRadius: 5,
@@ -358,6 +352,7 @@ class JobCardPage extends StatelessWidget {
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -503,6 +498,8 @@ class JobCardPage extends StatelessWidget {
                               Container(
                                 height: size.height * 0.05,
                                 width: size.width * 0.94,
+                                margin: EdgeInsets.only(
+                                    bottom: size.height * 0.0025),
                                 decoration: BoxDecoration(
                                     color: Colors.orange.shade200,
                                     borderRadius: const BorderRadius.only(
@@ -632,7 +629,3 @@ class JobCardPage extends StatelessWidget {
     );
   }
 }
-
-// if (shrinkOffset > 45) const Spacer(),
-              // if (shrinkOffset > 45)
-                

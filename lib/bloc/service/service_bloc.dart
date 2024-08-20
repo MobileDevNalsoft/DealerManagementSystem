@@ -105,14 +105,13 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
           if (event.inspectionIn == 'false') {
-            navigator!.pushAndRemoveUntil('/listOfJobCards', '/home');
-            navigator!.push('/gatePass');
+            navigator!.pushAndRemoveUntil('/gatePass', '/listOfJobCards');
           } else {
             emit(state.copyWith(svgStatus: SVGStatus.loading));
             await loadSvgImage(svgImage: 'assets/images/image.svg')
                 .then((value) {
               emit(state.copyWith(svgStatus: SVGStatus.success));
-              navigator!.pushAndRemoveUntil('/customDetector', '/home',
+              navigator!.pushAndRemoveUntil('/vehicleExamination', '/home',
                   arguments: GeneralBodyParts(generalParts: value));
             });
           }

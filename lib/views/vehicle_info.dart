@@ -55,348 +55,328 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
     return clipperWidgets = [
       Stack(
         children: [
-          Transform.flip(
+          VehicleInfoClippedButton(
+            decorationColor:
+                context.watch<MultiBloc>().state.reverseClippedWidgets!
+                    ? const Color.fromARGB(136, 109, 108, 108)
+                    : null,
+            shadowColor: context.watch<MultiBloc>().state.reverseClippedWidgets!
+                ? Colors.black
+                : Colors.transparent,
             flipX: true,
-            child: ClippedButton(
-              shadow: Shadow(
-                  offset: const Offset(0, 0),
-                  color: context.watch<MultiBloc>().state.reverseClippedWidgets!
-                      ? Colors.black
-                      : Colors.transparent),
-              clipper: VehicleInfoClipper(
-                  sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
-              size: Size.copy(Size(size.width * 0.95, size.height * 0.5)),
-              child: Transform.flip(
-                flipX: true,
-                child: Container(
-                    width: size.width * 0.95,
-                    decoration: BoxDecoration(
-                        // gradient: context
-                        //         .watch<MultiBloc>()
-                        //         .state
-                        //         .reverseClippedWidgets!
-                        //     ? LinearGradient(
-                        //         colors: [
-                        //             Color.fromARGB(135, 200, 198, 198),
-                        //             Colors.white,
-                        //             Color.fromRGBO(138, 136, 136, 0.529),
-                        //           ],
-                        //         begin: Alignment.topCenter,
-                        //         end: Alignment.bottomCenter)
-                        //     : null,
-                        color: context
-                                .watch<MultiBloc>()
-                                .state
-                                .reverseClippedWidgets!
-                            ? const Color.fromARGB(136, 109, 108, 108)
-                            : null),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: size.height * 0.05,
-                              right: size.width * 0.07),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Spacer(),
-                              Icon(Icons.history,
-                                  color: context
-                                          .watch<MultiBloc>()
-                                          .state
-                                          .reverseClippedWidgets!
-                                      ? Colors.white
-                                      : Colors.black),
-                              const Gap(4),
-                              Text(
-                                "Service History",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: context
-                                            .watch<MultiBloc>()
-                                            .state
-                                            .reverseClippedWidgets!
-                                        ? Colors.white
-                                        : Colors.black),
-                              ),
-                            ],
+            child: Transform.flip(
+              flipX: true,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: size.height * 0.05, right: size.width * 0.07),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Spacer(),
+                          Icon(Icons.history,
+                              color: context
+                                      .watch<MultiBloc>()
+                                      .state
+                                      .reverseClippedWidgets!
+                                  ? Colors.white
+                                  : Colors.black),
+                          const Gap(4),
+                          Text(
+                            "Service History",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: constraints.maxWidth * 0.05,
+                                color: context
+                                        .watch<MultiBloc>()
+                                        .state
+                                        .reverseClippedWidgets!
+                                    ? Colors.white
+                                    : Colors.black),
                           ),
+                        ],
+                      );
+                    }),
+                  ),
+                  if (context.watch<MultiBloc>().state.reverseClippedWidgets!)
+                    Padding(
+                      padding: EdgeInsets.only(left: size.width * 0.45),
+                      child: SizedBox(
+                        width: size.width * 0.2,
+                        child: Divider(
+                          color: Colors.orange.shade200,
                         ),
-                        if (context
-                            .watch<MultiBloc>()
-                            .state
-                            .reverseClippedWidgets!)
-                          Padding(
-                            padding: EdgeInsets.only(left: size.width * 0.45),
-                            child: SizedBox(
-                              width: size.width * 0.2,
-                              child: Divider(
-                                color: Colors.orange.shade200,
-                              ),
-                            ),
-                          ),
-                        Gap(size.height * 0.025),
-                        SizedBox(
-                          width: size.width * 0.9,
-                          height: size.height * 0.3,
-                          child: BlocConsumer<ServiceBloc, ServiceState>(
-                            listener: (context, state) {
-                              if (state.getServiceStatus ==
-                                  GetServiceStatus.success) {
-                                focusNode.unfocus();
-                              }
-                            },
-                            builder: (context, state) {
-                              print("service status ${state.getServiceStatus}");
-                              return CustomScrollView(
-                                slivers: [
-                                  (state.services == null ||
-                                          state.services!.isEmpty)
-                                      ? SliverToBoxAdapter(
-                                          child: Center(
-                                              heightFactor: size.height * 0.01,
-                                              child: Text("No services found !",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          size.width * 0.045,
-                                                      fontWeight:
-                                                          FontWeight.w300))))
-                                      : SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                              (context, index) {
-                                          return Skeletonizer(
-                                              enableSwitchAnimation: true,
-                                              enabled: state.getJobCardStatus ==
-                                                      GetJobCardStatus
-                                                          .loading ||
-                                                  state.jobCardStatusUpdate ==
-                                                      JobCardStatusUpdate
-                                                          .loading,
-                                              child: SizedBox(
-                                                width: size.width * 0.9,
-                                                height: size.height * 0.14,
-                                                child: ClipPath(
-                                                  clipper: TicketClipper(),
-                                                  clipBehavior: Clip.antiAlias,
-                                                  child: Card(
-                                                    elevation: 5,
-                                                    surfaceTintColor:
-                                                        Colors.orange.shade200,
-                                                    shadowColor:
-                                                        Colors.orange.shade200,
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                      vertical:
-                                                          size.height * 0.006,
-                                                    ),
-                                                    color: Colors.white,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Gap(size.width *
-                                                                0.03),
-                                                            Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    Gap(size.width *
-                                                                        0.05),
-                                                                    Image.asset(
-                                                                      'assets/images/job_card.png',
-                                                                      scale: size
-                                                                              .width *
-                                                                          0.05,
+                      ),
+                    ),
+                  Gap(size.height * 0.025),
+                  SizedBox(
+                    width: size.width * 0.9,
+                    height: size.height * 0.3,
+                    child: BlocConsumer<ServiceBloc, ServiceState>(
+                      listener: (context, state) {
+                        if (state.getServiceStatus ==
+                            GetServiceStatus.success) {
+                          focusNode.unfocus();
+                        }
+                      },
+                      builder: (context, state) {
+                        print("service status ${state.getServiceStatus}");
+                        return CustomScrollView(
+                          slivers: [
+                            (state.services == null || state.services!.isEmpty)
+                                ? SliverToBoxAdapter(
+                                    child: Center(
+                                        heightFactor: size.height * 0.01,
+                                        child: Text("No services found !",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: size.width * 0.045,
+                                                fontWeight: FontWeight.w300))))
+                                : SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                        (context, index) {
+                                    return Skeletonizer(
+                                        enableSwitchAnimation: true,
+                                        enabled: state.getJobCardStatus ==
+                                                GetJobCardStatus.loading ||
+                                            state.jobCardStatusUpdate ==
+                                                JobCardStatusUpdate.loading,
+                                        child: SizedBox(
+                                          width: size.width * 0.9,
+                                          height: size.height * 0.14,
+                                          child: ClipPath(
+                                            clipper: TicketClipper(),
+                                            clipBehavior: Clip.antiAlias,
+                                            child: Card(
+                                              elevation: 5,
+                                              surfaceTintColor:
+                                                  Colors.orange.shade200,
+                                              shadowColor:
+                                                  Colors.orange.shade200,
+                                              margin: EdgeInsets.symmetric(
+                                                vertical: size.height * 0.006,
+                                              ),
+                                              color: Colors.white,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Gap(size.width * 0.03),
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Gap(size.width *
+                                                                  0.05),
+                                                              Image.asset(
+                                                                'assets/images/job_card.png',
+                                                                scale:
+                                                                    size.width *
+                                                                        0.05,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                              Gap(size.width *
+                                                                  0.02),
+                                                              InkWell(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                radius: 100,
+                                                                splashColor: Colors
+                                                                    .transparent,
+                                                                customBorder: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20)),
+                                                                enableFeedback:
+                                                                    true,
+                                                                onTap: () {
+                                                                  _serviceBloc
+                                                                          .state
+                                                                          .service =
+                                                                      state.jobCards![
+                                                                          index];
+                                                                },
+                                                                child: Text(
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  state.getServiceStatus ==
+                                                                          GetServiceStatus
+                                                                              .success
+                                                                      ? state
+                                                                          .services![
+                                                                              index]
+                                                                          .jobCardNo!
+                                                                      : 'JC-MAD-633',
+                                                                  style: const TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontSize:
+                                                                          12,
                                                                       color: Colors
-                                                                          .black,
-                                                                    ),
-                                                                    Gap(size.width *
-                                                                        0.02),
-                                                                    InkWell(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20),
-                                                                      radius:
-                                                                          100,
-                                                                      splashColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      customBorder:
-                                                                          RoundedRectangleBorder(
-                                                                              borderRadius: BorderRadius.circular(20)),
-                                                                      enableFeedback:
-                                                                          true,
-                                                                      onTap:
-                                                                          () {
-                                                                        _serviceBloc
-                                                                            .state
-                                                                            .service = state
-                                                                                .jobCards![
-                                                                            index];
-                                                                      },
-                                                                      child:
-                                                                          Text(
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        state.getServiceStatus ==
-                                                                                GetServiceStatus.success
-                                                                            ? state.services![index].jobCardNo!
-                                                                            : 'JC-MAD-633',
-                                                                        style: const TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .w600,
-                                                                            fontSize:
-                                                                                12,
-                                                                            color:
-                                                                                Colors.blue,
-                                                                            decoration: TextDecoration.underline),
-                                                                      ),
-                                                                    )
-                                                                  ],
+                                                                          .blue,
+                                                                      decoration:
+                                                                          TextDecoration
+                                                                              .underline),
                                                                 ),
-                                                                Gap(size.width *
-                                                                    0.01),
-                                                                Row(
-                                                                  children: [
-                                                                    Gap(size.width *
-                                                                        0.055),
-                                                                    const Icon(Icons
-                                                                        .calendar_month_outlined),
-                                                                    Gap(size.width *
-                                                                        0.02),
-                                                                    SizedBox(
-                                                                      width: size
-                                                                              .width *
-                                                                          0.28,
-                                                                      child:
-                                                                          SingleChildScrollView(
-                                                                        scrollDirection:
-                                                                            Axis.horizontal,
-                                                                        child:
-                                                                            Text(
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          state.getServiceStatus == GetServiceStatus.success
-                                                                              ? state.services![index].scheduledDate!
-                                                                              : '12022004',
-                                                                          style: const TextStyle(
-                                                                              fontSize: 13,
-                                                                              fontWeight: FontWeight.w600),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
+                                                              )
+                                                            ],
+                                                          ),
+                                                          Gap(size.width *
+                                                              0.01),
+                                                          Row(
+                                                            children: [
+                                                              Gap(size.width *
+                                                                  0.055),
+                                                              const Icon(Icons
+                                                                  .calendar_month_outlined),
+                                                              Gap(size.width *
+                                                                  0.02),
+                                                              SizedBox(
+                                                                width:
+                                                                    size.width *
+                                                                        0.28,
+                                                                child:
+                                                                    SingleChildScrollView(
+                                                                  scrollDirection:
+                                                                      Axis.horizontal,
+                                                                  child: Text(
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    state.getServiceStatus ==
+                                                                            GetServiceStatus
+                                                                                .success
+                                                                        ? state
+                                                                            .services![index]
+                                                                            .scheduledDate!
+                                                                        : '12022004',
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            13,
+                                                                        fontWeight:
+                                                                            FontWeight.w600),
+                                                                  ),
                                                                 ),
-                                                                Gap(size.width *
-                                                                    0.01),
-                                                              ],
-                                                            ),
-                                                            Gap(size.width *
-                                                                0.01),
-                                                            Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                // Gap(size.height * 0.03),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Gap(size.width *
-                                                                        0.058),
-                                                                    const Icon(Icons
-                                                                        .mark_unread_chat_alt_outlined),
-                                                                    // Image.asset('assets/images/status.png', scale: size.width * 0.058),
-                                                                    Gap(size.width *
-                                                                        0.02),
-                                                                    Text(
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      state.getServiceStatus ==
-                                                                              GetServiceStatus
-                                                                                  .success
-                                                                          ? state.services![index].jobType ??
-                                                                              '123123123'
-                                                                          : '123123123',
-                                                                      style: const TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Gap(size.width *
-                                                                    0.01),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Gap(size.width *
-                                                                        0.058),
-                                                                    const Icon(Icons
-                                                                        .location_on_outlined),
-                                                                    Gap(size.width *
-                                                                        0.02),
-                                                                    Text(
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      state.getServiceStatus ==
-                                                                              GetServiceStatus
-                                                                                  .success
-                                                                          ? state.services![index].location ??
-                                                                              'Location27'
-                                                                          : 'Location27',
-                                                                      style: const TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Gap(size.width *
+                                                              0.01),
+                                                        ],
+                                                      ),
+                                                      Gap(size.width * 0.01),
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          // Gap(size.height * 0.03),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Gap(size.width *
+                                                                  0.058),
+                                                              const Icon(Icons
+                                                                  .mark_unread_chat_alt_outlined),
+                                                              // Image.asset('assets/images/status.png', scale: size.width * 0.058),
+                                                              Gap(size.width *
+                                                                  0.02),
+                                                              Text(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                state.getServiceStatus ==
+                                                                        GetServiceStatus
+                                                                            .success
+                                                                    ? state.services![index]
+                                                                            .jobType ??
+                                                                        '123123123'
+                                                                    : '123123123',
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        13,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Gap(size.width *
+                                                              0.01),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Gap(size.width *
+                                                                  0.058),
+                                                              const Icon(Icons
+                                                                  .location_on_outlined),
+                                                              Gap(size.width *
+                                                                  0.02),
+                                                              Text(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                state.getServiceStatus ==
+                                                                        GetServiceStatus
+                                                                            .success
+                                                                    ? state.services![index]
+                                                                            .location ??
+                                                                        'Location27'
+                                                                    : 'Location27',
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        13,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
                                                   ),
-                                                ),
-                                              ));
-                                        },
-                                              childCount: state.services != null
-                                                  ? state.services!.length
-                                                  : 0))
-                                ],
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    )),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ));
+                                  },
+                                        childCount: state.services != null
+                                            ? state.services!.length
+                                            : 0))
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                ],
               ),
             ),
           ),
@@ -421,28 +401,23 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
       ),
       Stack(
         children: [
-          ClippedButton(
-            shadow: Shadow(
-                offset: const Offset(0, 0),
-                color: !context.watch<MultiBloc>().state.reverseClippedWidgets!
-                    ? Colors.black
-                    : Colors.transparent),
-            clipper: VehicleInfoClipper(
-                sizeConstraints: Size(size.width * 0.95, size.height * 0.5)),
-            size: Size.copy(Size(size.width * 0.95, size.height * 0.5)),
-            child: Container(
-                decoration: BoxDecoration(
-                    color:
-                        !context.watch<MultiBloc>().state.reverseClippedWidgets!
-                            ? Colors.white
-                            : null),
-                child: Column(
-                  children: [
-                    Align(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: size.height * 0.05, right: size.width * 0.45),
-                        child: Row(
+          VehicleInfoClippedButton(
+              decorationColor:
+                  !context.watch<MultiBloc>().state.reverseClippedWidgets!
+                      ? Colors.white
+                      : null,
+              shadowColor:
+                  !context.watch<MultiBloc>().state.reverseClippedWidgets!
+                      ? Colors.black
+                      : Colors.transparent,
+              child: Column(
+                children: [
+                  Align(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: size.height * 0.05, right: size.width * 0.45),
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        return Row(
                           children: [
                             const Gap(24),
                             Image.asset(
@@ -451,73 +426,70 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               color: Colors.black,
                             ),
                             const Gap(6),
-                            const Text(
+                            Text(
                               "Vehicle Details",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: constraints.maxWidth * 0.08),
                             ),
                           ],
+                        );
+                      }),
+                      // ),
+                    ),
+                  ),
+                  if (!context.watch<MultiBloc>().state.reverseClippedWidgets!)
+                    Padding(
+                      padding: EdgeInsets.only(right: size.width * 0.45),
+                      child: SizedBox(
+                        width: size.width * 0.2,
+                        child: const Divider(
+                          color: Colors.black,
                         ),
-                        // ),
                       ),
                     ),
-                    if (!context
-                        .watch<MultiBloc>()
-                        .state
-                        .reverseClippedWidgets!)
-                      Padding(
-                        padding: EdgeInsets.only(right: size.width * 0.45),
-                        child: SizedBox(
-                          width: size.width * 0.2,
-                          child: const Divider(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: size.height * 0.08, left: size.width * 0.1),
-                      child: BlocConsumer<VehicleBloc, VehicleState>(
-                        listener: (context, state) {
-                          // TODO: implement listener
-                        },
-                        builder: (context, state) {
-                          return Skeletonizer(
-                            enabled:
-                                context.watch<VehicleBloc>().state.status ==
-                                    VehicleStatus.loading,
-                            child: DMSCustomWidgets.CustomDataFields(
-                                context: context,
-                                contentPadding: size.width * 0.08,
-                                spaceBetweenFields: size.width * 0.03,
-                                propertyFontStyle: const TextStyle(
-                                    fontWeight: FontWeight.w800, fontSize: 18),
-                                valueFontStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 18),
-                                showColonsBetween: false,
-                                propertyList: [
-                                  "Vehicle Reg. no.",
-                                  "Chassis no.",
-                                  "Customer",
-                                  "Make",
-                                  "Model",
-                                  "Color"
-                                ],
-                                valueList: [
-                                  state.vehicle!.vehicleRegNumber ?? "-",
-                                  state.vehicle!.chassisNumber ?? "-",
-                                  state.vehicle!.cusotmerName ?? "-",
-                                  state.vehicle!.make ?? "-",
-                                  state.vehicle!.model ?? "-",
-                                  state.vehicle!.color ?? "-"
-                                ]),
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                )),
-          ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: size.height * 0.08, left: size.width * 0.1),
+                    child: BlocConsumer<VehicleBloc, VehicleState>(
+                      listener: (context, state) {
+                        // TODO: implement listener
+                      },
+                      builder: (context, state) {
+                        return Skeletonizer(
+                          enabled: context.watch<VehicleBloc>().state.status ==
+                              VehicleStatus.loading,
+                          child: DMSCustomWidgets.CustomDataFields(
+                              context: context,
+                              contentPadding: size.width * 0.08,
+                              spaceBetweenFields: size.width * 0.03,
+                              propertyFontStyle: const TextStyle(
+                                  fontWeight: FontWeight.w800, fontSize: 18),
+                              valueFontStyle: const TextStyle(
+                                  fontWeight: FontWeight.w400, fontSize: 18),
+                              showColonsBetween: false,
+                              propertyList: [
+                                "Vehicle Reg. no.",
+                                "Chassis no.",
+                                "Customer",
+                                "Make",
+                                "Model",
+                                "Color"
+                              ],
+                              valueList: [
+                                state.vehicle!.vehicleRegNumber ?? "-",
+                                state.vehicle!.chassisNumber ?? "-",
+                                state.vehicle!.cusotmerName ?? "-",
+                                state.vehicle!.make ?? "-",
+                                state.vehicle!.model ?? "-",
+                                state.vehicle!.color ?? "-"
+                              ]),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              )),
           Positioned(
             top: 18,
             right: 0,
@@ -708,7 +680,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 ),
               ),
               Expanded(
-                flex: 6,
+                flex: context.watch<VehicleBloc>().state.status ==
+                        VehicleStatus.vehicleAlreadyAdded
+                    ? 24
+                    : 6,
                 child: BlocBuilder<VehicleBloc, VehicleState>(
                   builder: (context, state) {
                     print("building");
@@ -716,10 +691,9 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       case VehicleStatus.vehicleAlreadyAdded:
                         return Stack(
                             children: context
-                                        .read<MultiBloc>()
-                                        .state
-                                        .reverseClippedWidgets! ==
-                                    true
+                                    .read<MultiBloc>()
+                                    .state
+                                    .reverseClippedWidgets!
                                 ? clipperWidgets.reversed.toList()
                                 : clipperWidgets);
                       case VehicleStatus.loading:
@@ -776,7 +750,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 ),
               ),
               Expanded(
-                flex: 20,
+                flex: context.watch<VehicleBloc>().state.status ==
+                        VehicleStatus.vehicleAlreadyAdded
+                    ? 2
+                    : 20,
                 child: Gap(size.height * 0.01),
               )
             ],
@@ -784,50 +761,5 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
         ),
       ),
     );
-  }
-}
-
-class VehicleInfoClipper extends CustomClipper<Path> {
-  Size sizeConstraints;
-  VehicleInfoClipper({
-    required this.sizeConstraints,
-  });
-  @override
-  getClip(Size size) {
-    // TODO: implement getClip
-    print(size.height);
-    double x1 = 0;
-    double y1 = 30;
-    double x = sizeConstraints.width;
-    double y = sizeConstraints.height;
-
-    Path path = Path();
-    path.moveTo(x1, y1);
-    path.lineTo(x1, y - 20);
-    path.arcToPoint(Offset(x1 + 20, y),
-        radius: const Radius.circular(20), clockwise: false);
-    path.lineTo(x - 20, y);
-    path.arcToPoint(Offset(x, y - 20),
-        radius: const Radius.circular(20), clockwise: false);
-    path.lineTo(x, y1 + 80);
-    path.arcToPoint(Offset(x - 20, y1 + 60),
-        radius: const Radius.circular(20), clockwise: false);
-    path.lineTo(x - (size.width * 0.45), y1 + 60);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40),
-        radius: const Radius.circular(20), clockwise: true);
-    path.lineTo(x - (size.width * 0.45 + 20), y1 + 20);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1),
-        radius: const Radius.circular(20), clockwise: false);
-    path.lineTo(x1 + 20, y1);
-    path.arcToPoint(Offset(x1, y1 + 20),
-        radius: const Radius.circular(20), clockwise: false);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper oldClipper) {
-    // TODO: implement shouldReclip
-    return true;
   }
 }

@@ -119,7 +119,7 @@ class _QualityCheckState extends State<QualityCheck>
                       color: Colors.orange.shade200,
                       offset: const Offset(0, 0))
                 ]),
-            child: Center(
+            child: const Center(
               child: Text(
                 textAlign: TextAlign.center,
                 'Quality Check',
@@ -145,7 +145,7 @@ class _QualityCheckState extends State<QualityCheck>
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       gradient: LinearGradient(
                           colors: [
                             Colors.black45,
@@ -184,7 +184,7 @@ class _QualityCheckState extends State<QualityCheck>
                         if (!isConnected()) {
                           DMSCustomWidgets.DMSFlushbar(size, context,
                               message: 'Please check the internet connectivity',
-                              icon: Icon(Icons.error));
+                              icon: const Icon(Icons.error));
                           return;
                         }
                         String message = "";
@@ -292,7 +292,7 @@ class _QualityCheckState extends State<QualityCheck>
                               }
                             }
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.zoom_in_rounded,
                             color: Colors.white,
                           ),
@@ -322,7 +322,7 @@ class _QualityCheckState extends State<QualityCheck>
                           }
                           print(context.read<MultiBloc>().state.scaleFactor);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.zoom_out_rounded,
                           color: Colors.white,
                         ),
@@ -347,7 +347,7 @@ class _QualityCheckState extends State<QualityCheck>
                     child: DraggableScrollableSheet(
                       controller: draggableScrollableController,
                       snap: true,
-                      snapAnimationDuration: Duration(milliseconds: 500),
+                      snapAnimationDuration: const Duration(milliseconds: 500),
                       shouldCloseOnMinExtent: true,
                       minChildSize: 0.25,
                       maxChildSize: !context
@@ -414,7 +414,7 @@ class _QualityCheckState extends State<QualityCheck>
                           alignment: Alignment.center,
                           child: Container(
                             width: isMobile ? size.width : size.width * 0.5,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: Color.fromRGBO(26, 26, 27, 1),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(24),
@@ -434,17 +434,16 @@ class _QualityCheckState extends State<QualityCheck>
                                           children: [
                                             Gap(size.maxWidth * 0.455),
                                             Container(
-                                              decoration: BoxDecoration(
+                                              decoration: const BoxDecoration(
                                                 color: Colors.grey,
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(10)),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
                                               ),
                                               height: 4,
                                               width: size.maxWidth * 0.1,
                                               padding: EdgeInsets.zero,
                                             ),
-                                            Spacer(),
+                                            const Spacer(),
                                             Align(
                                                 alignment:
                                                     Alignment.centerRight,
@@ -458,7 +457,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                     // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
                                                     // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     Icons.cancel,
                                                     size: 28,
                                                   ),
@@ -467,7 +466,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                 ))
                                           ],
                                         ),
-                                        Text(
+                                        const Text(
                                           "Quality Check",
                                           style: TextStyle(
                                             color: Colors.white,
@@ -487,9 +486,9 @@ class _QualityCheckState extends State<QualityCheck>
                                               .watch<MultiBloc>()
                                               .state
                                               .selectedGeneralBodyPart)
-                                      ? SliverToBoxAdapter(
+                                      ? const SliverToBoxAdapter(
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: EdgeInsets.all(8.0),
                                             child: Text(
                                               "No data found",
                                               textAlign: TextAlign.center,
@@ -502,16 +501,17 @@ class _QualityCheckState extends State<QualityCheck>
                                           addRepaintBoundaries: true,
                                           children: [
                                               Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 18.0),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 18.0),
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Gap(16),
+                                                    const Gap(16),
                                                     Row(
                                                       children: [
-                                                        Gap(8),
+                                                        const Gap(8),
                                                         Text(
                                                           context
                                                               .watch<
@@ -536,8 +536,8 @@ class _QualityCheckState extends State<QualityCheck>
                                                     // Gap(8),
                                                     Row(
                                                       children: [
-                                                        Gap(8),
-                                                        CircleAvatar(
+                                                        const Gap(8),
+                                                        const CircleAvatar(
                                                           radius: 6,
                                                           backgroundColor:
                                                               Color.fromRGBO(
@@ -546,13 +546,14 @@ class _QualityCheckState extends State<QualityCheck>
                                                                   19,
                                                                   1),
                                                         ),
-                                                        Gap(8),
+                                                        const Gap(8),
                                                         Text(
-                                                            context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context
-                                                                        .watch<
-                                                                            MultiBloc>()
-                                                                        .state
-                                                                        .selectedGeneralBodyPart] ==
+                                                            context.watch<VehiclePartsInteractionBloc>().state.mapMedia[
+                                                                        context
+                                                                            .watch<
+                                                                                MultiBloc>()
+                                                                            .state
+                                                                            .selectedGeneralBodyPart] ==
                                                                     null
                                                                 ? "No data"
                                                                 : context
@@ -566,18 +567,18 @@ class _QualityCheckState extends State<QualityCheck>
                                                                         .selectedGeneralBodyPart]!
                                                                     .comments!,
                                                             style: TextStyle(
-                                                                color: Color
+                                                                color: const Color
                                                                     .fromARGB(
-                                                                        255,
-                                                                        223,
-                                                                        220,
-                                                                        220),
+                                                                    255,
+                                                                    223,
+                                                                    220,
+                                                                    220),
                                                                 fontSize:
                                                                     size.maxWidth *
                                                                         0.040)),
                                                       ],
                                                     ),
-                                                    Gap(8.0),
+                                                    const Gap(8.0),
                                                     SizedBox(
                                                       width:
                                                           size.maxWidth * 0.8,
@@ -618,7 +619,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                                             pageController:
                                                                                 PageController(initialPage: index),
                                                                             backgroundDecoration:
-                                                                                BoxDecoration(
+                                                                                const BoxDecoration(
                                                                               color: Colors.transparent,
                                                                             ),
                                                                             pageSnapping:
@@ -648,7 +649,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                                                 onPressed: () {
                                                                                   Navigator.of(context).pop();
                                                                                 },
-                                                                                icon: Icon(
+                                                                                icon: const Icon(
                                                                                   Icons.highlight_remove_rounded,
                                                                                   color: Colors.white,
                                                                                   size: 28,
@@ -719,19 +720,21 @@ class _QualityCheckState extends State<QualityCheck>
                                                                 size.maxWidth,
                                                                 size.maxHeight),
                                                             context: context,
-                                                            rightLabel: Text(
+                                                            rightLabel:
+                                                                const Text(
                                                               "Accept",
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .green),
                                                             ),
-                                                            leftLabel: Text(
+                                                            leftLabel:
+                                                                const Text(
                                                               "Reject",
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .red),
                                                             ),
-                                                            icon: Stack(
+                                                            icon: const Stack(
                                                               children: [
                                                                 CircleAvatar(
                                                                   backgroundColor:
@@ -764,15 +767,16 @@ class _QualityCheckState extends State<QualityCheck>
                                                             onDismissed: () {
                                                               draggableScrollableController.animateTo(
                                                                   0,
-                                                                  duration: Duration(
-                                                                      milliseconds:
-                                                                          800),
+                                                                  duration:
+                                                                      const Duration(
+                                                                          milliseconds:
+                                                                              800),
                                                                   curve: Easing
                                                                       .emphasizedDecelerate);
                                                             });
                                                       },
                                                     ),
-                                                    Gap(16),
+                                                    const Gap(16),
                                                     if (context
                                                                 .read<
                                                                     VehiclePartsInteractionBloc>()
@@ -820,17 +824,17 @@ class _QualityCheckState extends State<QualityCheck>
                                                                   //     rejectionController
                                                                   //         .text.isEmpty,
                                                                   maxLines: 5,
-                                                                  style: TextStyle(
+                                                                  style: const TextStyle(
                                                                       color: Colors
                                                                           .white),
                                                                   onTap:
                                                                       () async {
-                                                                    await Future.delayed(Duration(
+                                                                    await Future.delayed(const Duration(
                                                                         milliseconds:
                                                                             1000));
                                                                     scrollController.animateTo(
                                                                         180,
-                                                                        duration: Duration(
+                                                                        duration: const Duration(
                                                                             milliseconds:
                                                                                 500),
                                                                         curve: Curves
@@ -841,19 +845,21 @@ class _QualityCheckState extends State<QualityCheck>
                                                                           .white,
                                                                   decoration:
                                                                       InputDecoration(
-                                                                          hintStyle: TextStyle(
+                                                                          hintStyle: const TextStyle(
                                                                               fontSize:
                                                                                   14,
                                                                               color: Colors
                                                                                   .white60),
-                                                                          fillColor: Color.fromRGBO(
+                                                                          fillColor: const Color
+                                                                              .fromRGBO(
                                                                               38,
                                                                               38,
                                                                               40,
                                                                               1),
                                                                           filled:
                                                                               true,
-                                                                          contentPadding: EdgeInsets.only(
+                                                                          contentPadding: const EdgeInsets
+                                                                              .only(
                                                                               left:
                                                                                   16,
                                                                               top:
@@ -865,7 +871,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                                             borderRadius:
                                                                                 BorderRadius.circular(24.0),
                                                                             borderSide:
-                                                                                BorderSide(
+                                                                                const BorderSide(
                                                                               color: Color.fromARGB(255, 145, 95, 22),
                                                                             ),
                                                                           ),
@@ -881,7 +887,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                                         .reasonForRejection = value;
                                                                   },
                                                                 ),
-                                                                Gap(16),
+                                                                const Gap(16),
                                                                 GestureDetector(
                                                                   onTap: () {
                                                                     context
@@ -940,7 +946,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                                 .state
                                                                 .selectedGeneralBodyPart] !=
                                                         null)
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         height: 40,
                                                       )
                                                   ],
@@ -963,7 +969,9 @@ class _QualityCheckState extends State<QualityCheck>
                     case VehiclePartsInteractionStatus.success:
                       context.read<ServiceBloc>().add(
                           GetInspectionDetails(jobCardNo: widget.jobCardNo));
-                      context.read<ServiceBloc>().add(GetJobCards());
+                      context
+                          .read<ServiceBloc>()
+                          .add(GetJobCards(query: 'Location27'));
                       navigator.pushReplacement('/inspectionOut');
                     case VehiclePartsInteractionStatus.failure:
                       DMSCustomWidgets.DMSFlushbar(
@@ -979,7 +987,7 @@ class _QualityCheckState extends State<QualityCheck>
                     default:
                   }
                 },
-                child: SizedBox(),
+                child: const SizedBox(),
               )
             ],
           ),
@@ -1080,7 +1088,7 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
         // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
         //                                             Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
       });
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       widget.onDismissed();
       return;
     } else if (_position <= _leftPosition + 20) {
@@ -1117,14 +1125,14 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
-                  color: Color.fromRGBO(36, 38, 40, 1),
+                  color: const Color.fromRGBO(36, 38, 40, 1),
                   // gradient: LinearGradient(colors: [
                   //   Color.fromARGB(255, 230, 119, 119),
                   //   Color.fromARGB(255, 235, 233, 233),
                   //   Color.fromARGB(255, 230, 119, 119)
                   // ]),
                   boxShadow: [
-                    BoxShadow(
+                    const BoxShadow(
                         color: Color.fromARGB(255, 255, 159, 69),
                         blurRadius: 3,
                         spreadRadius: 0.3)
@@ -1164,10 +1172,10 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(36, 38, 40, 1),
+                  color: const Color.fromRGBO(36, 38, 40, 1),
                   borderRadius: BorderRadius.circular(40),
                   boxShadow: [
-                    BoxShadow(
+                    const BoxShadow(
                         color: Color.fromARGB(255, 255, 159, 69),
                         blurRadius: 0.1,
                         spreadRadius: 0.5)
@@ -1180,7 +1188,7 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
                       : (_position == _leftPosition)
                           ? Lottie.asset("assets/lottie/error2.json",
                               repeat: false)
-                          : Icon(
+                          : const Icon(
                               Icons.switch_left_rounded,
                               color: Colors.white,
                             )),

@@ -1,7 +1,7 @@
 import 'package:dms/inits/init.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
+import 'package:fl_chart/fl_chart.dart';
 import '../navigations/navigator_service.dart';
 
 class DashBoard extends StatefulWidget {
@@ -13,6 +13,9 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   NavigatorService navigator = getIt<NavigatorService>();
+
+  List<String> statuses = ['N', 'I', 'QC', 'IO', 'CL', 'C'];
+  List<int> values = [10, 4, 6, 3, 20, 2];
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +97,8 @@ class _DashBoardState extends State<DashBoard> {
                 child: Row(
                   children: [
                     Gap(size.width * 0.04),
-                    Expanded(
-                      child: const Text(
+                    const Expanded(
+                      child: Text(
                         'Job Cards This Week',
                         style: TextStyle(
                             fontSize: 16,
@@ -107,7 +110,7 @@ class _DashBoardState extends State<DashBoard> {
                 ),
               ),
               Expanded(
-                flex: 5,
+                flex: 3,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +125,7 @@ class _DashBoardState extends State<DashBoard> {
                           children: [
                             Positioned(
                               top: 8,
-                              right: 8,
+                              right: size.width * 0.025,
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 margin: EdgeInsets.all(size.width * 0.02),
@@ -133,19 +136,19 @@ class _DashBoardState extends State<DashBoard> {
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black12,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                           blurRadius: 10,
                                           blurStyle: BlurStyle.outer,
                                           spreadRadius: 0,
                                           color: Colors.black38,
-                                          offset: const Offset(0, 0))
+                                          offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
                             Positioned(
                               top: 4,
-                              right: 4,
+                              right: size.width * 0.018,
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 margin: EdgeInsets.all(size.width * 0.02),
@@ -156,13 +159,13 @@ class _DashBoardState extends State<DashBoard> {
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black54,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                           blurRadius: 10,
                                           blurStyle: BlurStyle.outer,
                                           spreadRadius: 0,
                                           color: Colors.black26,
-                                          offset: const Offset(0, 0))
+                                          offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -180,18 +183,18 @@ class _DashBoardState extends State<DashBoard> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Expanded(
+                                    const Expanded(
                                       flex: 2,
-                                      child: const Text(
+                                      child: Text(
                                         'Open',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
                                     Expanded(
-                                      child: Gap(size.height * 0.008),
                                       flex: 1,
+                                      child: Gap(size.height * 0.008),
                                     ),
-                                    Expanded(
+                                    const Expanded(
                                       flex: 2,
                                       child: Row(
                                         mainAxisAlignment:
@@ -216,7 +219,7 @@ class _DashBoardState extends State<DashBoard> {
                                         ],
                                       ),
                                     ),
-                                    Expanded(
+                                    const Expanded(
                                       flex: 2,
                                       child: Align(
                                           alignment: Alignment.bottomRight,
@@ -241,7 +244,7 @@ class _DashBoardState extends State<DashBoard> {
                           children: [
                             Positioned(
                               top: 8,
-                              right: 8,
+                              right: size.width * 0.025,
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 margin: EdgeInsets.all(size.width * 0.02),
@@ -252,19 +255,19 @@ class _DashBoardState extends State<DashBoard> {
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black12,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                           blurRadius: 10,
                                           blurStyle: BlurStyle.outer,
                                           spreadRadius: 0,
                                           color: Colors.black38,
-                                          offset: const Offset(0, 0))
+                                          offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
                             Positioned(
                               top: 4,
-                              right: 4,
+                              right: size.width * 0.018,
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 margin: EdgeInsets.all(size.width * 0.02),
@@ -275,13 +278,13 @@ class _DashBoardState extends State<DashBoard> {
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black54,
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                           blurRadius: 10,
                                           blurStyle: BlurStyle.outer,
                                           spreadRadius: 0,
                                           color: Colors.black26,
-                                          offset: const Offset(0, 0))
+                                          offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -299,7 +302,7 @@ class _DashBoardState extends State<DashBoard> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Expanded(
+                                    const Expanded(
                                       flex: 2,
                                       child: Text(
                                         'Completed',
@@ -307,10 +310,10 @@ class _DashBoardState extends State<DashBoard> {
                                       ),
                                     ),
                                     Expanded(
-                                      child: Gap(size.height * 0.008),
                                       flex: 1,
+                                      child: Gap(size.height * 0.008),
                                     ),
-                                    Expanded(
+                                    const Expanded(
                                       flex: 2,
                                       child: Row(
                                         mainAxisAlignment:
@@ -335,7 +338,7 @@ class _DashBoardState extends State<DashBoard> {
                                         ],
                                       ),
                                     ),
-                                    Expanded(
+                                    const Expanded(
                                       flex: 2,
                                       child: Align(
                                           alignment: Alignment.bottomRight,
@@ -355,8 +358,89 @@ class _DashBoardState extends State<DashBoard> {
                 ),
               ),
               Expanded(
+                flex: 1,
+                child: Row(
+                  children: [
+                    Gap(size.width * 0.06),
+                    const Expanded(
+                      child: Text(
+                        "Today's Job Cards Stats",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 6,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.black),
+                  width: size.width * 0.9,
+                  child: BarChart(BarChartData(
+                      alignment: BarChartAlignment.spaceAround,
+                      borderData: FlBorderData(show: false),
+                      maxY:
+                          values.reduce((v, e) => v > e ? v : e).toDouble() + 5,
+                      backgroundColor: Colors.transparent,
+                      gridData: const FlGridData(
+                        show: false,
+                      ),
+                      groupsSpace: 30,
+                      barTouchData: BarTouchData(
+                          enabled: true,
+                          touchTooltipData: BarTouchTooltipData(
+                            getTooltipColor: (group) {
+                              return Colors.transparent;
+                            },
+                            tooltipPadding: EdgeInsets.zero,
+                            tooltipMargin: 8,
+                            getTooltipItem:
+                                (group, groupIndex, rod, rodIndex) =>
+                                    BarTooltipItem(
+                                        (rod.toY.round()).toString(),
+                                        const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                          )),
+                      titlesData: FlTitlesData(
+                          topTitles: const AxisTitles(),
+                          rightTitles: const AxisTitles(),
+                          leftTitles: const AxisTitles(),
+                          bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 30,
+                            getTitlesWidget: (value, meta) => Text(
+                              statuses[int.parse(meta.formattedValue)],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ))),
+                      barGroups: values
+                          .map((e) => BarChartGroupData(
+                                x: values.indexOf(e),
+                                showingTooltipIndicators: [0],
+                                barRods: [
+                                  BarChartRodData(
+                                      toY: e.toDouble(),
+                                      borderSide:
+                                          const BorderSide(color: Colors.white),
+                                      color: Colors.orange.shade200,
+                                      borderRadius: BorderRadius.circular(2),
+                                      width: 15,
+                                      fromY: 0)
+                                ],
+                              ))
+                          .toList())),
+                ),
+              ),
+              Expanded(
+                flex: 4,
                 child: Gap(size.height * 0.6),
-                flex: 10,
               )
             ],
           ),

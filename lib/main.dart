@@ -47,7 +47,6 @@ void main() async {
         BlocProvider(
             create: (_) =>
                 VehiclePartsInteractionBloc(repo: getIt(), navigator: getIt())),
-        ChangeNotifierProvider(create: (_) => BodySelectorViewModel()),
       ],
       child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,
@@ -60,12 +59,36 @@ void main() async {
                 sharedPreferences.getBool('isLogged') == false
             ? '/login'
             : '/home',
-        routes: {
-          '/home': (context) => const HomeView(),
-          '/login': (context) => const LoginView()
-        },
         onGenerateRoute: RouteGenerator.generateRoute,
+        navigatorObservers: [MyNavigationObserver()],
       ),
     ),
   ));
+}
+
+class MyNavigationObserver extends NavigatorObserver {
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    super.didPush(route, previousRoute);
+    print('Pushed Route: ${route.settings.name}');
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    super.didPop(route, previousRoute);
+    print('Popped Route: ${route.settings.name}');
+  }
+
+  @override
+  void didRemove(Route route, Route? previousRoute) {
+    super.didRemove(route, previousRoute);
+    print('Removed Route: ${route.settings.name}');
+  }
+
+  @override
+  void didReplace({Route? newRoute, Route? oldRoute}) {
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    print(
+        "newRoute:  ${newRoute!.settings.name} oldRoute: ${oldRoute!.settings.name}");
+  }
 }

@@ -212,7 +212,6 @@ class _MyJobcardsState extends State<MyJobcards> {
                         state.getMyJobCardsStatus ==
                             GetMyJobCardsStatus.initial,
                     child: SizedBox(
-                      height: size.height * 0.15,
                       width: size.width * 0.95,
                       child: ClipShadowPath(
                         clipper: TicketClipper(),
@@ -378,6 +377,8 @@ class _MyJobcardsState extends State<MyJobcards> {
                               Container(
                                 height: size.height * 0.05,
                                 width: size.width * 0.94,
+                                margin: EdgeInsets.only(
+                                    bottom: size.height * 0.0025),
                                 decoration: BoxDecoration(
                                     color: Colors.orange.shade200,
                                     borderRadius: const BorderRadius.only(

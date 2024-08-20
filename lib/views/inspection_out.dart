@@ -123,7 +123,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
               listener: (context, state) {
             if (state.inspectionJsonUploadStatus ==
                 InspectionJsonUploadStatus.success) {
-              context.read<ServiceBloc>().add(GetJobCards());
+              context.read<ServiceBloc>().add(GetJobCards(query: 'Location27'));
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {
@@ -451,13 +451,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                 _serviceBloc.add(
                                     InspectionJsonUpdated(json: state.json!));
                                 _serviceBloc.add(InspectionJsonAdded(
-                                    jobCardNo: state.jobCardNo!,
+                                    jobCardNo: state.service!.jobCardNo!,
                                     inspectionIn: 'false'));
-                                _serviceBloc.add(GetJobCards(
-                                    query: 'Quick Fit Center Abu Dhabi'));
-                                navigator.pop();
-                                navigator.pushAndRemoveUntil(
-                                    '/gatePass', '/listOfJobCards');
+                                _serviceBloc
+                                    .add(GetJobCards(query: 'Location27'));
                               },
                               style: TextButton.styleFrom(
                                   fixedSize:
