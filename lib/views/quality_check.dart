@@ -607,8 +607,9 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                   Gap(16),
                                                                   GestureDetector(
                                                                     onTap: () {
-                                                                      context.read<MultiBloc>().state.selectedGeneralBodyPart = "";
-                                                                      context.read<MultiBloc>().state.isTapped = false;
+                                                                      context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                                                                      // context.read<MultiBloc>().state.selectedGeneralBodyPart = "";
+                                                                      // context.read<MultiBloc>().state.isTapped = false;
                                                                     },
                                                                     child: Container(
                                                                         alignment: Alignment.center,

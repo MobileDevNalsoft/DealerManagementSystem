@@ -109,11 +109,13 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                               focusNode: commentsFocus,
                               controller: commentsController,
                               maxLines: 10,
+                              cursorColor: Colors.white,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                   hintStyle: TextStyle(fontSize: 16, color: Colors.white60),
                                   fillColor: Color.fromRGBO(38, 38, 40, 1),
                                   filled: true,
+                                  
                                   contentPadding: EdgeInsets.only(left: 16, top: 16),
                                   hintText: "Comments",
                                   focusedBorder: OutlineInputBorder(
@@ -174,7 +176,7 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                         },
                         builder: (context, state) {
                           return Container(
-                              padding: isMobile ? null : EdgeInsets.symmetric(horizontal: 16.0),
+                              padding:  EdgeInsets.symmetric(horizontal: 16.0),
                               height: widget.vehiclePartMedia.images == null || widget.vehiclePartMedia.images!.length == 0
                                   ? 0
                                   : isMobile
