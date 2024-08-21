@@ -136,19 +136,31 @@ class JobCardDetails extends StatelessWidget {
                     child: ListView(
                       children: [
                         buildDetailRow(
-                            'Job Card Number', service!.jobCardNo.toString(), size,isMobile),
-                        Gap(size.height * 0.03),
-                        buildDetailRow('Vehicle Registration Number',
-                            service!.registrationNo.toString(), size,isMobile),
-                        Gap(size.height * 0.03),
-                        buildDetailRow(
-                            'Location', service!.location.toString(), size,isMobile),
+                            'Job Card Number',
+                            _serviceBloc.state.service!.jobCardNo.toString(),
+                            size,isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow(
-                            'Job Type', service!.jobType.toString(), size,isMobile),
+                            'Vehicle Registration Number',
+                            _serviceBloc.state.service!.registrationNo
+                                .toString(),
+                            size,isMobile),
                         Gap(size.height * 0.03),
-                        buildDetailRow('Scheduled Date',
-                            service!.scheduledDate.toString(), size,isMobile)
+                        buildDetailRow(
+                            'Location',
+                            _serviceBloc.state.service!.location.toString(),
+                            size,isMobile),
+                        Gap(size.height * 0.03),
+                        buildDetailRow(
+                            'Job Type',
+                            _serviceBloc.state.service!.jobType.toString(),
+                            size,isMobile),
+                        Gap(size.height * 0.03),
+                        buildDetailRow(
+                            'Scheduled Date',
+                            _serviceBloc.state.service!.scheduledDate
+                                .toString(),
+                            size,isMobile)
                       ],
                     ),
                   ),

@@ -52,6 +52,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
 
   List<Widget> initalizeWidgets() {
     size = MediaQuery.of(context).size;
+        bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     return clipperWidgets = [
       Stack(
         children: [
@@ -70,7 +71,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                        top: size.height * 0.05, right: size.width * 0.07),
+                        top: size.height * 0.05, right: size.width * (isMobile?0.07:0.04),bottom: isMobile?0:8),
                     child: LayoutBuilder(builder: (context, constraints) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,7 +103,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                   ),
                   if (context.watch<MultiBloc>().state.reverseClippedWidgets!)
                     Padding(
-                      padding: EdgeInsets.only(left: size.width * 0.45),
+                      padding: EdgeInsets.only(left: size.width *  (isMobile?0.45:0.2)),
                       child: SizedBox(
                         width: size.width * 0.2,
                         child: Divider(
@@ -112,8 +113,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     ),
                   Gap(size.height * 0.025),
                   SizedBox(
-                    width: size.width * 0.9,
-                    height: size.height * 0.3,
+                    width: size.width * (isMobile?0.9:0.48),
+                    height: size.height * (isMobile? 0.3:0.32),
                     child: BlocConsumer<ServiceBloc, ServiceState>(
                       listener: (context, state) {
                         if (state.getServiceStatus ==
@@ -128,11 +129,11 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                             (state.services == null || state.services!.isEmpty)
                                 ? SliverToBoxAdapter(
                                     child: Center(
-                                        heightFactor: size.height * 0.01,
+                                        heightFactor:  isMobile?size.height * 0.01:8,
                                         child: Text("No services found !",
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: size.width * 0.045,
+                                                fontSize: size.width *(isMobile? 0.045:0.016),
                                                 fontWeight: FontWeight.w300))))
                                 : SliverList(
                                     delegate: SliverChildBuilderDelegate(
@@ -144,7 +145,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                             state.jobCardStatusUpdate ==
                                                 JobCardStatusUpdate.loading,
                                         child: SizedBox(
-                                          width: size.width * 0.9,
+                                          width: size.width * (isMobile? 0.9:0.36),
                                           height: size.height * 0.14,
                                           child: ClipPath(
                                             clipper: TicketClipper(),
@@ -181,12 +182,12 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                           Row(
                                                             children: [
                                                               Gap(size.width *
-                                                                  0.05),
+                                                                  (isMobile?0.05:0.016)),
                                                               Image.asset(
                                                                 'assets/images/job_card.png',
                                                                 scale:
                                                                     size.width *
-                                                                        0.05,
+                                                                       (isMobile?0.05:0.02),
                                                                 color: Colors
                                                                     .black,
                                                               ),
@@ -245,7 +246,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                           Row(
                                                             children: [
                                                               Gap(size.width *
-                                                                  0.055),
+                                                                 (isMobile?0.05:0.016)),
                                                               const Icon(Icons
                                                                   .calendar_month_outlined),
                                                               Gap(size.width *
@@ -253,7 +254,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                               SizedBox(
                                                                 width:
                                                                     size.width *
-                                                                        0.28,
+                                                                       (isMobile? 0.28:0.08),
                                                                 child:
                                                                     SingleChildScrollView(
                                                                   scrollDirection:
@@ -392,8 +393,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     .add(AddClippedWidgets(reverseClippedWidgets: false));
               },
               child: Container(
-                width: size.width * 0.4,
-                height: size.height * 0.07,
+                width: size.width * (isMobile? 0.4: 0.24),
+                height: size.height * (isMobile?0.1:0.12),
               ),
             ),
           ),
@@ -415,14 +416,14 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                   Align(
                     child: Padding(
                       padding: EdgeInsets.only(
-                          top: size.height * 0.05, right: size.width * 0.45),
+                          top: size.height * 0.05, right: size.width * (isMobile?0.45:0),bottom: isMobile?0:8),
                       child: LayoutBuilder(builder: (context, constraints) {
                         return Row(
                           children: [
-                            const Gap(24),
+                             Gap(isMobile?24:size.width*0.040),
                             Image.asset(
                               'assets/images/registration_no.png',
-                              scale: size.width * 0.055,
+                              scale: size.width *(isMobile? 0.055:0.016),
                               color: Colors.black,
                             ),
                             const Gap(6),
@@ -440,7 +441,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                   ),
                   if (!context.watch<MultiBloc>().state.reverseClippedWidgets!)
                     Padding(
-                      padding: EdgeInsets.only(right: size.width * 0.45),
+                      padding: EdgeInsets.only(right: size.width * (isMobile?0.45:0.2)),
                       child: SizedBox(
                         width: size.width * 0.2,
                         child: const Divider(
@@ -450,7 +451,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     ),
                   Padding(
                     padding: EdgeInsets.only(
-                        top: size.height * 0.08, left: size.width * 0.1),
+                        top: size.height * (isMobile?0.08:0.04), left: size.width * 0.1),
                     child: BlocConsumer<VehicleBloc, VehicleState>(
                       listener: (context, state) {
                         // TODO: implement listener
@@ -461,8 +462,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               VehicleStatus.loading,
                           child: DMSCustomWidgets.CustomDataFields(
                               context: context,
-                              contentPadding: size.width * 0.08,
-                              spaceBetweenFields: size.width * 0.03,
+                              contentPadding: size.width * (isMobile?0.08:0.088),
+                              spaceBetweenFields: size.width *(isMobile? 0.03:0.016),
                               propertyFontStyle: const TextStyle(
                                   fontWeight: FontWeight.w800, fontSize: 18),
                               valueFontStyle: const TextStyle(
@@ -503,8 +504,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     .add(AddClippedWidgets(reverseClippedWidgets: true));
               },
               child: Container(
-                width: size.width * 0.4,
-                height: size.height * 0.1,
+                width: size.width * (isMobile? 0.4:0.24),
+                height: size.height * (isMobile?0.1:0.12),
               ),
             ),
           ),
@@ -515,6 +516,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
 
   @override
   Widget build(BuildContext context) {
+     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     clipperWidgets = initalizeWidgets();
     return Hero(
       tag: 'vehicleInfo',
@@ -528,7 +530,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045),
+            margin: EdgeInsets.only(left: size.width * 0.045,top:isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
@@ -554,7 +556,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
           title: Container(
               alignment: Alignment.center,
               height: size.height * 0.05,
-              width: size.width * 0.45,
+              width: isMobile ? size.width * 0.45 : size.width * 0.32,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black,
@@ -591,92 +593,90 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                flex: 3,
-                child: InkWell(
-                  onTap: () => focusNode.requestFocus(),
-                  overlayColor:
-                      const WidgetStatePropertyAll(Colors.transparent),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(left: size.width * 0.03),
-                          padding: EdgeInsets.only(top: size.height * 0.033),
-                          height: size.height * 0.06,
-                          width: size.width * 0.8,
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)),
-                              color: Colors.white60),
-                          child: TextFormField(
-                            controller: vehicleRegNoController,
-                            focusNode: focusNode,
-                            style: const TextStyle(color: Colors.black),
-                            onTapOutside: (event) => focusNode.unfocus(),
-                            onChanged: (value) {
-                              vehicleRegNoController.text =
-                                  vehicleRegNoController.text.toUpperCase();
-                              if (_debounce?.isActive ?? false)
-                                _debounce!.cancel();
-                              _debounce =
-                                  Timer(const Duration(milliseconds: 300), () {
-                                print("hello");
-                                if (!isConnected()) {
-                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message: 'Looks like you'
-                                          're offline. Please check your connection and try again.',
-                                      icon: const Icon(
-                                        Icons.error,
-                                        color: Colors.white,
-                                      ));
-                                  return;
-                                }
-                                context.read<VehicleBloc>().add(
-                                    FetchVehicleCustomer(
-                                        registrationNo:
-                                            vehicleRegNoController.text));
-                                context.read<ServiceBloc>().add(
-                                    GetServiceHistory(
-                                        query: 'vehicle_history',
-                                        vehicleRegNo:
-                                            vehicleRegNoController.text));
-                              });
-                            },
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 16),
-                              hintStyle: TextStyle(
-                                  color: Colors.black38, fontSize: 14),
-                              hintText: 'Vehicle Registration Number',
-                            ),
+               Gap(isMobile?8:16),
+              InkWell(
+                onTap: () => focusNode.requestFocus(),
+                overlayColor:
+                    const WidgetStatePropertyAll(Colors.transparent),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(left: size.width * (isMobile?0.03:0.32)),
+                        padding: EdgeInsets.only(top: size.height * 0.033),
+                        height: size.height * 0.06,
+                        width: size.width *(isMobile?0.8:0.32),
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                bottomLeft: Radius.circular(10)),
+                            color: Colors.white60),
+                        child: TextFormField(
+                          controller: vehicleRegNoController,
+                          focusNode: focusNode,
+                          style: const TextStyle(color: Colors.black),
+                          onTapOutside: (event) => focusNode.unfocus(),
+                          onChanged: (value) {
+                            vehicleRegNoController.text =
+                                vehicleRegNoController.text.toUpperCase();
+                            if (_debounce?.isActive ?? false)
+                              _debounce!.cancel();
+                            _debounce =
+                                Timer(const Duration(milliseconds: 300), () {
+                              print("hello");
+                              if (!isConnected()) {
+                                DMSCustomWidgets.DMSFlushbar(size, context,
+                                    message: 'Looks like you'
+                                        're offline. Please check your connection and try again.',
+                                    icon: const Icon(
+                                      Icons.error,
+                                      color: Colors.white,
+                                    ));
+                                return;
+                              }
+                              context.read<VehicleBloc>().add(
+                                  FetchVehicleCustomer(
+                                      registrationNo:
+                                          vehicleRegNoController.text));
+                              context.read<ServiceBloc>().add(
+                                  GetServiceHistory(
+                                      query: 'vehicle_history',
+                                      vehicleRegNo:
+                                          vehicleRegNoController.text));
+                            });
+                          },
+                          cursorColor: Colors.black,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 16),
+                            hintStyle: TextStyle(
+                                color: Colors.black38, fontSize: 14),
+                            hintText: 'Vehicle Registration Number',
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          margin: EdgeInsets.only(right: size.width * 0.03),
-                          height: size.height * 0.06,
-                          decoration: const BoxDecoration(
-                              color: Colors.black38,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10))),
-                          child: const Icon(
-                            Icons.search_rounded,
-                            color: Colors.white60,
-                          ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        margin: EdgeInsets.only(right: size.width *(isMobile?0.03:0.32)),
+                        height: size.height * 0.06,
+                        decoration: const BoxDecoration(
+                            color: Colors.black38,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                bottomRight: Radius.circular(10))),
+                        child: const Icon(
+                          Icons.search_rounded,
+                          color: Colors.white60,
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Expanded(
@@ -699,10 +699,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       case VehicleStatus.loading:
                         return Transform(
                           transform: Matrix4.translationValues(
-                              0, size.height * 0.15, 0),
+                              0,  isMobile?size.height * 0.15: size.height * 0.1, 0),
                           child: Lottie.asset(
                             "assets/lottie/steering.json",
-                            width: size.width * 0.6,
+                            width: size.width * (isMobile? 0.6: 0.16),
                           ),
                         );
                       default:
@@ -712,7 +712,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 0, size.height * 0.15, 0),
                             child: Lottie.asset(
                               "assets/lottie/car_search.json",
-                              width: size.width * 0.6,
+                              width: size.width *(isMobile? 0.6: 0.16),
                             ),
                           );
                         }
@@ -730,7 +730,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 flex: 8,
                                 child: Icon(
                                   Icons.car_crash_rounded,
-                                  size: size.width * 0.11,
+                                  size: size.width *(isMobile?0.11:0.032),
                                 ),
                               ),
                               const Expanded(

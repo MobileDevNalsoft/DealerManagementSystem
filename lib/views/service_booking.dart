@@ -5,8 +5,6 @@ import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/add_vehicle.dart';
-import 'package:dms/views/inspection_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -122,10 +120,15 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
-  context.read<MultiBloc>().add(GetSalesPersons(searchText: "ab"));
+//Fetching sales persons with names statring from 'ab'
+    _multiBloc.add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
-    if (_serviceBloc.state.serviceLocationsStatus != GetServiceLocationsStatus.success) {
+    Future.delayed(Duration(milliseconds: 600), () {
+      vehRegNumFocus.requestFocus();
+    });
+ // Fetching locations if not already fetched.
+    if (_serviceBloc.state.locations == null) {
       _serviceBloc.add(GetServiceLocations());
     }
 
@@ -197,6 +200,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     remarksController.clear();
   }
 
+// removing focus for all the fields when needed.
   void unFocusFields() {
     bookingFocus.unfocus();
     altContFocus.unfocus();
@@ -205,7 +209,37 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     bayFocus.unfocus();
     jobTypeFocus.unfocus();
     custConcernsFocus.unfocus();
-    remarksFocus.unfocus();
+    remarksFocus.unfocus();}
+  
+  void disposeFields() {
+    vehRegNumController.dispose();
+    customerController.dispose();
+    locTypeAheadController.dispose();
+    kmsController.dispose();
+    bookingTypeAheadController.dispose();
+    altContController.dispose();
+    altContPhoneNoController.dispose();
+    spTypeAheadController.dispose();
+    bayTypeAheadController.dispose();
+    jobTypeTypeAheadController.dispose();
+    custConcernsController.dispose();
+    remarksController.dispose();
+    vehRegNumFocus.dispose();
+    bookingFocus.dispose();
+    altContFocus.dispose();
+    altContPhoneNoFocus.dispose();
+    spFocus.dispose();
+    bayFocus.dispose();
+    jobTypeFocus.dispose();
+    custConcernsFocus.dispose();
+    remarksFocus.dispose();
+  }
+
+  @override
+  void dispose() {
+    _vehicleBloc.state.registrationNo = null;
+    disposeFields();
+    super.dispose();
   }
 
   @override
@@ -240,7 +274,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
             return PopScope(
               canPop: index == 1 ? false : true,
               onPopInvoked: (didPop) async {
-                print('tried');
+                //Navigating to page 1 when user is in page 2
                 if (index == 1) {
                   pageController.animateToPage(0,
                       duration: const Duration(milliseconds: 500),
@@ -290,14 +324,25 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                   title: Container(
                       alignment: Alignment.center,
                       height: size.height * 0.05,
-                      width: isMobile? size.width * 0.45:size.width*0.32,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                      ]),
+                      width: isMobile ? size.width * 0.45 : size.width * 0.32,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black,
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                blurStyle: BlurStyle.outer,
+                                spreadRadius: 0,
+                                color: Colors.orange.shade200,
+                                offset: const Offset(0, 0))
+                          ]),
                       child: Text(
                         textAlign: TextAlign.center,
                         'Service Booking',
-                        style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 16),
                       )),
                   centerTitle: true,
                 ),
@@ -317,7 +362,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1]),
                         ),
-                        child: index == 0
+                        child: 
+                        //Service booking first page
+                        index == 0
                             ? BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
                                 switch (state.serviceLocationsStatus) {
                                   case GetServiceLocationsStatus.loading:
@@ -367,26 +414,46 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                     scrollController:
                                                         page1ScrollController,
                                                     isMobile: isMobile),
-                                                Gap(size.height * (isMobile ? 0.01 : 0.03)),
-                                                BlocConsumer<VehicleBloc, VehicleState>(
+                                                Gap(size.height *
+                                                    (isMobile ? 0.01 : 0.03)),
+                                                BlocConsumer<VehicleBloc,
+                                                    VehicleState>(
                                                   listener: (context, state) {
-                                                    if (state.status == VehicleStatus.vehicleAlreadyAdded) {
-                                                      customerController.text = state.vehicle!.cusotmerName!;
-                                                    } else if (state.status == VehicleStatus.newVehicle) {
-                                                      FocusManager.instance.primaryFocus?.unfocus();
-
-                                                      showRegistrationDialog(size: size, state: state);
-                                                    } else if (state.status == VehicleStatus.failure) {
-                                                      Flushbar(
-                                                        backgroundColor: Colors.red,
-                                                        blockBackgroundInteraction: true,
-                                                        message: "Server Failure Please check the internet connectivity",
-                                                        flushbarPosition: FlushbarPosition.TOP,
-                                                        duration: const Duration(seconds: 2),
-                                                        borderRadius: BorderRadius.circular(12),
-                                                        margin: EdgeInsets.only(
-                                                            top: size.height * 0.01, left: isMobile ? 10 : size.width * 0.8, right: size.width * 0.03),
-                                                      ).show(context);
+                                                    switch (state.status) {
+                                                      case VehicleStatus
+                                                            .vehicleAlreadyAdded:
+                                                        customerController
+                                                                .text =
+                                                            state.vehicle!
+                                                                .cusotmerName!;
+                                                      case VehicleStatus
+                                                            .newVehicle:
+                                                        FocusManager.instance
+                                                            .primaryFocus
+                                                            ?.unfocus();
+                                                        if (navigator
+                                                            .navigatorkey
+                                                            .currentState!
+                                                            .mounted) {
+                                                          showRegistrationDialog(
+                                                              size: size,
+                                                              state: state);
+                                                        }
+                                                      case VehicleStatus
+                                                            .failure:
+                                                        DMSCustomWidgets
+                                                            .DMSFlushbar(
+                                                                size, context,
+                                                                message:
+                                                                    'Something went wrong. Please try again later',
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ));
+                                                      default:
+                                                        null;
                                                     }
                                                   },
                                                   builder: (context, state) {
@@ -589,17 +656,34 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                if (!isConnected()) {
-                                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                                      message: 'Please check the internet connectivity', icon: Icon(Icons.error));
-                                                  return;
-                                                }
-                                                FocusManager.instance.primaryFocus?.unfocus();
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
 
-                                                String? message = _locationValidator(locTypeAheadController.text) ??
-                                                    (vehRegNumController.text.isEmpty ? "vehicle registration number cannot be empty" : null) ??
-                                                    (context.read<MultiBloc>().state.date == null ? "schedule date cannot be empty" : null) ??
-                                                    (kmsController.text.isEmpty ? "lms cannot be empty" : null);
+                                                String? message =
+                                                    (!isConnected()
+                                                            ? 'Looks like you'
+                                                                're offline. Please check your connection and try again.'
+                                                            : null) ??
+                                                        _locationValidator(
+                                                            locTypeAheadController
+                                                                .text) ??
+                                                        (vehRegNumController
+                                                                .text.isEmpty
+                                                            ? "vehicle registration number cannot be empty"
+                                                            : null) ??
+                                                        (context
+                                                                    .read<
+                                                                        MultiBloc>()
+                                                                    .state
+                                                                    .date ==
+                                                                null
+                                                            ? "schedule date cannot be empty"
+                                                            : null) ??
+                                                        (kmsController
+                                                                .text.isEmpty
+                                                            ? "kms cannot be empty"
+                                                            : null);
 
                                                 if (message != null) {
                                                   DMSCustomWidgets.DMSFlushbar(
@@ -630,10 +714,10 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                         color: Colors.orange.shade200,
                                                         offset: const Offset(0, 0))
                                                   ]),
-                                                  child: Text(
+                                                  child: const Text(
                                                     textAlign: TextAlign.center,
                                                     'next',
-                                                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                                                    style: TextStyle(color: Colors.white, fontSize: 16),
                                                   )),
                                             ),
                                             if (MediaQuery.of(context)
@@ -729,33 +813,73 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                 height: size.height *
                                                     (isMobile ? 0.005 : 0.015),
                                               ),
-                                              BlocBuilder<MultiBloc, MultiBlocState>(
+                                              // Sales person searchable dropdown with inital values starting from letting 'ab' 
+                                              BlocBuilder<MultiBloc,
+                                                  MultiBlocState>(
                                                 builder: (context, state) {
-                                                  return DMSCustomWidgets.SearchableDropDown(
-                                                      onChanged: (p0) {
-                                                        if (!isConnected()) {
-                                                          DMSCustomWidgets.DMSFlushbar(size, context,
-                                                              message: 'Please check the internet connectivity', icon: Icon(Icons.error));
-                                                          return;
-                                                        }
-                                                        spTypeAheadController.text = p0;
-                                                        if (p0.length >= 3) {
-                                                          context.read<MultiBloc>().add(GetSalesPersons(searchText: p0));
-                                                        } else {
-                                                          context.read<MultiBloc>().state.salesPersons = null;
-                                                        }
-                                                      },
-                                                      size: size,
-                                                      items:
-                                                          state.salesPersons == null ? [] : state.salesPersons!.map((e) => "${e.empName}-${e.empId}").toList(),
-                                                      hint: 'Sales Person',
-                                                      icon: salesPersonDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
-                                                      isMobile: isMobile,
-                                                      isLoading: state.status == MultiStateStatus.loading ? true : false,
-                                                      focus: spFocus,
-                                                      typeAheadController: spTypeAheadController,
-                                                      suggestionsController: suggestionsController,
-                                                      scrollController: page2ScrollController);
+                                                  return DMSCustomWidgets
+                                                      .SearchableDropDown(
+                                                          onChanged: (p0) {
+                                                            if (!isConnected()) {
+                                                              DMSCustomWidgets.DMSFlushbar(
+                                                                  size, context,
+                                                                  message:
+                                                                      'Looks like you''re offline. Please check your connection and try again.',
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons.error,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ));
+                                                              return;
+                                                            }
+                                                            spTypeAheadController
+                                                                .text = p0;
+                                                            if (p0.length >=
+                                                                3) {
+                                                              context
+                                                                  .read<
+                                                                      MultiBloc>()
+                                                                  .add(GetSalesPersons(
+                                                                      searchText:
+                                                                          p0));
+                                                            } else {
+                                                              context
+                                                                  .read<
+                                                                      MultiBloc>()
+                                                                  .state
+                                                                  .salesPersons = null;
+                                                            }
+                                                          },
+                                                          size: size,
+                                                          items: state.salesPersons ==
+                                                                  null
+                                                              ? []
+                                                              : state
+                                                                  .salesPersons!
+                                                                  .map((e) =>
+                                                                      "${e.empName}-${e.empId}")
+                                                                  .toList(),
+                                                          hint: 'Sales Person',
+                                                          icon: salesPersonDropDownUp
+                                                              ? const Icon(Icons
+                                                                  .arrow_drop_up)
+                                                              : const Icon(Icons
+                                                                  .arrow_drop_down),
+                                                          isMobile: isMobile,
+                                                          isLoading: state
+                                                                      .status ==
+                                                                  MultiStateStatus
+                                                                      .loading
+                                                              ? true
+                                                              : false,
+                                                          focus: spFocus,
+                                                          typeAheadController:
+                                                              spTypeAheadController,
+                                                          suggestionsController:
+                                                              suggestionsController,
+                                                          scrollController:
+                                                              page2ScrollController);
                                                 },
                                               ),
                                               SizedBox(
@@ -833,32 +957,45 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                               ),
                                             ],
                                           ),
-                                          BlocConsumer<ServiceBloc, ServiceState>(
+                                          BlocConsumer<ServiceBloc,
+                                              ServiceState>(
                                             listener: (context, state) {
-                                              switch (state.serviceUploadStatus) {
-                                                case ServiceUploadStatus.success:
-                                                  Flushbar(
-                                                          flushbarPosition: FlushbarPosition.TOP,
-                                                          backgroundColor: Colors.green,
-                                                          message: 'Service Added Successfully',
-                                                          duration: const Duration(seconds: 2),
-                                                          borderRadius: BorderRadius.circular(12),
-                                                          margin: EdgeInsets.only(top: 24, left: isMobile ? 10 : size.width * 0.8, right: 10))
-                                                      .show(context);
-                                                  context.read<MultiBloc>().state.date = null;
-                                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const InspectionView()));
+                                              switch (
+                                                  state.serviceUploadStatus) {
+                                                    //Navigating to Inspection in after successful upload of service booking
+                                                case ServiceUploadStatus
+                                                      .success:
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          'Service Added Successfully');
+                                                  context
+                                                      .read<MultiBloc>()
+                                                      .state
+                                                      .date = null;
+                                                  _vehicleBloc.state
+                                                      .registrationNo = null;
+                                                  navigator.pushAndRemoveUntil(
+                                                      '/inspectionIn', '/home');
+                                                  FocusManager
+                                                      .instance.primaryFocus
+                                                      ?.unfocus();
                                                   clearFields();
-                                                case ServiceUploadStatus.failure:
                                                   sliderButtonController.position = SliderButtonPosition.left;
-                                                  Flushbar(
-                                                          flushbarPosition: FlushbarPosition.TOP,
-                                                          backgroundColor: Colors.red,
-                                                          message: 'Some error occured',
-                                                          duration: const Duration(seconds: 2),
-                                                          borderRadius: BorderRadius.circular(12),
-                                                          margin: EdgeInsets.only(top: 24, left: isMobile ? 10 : size.width * 0.8, right: 10))
-                                                      .show(context);
-                                                  print("status chagned");
+                                                  //Handling failure case from the backend (eg. Found multiple records with same location.)  
+                                                case ServiceUploadStatus
+                                                      .failure:
+                                                  sliderButtonController
+                                                          .position =
+                                                      SliderButtonPosition.left;
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          'Something went wrong. Please try again later',
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.white,
+                                                      ));
                                                 default:
                                                   null;
                                               }
@@ -868,77 +1005,147 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   MultiBlocState>(
                                                 builder: (context, state) {
                                                   return SizedBox(
-                                                    width:isMobile?size.width*0.56: size.width*0.2,
-                                                    child: LayoutBuilder(builder: (context, contraints) {
-                                                      
-                                                      return  CustomSliderButton(
-                                                      isMobile: isMobile,
-                                                      sliderController: sliderButtonController,
-                                                      context: context,
-                                                      size:contraints,
-                                                      label: const Text(
-                                                        "Proceed to receive",
-                                                        style: TextStyle(color: Color(0xff4a4a4a), fontWeight: FontWeight.w500, fontSize: 17),
-                                                      ),
-                                                      icon: const Icon(
-                                                        Icons.arrow_forward_ios_rounded,
-                                                        color: Colors.white,
-                                                      ),
-                                                      onDismissed: () async {
-                                                        if (!isConnected()) {
-                                                          DMSCustomWidgets.DMSFlushbar(size, context,
-                                                              message: 'Please check the internet connectivity', icon: Icon(Icons.error));
-                                                          return;
-                                                        }
-                                                        FocusManager.instance.primaryFocus?.unfocus();
-                                                    
-                                                       
-                                                    
-                                                        String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
-                                                            _altPersonContactNoValidation(altContPhoneNoController.text) ??
-                                                            _salesPersonValidator(
-                                                                spTypeAheadController.text, (state.salesPersons ?? []).map((e) => e.empName).toList()) ??
-                                                            _bayValidator(bayTypeAheadController.text, bayList) ??
-                                                            _jobTypeValidator(jobTypeTypeAheadController.text, jobTypeList);
-                                                    
-                                                        if (message != null) {
-                                                          Flushbar(
-                                                            flushbarPosition: FlushbarPosition.TOP,
-                                                            backgroundColor: Colors.red,
-                                                            message: message,
-                                                            duration: const Duration(seconds: 2),
-                                                            borderRadius: BorderRadius.circular(12),
-                                                            margin: EdgeInsets.only(
-                                                                top: size.height * 0.01, left: isMobile ? 10 : size.width * 0.8, right: size.width * 0.03),
-                                                          ).show(context);
-                                                        } else {
-                                                          Service service = Service(
-                                                              registrationNo: vehRegNumController.text,
-                                                              location: locTypeAheadController.text,
-                                                              customerName: customerController.text,
-                                                              scheduledDate: state.date.toString().substring(0, 10),
-                                                              kms: int.parse(kmsController.text),
-                                                              bookingSource: bookingTypeAheadController.text,
-                                                              alternateContactPerson: altContController.text,
-                                                              alternatePersonContactNo:
-                                                                  altContPhoneNoController.text.isNotEmpty ? int.parse(altContPhoneNoController.text) : null,
-                                                              salesPerson: spTypeAheadController.text.split('-')[0],
-                                                              bay: bayTypeAheadController.text,
-                                                              jobType: jobTypeTypeAheadController.text,
-                                                              jobCardNo:
-                                                                  'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
-                                                              customerConcerns: custConcernsController.text,
-                                                              remarks: remarksController.text);
-                                                          _serviceBloc.state.jobCardNo = service.jobCardNo!;
-                                                    
-                                                          Log.d(service.toJson());
-                                                          context.read<ServiceBloc>().add(ServiceAdded(service: service));
-                                                          _vehicleBloc.state.status = VehicleStatus.initial;
-                                                        }
+                                                    width: isMobile
+                                                        ? size.width * 0.56
+                                                        : size.width * 0.2,
+                                                    child: LayoutBuilder(
+                                                      builder: (context,
+                                                          contraints) {
+                                                        return CustomSliderButton(
+                                                          isMobile: isMobile,
+                                                          sliderController:
+                                                              sliderButtonController,
+                                                          context: context,
+                                                          size: contraints,
+                                                          label: const Text(
+                                                            "Proceed to receive",
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    0xff4a4a4a),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 17),
+                                                          ),
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .arrow_forward_ios_rounded,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onDismissed:
+                                                              () async {
+                                                            if (!isConnected()) {
+                                                              DMSCustomWidgets.DMSFlushbar(
+                                                                  size, context,
+                                                                  message:
+                                                                      'Looks like you'
+                                                                      're offline. Please check your connection and try again.',
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons.error,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ));
+                                                              return;
+                                                            }
+                                                            FocusManager
+                                                                .instance
+                                                                .primaryFocus
+                                                                ?.unfocus();
+                                                            // Validating the textfields and displaying appropriate error snackbars.
+                                                            String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
+                                                                _altPersonContactNoValidation(
+                                                                    altContPhoneNoController
+                                                                        .text) ??
+                                                                _salesPersonValidator(
+                                                                    spTypeAheadController
+                                                                        .text,
+                                                                    (state.salesPersons ??
+                                                                            [])
+                                                                        .map((e) => e
+                                                                            .empName)
+                                                                        .toList()) ??
+                                                                _bayValidator(
+                                                                    bayTypeAheadController
+                                                                        .text,
+                                                                    bayList) ??
+                                                                _jobTypeValidator(
+                                                                    jobTypeTypeAheadController
+                                                                        .text,
+                                                                    jobTypeList);
+
+                                                            if (message !=
+                                                                null) {
+                                                              DMSCustomWidgets
+                                                                  .DMSFlushbar(
+                                                                      size,
+                                                                      context,
+                                                                      message:
+                                                                          message,
+                                                                      icon:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .error,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ));
+                                                            } else {
+                                                              Service service = Service(
+                                                                  registrationNo:
+                                                                      vehRegNumController
+                                                                          .text,
+                                                                  location:
+                                                                      locTypeAheadController
+                                                                          .text,
+                                                                  customerName:
+                                                                      customerController
+                                                                          .text,
+                                                                  scheduledDate: state.date
+                                                                      .toString()
+                                                                      .substring(
+                                                                          0, 10),
+                                                                  kms: int.parse(
+                                                                      kmsController
+                                                                          .text),
+                                                                  bookingSource:
+                                                                      bookingTypeAheadController
+                                                                          .text,
+                                                                  alternateContactPerson:
+                                                                      altContController
+                                                                          .text,
+                                                                  alternatePersonContactNo: altContPhoneNoController
+                                                                          .text
+                                                                          .isNotEmpty
+                                                                      ? int.parse(altContPhoneNoController.text)
+                                                                      : null,
+                                                                  salesPerson: spTypeAheadController.text.split('-')[0],
+                                                                  bay: bayTypeAheadController.text,
+                                                                  jobType: jobTypeTypeAheadController.text,
+                                                                  jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
+                                                                  customerConcerns: custConcernsController.text,
+                                                                  remarks: remarksController.text);
+                                                              _serviceBloc.state
+                                                                      .jobCardNo =
+                                                                  service
+                                                                      .jobCardNo!;
+
+                                                              Log.d(service
+                                                                  .toJson());
+                                                              context
+                                                                  .read<
+                                                                      ServiceBloc>()
+                                                                  .add(ServiceAdded(
+                                                                      service:
+                                                                          service));
+                                                              _vehicleBloc.state
+                                                                      .status =
+                                                                  VehicleStatus
+                                                                      .initial;
+                                                            }
+                                                          },
+                                                        );
                                                       },
-                                                    );
-                                                                                                    
-                                                    },),
+                                                    ),
                                                   );
                                                 },
                                               );
@@ -1158,11 +1365,14 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void initState() {
     super.initState();
     _initController();
+   
+    
     _position = widget.size.maxWidth*0.01;
     _startPosition =widget.size.maxWidth*0.01;
     _endPosition =widget.isMobile? widget.size.maxWidth*0.8:widget.size.maxWidth*0.825;
-    print("stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus} ${_sliderController._position}");
     _sliderController.currentPosition = widget.size.maxWidth*0.01;
+
+    //Updating the initial position of the slider
     if (_sliderController.position == SliderButtonPosition.right) {
       _sliderController.currentPosition = _endPosition;
     } else if (_sliderController.position == SliderButtonPosition.left) {
@@ -1202,11 +1412,11 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     }
     await widget.onDismissed();
     setState(() {
-      print("status from state ${context.read<ServiceBloc>().state.serviceUploadStatus}");
+      // Updating the posiition based on the Service upload status 
       if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
         _sliderController.currentPosition = _startPosition;
         _sliderController.position = SliderButtonPosition.left;
-        // _position = _startPosition;
+        
       } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
         _sliderController.currentPosition = _endPosition;
         _sliderController.position = SliderButtonPosition.right;

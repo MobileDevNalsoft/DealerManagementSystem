@@ -259,9 +259,7 @@ class _MyJobcardsState extends State<MyJobcards> {
                                                     MaterialPageRoute(
                                                         builder: (_) =>
                                                             JobCardDetails(
-                                                                service: state
-                                                                        .myJobCards![
-                                                                    index])));
+                                                               )));
                                               },
                                               child: Text(
                                                 textAlign: TextAlign.center,

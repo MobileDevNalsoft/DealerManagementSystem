@@ -1,5 +1,5 @@
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/vehicle_examination.dart';
+import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
@@ -14,10 +14,10 @@ import 'package:dms/views/my_jobcards.dart';
 import 'package:dms/views/quality_check.dart';
 import 'package:dms/views/service_booking.dart';
 import 'package:dms/views/service_history.dart';
+import 'package:dms/views/vehicle_examination.dart';
 import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 
-import '../vehiclemodule/wrapper_ex.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
