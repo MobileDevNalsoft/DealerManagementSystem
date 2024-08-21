@@ -17,7 +17,7 @@ class JobCardDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+ bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     List<String> dmsFlow = [
       'New',
       'Work in progress',
@@ -59,7 +59,7 @@ class JobCardDetails extends StatelessWidget {
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045),
+                  margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
@@ -84,7 +84,7 @@ class JobCardDetails extends StatelessWidget {
           title: Container(
               alignment: Alignment.center,
               height: size.height * 0.05,
-              width: size.width * 0.45,
+              width: isMobile ? size.width * 0.45 : size.width * 0.32,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black,
@@ -122,9 +122,9 @@ class JobCardDetails extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: size.height * 0.04),
                     height: size.height * 0.32,
-                    width: size.width * 0.9,
+                    width: size.width *(isMobile? 0.9:0.48),
                     padding: EdgeInsets.symmetric(
-                        horizontal: size.width * 0.05,
+                        horizontal: size.width * (isMobile? 0.05:0.032),
                         vertical: size.height * 0.03),
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -132,19 +132,19 @@ class JobCardDetails extends StatelessWidget {
                     child: ListView(
                       children: [
                         buildDetailRow(
-                            'Job Card Number', service!.jobCardNo.toString(), size),
+                            'Job Card Number', service!.jobCardNo.toString(), size,isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow('Vehicle Registration Number',
-                            service!.registrationNo.toString(), size),
+                            service!.registrationNo.toString(), size,isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow(
-                            'Location', service!.location.toString(), size),
+                            'Location', service!.location.toString(), size,isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow(
-                            'Job Type', service!.jobType.toString(), size),
+                            'Job Type', service!.jobType.toString(), size,isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow('Scheduled Date',
-                            service!.scheduledDate.toString(), size)
+                            service!.scheduledDate.toString(), size,isMobile)
                       ],
                     ),
                   ),
@@ -152,7 +152,7 @@ class JobCardDetails extends StatelessWidget {
                     child: Container(
                         margin: EdgeInsets.only(top: size.height * 0.032),
                         padding: EdgeInsets.only(top: size.height * 0.01),
-                        width: size.width * 0.93,
+                        width: size.width * (isMobile?0.93:0.48),
                         decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -169,9 +169,9 @@ class JobCardDetails extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
+                             Text(
                               'Status',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(fontWeight: FontWeight.bold,fontSize:isMobile? 14:16),
                             ),
                             Gap(size.height * 0.01),
                             Expanded(
@@ -205,14 +205,14 @@ class JobCardDetails extends StatelessWidget {
         ));
   }
 
-  Widget buildDetailRow(String key, String value, Size size) {
+  Widget buildDetailRow(String key, String value, Size size, bool isMobile) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: size.width * 0.4,
+            width: size.width * (isMobile?0.4:0.16),
             child: Text(
               key,
               softWrap: true,
@@ -220,7 +220,7 @@ class JobCardDetails extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: size.width * 0.4,
+            width: size.width * (isMobile?0.4:0.16),
             child: Text(
               textAlign: TextAlign.right,
               value,

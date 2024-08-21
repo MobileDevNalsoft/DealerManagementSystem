@@ -6,7 +6,6 @@ import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/inspection_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,9 +14,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// ignore: depend_on_referenced_packages
 import 'package:shimmer/shimmer.dart';
-import 'package:slider_button/slider_button.dart';
 import '../inits/init.dart';
 import '../logger/logger.dart';
 
@@ -116,9 +113,12 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
+
+    //Fetching sales persons with names statring from 'ab'
   context.read<MultiBloc>().add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
+  // Fetching locations if not already fetched.
     if (_serviceBloc.state.serviceLocationsStatus != GetServiceLocationsStatus.success) {
       _serviceBloc.add(GetServiceLocations());
     }
@@ -164,6 +164,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     }
   }
 
+  //To clear all the text fields once the service data is uploaded.
   void clearFields() {
     vehRegNumController.clear();
     customerController.clear();
@@ -180,6 +181,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
     remarksController.clear();
   }
 
+// removing focus for all the fields when needed.
   void unFocusFields() {
     bookingFocus.unfocus();
     altContFocus.unfocus();
@@ -224,7 +226,7 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
             child: PopScope(
               canPop: false,
               onPopInvoked: (didPop) async {
-                print('tried');
+                //Navigating to page 1 when user is in page 2
                 if (index == 1) {
                   pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
                 } else {
@@ -246,7 +248,6 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                     ]),
                     child: Transform(
                       transform: Matrix4.translationValues(-3, 0, 0),
-                      
                       child: IconButton(
                           onPressed: () {
                             if (index == 0) {
@@ -265,10 +266,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
                         BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
                       ]),
-                      child: Text(
+                      child: const Text(
                         textAlign: TextAlign.center,
                         'Service Booking',
-                        style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
                       )),
                   centerTitle: true,
                 ),
@@ -284,7 +285,9 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1]),
                         ),
-                        child: index == 0
+                        child: 
+                        //Service booking first page
+                        index == 0
                             ? BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
                                 switch (state.serviceLocationsStatus) {
                                   case GetServiceLocationsStatus.loading:
@@ -294,6 +297,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                         child: Lottie.asset('assets/lottie/car_loading.json',  height: isMobile? size.height * 0.5:size.height*0.32, width:isMobile?  size.width * 0.6:size.width*0.32),
                                       ),
                                     );
+
+                                  //After fetching the locations   
                                   case GetServiceLocationsStatus.success:
                                     return ListView(
                                       controller: page1ScrollController,
@@ -316,13 +321,16 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                     scrollController: page1ScrollController,
                                                     isMobile: isMobile),
                                                 Gap(size.height * (isMobile ? 0.01 : 0.03)),
+
+                                               
                                                 BlocConsumer<VehicleBloc, VehicleState>(
                                                   listener: (context, state) {
+
+                                                     // Vehicle number verification 
                                                     if (state.status == VehicleStatus.vehicleAlreadyAdded) {
                                                       customerController.text = state.vehicle!.cusotmerName!;
                                                     } else if (state.status == VehicleStatus.newVehicle) {
                                                       FocusManager.instance.primaryFocus?.unfocus();
-
                                                       showRegistrationDialog(size: size, state: state);
                                                     } else if (state.status == VehicleStatus.failure) {
                                                       Flushbar(
@@ -393,6 +401,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                     scrollController: page1ScrollController),
                                               ],
                                             ),
+
+                                            // view more dialog box
                                             Row(
                                               children: [
                                                 Gap(isMobile ? (size.width * 0.7) : (size.width * 0.595)),
@@ -450,7 +460,8 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                   return;
                                                 }
                                                 FocusManager.instance.primaryFocus?.unfocus();
-
+                                                
+                                                // Validations for text fields.
                                                 String? message = _locationValidator(locTypeAheadController.text) ??
                                                     (vehRegNumController.text.isEmpty ? "vehicle registration number cannot be empty" : null) ??
                                                     (context.read<MultiBloc>().state.date == null ? "schedule date cannot be empty" : null) ??
@@ -484,10 +495,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                         color: Colors.orange.shade200,
                                                         offset: const Offset(0, 0))
                                                   ]),
-                                                  child: Text(
+                                                  child: const Text(
                                                     textAlign: TextAlign.center,
                                                     'next',
-                                                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                                                    style: TextStyle(color: Colors.white, fontSize: 16),
                                                   )),
                                             ),
                                             if (MediaQuery.of(context).viewInsets.bottom != 0) Gap(size.height * (isMobile ? 0.4 : 0.5)),
@@ -501,7 +512,9 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                     );
                                 }
                               })
-                            : ListView(
+                            : 
+                             //Service booking second  page
+                            ListView(
                                 controller: page2ScrollController,
                                 children: [
                                   Column(
@@ -551,13 +564,15 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                               SizedBox(
                                                 height: size.height * (isMobile ? 0.005 : 0.015),
                                               ),
+
+                                              // Sales person searchable dropdown with inital values starting from letting 'ab' 
                                               BlocBuilder<MultiBloc, MultiBlocState>(
                                                 builder: (context, state) {
                                                   return DMSCustomWidgets.SearchableDropDown(
                                                       onChanged: (p0) {
                                                         if (!isConnected()) {
                                                           DMSCustomWidgets.DMSFlushbar(size, context,
-                                                              message: 'Please check the internet connectivity', icon: Icon(Icons.error));
+                                                              message: 'Please check the internet connectivity', icon: const Icon(Icons.error));
                                                           return;
                                                         }
                                                         spTypeAheadController.text = p0;
@@ -632,8 +647,10 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                             ],
                                           ),
                                           BlocConsumer<ServiceBloc, ServiceState>(
-                                            listener: (context, state) {
+                                            listener: (context, state) async {
                                               switch (state.serviceUploadStatus) {
+
+                                                //Navigating to Inspection in after successful upload of service booking
                                                 case ServiceUploadStatus.success:
                                                   Flushbar(
                                                           flushbarPosition: FlushbarPosition.TOP,
@@ -644,8 +661,13 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                           margin: EdgeInsets.only(top: 24, left: isMobile ? 10 : size.width * 0.8, right: 10))
                                                       .show(context);
                                                   context.read<MultiBloc>().state.date = null;
-                                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const InspectionView()));
+                                                  print("on suceesssss");
                                                   clearFields();
+                                                  sliderButtonController.position = SliderButtonPosition.left;
+                                                  await Future.delayed(Duration(seconds: 1));
+                                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const InspectionView()));
+
+                                                //Handling failure case from the backend (eg. Found multiple records with same location.)  
                                                 case ServiceUploadStatus.failure:
                                                   sliderButtonController.position = SliderButtonPosition.left;
                                                   Flushbar(
@@ -667,7 +689,6 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                   return SizedBox(
                                                     width:isMobile?size.width*0.56: size.width*0.2,
                                                     child: LayoutBuilder(builder: (context, contraints) {
-                                                      
                                                       return  CustomSliderButton(
                                                       isMobile: isMobile,
                                                       sliderController: sliderButtonController,
@@ -682,15 +703,15 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
                                                         color: Colors.white,
                                                       ),
                                                       onDismissed: () async {
+                                                        //Network check
                                                         if (!isConnected()) {
                                                           DMSCustomWidgets.DMSFlushbar(size, context,
                                                               message: 'Please check the internet connectivity', icon: Icon(Icons.error));
                                                           return;
                                                         }
                                                         FocusManager.instance.primaryFocus?.unfocus();
-                                                    
-                                                       
-                                                    
+
+                                                    // Validating the textfields and displaying appropriate error snackbars.
                                                         String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
                                                             _altPersonContactNoValidation(altContPhoneNoController.text) ??
                                                             _salesPersonValidator(
@@ -794,7 +815,6 @@ class _ServiceMain extends State<ServiceMain> with ConnectivityMixin {
   }
 
   String? _salesPersonValidator(String value, List<String?> salesPersons) {
-    print(salesPersons);
     if (value.isEmpty) {
       return "Sales Person cannot be empty";
     } else if (!salesPersons.contains(value.split('-')[0])) {
@@ -916,11 +936,14 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void initState() {
     super.initState();
     _initController();
+   
+    
     _position = widget.size.maxWidth*0.01;
     _startPosition =widget.size.maxWidth*0.01;
     _endPosition =widget.isMobile? widget.size.maxWidth*0.8:widget.size.maxWidth*0.825;
-    print("stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus} ${_sliderController._position}");
     _sliderController.currentPosition = widget.size.maxWidth*0.01;
+
+    //Updating the initial position of the slider
     if (_sliderController.position == SliderButtonPosition.right) {
       _sliderController.currentPosition = _endPosition;
     } else if (_sliderController.position == SliderButtonPosition.left) {
@@ -932,12 +955,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     _sliderController = widget.sliderController;
   }
 
-  void _onPanStart(DragStartDetails details) {
-    // setState(() {
-    //   _isSliding = true;
-    // });
-  }
-
+  //Slider in motion
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       _sliderController.currentPosition = details.localPosition.dx;
@@ -953,6 +971,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     });
   }
 
+  //on Slider motion end 
   void _onPanEnd(DragEndDetails details) async {
     if (_sliderController.currentPosition <= widget.size.maxWidth / 2) {
       setState(() {
@@ -964,33 +983,31 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     }
     await widget.onDismissed();
     setState(() {
-      print("status from state ${context.read<ServiceBloc>().state.serviceUploadStatus}");
+      // Updating the posiition based on the Service upload status 
       if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
         _sliderController.currentPosition = _startPosition;
         _sliderController.position = SliderButtonPosition.left;
-        // _position = _startPosition;
+        
       } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
         _sliderController.currentPosition = _endPosition;
         _sliderController.position = SliderButtonPosition.right;
-        // _position = _endPosition;
+        
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("from build ${_sliderController.position}");
+    // updating the slider postion in the controller
     if (_sliderController.position != SliderButtonPosition.moving) {
       if (_sliderController.position == SliderButtonPosition.right) {
         _sliderController.currentPosition = _endPosition;
       } else if (_sliderController.position == SliderButtonPosition.left) {
-        print("inside left");
         _sliderController.currentPosition = _startPosition;
       }
     }
     print("from build current position${_sliderController.currentPosition} ${_startPosition} ${_endPosition}");
     return GestureDetector(
-      onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
       child: Stack(

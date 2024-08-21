@@ -1,29 +1,23 @@
-import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:flutter/services.dart';
 import 'package:xml/xml.dart';
 
 Future<List<GeneralBodyPart>> loadSvgImage({required String svgImage}) async {
-    List<GeneralBodyPart> parts = [];
-    
-    String generalString = await rootBundle.loadString(svgImage);
+  List<GeneralBodyPart> parts = [];
 
-    XmlDocument document = XmlDocument.parse(generalString);
+  String generalString = await rootBundle.loadString(svgImage);
 
-    final paths = document.findAllElements('path');
-      
-    paths.forEach((element) {
+  XmlDocument document = XmlDocument.parse(generalString);
 
-      String partName = element.getAttribute('id').toString();
-      String partPath = element.getAttribute('d').toString();
-      String partClass = element.getAttribute('class').toString();
+  final paths = document.findAllElements('path');
 
-      // if (!partName.contains('path')) {
-        GeneralBodyPart part = GeneralBodyPart(name: partName, path: partPath,color:partClass);
+  paths.forEach((element) {
+    String partName = element.getAttribute('id').toString();
+    String partPath = element.getAttribute('d').toString();
+    String partClass = element.getAttribute('class').toString();
 
-        parts.add(part);
-      // }
-
-    });
-    print(parts.map((e) => e.name).toList());
-    return parts;
-  }
+    GeneralBodyPart part = GeneralBodyPart(name: partName, path: partPath, color: partClass);
+    parts.add(part);
+  });
+  return parts;
+}

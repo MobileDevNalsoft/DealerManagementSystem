@@ -4,7 +4,7 @@ import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/inspection_out.dart';
 import 'package:dms/views/list_of_jobcards.dart';
@@ -47,8 +47,6 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
     print(draggableScrollableController.pixels);
     if (draggableScrollableController.pixels < 190) {
       context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
-      // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
-      // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
     }
   }
 
@@ -607,9 +605,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                   Gap(16),
                                                                   GestureDetector(
                                                                     onTap: () {
+                                                                      //bringing to intial status when needed
                                                                       context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
-                                                                      // context.read<MultiBloc>().state.selectedGeneralBodyPart = "";
-                                                                      // context.read<MultiBloc>().state.isTapped = false;
                                                                     },
                                                                     child: Container(
                                                                         alignment: Alignment.center,

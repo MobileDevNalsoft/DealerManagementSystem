@@ -12,6 +12,7 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+  bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: false,
@@ -21,7 +22,8 @@ class _DashBoardState extends State<DashBoard> {
         backgroundColor: Colors.black45,
         leadingWidth: size.width * 0.14,
         leading: Container(
-          margin: EdgeInsets.only(left: size.width * 0.045),
+                            margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
+
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.black,
@@ -46,7 +48,7 @@ class _DashBoardState extends State<DashBoard> {
         title: Container(
             alignment: Alignment.center,
             height: size.height * 0.05,
-            width: size.width * 0.45,
+               width: isMobile ? size.width * 0.45 : size.width * 0.32,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.black,

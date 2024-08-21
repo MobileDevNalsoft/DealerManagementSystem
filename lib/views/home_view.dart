@@ -22,12 +22,12 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, ConnectivityMixin {
-  late O3DController o3dController;
+   
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    o3dController = O3DController();
+    
   }
 
   @override
@@ -47,30 +47,17 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
             Column(
               children: [
                 Gap(size.height * 0.18),
-                SizedBox(
-                    width: size.width * 0.8,
-                    height: size.height * 0.48,
-                    child: O3D.asset(
-                      src: 'assets/images/cyberpunk_car.glb',
-                      autoPlay: false,
-                      autoRotate: false,
-                      cameraControls: true,
-                      autoRotateDelay: 0,
-                      controller: o3dController, 
-
-                    )
-                   
-                    ),
-                // Image.asset(
-                //   'assets/images/dashboard_car.png',
-                //   height:isMobile?200:size.height*0.32,
-                //   width: isMobile?200:size.width*0.32,
-                // ),
+                
+                Image.asset(
+                  'assets/images/dashboard_car.png',
+                  height:isMobile?200:size.height*0.32,
+                  width: isMobile?200:size.width*0.32,
+                ),
                 Gap(size.height * 0.24),
                 InkWell(
                   onTap: () {
                     if (isConnected()) {
-                      o3dController.autoRotate=false;
+                      
 
                       Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceMain()));
                     } else {
@@ -118,7 +105,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       if (isConnected()) {
-                        o3dController.pause();
+                        
                         Navigator.push(context, MaterialPageRoute(builder: (_) => const AddVehicleView()));
                       } else {
                         DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));
@@ -271,7 +258,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                       child: GestureDetector(
                         onTap: () {
                           if (isConnected()) {
-                            o3dController.autoRotate=false;
+                            
                             Navigator.push(context, MaterialPageRoute(builder: (_) => const ListOfJobcards()));
                           } else {
                             DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: Icon(Icons.error));

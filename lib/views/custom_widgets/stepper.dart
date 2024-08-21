@@ -2,7 +2,7 @@ import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/gate_pass.dart';
@@ -60,6 +60,8 @@ class _StepState extends State<Step> with ConnectivityMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
     return LayoutBuilder(builder: (context, constraints) {
       print('current ${widget.currentStep}');
       print('activeStep ${widget.activeStep}');
@@ -72,7 +74,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
               child: Text(
                 widget.title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
+                style:  TextStyle(fontSize: (isMobile?12:14)),
               )),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -81,7 +83,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                 padding: EdgeInsets.only(
                     left: constraints.minWidth * 0.095,
                     top: constraints.minWidth *
-                        (widget.currentStep == widget.activeStep ? 0 : 0.01)),
+                        (widget.currentStep == widget.activeStep ? 0 : 0.0)),
                 child: SizedBox(
                   height: constraints.maxWidth *
                       (widget.currentStep == widget.activeStep ? 0.2 : 0.15),
@@ -173,12 +175,12 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                   : widget.currentStep == widget.activeStep
                                       ? Colors.green.shade100
                                       : Colors.grey.shade300,
-                          maxRadius: 25,
+                          maxRadius: (isMobile?25:40),
                           child: Image.asset(
                             'assets/images/${widget.icons[widget.currentStep]}.png',
                             fit: BoxFit.cover,
-                            height: 30,
-                            width: 30,
+                            height: (isMobile?30:40),
+                            width: (isMobile?30:40),
                           ),
                         ),
                       )
@@ -192,7 +194,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                   width: constraints.maxWidth * 0.7,
                   child: Text(
                     widget.statusLines[widget.currentStep],
-                    style: const TextStyle(fontSize: 12),
+                    style:  TextStyle(fontSize: isMobile?12:14),
                   ),
                 ),
               if (widget.currentStep == widget.activeStep &&
@@ -209,7 +211,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
           ),
           if (widget.currentStep < widget.stepperLength - 1)
             Padding(
-              padding: EdgeInsets.only(left: constraints.maxWidth * 0.173),
+              padding: EdgeInsets.only(left: constraints.maxWidth * (isMobile?0.173:0.185)),
               child: SizedBox(
                 height: constraints.maxWidth * 0.1,
                 child: VerticalDivider(

@@ -1,25 +1,17 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-
-import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/comments.dart';
 import 'package:dms/views/list_of_jobcards.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
-import '../bloc/service/service_bloc.dart';
 
 class VehicleExamination extends StatefulWidget {
-
   final List<GeneralBodyPart>? generalParts;
   VehicleExamination({super.key, this.generalParts});
 
@@ -31,6 +23,8 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
   @override
   void initState() {
     super.initState();
+
+    //initaializing empty object
     context.read<VehiclePartsInteractionBloc>().state.mapMedia = {};
   }
 
@@ -45,7 +39,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
         backgroundColor: Colors.black45,
         leadingWidth: size.width * 0.14,
         leading: Container(
-          margin: EdgeInsets.only(left: size.width * 0.045,top:isMobile? 0:size.height*0.008,bottom:isMobile? 0: size.height*0.008),
+          margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.black,
@@ -54,7 +48,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.popUntil(context, (route) => route.settings.name == '/');
                 },
                 icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           ),
@@ -62,10 +56,11 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
         title: Container(
             alignment: Alignment.center,
             height: size.height * 0.05,
-            width:isMobile? size.width * 0.45:size.width*0.32,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-              BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-            ]),
+            width: isMobile ? size.width * 0.45 : size.width * 0.32,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.black,
+                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
             child: const Center(
               child: Text(
                 textAlign: TextAlign.center,
@@ -88,33 +83,23 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                         Icons.cloud_upload_rounded,
                         color: Colors.white,
                       ));
-    context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart:"", isTapped: false));
-                  // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
-                  // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
+                  // Updating with initial parameters
+                  context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
                 }
               }, builder: (context, state) {
-                return GestureDetector(
-                  onTapDown: (details) {
-                    print("inside gd");
-                    
-    context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart:"", isTapped: false));
-                    // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
-                    // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
-                  },
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: [0.1, 0.5, 1])),
-                    child: Transform.scale(
-                      scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
-                      child: BodyCanvas(
-                        generalParts: widget.generalParts,
-                      ),
+                return Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.1, 0.5, 1])),
+                  child: Transform.scale(
+                    scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
+                    child: BodyCanvas(
+                      generalParts: widget.generalParts,
                     ),
                   ),
                 );
@@ -123,20 +108,21 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
               //zoom in zoom out buttons
               Positioned(
                 top: size.height * 0.35,
-                right: isMobile?size.width * 0.05:null,
-                left:isMobile?null:size.width*0.032,
+                right: isMobile ? size.width * 0.05 : null,
+                left: isMobile ? null : size.width * 0.032,
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(16), 
-                  boxShadow: [
+                  decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(16), boxShadow: [
                     BoxShadow(blurRadius: 16, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
                   ]),
                   height: size.height * 0.12,
-                  width: isMobile?size.width * 0.1:size.width*0.032,
+                  width: isMobile ? size.width * 0.1 : size.width * 0.032,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
                           onPressed: () {
+    
+                            // Upper limit for zoom is 1.8
                             if (context.read<MultiBloc>().state.scaleFactor == null) {
                               context.read<MultiBloc>().state.scaleFactor = 1.4;
                               context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
@@ -147,13 +133,15 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                               }
                             }
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.zoom_in_rounded,
                             color: Colors.white,
                           ),
                           visualDensity: VisualDensity.compact),
                       IconButton(
                         onPressed: () {
+    
+                          // Lower limit for zoom is 1.3
                           if (context.read<MultiBloc>().state.scaleFactor == null) {
                             context.read<MultiBloc>().state.scaleFactor = 1.3;
                             context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
@@ -163,9 +151,8 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                               context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                             }
                           }
-                          print(context.read<MultiBloc>().state.scaleFactor);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.zoom_out_rounded,
                           color: Colors.white,
                         ),
@@ -177,35 +164,28 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
               ),
               if (context.watch<MultiBloc>().state.isTapped)
                 Positioned(
-                  
                     left: isMobile ? size.width * 0.04 : null,
-                    right: isMobile?null:size.width * 0.16,
-                    top: isMobile ? 150 : size.width*0.08,
-                    child:
-                        CommentsView(
-                      vehiclePartMedia: context
-                              .read<VehiclePartsInteractionBloc>()
-                              .state
-                              .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] ??
+                    right: isMobile ? null : size.width * 0.16,
+                    top: isMobile ? 150 : size.width * 0.08,
+                    child: CommentsView(
+                      vehiclePartMedia: context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] ??
                           VehiclePartMedia(name: context.read<MultiBloc>().state.selectedGeneralBodyPart, isUploaded: false),
                     )),
               Positioned(
-                bottom: isMobile?100:size.height*0.040,
-                left: isMobile? 155:size.width*0.455,
+                bottom: isMobile ? 100 : size.height * 0.040,
+                left: isMobile ? 155 : size.width * 0.455,
                 child: GestureDetector(
                   onTap: () {
+                    // After vehicle examination navigation user from home page to list of jobcards.
                     if (!context.read<MultiBloc>().state.isTapped) {
                       Navigator.of(context).popUntil((route) => route.settings.name == '/');
                       Navigator.of(context).push(MaterialPageRoute(builder: (_) => ListOfJobcards()));
                     }
-                    // context
-                    //     .read<VehiclePartsInteractionBloc>()
-                    //     .add(SubmitVehicleMediaEvent());
                   },
                   child: Container(
                       alignment: Alignment.center,
                       height: size.height * 0.045,
-                      width: isMobile? size.width * 0.2:size.width*0.08,
+                      width: isMobile ? size.width * 0.2 : size.width * 0.08,
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
                         BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
                       ]),

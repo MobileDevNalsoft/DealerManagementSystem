@@ -285,8 +285,7 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                           context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isEmpty) ||
                       context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.isUploaded) {
                     context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
-                    // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
-                    // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
+                  
                     print("git herer");
                     return;
                   }
@@ -321,7 +320,7 @@ class _CommentsViewState extends State<CommentsView> with SingleTickerProviderSt
                       ),
                     );
 
-                    return;
+                    // return;
                   }
                   // Provider.of<BodySelectorViewModel>(context, listen: false)
                   //     .isTapped = false;
