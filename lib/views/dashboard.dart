@@ -12,21 +12,28 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  // navigator service
   NavigatorService navigator = getIt<NavigatorService>();
 
+  // Define lists for job card statuses and their corresponding values (replace with actual data)
   List<String> statuses = ['N', 'I', 'QC', 'IO', 'CL', 'C'];
   List<int> values = [10, 4, 6, 3, 20, 2];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    // Wrap the entire dashboard with a Hero widget for transitions
     return Hero(
       tag: 'dashboard',
       transitionOnUserGestures: true,
       child: Scaffold(
+        // Prevent keyboard from resizing the body
         resizeToAvoidBottomInset: false,
+        // Disable app bar extending behind content
         extendBodyBehindAppBar: false,
         appBar: AppBar(
+          // Remove shadow effect when scrolling
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.black45,
@@ -45,6 +52,7 @@ class _DashBoardState extends State<DashBoard> {
                       offset: const Offset(0, 0))
                 ]),
             child: Transform(
+              // Slightly shift the icon to the left for better alignment
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
@@ -79,6 +87,7 @@ class _DashBoardState extends State<DashBoard> {
               )),
           centerTitle: true,
         ),
+        // Create the body of the dashboard
         body: Container(
           height: size.height,
           width: size.width,
@@ -88,8 +97,10 @@ class _DashBoardState extends State<DashBoard> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   stops: [0.1, 0.5, 1])),
+          // This Column widget defines a section with the title "Job Cards This Week" and a container
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize:
+                MainAxisSize.min, // Set minimum height for this column
             children: [
               Gap(size.height * 0.01),
               Expanded(
@@ -121,8 +132,10 @@ class _DashBoardState extends State<DashBoard> {
                       child: SizedBox(
                         height: size.height * 0.15,
                         width: size.width * 0.492,
+                        // Stack the container with background layers
                         child: Stack(
                           children: [
+                            // Black background with inner shadow
                             Positioned(
                               top: 8,
                               right: size.width * 0.025,
@@ -146,6 +159,7 @@ class _DashBoardState extends State<DashBoard> {
                                     ]),
                               ),
                             ),
+                            // Another black background with inner shadow on top of the first one
                             Positioned(
                               top: 4,
                               right: size.width * 0.018,
@@ -240,8 +254,10 @@ class _DashBoardState extends State<DashBoard> {
                       child: SizedBox(
                         height: size.height * 0.15,
                         width: size.width * 0.492,
+                        // Stack the container with background layers
                         child: Stack(
                           children: [
+                            // Black background with inner shadow
                             Positioned(
                               top: 8,
                               right: size.width * 0.025,
@@ -265,6 +281,7 @@ class _DashBoardState extends State<DashBoard> {
                                     ]),
                               ),
                             ),
+                            // Another black background with inner shadow on top of the first one
                             Positioned(
                               top: 4,
                               right: size.width * 0.018,
@@ -357,6 +374,7 @@ class _DashBoardState extends State<DashBoard> {
                   ],
                 ),
               ),
+              // This section builds the top portion of the job card stats widget
               Expanded(
                 flex: 1,
                 child: Row(
@@ -374,6 +392,7 @@ class _DashBoardState extends State<DashBoard> {
                   ],
                 ),
               ),
+              // This section builds the bar chart
               Expanded(
                 flex: 6,
                 child: Container(
@@ -382,6 +401,7 @@ class _DashBoardState extends State<DashBoard> {
                       color: Colors.black),
                   width: size.width * 0.9,
                   child: BarChart(BarChartData(
+                      // Define the data and styling for the chart
                       alignment: BarChartAlignment.spaceAround,
                       borderData: FlBorderData(show: false),
                       maxY:
@@ -392,6 +412,7 @@ class _DashBoardState extends State<DashBoard> {
                       ),
                       groupsSpace: 30,
                       barTouchData: BarTouchData(
+                          // Configure bar interaction
                           enabled: true,
                           touchTooltipData: BarTouchTooltipData(
                             getTooltipColor: (group) {
@@ -408,6 +429,7 @@ class _DashBoardState extends State<DashBoard> {
                                             fontWeight: FontWeight.bold)),
                           )),
                       titlesData: FlTitlesData(
+                          // Define chart titles and labels
                           topTitles: const AxisTitles(),
                           rightTitles: const AxisTitles(),
                           leftTitles: const AxisTitles(),
@@ -420,10 +442,12 @@ class _DashBoardState extends State<DashBoard> {
                               style: const TextStyle(color: Colors.white),
                             ),
                           ))),
-                      barGroups: values
+                      barGroups: values // Define bar data
                           .map((e) => BarChartGroupData(
                                 x: values.indexOf(e),
-                                showingTooltipIndicators: [0],
+                                showingTooltipIndicators: [
+                                  0
+                                ], // Show tooltip on first bar in group
                                 barRods: [
                                   BarChartRodData(
                                       toY: e.toDouble(),

@@ -1,6 +1,5 @@
 import 'package:dms/inits/init.dart';
 import 'package:dms/navigations/navigator_service.dart';
-import 'package:dms/views/login.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +10,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../bloc/service/service_bloc.dart';
 import 'custom_widgets/clipped_buttons.dart';
 import 'list_of_jobcards.dart';
-import 'jobcard_details.dart';
 
 class MyJobcards extends StatefulWidget {
   const MyJobcards({super.key});

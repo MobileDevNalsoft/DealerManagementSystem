@@ -18,15 +18,15 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class CommentsView extends StatefulWidget {
+class Comments extends StatefulWidget {
   VehiclePartMedia vehiclePartMedia;
-  CommentsView({super.key, required this.vehiclePartMedia});
+  Comments({super.key, required this.vehiclePartMedia});
 
   @override
-  State<CommentsView> createState() => _CommentsViewState();
+  State<Comments> createState() => _CommentsState();
 }
 
-class _CommentsViewState extends State<CommentsView>
+class _CommentsState extends State<Comments>
     with SingleTickerProviderStateMixin, ConnectivityMixin {
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
@@ -36,7 +36,7 @@ class _CommentsViewState extends State<CommentsView>
   void initState() {
     super.initState();
     animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     widget.vehiclePartMedia.comments ??= "";
     widget.vehiclePartMedia.images ??= [];
 
@@ -72,7 +72,7 @@ class _CommentsViewState extends State<CommentsView>
                   margin: EdgeInsets.zero,
                   width: isMobile ? size.width * 0.9 : size.width * 0.32,
                   decoration: BoxDecoration(
-                      color: Color.fromRGBO(26, 26, 27, 1),
+                      color: const Color.fromRGBO(26, 26, 27, 1),
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
@@ -87,7 +87,7 @@ class _CommentsViewState extends State<CommentsView>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Gap(8),
+                      const Gap(8),
                       Text(
                         widget.vehiclePartMedia.name
                             .replaceAll("_", " ")
@@ -108,9 +108,9 @@ class _CommentsViewState extends State<CommentsView>
                             ],
                             letterSpacing: 0.4),
                       ),
-                      Gap(8),
+                      const Gap(8),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         height: size.height * 0.15,
                         //  width: size.width * 0.65,
                         child: Stack(
@@ -120,18 +120,20 @@ class _CommentsViewState extends State<CommentsView>
                               focusNode: commentsFocus,
                               controller: commentsController,
                               maxLines: 10,
-                              style: TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                       fontSize: 16, color: Colors.white60),
-                                  fillColor: Color.fromRGBO(38, 38, 40, 1),
+                                  fillColor:
+                                      const Color.fromRGBO(38, 38, 40, 1),
                                   filled: true,
                                   contentPadding:
-                                      EdgeInsets.only(left: 16, top: 16),
+                                      const EdgeInsets.only(left: 16, top: 16),
                                   hintText: "Comments",
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16.0),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                       color: Color.fromARGB(255, 145, 95, 22),
                                     ),
                                   ),
@@ -171,7 +173,7 @@ class _CommentsViewState extends State<CommentsView>
                                   icon: Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.add_photo_alternate_rounded,
                                         color: Colors.white60,
                                       ),
@@ -191,7 +193,7 @@ class _CommentsViewState extends State<CommentsView>
                           ],
                         ),
                       ),
-                      Gap(8),
+                      const Gap(8),
                       BlocConsumer<VehiclePartsInteractionBloc,
                           VehiclePartsInteractionBlocState>(
                         listener: (context, state) {
@@ -204,19 +206,17 @@ class _CommentsViewState extends State<CommentsView>
                         },
                         builder: (context, state) {
                           return Container(
-                              padding: isMobile
-                                  ? null
-                                  : EdgeInsets.symmetric(horizontal: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
                               height: widget.vehiclePartMedia.images == null ||
-                                      widget.vehiclePartMedia.images!.length ==
-                                          0
+                                      widget.vehiclePartMedia.images!.isEmpty
                                   ? 0
                                   : isMobile
                                       ? size.height * 0.14
                                       : size.height * 0.18,
                               child: GridView.builder(
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         crossAxisSpacing: 16,
                                         mainAxisSpacing: 16),
@@ -328,12 +328,12 @@ class _CommentsViewState extends State<CommentsView>
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.black,
                                   boxShadow: [
-                                    BoxShadow(
+                                    const BoxShadow(
                                         blurRadius: 8,
                                         blurStyle: BlurStyle.outer,
                                         spreadRadius: 0,
                                         color: Color.fromRGBO(255, 204, 128, 1),
-                                        offset: const Offset(0, 0))
+                                        offset: Offset(0, 0))
                                   ]),
                               child: const Text(
                                 textAlign: TextAlign.center,
@@ -342,7 +342,7 @@ class _CommentsViewState extends State<CommentsView>
                                     color: Colors.white, fontSize: 14),
                               )),
                         ),
-                      Gap(16)
+                      const Gap(16)
                     ],
                   ),
                 ),
@@ -450,7 +450,7 @@ class _CommentsViewState extends State<CommentsView>
                 },
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                icon: Icon(
+                icon: const Icon(
                   Icons.cancel,
                   // color: Colors.red,
                   size: 32,

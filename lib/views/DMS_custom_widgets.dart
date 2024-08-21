@@ -12,6 +12,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DMSCustomWidgets {
+  /// This widget creates a searchable dropdown field.
   static Widget SearchableDropDown(
       {required Size size,
       required String hint,
@@ -25,10 +26,12 @@ class DMSCustomWidgets {
       SuggestionsController? suggestionsController,
       bool isLoading = false,
       Icon? icon}) {
+    // Refresh the suggestions if a SuggestionsController is provided
     if (suggestionsController != null) {
       suggestionsController.refresh();
     }
 
+    // Define the size of the widget based on whether it's mobile or not
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
@@ -37,6 +40,7 @@ class DMSCustomWidgets {
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
+          // Use the provided suggestions controller or create a new list based on items
           suggestionsController: suggestionsController,
           controller: typeAheadController,
           focusNode: focus,
@@ -44,13 +48,17 @@ class DMSCustomWidgets {
             return Padding(
               padding: EdgeInsets.only(top: size.height * 0.005),
               child: TextFormField(
+                // Call the onChanged function when the text changes
                 onChanged: onChanged,
+                // Focus the field when tapped
                 onTap: () {
+                  // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
                   context.read<MultiBloc>().add(OnFocusChange(
                       focusNode: focusNode,
                       scrollController: scrollController,
                       context: context));
                 },
+                // Unfocus the field when tapped outside
                 onTapOutside: (event) => focusNode.unfocus(),
                 cursorColor: Colors.black,
                 inputFormatters: [
@@ -68,6 +76,7 @@ class DMSCustomWidgets {
                     color: Colors.black38,
                     fontWeight: FontWeight.normal,
                   ),
+                  // Remove all borders for a cleaner look
                   border: InputBorder.none, // Removes all borders
                 ),
                 controller: controller,
@@ -75,6 +84,7 @@ class DMSCustomWidgets {
               ),
             );
           },
+          // Filter suggestions based on the pattern entered
           suggestionsCallback: (pattern) {
             if (suggestionsController == null) {
               return items
@@ -84,7 +94,9 @@ class DMSCustomWidgets {
             }
             return items;
           },
+          // Hide the suggestions list when the field loses focus
           hideOnUnfocus: true,
+          // Display a message when no suggestions are found
           emptyBuilder: (context) => Container(
             height: size.height * 0.038,
             width: size.width,
@@ -98,9 +110,11 @@ class DMSCustomWidgets {
                 : null,
           ),
           onSelected: (suggestion) {
+            // removes focus when an item from the suggestion list is selected.
             FocusManager.instance.primaryFocus?.unfocus();
             typeAheadController.text = suggestion;
           },
+          // defines widget that to be built for each item in the suggestions list
           itemBuilder: (context, suggestion) => Container(
             height: size.height * 0.038,
             color: Colors.white,
@@ -115,6 +129,7 @@ class DMSCustomWidgets {
     );
   }
 
+  // This widget creates a custom data card for text input
   // ignore: non_constant_identifier_names
   static Widget CustomDataCard(
       {required Size size,
@@ -133,6 +148,7 @@ class DMSCustomWidgets {
       Widget? suffixIcon,
       FocusNode? focusNode}) {
     return SizedBox(
+      // Set the card height and width based on mobile status
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
@@ -141,6 +157,7 @@ class DMSCustomWidgets {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Transform(
+          // Adjust vertical position slightly for mobile layout
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
             onChanged: onChange,
@@ -149,6 +166,8 @@ class DMSCustomWidgets {
             inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
             onTap: () {
+              // Trigger event on focus change in MultiBloc
+              // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
               context.read<MultiBloc>().add(OnFocusChange(
                   focusNode: focusNode!,
                   scrollController: scrollController,
@@ -160,10 +179,12 @@ class DMSCustomWidgets {
             cursorColor: Colors.black,
             controller: textcontroller,
             style: TextStyle(
-              fontSize: isMobile ? 13 : 14,
+              fontSize:
+                  isMobile ? 13 : 14, // Adjust font size for mobile layout
             ),
-            maxLength: 25,
-            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            maxLength: 25, // Set maximum allowed characters
+            maxLengthEnforcement:
+                MaxLengthEnforcement.enforced, // Enforce max length
             decoration: InputDecoration(
                 suffix: suffixIcon,
                 contentPadding: EdgeInsets.symmetric(
@@ -176,6 +197,7 @@ class DMSCustomWidgets {
                   fontWeight: FontWeight.normal,
                 ),
                 suffixIcon: Transform(
+                  // Adjust vertical position of suffix icon slightly
                   transform: Matrix4.translationValues(0, -2, 0),
                   child: icon,
                 ),
@@ -186,6 +208,8 @@ class DMSCustomWidgets {
     );
   }
 
+  // This widget creates a custom text field card
+  // This function defines a reusable widget named `CustomTextFieldCard`.
   // ignore: non_constant_identifier_names
   static Widget CustomTextFieldCard(
       {required Size size,
@@ -198,6 +222,7 @@ class DMSCustomWidgets {
       Widget? icon,
       required bool isMobile}) {
     return SizedBox(
+      // Set the height and width of the card based on mobile/non-mobile
       height: isMobile ? size.height * 0.1 : size.height * 0.13,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
@@ -212,18 +237,20 @@ class DMSCustomWidgets {
           focusNode: focusNode,
           inputFormatters: inputFormatters,
           onTap: () {
+            // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
             context.read<MultiBloc>().add(OnFocusChange(
                 focusNode: focusNode!,
                 scrollController: scrollController,
                 context: context));
           },
+          // Set text field properties
           minLines: 1,
           maxLines: 5,
           maxLength: 200,
           decoration: InputDecoration(
             counterText: "",
             contentPadding: const EdgeInsets.only(left: 15, top: 0),
-            border: InputBorder.none,
+            border: InputBorder.none, // Remove default border
             hintText: hint,
             hintStyle: const TextStyle(
                 color: Colors.black45, fontWeight: FontWeight.normal),
@@ -233,6 +260,7 @@ class DMSCustomWidgets {
     );
   }
 
+  /// This widget displays a clickable card to select a schedule date using a calendar dialog.
   // ignore: non_constant_identifier_names
   static Widget ScheduleDateCalendar(
       {context, required Size size, required bool isMobile, DateTime? date}) {
@@ -250,6 +278,7 @@ class DMSCustomWidgets {
                     height: size.height * 0.4,
                     width: size.width * (isMobile ? 1 : 0.35),
                     child: SfDateRangePicker(
+                      // Configure date range picker options
                       enablePastDates: false,
                       view: DateRangePickerView.month,
                       allowViewNavigation: true,
@@ -264,6 +293,7 @@ class DMSCustomWidgets {
                         Navigator.pop(context);
                       },
                       onSubmit: (p0) {
+                        // Handle submit action (update selected date)
                         context
                             .read<MultiBloc>()
                             .add(DateChanged(date: p0 as DateTime));
@@ -304,6 +334,7 @@ class DMSCustomWidgets {
     );
   }
 
+  // used to create data fields with key value pairs
   static Widget CustomDataFields(
       {required BuildContext context,
       double? contentPadding,
@@ -358,22 +389,29 @@ class DMSCustomWidgets {
     ]);
   }
 
+  /// This widget builds a custom year picker for selecting a vehicle's manufacturing year.
   static Widget CustomYearPicker(
       {required Size size,
       required bool isMobile,
       required BuildContext context,
       required FixedExtentScrollController yearPickerController,
       int? year}) {
+    // Get the current year
     int now = DateTime.now().year;
     return SizedBox(
+      /// Set height and width based on device type
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
         onTap: () {
+          // Unfocus any currently focused widget
           FocusManager.instance.primaryFocus?.unfocus();
+          // Update the year picker controller with initial selection based on current year and pre-selected year (if any)
           yearPickerController =
               FixedExtentScrollController(initialItem: now - (year ?? 0));
+
+          // Show the year picker dialog using CupertinoModalPopup
           showCupertinoModalPopup(
             context: context,
             builder: (context) => CupertinoActionSheet(
@@ -386,6 +424,7 @@ class DMSCustomWidgets {
                       looping: true,
                       scrollController: yearPickerController,
                       onSelectedItemChanged: (value) {
+                        // Update the MultiBloc state with the selected year
                         context
                             .read<MultiBloc>()
                             .add(YearChanged(year: now - value));
@@ -397,6 +436,8 @@ class DMSCustomWidgets {
                           const CupertinoPickerDefaultSelectionOverlay(
                         background: Colors.white30,
                       ),
+
+                      /// Generate list of year Text widgets from current year back to 1980
                       children: List.generate(
                         now - 1980,
                         (index) => Center(
@@ -407,6 +448,8 @@ class DMSCustomWidgets {
                       )),
                 )
               ],
+
+              /// Set cancel button for the dialog
               cancelButton: TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
@@ -424,6 +467,7 @@ class DMSCustomWidgets {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
               child: Text(
+                /// Display "MFG Year" if no year is selected, otherwise display the selected year
                 year == null ? 'MFG Year' : year.toString(),
                 style: TextStyle(
                     color: year == null ? Colors.black38 : Colors.black),
@@ -433,6 +477,7 @@ class DMSCustomWidgets {
     );
   }
 
+  // This function shows a custom DMS dialog
   static showDMSDialog({
     required BuildContext context,
     required String text,
@@ -442,10 +487,13 @@ class DMSCustomWidgets {
     required void Function()? onReject,
     Widget? leadingIcon,
   }) {
+    // Get the screen size
     Size size = MediaQuery.of(context).size;
 
+    // Show an AlertDialog with customizations
     showDialog(
         context: context,
+        // Prevent dismissal by tapping outside the dialog
         barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
@@ -509,14 +557,20 @@ class DMSCustomWidgets {
                   )
                 ],
               ),
-              actionsPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero);
+              actionsPadding:
+                  EdgeInsets.zero, // Remove default padding around buttons
+              buttonPadding:
+                  EdgeInsets.zero); // Remove default padding around buttons
         });
   }
 
+// This function displays a custom flushbar message on the screen
   static Future DMSFlushbar(Size size, BuildContext context,
       {String message = 'message', Widget? icon}) async {
+    // Check if the device is mobile based on screen size
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    // Show the flushbar using Flushbar package
     await Flushbar(
       backgroundColor: Colors.black,
       blockBackgroundInteraction: true,
@@ -542,6 +596,7 @@ class DMSCustomWidgets {
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
+  /// Converts all input text to uppercase.
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -553,10 +608,13 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 }
 
 class InitCapCaseTextFormatter extends TextInputFormatter {
+  /// Capitalizes the first letter of each word in the input text.
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
+      // This implementation only capitalizes the first letter of the entire string.
+      // For proper word capitalization, more complex logic is required.
       text: newValue.text[0].toUpperCase() + newValue.text.substring(1),
       selection: newValue.selection,
     );

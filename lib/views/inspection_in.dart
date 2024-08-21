@@ -1,8 +1,5 @@
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
-import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
-import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/vehicle_examination.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -10,24 +7,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
-import '../vehiclemodule/xml_parser.dart';
 
-class InspectionView extends StatefulWidget {
-  const InspectionView({super.key});
+class InspectionIn extends StatefulWidget {
+  const InspectionIn({super.key});
 
   @override
-  State<InspectionView> createState() => _InspectionViewState();
+  State<InspectionIn> createState() => _InspectionInState();
 }
 
-class _InspectionViewState extends State<InspectionView>
-    with ConnectivityMixin {
+class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
+  // controllers
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
+
+  // navigator service
   final NavigatorService navigator = getIt<NavigatorService>();
+
+  // bloc varaibles
   late ServiceBloc _serviceBloc;
 
   @override
@@ -35,26 +34,34 @@ class _InspectionViewState extends State<InspectionView>
     super.initState();
 
     _serviceBloc = context.read<ServiceBloc>();
+
+    //initialize required statuses
     _serviceBloc.state.serviceUploadStatus = ServiceUploadStatus.initial;
     _serviceBloc.state.inspectionJsonUploadStatus =
         InspectionJsonUploadStatus.initial;
     _serviceBloc.state.svgStatus = SVGStatus.initial;
     _serviceBloc.state.index = 0;
+
+    // get json to create widgets dynamically
     _serviceBloc.add(GetJson());
   }
 
   @override
   Widget build(BuildContext context) {
+    // responsive UI
     Size size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
     return GestureDetector(
       onTap: () {
+        // unfocuses all the current focused widgets
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        // restricts widget resizing when keyboard appears
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          // Remove shadow effect when scrolling
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.black45,
@@ -76,6 +83,7 @@ class _InspectionViewState extends State<InspectionView>
                       offset: const Offset(0, 0))
                 ]),
             child: Transform(
+              // Slightly shift the icon to the left for better alignment
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
@@ -126,6 +134,7 @@ class _InspectionViewState extends State<InspectionView>
                   builder: (context, state) {
                 switch (state.jsonStatus) {
                   case JsonStatus.loading:
+                    // Show loading animation while data is being fetched
                     return Transform(
                       transform: Matrix4.translationValues(0, -40, 0),
                       child: Center(
@@ -139,10 +148,13 @@ class _InspectionViewState extends State<InspectionView>
                       ),
                     );
                   case JsonStatus.success:
+                    // Extract button text from JSON data
                     List<String> buttonsText = [];
                     for (var entry in state.json!.entries) {
                       buttonsText.add(entry.key);
                     }
+
+                    // Build the UI for buttons and content pages
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -157,6 +169,7 @@ class _InspectionViewState extends State<InspectionView>
                               controller: _autoScrollController,
                               children: buttonsText
                                   .map((e) => AutoScrollTag(
+                                        // Use AutoScrollTag widget to auto scroll the buttons list UI to make the buttons visible corresponding to the page index.
                                         key: ValueKey(buttonsText.indexOf(e)),
                                         controller: _autoScrollController,
                                         index: buttonsText.indexOf(e),
@@ -199,23 +212,29 @@ class _InspectionViewState extends State<InspectionView>
                         ),
                         Gap(size.height * 0.01),
                         Expanded(
+                          // Outer SizedBox: Likely used for layout constraints or alignment purposes.
                           child: SizedBox(
                             width: size.width,
                             child: PageView.builder(
+                              // Creates a scrollable view with multiple pages based on the number of items in state.json
                               itemCount: state.json!.length,
                               controller: _pageController,
                               onPageChanged: (value) {
+                                // Updates the service bloc with the current page index
                                 _serviceBloc.add(PageChange(index: value));
+                                // Scrolls Buttons list corresponding to the current page index
                                 _autoScrollController.scrollToIndex(value,
                                     duration: const Duration(milliseconds: 500),
                                     preferPosition: AutoScrollPosition.begin);
                               },
                               itemBuilder: (context, pageIndex) =>
+                                  // Creates a list view for each page
                                   ListView.builder(
                                 itemCount:
                                     state.json![buttonsText[pageIndex]].length -
                                         1,
                                 itemBuilder: (context, index) {
+                                  // Renders a column for each item in the list
                                   return Column(
                                     children: [
                                       Gap(size.height * 0.01),
@@ -237,6 +256,7 @@ class _InspectionViewState extends State<InspectionView>
                                             ),
                                           ),
                                           Gap(size.width * 0.05),
+                                          // Dynamically renders a widget based on the index, page, and other data
                                           getWidget(
                                               context: context,
                                               index: index,
@@ -247,6 +267,7 @@ class _InspectionViewState extends State<InspectionView>
                                         ],
                                       ),
                                       Gap(size.height * 0.02),
+                                      // Conditional rendering of spacing and a BlocListener based on the current page and item index
                                       if (pageIndex == buttonsText.length - 1 &&
                                           index ==
                                               state
@@ -262,66 +283,73 @@ class _InspectionViewState extends State<InspectionView>
                                                           pageIndex]]
                                                       .length -
                                                   2)
-                                        BlocListener<ServiceBloc, ServiceState>(
-                                            listener: (context, state) async {},
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                if (!isConnected()) {
-                                                  DMSCustomWidgets.DMSFlushbar(
-                                                      size, context,
-                                                      message: 'Looks like you'
-                                                          're offline. Please check your connection and try again.',
-                                                      icon: const Icon(
-                                                        Icons.error,
-                                                        color: Colors.white,
-                                                      ));
-                                                  return;
-                                                }
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
-                                                _serviceBloc.add(
-                                                    InspectionJsonAdded(
-                                                        jobCardNo:
-                                                            state.jobCardNo!,
-                                                        inspectionIn: 'true'));
-                                                context
-                                                        .read<VehicleBloc>()
-                                                        .state
-                                                        .status =
-                                                    VehicleStatus.initial;
-                                              },
-                                              child: Container(
-                                                  alignment: Alignment.center,
-                                                  height: size.height * 0.045,
-                                                  width: isMobile
-                                                      ? size.width * 0.2
-                                                      : size.width * 0.08,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: Colors.black,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            blurRadius: 10,
-                                                            blurStyle:
-                                                                BlurStyle.outer,
-                                                            spreadRadius: 0,
-                                                            color: Colors.orange
-                                                                .shade200,
-                                                            offset:
-                                                                const Offset(
-                                                                    0, 0))
-                                                      ]),
-                                                  child: const Text(
-                                                    textAlign: TextAlign.center,
-                                                    'submit',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16),
-                                                  )),
-                                            ))
+                                        BlocBuilder<ServiceBloc, ServiceState>(
+                                            builder: (context, state) {
+                                          return GestureDetector(
+                                            onTap: () async {
+                                              // Checks for internet connection
+                                              if (!isConnected()) {
+                                                // Displays an error message if offline
+                                                DMSCustomWidgets.DMSFlushbar(
+                                                    size, context,
+                                                    message: 'Looks like you'
+                                                        're offline. Please check your connection and try again.',
+                                                    icon: const Icon(
+                                                      Icons.error,
+                                                      color: Colors.white,
+                                                    ));
+                                                return;
+                                              }
+
+                                              // Unfocus any active input
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+
+                                              // Dispatches an event to the service bloc to add inspection data
+                                              _serviceBloc.add(
+                                                  InspectionJsonAdded(
+                                                      jobCardNo:
+                                                          state.jobCardNo!,
+                                                      inspectionIn: 'true'));
+
+                                              // Resets vehicle state
+                                              context
+                                                      .read<VehicleBloc>()
+                                                      .state
+                                                      .status =
+                                                  VehicleStatus.initial;
+                                            },
+                                            child: Container(
+                                                alignment: Alignment.center,
+                                                height: size.height * 0.045,
+                                                width: isMobile
+                                                    ? size.width * 0.2
+                                                    : size.width * 0.08,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: Colors.black,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          blurRadius: 10,
+                                                          blurStyle:
+                                                              BlurStyle.outer,
+                                                          spreadRadius: 0,
+                                                          color: Colors
+                                                              .orange.shade200,
+                                                          offset: const Offset(
+                                                              0, 0))
+                                                    ]),
+                                                child: const Text(
+                                                  textAlign: TextAlign.center,
+                                                  'submit',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16),
+                                                )),
+                                          );
+                                        })
                                     ],
                                   );
                                 },
@@ -340,6 +368,7 @@ class _InspectionViewState extends State<InspectionView>
                     InspectionJsonUploadStatus.loading ||
                 context.watch<ServiceBloc>().state.svgStatus ==
                     SVGStatus.loading)
+              // Show a loading indicator when inspection JSON upload or SVG is loading
               Container(
                 color: Colors.black54,
                 child: Center(
@@ -355,6 +384,7 @@ class _InspectionViewState extends State<InspectionView>
     );
   }
 
+  // returns widget dynamically according to the widget name extracted from json.
   Widget getWidget(
       {required Size size,
       required String page,
@@ -362,8 +392,10 @@ class _InspectionViewState extends State<InspectionView>
       required Map<String, dynamic> json,
       required BuildContext context,
       required bool isMobile}) {
+    // Switch statement to handle different widget types based on "widget" key in JSON
     switch (json[page][index]['widget']) {
       case "checkBox":
+        // Return a Checkbox widget with specific properties and behavior
         return SizedBox(
           height: size.height * 0.03,
           width: isMobile ? size.width * 0.05 : size.width * 0.024,
@@ -381,6 +413,7 @@ class _InspectionViewState extends State<InspectionView>
           ),
         );
       case "textField":
+        // Return a TextField widget with specific properties and behavior
         TextEditingController textEditingController = TextEditingController();
 
         textEditingController.text = json[page][index]['properties']['value'];
@@ -416,6 +449,8 @@ class _InspectionViewState extends State<InspectionView>
               }),
         );
       case "dropDown":
+        // Return a DropdownButton2 widget with specific properties and behavior
+        // Create a list of items based on the JSON properties
         List<String> items = [];
 
         for (String s in json[page][index]['properties']['items']) {
@@ -490,6 +525,7 @@ class _InspectionViewState extends State<InspectionView>
           ),
         );
       case "radioButtons":
+        // Return a column of Radio widgets with specific properties and behavior
         List<String> options = [];
 
         for (String s in json[page][index]['properties']['options']) {
@@ -530,6 +566,7 @@ class _InspectionViewState extends State<InspectionView>
         );
     }
 
+    // If no matching widget is found, return an empty SizedBox
     return const SizedBox();
   }
 }

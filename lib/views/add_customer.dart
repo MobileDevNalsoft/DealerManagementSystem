@@ -11,8 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
-class AddCustomerView extends StatelessWidget {
-  AddCustomerView({super.key});
+class AddCustomer extends StatelessWidget {
+  AddCustomer({super.key});
 
   TextEditingController customerIdController = TextEditingController();
   TextEditingController customerNameController = TextEditingController();
@@ -63,7 +63,7 @@ class AddCustomerView extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => AddVehicleView()));
+                                builder: (_) => AddVehicle()));
                           },
                           child: Column(
                             children: [
@@ -89,7 +89,7 @@ class AddCustomerView extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const ServiceHistoryView()));
+                                builder: (_) => const ServiceHistory()));
                           },
                           child: Column(
                             children: [

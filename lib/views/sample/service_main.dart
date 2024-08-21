@@ -563,8 +563,7 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                               context.read<VehicleBloc>().state.status =
                                   VehicleStatus.initial;
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const ServiceHistoryView(),
+                                builder: (context) => const ServiceHistory(),
                               ));
                             },
                             child: Column(

@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/sample/service_main.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:o3d/o3d.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
 
@@ -19,14 +17,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView>
     with TickerProviderStateMixin, ConnectivityMixin {
-  late O3DController o3dController;
   final NavigatorService navigator = getIt<NavigatorService>();
-
-  @override
-  void initState() {
-    super.initState();
-    o3dController = O3DController();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,29 +54,15 @@ class _HomeViewState extends State<HomeView>
               Column(
                 children: [
                   Gap(size.height * 0.18),
-                  // if (!isMobile)
-                  SizedBox(
-                      width: size.width * 0.8,
-                      height: size.height * (isMobile ? 0.3 : 0.48),
-                      child: O3D.asset(
-                        src: 'assets/images/cyberpunk_car.glb',
-                        autoPlay: false,
-                        autoRotate: false,
-                        cameraControls: true,
-                        autoRotateDelay: 0,
-                        controller: o3dController,
-                      )),
-                  // if (isMobile)
-                  //   Image.asset(
-                  //     'assets/images/dashboard_car.png',
-                  //     height: 200,
-                  //     width: 200,
-                  //   ),
+                  Image.asset(
+                    'assets/images/dashboard_car.png',
+                    height: 200,
+                    width: 200,
+                  ),
                   Gap(size.height * 0.3),
                   InkWell(
                     onTap: () {
                       if (isConnected()) {
-                        o3dController.autoRotate = false;
                         navigator.push('/serviceBooking');
                       } else {
                         DMSCustomWidgets.DMSFlushbar(size, context,

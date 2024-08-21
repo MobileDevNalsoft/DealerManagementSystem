@@ -51,7 +51,7 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const AddVehicleView(),
+              const AddVehicle(),
           transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
@@ -65,15 +65,14 @@ class RouteGenerator {
       case '/gatePass':
         return Transitions.slideLeftTransition(const GatePass(), settings);
       case '/inspectionIn':
-        return Transitions.slideLeftTransition(
-            const InspectionView(), settings);
+        return Transitions.slideLeftTransition(const InspectionIn(), settings);
       case '/inspectionOut':
         return Transitions.slideLeftTransition(const InspectionOut(), settings);
       case '/jobCardDetails':
         return Transitions.slideLeftTransition(JobCardDetails(), settings);
       case '/login':
         return MaterialPageRoute(
-            builder: (_) => const LoginView(), settings: settings);
+            builder: (_) => const Login(), settings: settings);
       case '/listOfJobCards':
         return PageRouteBuilder(
           settings: settings,
@@ -115,7 +114,7 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) =>
-              const ServiceHistoryView(),
+              const ServiceHistory(),
           transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
