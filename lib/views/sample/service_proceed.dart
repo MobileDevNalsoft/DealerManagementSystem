@@ -292,21 +292,9 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   jobTypeAheadController.text = "";
                                   custConcernsController.text = "";
                                   remarksController.text = "";
-                                  Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.green,
-                                          message: 'Service Added Successfully',
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: 24,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: 10))
-                                      .show(context);
+                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                      message: 'Service Added Successfully');
+
                                   context.read<MultiBloc>().state.date = null;
                                   Navigator.pushReplacement(
                                       context,
@@ -314,22 +302,13 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                           builder: (_) =>
                                               const InspectionView()));
                                 case ServiceUploadStatus.failure:
-                                  Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.red,
-                                          message: 'Some error occured',
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: 24,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: 10))
-                                      .show(context);
-
+                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                      message:
+                                          'Something went wrong. Please try again later',
+                                      icon: const Icon(
+                                        Icons.error,
+                                        color: Colors.white,
+                                      ));
                                 default:
                                   null;
                               }
@@ -386,21 +365,13 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                               jobTypeList);
 
                                       if (message != null) {
-                                        Flushbar(
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          backgroundColor: Colors.red,
-                                          message: message,
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: size.height * 0.01,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: size.width * 0.03),
-                                        ).show(context);
+                                        DMSCustomWidgets.DMSFlushbar(
+                                            size, context,
+                                            message: message,
+                                            icon: const Icon(
+                                              Icons.error,
+                                              color: Colors.white,
+                                            ));
                                       } else {
                                         Service service =
                                             Service.fromJson(widget.homeData);

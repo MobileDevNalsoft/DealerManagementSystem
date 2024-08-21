@@ -1,7 +1,9 @@
 import 'dart:ui' as ui;
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -19,7 +21,9 @@ class VehicleExamination extends StatefulWidget {
   State<VehicleExamination> createState() => _VehicleExaminationState();
 }
 
-class _VehicleExaminationState extends State<VehicleExamination> with SingleTickerProviderStateMixin {
+class _VehicleExaminationState extends State<VehicleExamination>
+    with SingleTickerProviderStateMixin {
+  NavigatorService navigator = getIt<NavigatorService>();
   @override
   void initState() {
     super.initState();
@@ -43,14 +47,22 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.black,
-              boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 10,
+                    blurStyle: BlurStyle.outer,
+                    spreadRadius: 0,
+                    color: Colors.orange.shade200,
+                    offset: const Offset(0, 0))
+              ]),
           child: Transform(
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
-                  Navigator.popUntil(context, (route) => route.settings.name == '/');
+                  navigator.pop();
                 },
-                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                icon:
+                    const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           ),
         ),
         title: Container(
@@ -65,7 +77,10 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
               child: Text(
                 textAlign: TextAlign.center,
                 'Parts Examination',
-                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 16),
               ),
             )),
         centerTitle: true,
@@ -75,7 +90,8 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
         children: [
           Stack(
             children: [
-              BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(listener: (context, state) {
+              BlocConsumer<VehiclePartsInteractionBloc,
+                  VehiclePartsInteractionBlocState>(listener: (context, state) {
                 if (state.status == VehiclePartsInteractionStatus.success) {
                   DMSCustomWidgets.DMSFlushbar(size, context,
                       message: "Successfully uploaded",
@@ -104,7 +120,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                   ),
                 );
               }),
-    
+
               //zoom in zoom out buttons
               Positioned(
                 top: size.height * 0.35,
@@ -125,11 +141,28 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                             // Upper limit for zoom is 1.8
                             if (context.read<MultiBloc>().state.scaleFactor == null) {
                               context.read<MultiBloc>().state.scaleFactor = 1.4;
-                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                              context.read<MultiBloc>().add(ScaleVehicle(
+                                  factor: context
+                                      .read<MultiBloc>()
+                                      .state
+                                      .scaleFactor!));
                             } else {
-                              if (context.read<MultiBloc>().state.scaleFactor! <= 1.8) {
-                                context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! + 0.1;
-                                context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                              if (context
+                                      .read<MultiBloc>()
+                                      .state
+                                      .scaleFactor! <=
+                                  1.8) {
+                                context.read<MultiBloc>().state.scaleFactor =
+                                    context
+                                            .read<MultiBloc>()
+                                            .state
+                                            .scaleFactor! +
+                                        0.1;
+                                context.read<MultiBloc>().add(ScaleVehicle(
+                                    factor: context
+                                        .read<MultiBloc>()
+                                        .state
+                                        .scaleFactor!));
                               }
                             }
                           },
@@ -144,11 +177,22 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                           // Lower limit for zoom is 1.3
                           if (context.read<MultiBloc>().state.scaleFactor == null) {
                             context.read<MultiBloc>().state.scaleFactor = 1.3;
-                            context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                            context.read<MultiBloc>().add(ScaleVehicle(
+                                factor: context
+                                    .read<MultiBloc>()
+                                    .state
+                                    .scaleFactor!));
                           } else {
-                            if (context.read<MultiBloc>().state.scaleFactor! >= 1.3) {
-                              context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! - 0.1;
-                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                            if (context.read<MultiBloc>().state.scaleFactor! >=
+                                1.3) {
+                              context.read<MultiBloc>().state.scaleFactor =
+                                  context.read<MultiBloc>().state.scaleFactor! -
+                                      0.1;
+                              context.read<MultiBloc>().add(ScaleVehicle(
+                                  factor: context
+                                      .read<MultiBloc>()
+                                      .state
+                                      .scaleFactor!));
                             }
                           }
                         },
@@ -178,8 +222,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                   onTap: () {
                     // After vehicle examination navigation user from home page to list of jobcards.
                     if (!context.read<MultiBloc>().state.isTapped) {
-                      Navigator.of(context).popUntil((route) => route.settings.name == '/');
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => ListOfJobcards()));
+                      navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                     }
                   },
                   child: Container(
@@ -198,10 +241,13 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
               ),
             ],
           ),
-          if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
+          if (context.watch<VehiclePartsInteractionBloc>().state.status ==
+              VehiclePartsInteractionStatus.loading)
             Container(
               color: Colors.blueGrey.withOpacity(0.25),
-              child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
+              child: Center(
+                  child: Lottie.asset('assets/lottie/car_loading.json',
+                      height: size.height * 0.4, width: size.width * 0.4)),
             )
         ],
       ),

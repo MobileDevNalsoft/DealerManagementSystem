@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dms/inits/init.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,8 +10,9 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationBloc({required Repository repo})
-      : _repo = repo,
+  NavigatorService? navigator;
+  AuthenticationBloc({Repository? repo, this.navigator})
+      : _repo = repo!,
         super(AuthenticationState.initial()) {
     on<LoginButtonPressed>(_onLoginButtonPressed);
     on<ObscurePasswordTapped>(_onObscurePasswordTapped);
@@ -28,6 +30,7 @@ class AuthenticationBloc
               authenticationStatus: AuthenticationStatus.success));
           getIt<SharedPreferences>()
               .setInt('service_advisor_id', int.parse(event.username));
+          navigator!.pushReplacement('/home');
         } else if (json['response_code'] == 404) {
           emit(state.copyWith(
               authenticationStatus: AuthenticationStatus.invalidCredentials));

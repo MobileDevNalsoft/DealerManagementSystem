@@ -2,12 +2,15 @@ import 'package:bloc/bloc.dart';
 import 'package:dms/models/customer.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:flutter/material.dart';
+
+import '../../navigations/navigator_service.dart';
 part 'customer_event.dart';
 part 'customer_state.dart';
 
 class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
-  CustomerBloc({required Repository repo})
-      : _repo = repo,
+  NavigatorService? navigator;
+  CustomerBloc({Repository? repo, this.navigator})
+      : _repo = repo!,
         super(CustomerState.initial()) {
     // on<CustomerDetailsSubmitted>(_onCustomerDetailsSubmitted);
     // on<CustomerIdOnChangeEvent>(_onCustomerIdChange);

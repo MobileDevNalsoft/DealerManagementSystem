@@ -81,10 +81,8 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     setState(() {
       if (_sliderButtonController.currentPosition == _rightPosition) {
         widget.onRightLabelReached();
-        return;
       } else if (_sliderButtonController.currentPosition == _leftPosition) {
         widget.onLeftLabelReached();
-        return;
       } else {
         _sliderButtonController.setCurrentPosition = _startPosition;
         _sliderButtonController.setPosition = Position.middle;
@@ -108,6 +106,9 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     return GestureDetector(
       onHorizontalDragUpdate: _onPanUpdate,
       onHorizontalDragEnd: _onPanEnd,
+      onHorizontalDragStart: (details) {
+        _sliderButtonController.position = Position.moving;
+      },
       child: Stack(
         children: [
           Align(

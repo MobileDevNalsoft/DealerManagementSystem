@@ -2,7 +2,10 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/vehicle.dart';
+import 'package:dms/navigations/navigator_service.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,12 +21,14 @@ class AddVehicleView extends StatefulWidget {
   State<AddVehicleView> createState() => _AddVehicleViewState();
 }
 
-class _AddVehicleViewState extends State<AddVehicleView> {
+class _AddVehicleViewState extends State<AddVehicleView>
+    with ConnectivityMixin {
   // TextEditing Controllers
 
   TextEditingController vehicleRegNumberController = TextEditingController();
 
-  TextEditingController customerContactNumberController = TextEditingController();
+  TextEditingController customerContactNumberController =
+      TextEditingController();
 
   TextEditingController customerNameController = TextEditingController();
 
@@ -47,7 +52,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
 
   TextEditingController mfgYearController = TextEditingController();
 
-  TextEditingController insuranceCompanyTypeAheadController = TextEditingController();
+  TextEditingController insuranceCompanyTypeAheadController =
+      TextEditingController();
 
   TextEditingController financialDetailsController = TextEditingController();
 
@@ -98,6 +104,9 @@ class _AddVehicleViewState extends State<AddVehicleView> {
   late MultiBloc _multiBloc;
   late VehicleBloc _vehicleBloc;
   late ServiceBloc _serviceBloc;
+  late Size size;
+
+  NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   void initState() {
@@ -107,8 +116,11 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     _vehicleBloc = context.read<VehicleBloc>();
     _serviceBloc = context.read<ServiceBloc>();
 
-    _multiBloc.state.year = null;
+    _multiBloc.state.year = DateTime.now().year;
     yearPickerController = FixedExtentScrollController(initialItem: index);
+    if (_vehicleBloc.state.registrationNo != null) {
+      vehicleRegNumberController.text = _vehicleBloc.state.registrationNo!;
+    }
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
     // customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
     _vehicleBloc.state.status = VehicleStatus.initial;
@@ -122,6 +134,26 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       insuranceCompanyDropDownUp = !insuranceCompanyDropDownUp;
       _serviceBloc.add(DropDownOpen());
     });
+  }
+
+  void _onRegNoFocusChange() {
+    if (isConnected()) {
+      if (!vehicleRegNumberFocus.hasFocus &&
+          vehicleRegNumberController.text.isNotEmpty) {
+        _vehicleBloc.state.status = VehicleStatus.initial;
+        _vehicleBloc.add(VehicleCheck(
+            registrationNo: vehicleRegNumberController
+                .text)); // manage this api with customer check in service booking so that this api is no more required.
+      }
+    } else {
+      DMSCustomWidgets.DMSFlushbar(size, context,
+          message: 'Looks like you'
+              're offline. Please check your connection and try again.',
+          icon: const Icon(
+            Icons.error,
+            color: Colors.white,
+          ));
+    }
   }
 
   void clearFields() {
@@ -142,49 +174,52 @@ class _AddVehicleViewState extends State<AddVehicleView> {
     financialDetailsController.clear();
   }
 
-  void unfocusFields() {
-    vehicleRegNumberFocus.unfocus();
-    vehicleTypeFocus.unfocus();
-    customerContactNumberFocus.unfocus();
-    customerNameFocus.unfocus();
-    customerAddressFocus.unfocus();
-    chassisNumberFocus.unfocus();
-    engineNumberFocus.unfocus();
-    makeFocus.unfocus();
-    modelFocus.unfocus();
-    variantFocus.unfocus();
-    colorFocus.unfocus();
-    kmsFocus.unfocus();
-    mfgYearFocus.unfocus();
-    insuranceCompanyFocus.unfocus();
-    financialDetailsFocus.unfocus();
+  void disposeFields() {
+    vehicleRegNumberController.dispose();
+    vehicleTypeController.dispose();
+    customerContactNumberController.dispose();
+    chassisNumberController.dispose();
+    engineNumberController.dispose();
+    customerNameController.dispose();
+    customerAddressController.dispose();
+    makeTypeAheadController.dispose();
+    modelController.dispose();
+    variantController.dispose();
+    colorController.dispose();
+    kmsController.dispose();
+    mfgYearController.dispose();
+    insuranceCompanyTypeAheadController.dispose();
+    financialDetailsController.dispose();
+    vehicleRegNumberFocus.dispose();
+    vehicleTypeFocus.dispose();
+    customerContactNumberFocus.dispose();
+    customerNameFocus.dispose();
+    customerAddressFocus.dispose();
+    chassisNumberFocus.dispose();
+    engineNumberFocus.dispose();
+    makeFocus.dispose();
+    modelFocus.dispose();
+    variantFocus.dispose();
+    colorFocus.dispose();
+    kmsFocus.dispose();
+    mfgYearFocus.dispose();
+    insuranceCompanyFocus.dispose();
+    financialDetailsFocus.dispose();
   }
 
   @override
   void dispose() {
     yearPickerController.dispose();
+    _vehicleBloc.state.registrationNo = null;
+    disposeFields();
     super.dispose();
-  }
-
-  void _onRegNoFocusChange() {
-    if (!vehicleRegNumberFocus.hasFocus && vehicleRegNumberController.text.isNotEmpty) {
-      _vehicleBloc.state.status = VehicleStatus.initial;
-      _vehicleBloc.add(VehicleCheck(
-          registrationNo: vehicleRegNumberController.text)); // manage this api with customer check in service booking so that this api is no more required.
-    }
-  }
-
-  void _onCustomerContactNoFocusChange() {
-    if (!customerContactNumberFocus.hasFocus && customerContactNumberController.text.isNotEmpty) {
-      _vehicleBloc.add(CustomerCheck(customerContactNo: customerContactNumberController.text));
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
 
-    var size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
     double fieldWidth;
     double fieldHeight;
 
@@ -194,7 +229,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       fieldWidth = size.width * 0.8;
       fieldHeight = size.height * 0.06;
     } else {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       fieldWidth = size.width * 0.6;
       fieldHeight = size.height * 0.063;
     }
@@ -203,328 +239,503 @@ class _AddVehicleViewState extends State<AddVehicleView> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          extendBodyBehindAppBar: false,
-          appBar: AppBar(
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            backgroundColor: Colors.black45,
-            leadingWidth: size.width * 0.14,
-            leading: Container(
-              margin: EdgeInsets.only(left: size.width * 0.045),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
-              child: Transform(
-                transform: Matrix4.translationValues(-3, 0, 0),
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-              ),
-            ),
-            title: Container(
-                alignment: Alignment.center,
-                height: size.height * 0.05,
-                width: size.width * 0.45,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                ]),
-                child: const Text(
-                  textAlign: TextAlign.center,
-                  'Add Vehicle',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                )),
-            centerTitle: true,
-          ),
-          body: Stack(
-            children: [
-              Container(
-                height: size.height,
-                width: size.width,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
+      child: Hero(
+        tag: 'addVehicle',
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            extendBodyBehindAppBar: false,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              elevation: 0,
+              backgroundColor: Colors.black45,
+              leadingWidth: size.width * 0.14,
+              leading: Container(
+                margin: EdgeInsets.only(left: size.width * 0.045),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black,
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 10,
+                          blurStyle: BlurStyle.outer,
+                          spreadRadius: 0,
+                          color: Colors.orange.shade200,
+                          offset: const Offset(0, 0))
+                    ]),
+                child: Transform(
+                  transform: Matrix4.translationValues(-3, 0, 0),
+                  child: IconButton(
+                      onPressed: () {
+                        navigator.pop();
+                      },
+                      icon: const Icon(Icons.arrow_back_rounded,
+                          color: Colors.white)),
                 ),
-                child: Column(
-                  children: [
-                    Gap(
-                      size.height * 0.05,
-                    ),
-                    SizedBox(
-                        height: isMobile ? size.height * 0.62 : size.height * 0.5,
-                        width: fieldWidth,
-                        child: SingleChildScrollView(
-                          controller: scrollController,
-                          child: StaggeredGrid.count(
-                            crossAxisCount: isMobile ? 1 : 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 16,
-                            children: [
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: vehicleRegNumberFocus,
-                                  size: size,
-                                  hint: "Vehicle Reg. No.",
-                                  isMobile: isMobile,
-                                  inputFormatters: [UpperCaseTextFormatter()],
-                                  scrollController: scrollController,
-                                  textcontroller: vehicleRegNumberController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: chassisNumberFocus,
-                                  size: size,
-                                  hint: "Chassis No.",
-                                  isMobile: isMobile,
-                                  inputFormatters: [UpperCaseTextFormatter()],
-                                  scrollController: scrollController,
-                                  textcontroller: chassisNumberController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: engineNumberFocus,
-                                  size: size,
-                                  hint: "Engine No.",
-                                  inputFormatters: [UpperCaseTextFormatter()],
-                                  isMobile: isMobile,
-                                  textcontroller: engineNumberController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.SearchableDropDown(
-                                size: size,
-                                hint: "Make",
-                                items: ["Maruthi Suzuki", "Tata", "Mercedes", "Hyundai", "Kia", "Ford", "Toyota"],
-                                focus: makeFocus,
-                                typeAheadController: makeTypeAheadController,
-                                isMobile: isMobile,
-                                scrollController: scrollController,
-                                icon: makeDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
-                              ),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: modelFocus,
-                                  size: size,
-                                  inputFormatters: [InitCapCaseTextFormatter()],
-                                  hint: "Model",
-                                  isMobile: isMobile,
-                                  textcontroller: modelController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: variantFocus,
-                                  size: size,
-                                  hint: "Variant",
-                                  inputFormatters: [InitCapCaseTextFormatter()],
-                                  isMobile: isMobile,
-                                  textcontroller: variantController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: colorFocus,
-                                  size: size,
-                                  hint: "Color",
-                                  inputFormatters: [UpperCaseTextFormatter()],
-                                  isMobile: isMobile,
-                                  textcontroller: colorController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: kmsFocus,
-                                  size: size,
-                                  hint: "KMS",
-                                  isMobile: isMobile,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  textcontroller: kmsController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              BlocBuilder<MultiBloc, MultiBlocState>(
-                                builder: (context, state) {
-                                  return DMSCustomWidgets.CustomYearPicker(
-                                      size: size, isMobile: isMobile, context: context, yearPickerController: yearPickerController, year: state.year);
-                                },
-                              ),
-                              DMSCustomWidgets.SearchableDropDown(
-                                size: size,
-                                hint: "Insurance Company",
-                                items: ["abc", "xyz", "pqr"],
-                                focus: insuranceCompanyFocus,
-                                typeAheadController: insuranceCompanyTypeAheadController,
-                                isMobile: isMobile,
-                                scrollController: scrollController,
-                                icon: insuranceCompanyDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
-                              ),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: financialDetailsFocus,
-                                  size: size,
-                                  hint: "Financial details",
-                                  isMobile: isMobile,
-                                  textcontroller: financialDetailsController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: customerNameFocus,
-                                  size: size,
-                                  hint: "Customer Name",
-                                  inputFormatters: [InitCapCaseTextFormatter()],
-                                  isMobile: isMobile,
-                                  scrollController: scrollController,
-                                  textcontroller: customerNameController,
-                                  context: context),
-                              DMSCustomWidgets.CustomDataCard(
-                                  focusNode: customerContactNumberFocus,
-                                  keyboardType: const TextInputType.numberWithOptions(signed: true),
-                                  size: size,
-                                  hint: "Customer Contact No.",
-                                  isMobile: isMobile,
-                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
-                                  textcontroller: customerContactNumberController,
-                                  scrollController: scrollController,
-                                  context: context),
-                              StaggeredGridTile.extent(
-                                crossAxisCellCount: 1,
-                                mainAxisExtent: fieldHeight * 2,
-                                child: DMSCustomWidgets.CustomTextFieldCard(
-                                    focusNode: customerAddressFocus,
+              ),
+              title: Container(
+                  alignment: Alignment.center,
+                  height: size.height * 0.05,
+                  width: size.width * 0.45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 10,
+                            blurStyle: BlurStyle.outer,
+                            spreadRadius: 0,
+                            color: Colors.orange.shade200,
+                            offset: const Offset(0, 0))
+                      ]),
+                  child: const Text(
+                    textAlign: TextAlign.center,
+                    'Add Vehicle',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 16),
+                  )),
+              centerTitle: true,
+            ),
+            body: Stack(
+              children: [
+                Container(
+                  height: size.height,
+                  width: size.width,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [
+                          Colors.black45,
+                          Colors.black26,
+                          Colors.black45
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.1, 0.5, 1]),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Gap(
+                        size.height * 0.05,
+                      ),
+                      Expanded(
+                        flex: 9,
+                        child: SizedBox(
+                            width: fieldWidth,
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              child: StaggeredGrid.count(
+                                crossAxisCount: isMobile ? 1 : 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 16,
+                                children: [
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: vehicleRegNumberFocus,
+                                      size: size,
+                                      hint: "Vehicle Reg. No.",
+                                      isMobile: isMobile,
+                                      inputFormatters: [
+                                        UpperCaseTextFormatter()
+                                      ],
+                                      scrollController: scrollController,
+                                      textcontroller:
+                                          vehicleRegNumberController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: chassisNumberFocus,
+                                      size: size,
+                                      hint: "Chassis No.",
+                                      isMobile: isMobile,
+                                      inputFormatters: [
+                                        UpperCaseTextFormatter()
+                                      ],
+                                      scrollController: scrollController,
+                                      textcontroller: chassisNumberController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: engineNumberFocus,
+                                      size: size,
+                                      hint: "Engine No.",
+                                      inputFormatters: [
+                                        UpperCaseTextFormatter()
+                                      ],
+                                      isMobile: isMobile,
+                                      textcontroller: engineNumberController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.SearchableDropDown(
                                     size: size,
-                                    hint: "Customer Address",
-                                    inputFormatters: [InitCapCaseTextFormatter()],
+                                    hint: "Make",
+                                    items: [
+                                      "Maruthi Suzuki",
+                                      "Tata",
+                                      "Mercedes",
+                                      "Hyundai",
+                                      "Kia",
+                                      "Ford",
+                                      "Toyota"
+                                    ],
+                                    focus: makeFocus,
+                                    typeAheadController:
+                                        makeTypeAheadController,
                                     isMobile: isMobile,
                                     scrollController: scrollController,
-                                    textcontroller: customerAddressController,
-                                    context: context),
-                              ),
-                              if (MediaQuery.viewInsetsOf(context).bottom != 0)
-                                StaggeredGridTile.extent(
-                                  crossAxisCellCount: 1,
-                                  mainAxisExtent: fieldHeight * 3,
-                                  child: const SizedBox(),
-                                )
-                            ],
-                          ),
-                        )),
-                    BlocListener<VehicleBloc, VehicleState>(
-                        listener: (context, state) {
-                          switch (state.status) {
-                            case VehicleStatus.success:
-                              clearFields();
-                              showRegistrationDialog(
-                                  size: size,
-                                  state: state,
-                                  statusWidget: Container(
-                                      alignment: Alignment.centerLeft,
-                                      width: size.width * 0.88,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
-                                      child: Row(
-                                        children: [
-                                          Lottie.asset("assets/lottie/success.json", repeat: false, width: size.width * 0.08),
-                                          Gap(4),
-                                          Text(
-                                            'Vehicle Registration is Successful',
-                                            style: TextStyle(color: Colors.black87),
-                                          ),
+                                    icon: makeDropDownUp
+                                        ? const Icon(Icons.arrow_drop_up)
+                                        : const Icon(Icons.arrow_drop_down),
+                                  ),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: modelFocus,
+                                      size: size,
+                                      inputFormatters: [
+                                        InitCapCaseTextFormatter()
+                                      ],
+                                      hint: "Model",
+                                      isMobile: isMobile,
+                                      textcontroller: modelController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: variantFocus,
+                                      size: size,
+                                      hint: "Variant",
+                                      inputFormatters: [
+                                        InitCapCaseTextFormatter()
+                                      ],
+                                      isMobile: isMobile,
+                                      textcontroller: variantController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: colorFocus,
+                                      size: size,
+                                      hint: "Color",
+                                      inputFormatters: [
+                                        UpperCaseTextFormatter()
+                                      ],
+                                      isMobile: isMobile,
+                                      textcontroller: colorController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: kmsFocus,
+                                      size: size,
+                                      hint: "KMS",
+                                      isMobile: isMobile,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      textcontroller: kmsController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  BlocBuilder<MultiBloc, MultiBlocState>(
+                                    builder: (context, state) {
+                                      return DMSCustomWidgets.CustomYearPicker(
+                                          size: size,
+                                          isMobile: isMobile,
+                                          context: context,
+                                          yearPickerController:
+                                              yearPickerController,
+                                          year: state.year);
+                                    },
+                                  ),
+                                  DMSCustomWidgets.SearchableDropDown(
+                                    size: size,
+                                    hint: "Insurance Company",
+                                    items: ["abc", "xyz", "pqr"],
+                                    focus: insuranceCompanyFocus,
+                                    typeAheadController:
+                                        insuranceCompanyTypeAheadController,
+                                    isMobile: isMobile,
+                                    scrollController: scrollController,
+                                    icon: insuranceCompanyDropDownUp
+                                        ? const Icon(Icons.arrow_drop_up)
+                                        : const Icon(Icons.arrow_drop_down),
+                                  ),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: financialDetailsFocus,
+                                      size: size,
+                                      hint: "Financial details",
+                                      isMobile: isMobile,
+                                      textcontroller:
+                                          financialDetailsController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: customerNameFocus,
+                                      size: size,
+                                      hint: "Customer Name",
+                                      inputFormatters: [
+                                        InitCapCaseTextFormatter()
+                                      ],
+                                      isMobile: isMobile,
+                                      scrollController: scrollController,
+                                      textcontroller: customerNameController,
+                                      context: context),
+                                  DMSCustomWidgets.CustomDataCard(
+                                      focusNode: customerContactNumberFocus,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              signed: true),
+                                      size: size,
+                                      hint: "Customer Contact No.",
+                                      isMobile: isMobile,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        LengthLimitingTextInputFormatter(10)
+                                      ],
+                                      textcontroller:
+                                          customerContactNumberController,
+                                      scrollController: scrollController,
+                                      context: context),
+                                  StaggeredGridTile.extent(
+                                    crossAxisCellCount: 1,
+                                    mainAxisExtent: fieldHeight * 2,
+                                    child: DMSCustomWidgets.CustomTextFieldCard(
+                                        focusNode: customerAddressFocus,
+                                        size: size,
+                                        hint: "Customer Address",
+                                        inputFormatters: [
+                                          InitCapCaseTextFormatter()
                                         ],
-                                      )),
-                                  text: 'Do you want to book service ?',
-                                  acceptText: 'book now',
-                                  rejectText: 'later',
-                                  onAccept: () {
-                                    state.status = VehicleStatus.initial;
-                                    Navigator.pop(context);
-                                    Navigator.popAndPushNamed(context, '/serviceBooking');
-                                  },
-                                  onReject: () {
-                                    state.status = VehicleStatus.initial;
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  });
+                                        isMobile: isMobile,
+                                        scrollController: scrollController,
+                                        textcontroller:
+                                            customerAddressController,
+                                        context: context),
+                                  ),
+                                  if (MediaQuery.viewInsetsOf(context).bottom !=
+                                      0)
+                                    StaggeredGridTile.extent(
+                                      crossAxisCellCount: 1,
+                                      mainAxisExtent: fieldHeight * 3,
+                                      child: const SizedBox(),
+                                    )
+                                ],
+                              ),
+                            )),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: BlocListener<VehicleBloc, VehicleState>(
+                            listener: (context, state) {
+                              switch (state.status) {
+                                case VehicleStatus.success:
+                                  if (navigator
+                                      .navigatorkey.currentState!.mounted) {
+                                    showRegistrationDialog(
+                                        size: size,
+                                        state: state,
+                                        statusWidget: Container(
+                                            alignment: Alignment.centerLeft,
+                                            width: size.width * 0.88,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(16)),
+                                            child: Row(
+                                              children: [
+                                                Lottie.asset(
+                                                    "assets/lottie/success.json",
+                                                    repeat: false,
+                                                    width: size.width * 0.08),
+                                                const Gap(4),
+                                                const Text(
+                                                  'Vehicle Registration is Successful',
+                                                  style: TextStyle(
+                                                      color: Colors.black87),
+                                                ),
+                                              ],
+                                            )),
+                                        text: 'Do you want to book service ?',
+                                        acceptText: 'book now',
+                                        rejectText: 'later',
+                                        onAccept: () {
+                                          state.status = VehicleStatus.initial;
+                                          state.registrationNo =
+                                              vehicleRegNumberController.text;
+                                          navigator.pushAndRemoveUntil(
+                                              '/serviceBooking', '/home');
+                                          clearFields();
+                                        },
+                                        onReject: () {
+                                          state.status = VehicleStatus.initial;
+                                          navigator.popUntil('/home');
+                                        });
+                                  }
 
-                            case VehicleStatus.vehicleAlreadyAdded:
-                              showRegistrationDialog(
-                                size: size,
-                                state: state,
-                                text: 'Oops! This Vehicle is already registered with us.\nDo you want to book service ?',
-                                acceptText: 'book now',
-                                rejectText: 'later',
-                                onAccept: () {
-                                  state.status = VehicleStatus.initial;
-                                  Navigator.pop(context);
-                                  Navigator.popAndPushNamed(context, '/serviceBooking');
-                                },
-                                onReject: () {
-                                  state.status = VehicleStatus.initial;
-                                  Navigator.pop(context);
-                                  vehicleRegNumberFocus.requestFocus();
-                                },
-                              );
-                              break;
-                            default:
-                              break;
-                          }
-                        },
-                        child: GestureDetector(
-                          onTap: () {
-                            unfocusFields();
-                            String? message = _vehicleRegistrationNoValidator(vehicleRegNumberController.text) ??
-                                _chassisNoValidation(chassisNumberController.text) ??
-                                _engineNoValidation(engineNumberController.text) ??
-                                (makeTypeAheadController.text.isEmpty ? 'Make cannot be empty' : null) ??
-                                (kmsController.text.isEmpty ? 'KMS cannot be empty' : null) ??
-                                _nameValidation(customerNameController.text) ??
-                                (customerContactNumberController.text.isEmpty ? 'Customer Contact No. cannot be empty' : null);
+                                case VehicleStatus.vehicleAlreadyAdded:
+                                  if (navigator
+                                      .navigatorkey.currentState!.mounted) {
+                                    showRegistrationDialog(
+                                      size: size,
+                                      state: state,
+                                      statusWidget: Container(
+                                          alignment: Alignment.centerLeft,
+                                          width: size.width * 0.88,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16)),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Lottie.asset(
+                                                  "assets/lottie/success.json",
+                                                  repeat: false,
+                                                  width: size.width * 0.08),
+                                              const Gap(4),
+                                              SizedBox(
+                                                width: size.width * 0.58,
+                                                child: const Text(
+                                                  'Oops! This Vehicle is already registered with us',
+                                                  softWrap: true,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.black87),
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                      text: 'Do you want to book service ?',
+                                      acceptText: 'book now',
+                                      rejectText: 'retry',
+                                      onAccept: () {
+                                        state.status = VehicleStatus.initial;
+                                        state.registrationNo =
+                                            vehicleRegNumberController.text;
+                                        navigator.pushAndRemoveUntil(
+                                            '/serviceBooking', '/home');
+                                        clearFields();
+                                      },
+                                      onReject: () {
+                                        state.status = VehicleStatus.initial;
+                                        navigator.pop();
+                                        vehicleRegNumberFocus.requestFocus();
+                                      },
+                                    );
+                                  }
+                                  break;
+                                case VehicleStatus.failure:
+                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                      message: 'Something went wrong',
+                                      icon: const Icon(
+                                        Icons.error,
+                                        color: Colors.white,
+                                      ));
+                                default:
+                                  break;
+                              }
+                            },
+                            child: GestureDetector(
+                              onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                String? message =
+                                    _vehicleRegistrationNoValidator(
+                                            vehicleRegNumberController.text) ??
+                                        _chassisNoValidation(
+                                            chassisNumberController.text) ??
+                                        _engineNoValidation(
+                                            engineNumberController.text) ??
+                                        (makeTypeAheadController.text.isEmpty
+                                            ? 'Make cannot be empty'
+                                            : null) ??
+                                        (kmsController.text.isEmpty
+                                            ? 'KMS cannot be empty'
+                                            : null) ??
+                                        _nameValidation(
+                                            customerNameController.text) ??
+                                        (customerContactNumberController
+                                                .text.isEmpty
+                                            ? _customerContactNoValidation(
+                                                customerContactNumberController
+                                                    .text)
+                                            : null);
 
-                            if (message != null) {
-                              DMSCustomWidgets.DMSFlushbar(size, context,
-                                  message: message,
-                                  icon: const Icon(
-                                    Icons.error,
-                                    color: Colors.white,
-                                  ));
-                            } else {
-                              Vehicle vehicle = Vehicle(
-                                  vehicleRegNumber: vehicleRegNumberController.text,
-                                  chassisNumber: chassisNumberController.text,
-                                  engineNumber: engineNumberController.text,
-                                  make: makeTypeAheadController.text,
-                                  varient: variantController.text,
-                                  color: colorController.text,
-                                  mfgYear: mfgYearController.text.isNotEmpty ? int.parse(mfgYearController.text) : 0,
-                                  kms: kmsController.text.isNotEmpty ? int.parse(kmsController.text) : 0,
-                                  financialDetails: financialDetailsController.text,
-                                  model: modelController.text,
-                                  insuranceCompany: insuranceCompanyTypeAheadController.text,
-                                  customerContactNo: customerContactNumberController.text,
-                                  customerName: customerNameController.text,
-                                  customerAddress: customerAddressController.text);
-                              context.read<VehicleBloc>().add(AddVehicleEvent(vehicle: vehicle));
-                            }
-                          },
-                          child: Container(
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.only(top: size.height * 0.03),
-                              height: size.height * 0.045,
-                              width: size.width * 0.2,
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                              ]),
-                              child: const Text(
-                                textAlign: TextAlign.center,
-                                'submit',
-                                style: TextStyle(color: Colors.white, fontSize: 16),
-                              )),
-                        )),
-                  ],
+                                if (message != null) {
+                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                      message: message,
+                                      icon: const Icon(
+                                        Icons.error,
+                                        color: Colors.white,
+                                      ));
+                                } else {
+                                  Vehicle vehicle = Vehicle(
+                                      vehicleRegNumber:
+                                          vehicleRegNumberController.text,
+                                      chassisNumber:
+                                          chassisNumberController.text,
+                                      engineNumber: engineNumberController.text,
+                                      make: makeTypeAheadController.text,
+                                      varient: variantController.text,
+                                      color: colorController.text,
+                                      mfgYear: mfgYearController.text.isNotEmpty
+                                          ? int.parse(mfgYearController.text)
+                                          : 0,
+                                      kms: kmsController.text.isNotEmpty
+                                          ? int.parse(kmsController.text)
+                                          : 0,
+                                      financialDetails:
+                                          financialDetailsController.text,
+                                      model: modelController.text,
+                                      insuranceCompany:
+                                          insuranceCompanyTypeAheadController
+                                              .text,
+                                      customerContactNo:
+                                          customerContactNumberController.text,
+                                      customerName: customerNameController.text,
+                                      customerAddress:
+                                          customerAddressController.text);
+                                  context
+                                      .read<VehicleBloc>()
+                                      .add(AddVehicleEvent(vehicle: vehicle));
+                                }
+                              },
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  margin:
+                                      EdgeInsets.only(top: size.height * 0.03),
+                                  height: size.height * 0.045,
+                                  width: size.width * 0.2,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 10,
+                                            blurStyle: BlurStyle.outer,
+                                            spreadRadius: 0,
+                                            color: Colors.orange.shade200,
+                                            offset: const Offset(0, 0))
+                                      ]),
+                                  child: const Text(
+                                    textAlign: TextAlign.center,
+                                    'submit',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  )),
+                            )),
+                      ),
+                      Expanded(
+                        child: Gap(size.height * 0.15),
+                        flex: 2,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading)
-                Container(
-                  color: Colors.black54,
-                  child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6,delegates: LottieDelegates())),
-                )
-            ],
-          )),
+                if (context.watch<VehicleBloc>().state.status ==
+                    VehicleStatus.loading)
+                  Container(
+                    color: Colors.black54,
+                    child: Center(
+                        child: Lottie.asset('assets/lottie/car_loading.json',
+                            height: size.height * 0.5,
+                            width: size.width * 0.6)),
+                  )
+              ],
+            )),
+      ),
     );
   }
 
@@ -541,66 +752,79 @@ class _AddVehicleViewState extends State<AddVehicleView> {
         context: context,
         barrierDismissible: false,
         builder: (context) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              contentPadding: EdgeInsets.only(top: size.height * 0.01),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: size.width * 0.03),
-                    child: Column(
-                      children: [
-                        statusWidget ?? SizedBox(),
-                        if (statusWidget != null) Gap(8),
-                        Text(
-                          text,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: size.width * 0.03),
+                      child: Column(
+                        children: [
+                          statusWidget ?? const SizedBox(),
+                          if (statusWidget != null) const Gap(8),
+                          Text(
+                            text,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Gap(size.height * 0.01),
-                  Container(
-                    height: size.height * 0.05,
-                    margin: EdgeInsets.all(size.height * 0.001),
-                    decoration: const BoxDecoration(
-                        color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: onReject,
-                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                            child: Text(
-                              rejectText,
+                    Gap(size.height * 0.01),
+                    Container(
+                      height: size.height * 0.05,
+                      margin: EdgeInsets.all(size.height * 0.001),
+                      decoration: const BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onReject,
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: Text(
+                                rejectText,
+                              ),
                             ),
                           ),
-                        ),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          thickness: 0.5,
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            onPressed: onAccept,
-                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                            child: Text(
-                              acceptText,
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 0.5,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onAccept,
+                              style: TextButton.styleFrom(
+                                  fixedSize:
+                                      Size(size.width * 0.3, size.height * 0.1),
+                                  foregroundColor: Colors.white),
+                              child: Text(
+                                acceptText,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              actionsPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero);
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero),
+          );
         });
   }
 }
@@ -631,6 +855,9 @@ String? _chassisNoValidation(String value) {
   } else if (value.length > 17) {
     return "Invalid Chassis No.";
   }
+  //  else if (!chassisNoRegex.hasMatch(value)) {
+  //   return "Invalid Chassis No.";
+  // }
   return null;
 }
 
@@ -638,9 +865,10 @@ String? _engineNoValidation(String value) {
   RegExp engineNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
     return "Engine No. can't be empty";
-  } else if (!engineNoRegex.hasMatch(value)) {
-    return "Invalid Engine No.";
   }
+  // else if (!engineNoRegex.hasMatch(value)) {
+  //   return "Invalid Engine No.";
+  // }
   return null;
 }
 

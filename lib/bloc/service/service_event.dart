@@ -12,7 +12,10 @@ class ServiceAdded extends ServiceEvent {
 class GetServiceHistory extends ServiceEvent {
   final String? query;
   final String? vehicleRegNo;
-  GetServiceHistory({this.query,this.vehicleRegNo,});
+  GetServiceHistory({
+    this.query,
+    this.vehicleRegNo,
+  });
 }
 
 class PageChange extends ServiceEvent {
@@ -35,7 +38,8 @@ class GetJson extends ServiceEvent {}
 
 class UpdateSliderPosition extends ServiceEvent {
   final Position position;
-  UpdateSliderPosition({required this.position});
+  double? value;
+  UpdateSliderPosition({required this.position, this.value});
 }
 
 class GetJobCards extends ServiceEvent {
@@ -82,11 +86,12 @@ class SearchJobCards extends ServiceEvent {
 }
 
 class DropDownOpen extends ServiceEvent {}
-class ModifyGatePassStatus extends ServiceEvent{
+
+class ModifyGatePassStatus extends ServiceEvent {
   final GatePassStatus status;
   ModifyGatePassStatus({required this.status});
 }
 
-class ClearServices extends ServiceEvent{
+class ClearServices extends ServiceEvent {
   ClearServices();
 }

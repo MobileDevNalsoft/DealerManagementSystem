@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
+
+import '../navigations/navigator_service.dart';
 
 class GatePass extends StatefulWidget {
   const GatePass({super.key});
@@ -25,60 +28,34 @@ class _GatePassState extends State<GatePass> {
       WidgetsToImageController();
   late Uint8List? bytes;
   late ServiceBloc _serviceBloc;
+
+  NavigatorService navigator = getIt<NavigatorService>();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _serviceBloc = context.read<ServiceBloc>();
-    _serviceBloc.state.gatePassno="";
-    _serviceBloc.add(GetGatePass(jobCardNo: _serviceBloc.state.jobCardNo!));
+    _serviceBloc.state.gatePassno = "";
+    _serviceBloc
+        .add(GetGatePass(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
-        child: PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        Navigator.pop(context);
-      },
-      child: Scaffold(
-          extendBody: false,
-          appBar: AppBar(
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            backgroundColor: Colors.black45,
-            leadingWidth: size.width * 0.14,
-            leading: Container(
-              margin: EdgeInsets.only(left: size.width * 0.045),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 0,
-                        color: Colors.orange.shade200,
-                        offset: const Offset(0, 0))
-                  ]),
-              child: Transform(
-                transform: Matrix4.translationValues(-3, 0, 0),
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: Colors.white)),
-              ),
-            ),
-            title: Container(
-                alignment: Alignment.center,
-                height: size.height * 0.05,
-                width: size.width * 0.45,
+        child: Scaffold(
+            extendBody: false,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              elevation: 0,
+              backgroundColor: Colors.black45,
+              leadingWidth: size.width * 0.14,
+              leading: Container(
+                margin: EdgeInsets.only(left: size.width * 0.045),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    shape: BoxShape.circle,
                     color: Colors.black,
                     boxShadow: [
                       BoxShadow(
@@ -88,170 +65,198 @@ class _GatePassState extends State<GatePass> {
                           color: Colors.orange.shade200,
                           offset: const Offset(0, 0))
                     ]),
-                child: const Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    'Gate Pass',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        fontSize: 16),
-                  ),
-                )),
-            centerTitle: true,
-          ),
-          body: Stack(
-            children: [
-              Container(
-                width: size.width,
-                height: size.height,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.black45, Colors.black26, Colors.black45],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                child: Transform(
+                  transform: Matrix4.translationValues(-3, 0, 0),
+                  child: IconButton(
+                      onPressed: () {
+                        navigator.pop();
+                      },
+                      icon: const Icon(Icons.arrow_back_rounded,
+                          color: Colors.white)),
                 ),
-                child: Align(
+              ),
+              title: Container(
                   alignment: Alignment.center,
-                  child: WidgetsToImage(
-                    controller: widgetsToImageController,
-                    child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Gap(size.height * 0.15),
-                        ClipShadowPath(
-                          clipper: RoundedEdgeClipper(
-                            points: 8,
-                            depth: 20,
-                            edge: Edge.vertical,
-                          ),
-                          shadow: const Shadow(
-                              color: Colors.black, blurRadius: 2.5),
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: size.height * 0.42,
-                            width: size.width * 0.8,
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
-                            child: Column(
-                              children: [
-                                const Gap(16.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Gap(size.width * 0.26),
-                                    Text(
-                                      "Gate Pass",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: size.width * 0.06),
-                                    ),
-                                    const Spacer(),
-                                    Align(
-                                        alignment: Alignment.centerRight,
-                                        child: IconButton(
-                                          onPressed: () async {
-                                            await Future.delayed(const Duration(
-                                                milliseconds: 20));
-                                            context.read<ServiceBloc>().add(
-                                                ModifyGatePassStatus(
-                                                    status: GatePassStatus
-                                                        .loading));
-                                            final bytes =
-                                                await widgetsToImageController
-                                                    .capture();
-                                            final dir =
-                                                await getTemporaryDirectory();
-                                            final path =
-                                                '${dir.path}/gatepass_${context.read<ServiceBloc>().state.gatePassno}.png';
-                                            final File file = File(path);
-                                            await file.writeAsBytes(
-                                                bytes as List<int>);
-                                            await Share.shareXFiles(
-                                              [XFile(path)],
-                                              text:
-                                                  " gatepass_${context.read<ServiceBloc>().state.gatePassno}",
-                                            );
-                                            context.read<ServiceBloc>().add(
-                                                ModifyGatePassStatus(
-                                                    status: GatePassStatus
-                                                        .initial));
-                                          },
-                                          icon: const Icon(
-                                            Icons.ios_share_rounded,
+                  height: size.height * 0.05,
+                  width: size.width * 0.45,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 10,
+                            blurStyle: BlurStyle.outer,
+                            spreadRadius: 0,
+                            color: Colors.orange.shade200,
+                            offset: const Offset(0, 0))
+                      ]),
+                  child: const Center(
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      'Gate Pass',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontSize: 16),
+                    ),
+                  )),
+              centerTitle: true,
+            ),
+            body: Stack(
+              children: [
+                Container(
+                  width: size.width,
+                  height: size.height,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.black45, Colors.black26, Colors.black45],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: WidgetsToImage(
+                      controller: widgetsToImageController,
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Gap(size.height * 0.15),
+                          ClipShadowPath(
+                            clipper: RoundedEdgeClipper(
+                              points: 8,
+                              depth: 20,
+                              edge: Edge.vertical,
+                            ),
+                            shadow: const Shadow(
+                                color: Colors.black, blurRadius: 2.5),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: size.height * 0.42,
+                              width: size.width * 0.8,
+                              decoration:
+                                  const BoxDecoration(color: Colors.white),
+                              child: Column(
+                                children: [
+                                  const Gap(16.0),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Gap(size.width * 0.26),
+                                      Text(
+                                        "Gate Pass",
+                                        style: TextStyle(
                                             color: Colors.black,
-                                          ),
-                                          visualDensity: VisualDensity.compact,
-                                        )),
-                                    const Gap(8),
-                                  ],
-                                ),
-                                Container(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: size.width * 0.06),
+                                      ),
+                                      const Spacer(),
+                                      Align(
+                                          alignment: Alignment.centerRight,
+                                          child: IconButton(
+                                            onPressed: () async {
+                                              await Future.delayed(
+                                                  const Duration(
+                                                      milliseconds: 20));
+                                              context.read<ServiceBloc>().add(
+                                                  ModifyGatePassStatus(
+                                                      status: GatePassStatus
+                                                          .loading));
+                                              final bytes =
+                                                  await widgetsToImageController
+                                                      .capture();
+                                              final dir =
+                                                  await getTemporaryDirectory();
+                                              final path =
+                                                  '${dir.path}/gatepass_${context.read<ServiceBloc>().state.gatePassno}.png';
+                                              final File file = File(path);
+                                              await file.writeAsBytes(
+                                                  bytes as List<int>);
+                                              await Share.shareXFiles(
+                                                [XFile(path)],
+                                                text:
+                                                    " gatepass_${context.read<ServiceBloc>().state.gatePassno}",
+                                              );
+                                              context.read<ServiceBloc>().add(
+                                                  ModifyGatePassStatus(
+                                                      status: GatePassStatus
+                                                          .initial));
+                                            },
+                                            icon: const Icon(
+                                              Icons.ios_share_rounded,
+                                              color: Colors.black,
+                                            ),
+                                            visualDensity:
+                                                VisualDensity.compact,
+                                          )),
+                                      const Gap(8),
+                                    ],
+                                  ),
+                                  Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            217, 217, 217, 1),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: size.height * 0.005,
+                                          horizontal: size.width * 0.02),
+                                      child: Text(
+                                          context
+                                                  .read<ServiceBloc>()
+                                                  .state
+                                                  .gatePassno ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 18))),
+                                  Gap(size.height * 0.02),
+                                  const DottedLine(),
+                                  Gap(size.height * 0.02),
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(
-                                          217, 217, 217, 1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: size.height * 0.005,
-                                        horizontal: size.width * 0.02),
-                                    child: Text(
-                                        context
-                                                .read<ServiceBloc>()
-                                                .state
-                                                .gatePassno ??
-                                            "",
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 18))),
-                                Gap(size.height * 0.02),
-                                const DottedLine(),
-                                Gap(size.height * 0.02),
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(
-                                          217, 217, 217, 1),
-                                      borderRadius: BorderRadius.circular(16)),
-                                  child: QrImageView(
-                                    backgroundColor: Colors.white,
-                                    data: context
-                                            .read<ServiceBloc>()
-                                            .state
-                                            .gatePassno ??
-                                        "",
-                                    version: QrVersions.auto,
-                                    size: size.width * 0.4,
-                                    gapless: true,
-                                    embeddedImageStyle:
-                                        const QrEmbeddedImageStyle(
-                                      size: Size(80, 80),
+                                        color: const Color.fromRGBO(
+                                            217, 217, 217, 1),
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    child: QrImageView(
+                                      backgroundColor: Colors.white,
+                                      data: context
+                                              .read<ServiceBloc>()
+                                              .state
+                                              .gatePassno ??
+                                          "",
+                                      version: QrVersions.auto,
+                                      size: size.width * 0.4,
+                                      gapless: true,
+                                      embeddedImageStyle:
+                                          const QrEmbeddedImageStyle(
+                                        size: Size(80, 80),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (context.watch<ServiceBloc>().state.gatePassStatus ==
-                  GatePassStatus.loading)
-                Container(
-                  color: Colors.blueGrey.withOpacity(0.25),
-                  child: Center(
-                      child: Lottie.asset('assets/lottie/car_loading.json',
-                          height: size.height * 0.4, width: size.width * 0.4)),
-                )
-            ],
-          )),
-    ));
+                if (context.watch<ServiceBloc>().state.gatePassStatus ==
+                    GatePassStatus.loading)
+                  Container(
+                    color: Colors.blueGrey.withOpacity(0.25),
+                    child: Center(
+                        child: Lottie.asset('assets/lottie/car_loading.json',
+                            height: size.height * 0.4,
+                            width: size.width * 0.4)),
+                  )
+              ],
+            )));
   }
 }
 

@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
 import 'package:dms/views/service_booking.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +13,16 @@ import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 import '../../logger/logger.dart';
+import '../../navigations/navigator_service.dart';
+import '../../navigations/route_generator.dart';
 
 part 'service_event.dart';
 part 'service_state.dart';
 
 class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
-  ServiceBloc({required Repository repo})
-      : _repo = repo,
+  NavigatorService? navigator;
+  ServiceBloc({Repository? repo, this.navigator})
+      : _repo = repo!,
         super(ServiceState.initial()) {
     on<ServiceAdded>(_onServiceAdded);
     on<GetServiceHistory>(_onGetServiceHistory);
@@ -53,7 +57,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   void _onUpdateSliderPosition(
       UpdateSliderPosition event, Emitter<ServiceState> emit) {
-    emit(state.copyWith(sliderPosition: event.position));
+    emit(state.copyWith(
+      sliderPosition: event.position,
+    ));
   }
 
   void _onSearchJobCards(
@@ -94,10 +100,21 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       'inspection_details': jsonEncode(state.json).toString(),
       'in': event.inspectionIn
     }).then(
-      (value) {
+      (value) async {
         if (value == 200) {
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
+          if (event.inspectionIn == 'false') {
+            navigator!.pushAndRemoveUntil('/gatePass', '/listOfJobCards');
+          } else {
+            emit(state.copyWith(svgStatus: SVGStatus.loading));
+            await loadSvgImage(svgImage: 'assets/images/image.svg')
+                .then((value) {
+              emit(state.copyWith(svgStatus: SVGStatus.success));
+              navigator!.pushAndRemoveUntil('/vehicleExamination', '/home',
+                  arguments: GeneralBodyParts(generalParts: value));
+            });
+          }
 
           emit(state.copyWith(
               inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
@@ -369,18 +386,19 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
             gatePassStatus: GatePassStatus.success));
       },
     ).onError(
-      (error, stackTrace) async{
+      (error, stackTrace) async {
         print("generating gatepass number");
-        await _repo.generateGatePass(jobCardNo: event.jobCardNo).then((value){
+        await _repo.generateGatePass(jobCardNo: event.jobCardNo).then((value) {
           print("$value value");
-           print("gatepassno ${value["gate_pass_out_no"]}");
-        emit(state.copyWith(
-            gatePassno: value["gate_pass_out_no"],
-            gatePassStatus: GatePassStatus.success));
-        }).onError((error, stackTrace) {
-          
-        emit(state.copyWith(gatePassStatus: GatePassStatus.failure));
-        },);
+          print("gatepassno ${value["gate_pass_out_no"]}");
+          emit(state.copyWith(
+              gatePassno: value["gate_pass_out_no"],
+              gatePassStatus: GatePassStatus.success));
+        }).onError(
+          (error, stackTrace) {
+            emit(state.copyWith(gatePassStatus: GatePassStatus.failure));
+          },
+        );
       },
     );
   }
@@ -390,10 +408,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(gatePassStatus: event.status));
   }
 
-  void _onClearServices(ClearServices event, Emitter<ServiceState> emit){
-    emit(state.copyWith(services: [],getServiceStatus: GetServiceStatus.initial));
-  }  
-
+  void _onClearServices(ClearServices event, Emitter<ServiceState> emit) {
+    emit(state
+        .copyWith(services: [], getServiceStatus: GetServiceStatus.initial));
+  }
 }
-
-

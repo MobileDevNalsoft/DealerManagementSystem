@@ -202,20 +202,18 @@ class AddCustomerView extends StatelessWidget {
                     BlocConsumer<CustomerBloc, CustomerState>(
                       listener: (context, state) {
                         if (state.status == CustomerStatus.failure) {
-                          Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
-                                  backgroundColor: Colors.red,
-                                  message:
-                                      'Customer with this Id already exists',
-                                  duration: Duration(seconds: 2))
-                              .show(context);
+                          DMSCustomWidgets.DMSFlushbar(size, context,
+                              message: 'Customer with this Id already exists',
+                              icon: const Icon(
+                                Icons.error,
+                                color: Colors.white,
+                              ));
                         } else if (state.status == CustomerStatus.success) {
-                          Flushbar(
-                                  flushbarPosition: FlushbarPosition.TOP,
-                                  backgroundColor: Colors.red,
-                                  message: 'Customer added Successfully',
-                                  duration: Duration(seconds: 2))
-                              .show(context);
+                          DMSCustomWidgets.DMSFlushbar(
+                            size,
+                            context,
+                            message: 'Customer added Successfully',
+                          );
                         }
                       },
                       builder: (context, state) {

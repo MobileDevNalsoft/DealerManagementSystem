@@ -393,7 +393,8 @@ class DMSCustomWidgets {
                       useMagnifier: true,
                       magnification: 1.2,
                       backgroundColor: Colors.black,
-                      selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                      selectionOverlay:
+                          const CupertinoPickerDefaultSelectionOverlay(
                         background: Colors.white30,
                       ),
                       children: List.generate(
@@ -401,7 +402,7 @@ class DMSCustomWidgets {
                         (index) => Center(
                             child: Text(
                           (now - index).toString(),
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         )),
                       )),
                 )
@@ -432,10 +433,91 @@ class DMSCustomWidgets {
     );
   }
 
+  static showDMSDialog({
+    required BuildContext context,
+    required String text,
+    required String acceptLable,
+    required String rejectLable,
+    required void Function()? onAccept,
+    required void Function()? onReject,
+    Widget? leadingIcon,
+  }) {
+    Size size = MediaQuery.of(context).size;
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              contentPadding: EdgeInsets.only(top: size.height * 0.01),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: size.width * 0.03),
+                    child: Text(
+                      text,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Gap(size.height * 0.01),
+                  Container(
+                    height: size.height * 0.05,
+                    margin: EdgeInsets.all(size.height * 0.001),
+                    decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: onReject,
+                            style: TextButton.styleFrom(
+                                fixedSize:
+                                    Size(size.width * 0.3, size.height * 0.1),
+                                foregroundColor: Colors.white),
+                            child: Text(
+                              rejectLable,
+                            ),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.white,
+                          thickness: 0.5,
+                        ),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: onAccept,
+                            style: TextButton.styleFrom(
+                                fixedSize:
+                                    Size(size.width * 0.3, size.height * 0.1),
+                                foregroundColor: Colors.white),
+                            child: Text(
+                              rejectLable,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              actionsPadding: EdgeInsets.zero,
+              buttonPadding: EdgeInsets.zero);
+        });
+  }
+
   static Future DMSFlushbar(Size size, BuildContext context,
       {String message = 'message', Widget? icon}) async {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-     await Flushbar(
+    await Flushbar(
       backgroundColor: Colors.black,
       blockBackgroundInteraction: true,
       message: message,
@@ -443,7 +525,6 @@ class DMSCustomWidgets {
       duration: const Duration(seconds: 2),
       borderRadius: BorderRadius.circular(8),
       icon: icon,
-
       boxShadows: [
         BoxShadow(
             blurRadius: 12,
@@ -453,9 +534,9 @@ class DMSCustomWidgets {
             offset: const Offset(0, 0))
       ],
       margin: EdgeInsets.only(
-          top: size.height * 0.1,
-          left: isMobile ? size.width * 0.04 : size.width * 0.38,
-          right: isMobile ? size.width * 0.04 : size.width * 0.38),
+          top: size.height * 0.01,
+          left: isMobile ? size.width * 0.04 : size.width * 0.8,
+          right: isMobile ? size.width * 0.04 : size.width * 0.03),
     ).show(context);
   }
 }

@@ -15,7 +15,8 @@ enum VehicleStatus {
 class VehicleState {
   final Vehicle? vehicle;
   VehicleStatus status;
-  VehicleState({this.vehicle, required this.status});
+  String? registrationNo;
+  VehicleState({this.vehicle, required this.status, this.registrationNo});
 
   VehicleState copyWith({Vehicle? vehicle, VehicleStatus? status}) {
     return VehicleState(

@@ -218,23 +218,14 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                         );
                                       } else if (state.status ==
                                           VehicleStatus.failure) {
-                                        Flushbar(
-                                          backgroundColor: Colors.red,
-                                          blockBackgroundInteraction: true,
-                                          message:
-                                              "Server Failure Please check the internet connectivity",
-                                          flushbarPosition:
-                                              FlushbarPosition.TOP,
-                                          duration: const Duration(seconds: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          margin: EdgeInsets.only(
-                                              top: size.height * 0.01,
-                                              left: isMobile
-                                                  ? 10
-                                                  : size.width * 0.8,
-                                              right: size.width * 0.03),
-                                        ).show(context);
+                                        DMSCustomWidgets.DMSFlushbar(
+                                            size, context,
+                                            message:
+                                                'Something went wrong. Please try again later',
+                                            icon: const Icon(
+                                              Icons.error,
+                                              color: Colors.white,
+                                            ));
                                       }
                                     },
                                     builder: (context, state) {
@@ -415,20 +406,13 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                       message = "Please select schedule date";
                                     }
                                     if (message != "") {
-                                      Flushbar(
-                                        backgroundColor: Colors.red,
-                                        blockBackgroundInteraction: true,
-                                        message: message,
-                                        flushbarPosition: FlushbarPosition.TOP,
-                                        duration: const Duration(seconds: 2),
-                                        borderRadius: BorderRadius.circular(12),
-                                        margin: EdgeInsets.only(
-                                            top: size.height * 0.01,
-                                            left: isMobile
-                                                ? 10
-                                                : size.width * 0.8,
-                                            right: size.width * 0.03),
-                                      ).show(context);
+                                      DMSCustomWidgets.DMSFlushbar(
+                                          size, context,
+                                          message: message,
+                                          icon: const Icon(
+                                            Icons.error,
+                                            color: Colors.white,
+                                          ));
                                       return;
                                     } else {
                                       Service service = Service(

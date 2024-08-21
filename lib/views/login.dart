@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
-import 'package:dms/views/list_of_jobcards.dart';
 import 'package:dms/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,21 +76,14 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                 switch (state.authenticationStatus) {
                   case AuthenticationStatus.success:
                     message = "Login Successful";
-                    FocusManager.instance.primaryFocus?.unfocus();
                     sharedPreferences.setBool("isLogged", true);
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeView(),
-                      ),
-                      (route) => false,
-                    );
+                    FocusManager.instance.primaryFocus?.unfocus();
                     break;
                   case AuthenticationStatus.invalidCredentials:
                     message = "Invalid Credentials";
                     break;
                   case AuthenticationStatus.failure:
-                    message = "Some error has occurred";
+                    message = "Something went wrong. Please try again later";
                   default:
                     message = null;
                 }
@@ -125,30 +116,32 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1])),
                       child: Stack(children: [
-                        if(isMobile)ClipShadowPath(
-                          shadow: BoxShadow(
-                              blurRadius: 20,
-                              blurStyle: BlurStyle.outer,
-                              spreadRadius: 25,
-                              color: Colors.orange.shade200,
-                              offset: const Offset(0, 0)),
-                          clipper: ImageClipper(),
-                          child: Container(
-                            height: size.height * 0.4,
-                            width: size.width,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/login.png'),
-                                  alignment: Alignment.topCenter,
-                                  isAntiAlias: true),
+                        if (isMobile)
+                          ClipShadowPath(
+                            shadow: BoxShadow(
+                                blurRadius: 20,
+                                blurStyle: BlurStyle.outer,
+                                spreadRadius: 25,
+                                color: Colors.orange.shade200,
+                                offset: const Offset(0, 0)),
+                            clipper: ImageClipper(),
+                            child: Container(
+                              height: size.height * 0.4,
+                              width: size.width,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                image: DecorationImage(
+                                    image:
+                                        AssetImage('assets/images/login.png'),
+                                    alignment: Alignment.topCenter,
+                                    isAntiAlias: true),
+                              ),
                             ),
                           ),
-                        ),
-                       
-                        if(!isMobile)Container(
+                        if (!isMobile)
+                          Container(
                             height: size.height,
-                            width: size.width*0.4,
+                            width: size.width * 0.4,
                             decoration: BoxDecoration(
                               color: Colors.black,
                               image: DecorationImage(
@@ -363,7 +356,6 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
 class ImageClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    print('height ${size.height} width ${size.width}');
     Path path = Path();
     path.lineTo(0, size.height - 100);
     path.quadraticBezierTo(size.width * 0.25, size.height - 120,

@@ -1,4 +1,5 @@
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/vehicle_examination.dart';
@@ -11,6 +12,8 @@ import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import '../bloc/multi/multi_bloc.dart';
 import '../bloc/service/service_bloc.dart';
+import '../inits/init.dart';
+import '../navigations/navigator_service.dart';
 import '../vehiclemodule/xml_parser.dart';
 
 class InspectionView extends StatefulWidget {
@@ -20,10 +23,11 @@ class InspectionView extends StatefulWidget {
   State<InspectionView> createState() => _InspectionViewState();
 }
 
-class _InspectionViewState extends State<InspectionView> with ConnectivityMixin {
+class _InspectionViewState extends State<InspectionView>
+    with ConnectivityMixin {
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
-
+  final NavigatorService navigator = getIt<NavigatorService>();
   late ServiceBloc _serviceBloc;
 
   @override
@@ -32,7 +36,9 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
 
     _serviceBloc = context.read<ServiceBloc>();
     _serviceBloc.state.serviceUploadStatus = ServiceUploadStatus.initial;
-    _serviceBloc.state.inspectionJsonUploadStatus = InspectionJsonUploadStatus.initial;
+    _serviceBloc.state.inspectionJsonUploadStatus =
+        InspectionJsonUploadStatus.initial;
+    _serviceBloc.state.svgStatus = SVGStatus.initial;
     _serviceBloc.state.index = 0;
     _serviceBloc.add(GetJson());
   }
@@ -54,31 +60,53 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045,top:isMobile? 0:size.height*0.008,bottom:isMobile? 0: size.height*0.008),
+            margin: EdgeInsets.only(
+                left: size.width * 0.045,
+                top: isMobile ? 0 : size.height * 0.008,
+                bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
-                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 10,
+                      blurStyle: BlurStyle.outer,
+                      spreadRadius: 0,
+                      color: Colors.orange.shade200,
+                      offset: const Offset(0, 0))
+                ]),
             child: Transform(
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
-                    Navigator.popUntil(context, (route) => route.settings.name == '/');
+                    navigator.pop();
                   },
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: Colors.white)),
             ),
           ),
           title: Container(
               alignment: Alignment.center,
               height: size.height * 0.05,
-              width: isMobile? size.width * 0.45:size.width*0.32,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
+              width: isMobile ? size.width * 0.45 : size.width * 0.32,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 10,
+                        blurStyle: BlurStyle.outer,
+                        spreadRadius: 0,
+                        color: Colors.orange.shade200,
+                        offset: const Offset(0, 0))
+                  ]),
               child: const Text(
                 textAlign: TextAlign.center,
                 'Inspection In',
-                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 16),
               )),
           centerTitle: true,
         ),
@@ -89,15 +117,25 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
               width: size.width,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
+                    colors: [Colors.black45, Colors.black26, Colors.black45],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.1, 0.5, 1]),
               ),
-              child: BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
+              child: BlocBuilder<ServiceBloc, ServiceState>(
+                  builder: (context, state) {
                 switch (state.jsonStatus) {
                   case JsonStatus.loading:
                     return Transform(
                       transform: Matrix4.translationValues(0, -40, 0),
                       child: Center(
-                        child: Lottie.asset('assets/lottie/car_loading.json',  height: isMobile? size.height * 0.5:size.height*0.32, width:isMobile?  size.width * 0.6:size.width*0.32),
+                        child: Lottie.asset('assets/lottie/car_loading.json',
+                            height: isMobile
+                                ? size.height * 0.5
+                                : size.height * 0.32,
+                            width: isMobile
+                                ? size.width * 0.6
+                                : size.width * 0.32),
                       ),
                     );
                   case JsonStatus.success:
@@ -110,7 +148,8 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
                       children: [
                         Gap(size.height * 0.008),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.005),
                           child: SizedBox(
                             height: size.height * 0.04,
                             child: ListView(
@@ -122,18 +161,33 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
                                         controller: _autoScrollController,
                                         index: buttonsText.indexOf(e),
                                         child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: size.width * 0.005),
                                           child: SizedBox(
                                             height: size.height * 0.035,
                                             child: TextButton(
                                                 style: TextButton.styleFrom(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                    backgroundColor: state.index == buttonsText.indexOf(e) ? Colors.black : Colors.grey.shade400,
-                                                    foregroundColor:
-                                                        state.index == buttonsText.indexOf(e) ? Colors.white : const Color.fromARGB(255, 29, 22, 22),
-                                                    side: const BorderSide(color: Colors.black)),
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                    backgroundColor: state
+                                                                .index ==
+                                                            buttonsText
+                                                                .indexOf(e)
+                                                        ? Colors.black
+                                                        : Colors.grey.shade400,
+                                                    foregroundColor: state
+                                                                .index ==
+                                                            buttonsText
+                                                                .indexOf(e)
+                                                        ? Colors.white
+                                                        : const Color.fromARGB(
+                                                            255, 29, 22, 22),
+                                                    side: const BorderSide(
+                                                        color: Colors.black)),
                                                 onPressed: () {
-                                                  _pageController.jumpToPage(buttonsText.indexOf(e));
+                                                  _pageController.jumpToPage(
+                                                      buttonsText.indexOf(e));
                                                 },
                                                 child: Text(e)),
                                           ),
@@ -153,76 +207,119 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
                               onPageChanged: (value) {
                                 _serviceBloc.add(PageChange(index: value));
                                 _autoScrollController.scrollToIndex(value,
-                                    duration: const Duration(milliseconds: 500), preferPosition: AutoScrollPosition.begin);
+                                    duration: const Duration(milliseconds: 500),
+                                    preferPosition: AutoScrollPosition.begin);
                               },
-                              itemBuilder: (context, pageIndex) => ListView.builder(
-                                itemCount: state.json![buttonsText[pageIndex]].length - 1,
+                              itemBuilder: (context, pageIndex) =>
+                                  ListView.builder(
+                                itemCount:
+                                    state.json![buttonsText[pageIndex]].length -
+                                        1,
                                 itemBuilder: (context, index) {
                                   return Column(
                                     children: [
                                       Gap(size.height * 0.01),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Gap(size.width * 0.05),
                                           SizedBox(
                                             width: size.width * 0.2,
                                             child: Wrap(
-                                              children: [Text(state.json![buttonsText[pageIndex]][index]['properties']['label'])],
+                                              children: [
+                                                Text(state.json![buttonsText[
+                                                        pageIndex]][index]
+                                                    ['properties']['label'])
+                                              ],
                                             ),
                                           ),
                                           Gap(size.width * 0.05),
-                                          getWidget(context: context, index: index, page: buttonsText[pageIndex], json: state.json!, size: size,isMobile: isMobile),
+                                          getWidget(
+                                              context: context,
+                                              index: index,
+                                              page: buttonsText[pageIndex],
+                                              json: state.json!,
+                                              size: size,
+                                              isMobile: isMobile),
                                         ],
                                       ),
                                       Gap(size.height * 0.02),
-                                      if (pageIndex == buttonsText.length - 1 && index == state.json![buttonsText[pageIndex]].length - 2)
+                                      if (pageIndex == buttonsText.length - 1 &&
+                                          index ==
+                                              state
+                                                      .json![buttonsText[
+                                                          pageIndex]]
+                                                      .length -
+                                                  2)
                                         Gap(size.height * 0.05),
-                                      if (pageIndex == buttonsText.length - 1 && index == state.json![buttonsText[pageIndex]].length - 2)
+                                      if (pageIndex == buttonsText.length - 1 &&
+                                          index ==
+                                              state
+                                                      .json![buttonsText[
+                                                          pageIndex]]
+                                                      .length -
+                                                  2)
                                         BlocListener<ServiceBloc, ServiceState>(
-                                            listener: (context, state) async {
-                                              if (state.inspectionJsonUploadStatus == InspectionJsonUploadStatus.success) {
-                                                await loadSvgImage(svgImage: 'assets/images/image.svg').then(
-                                                  (value) {
-                                                    Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) => VehicleExamination(
-                                                            // model: BodySelectorViewModel(),
-                                                            generalParts: value,
-                                                          ),
-                                                        ));
-                                                  },
-                                                );
-                                              }
-                                            },
+                                            listener: (context, state) async {},
                                             child: GestureDetector(
                                               onTap: () async {
                                                 if (!isConnected()) {
-                                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                                      message: 'Please check the internet connectivity', icon: Icon(Icons.error));
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message: 'Looks like you'
+                                                          're offline. Please check your connection and try again.',
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.white,
+                                                      ));
                                                   return;
                                                 }
-                                                _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.jobCardNo!, inspectionIn: 'true'));
-                                                context.read<VehicleBloc>().state.status = VehicleStatus.initial;
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                                _serviceBloc.add(
+                                                    InspectionJsonAdded(
+                                                        jobCardNo:
+                                                            state.jobCardNo!,
+                                                        inspectionIn: 'true'));
+                                                context
+                                                        .read<VehicleBloc>()
+                                                        .state
+                                                        .status =
+                                                    VehicleStatus.initial;
                                               },
                                               child: Container(
                                                   alignment: Alignment.center,
                                                   height: size.height * 0.045,
-                                                  width:isMobile?size.width * 0.2:size.width * 0.08,
-                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 10,
-                                                        blurStyle: BlurStyle.outer,
-                                                        spreadRadius: 0,
-                                                        color: Colors.orange.shade200,
-                                                        offset: const Offset(0, 0))
-                                                  ]),
+                                                  width: isMobile
+                                                      ? size.width * 0.2
+                                                      : size.width * 0.08,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: Colors.black,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            blurRadius: 10,
+                                                            blurStyle:
+                                                                BlurStyle.outer,
+                                                            spreadRadius: 0,
+                                                            color: Colors.orange
+                                                                .shade200,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 0))
+                                                      ]),
                                                   child: const Text(
                                                     textAlign: TextAlign.center,
                                                     'submit',
-                                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16),
                                                   )),
                                             ))
                                     ],
@@ -239,10 +336,18 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
                 }
               }),
             ),
-            if (context.watch<ServiceBloc>().state.inspectionJsonUploadStatus == InspectionJsonUploadStatus.loading)
+            if (context.watch<ServiceBloc>().state.inspectionJsonUploadStatus ==
+                    InspectionJsonUploadStatus.loading ||
+                context.watch<ServiceBloc>().state.svgStatus ==
+                    SVGStatus.loading)
               Container(
                 color: Colors.black54,
-                child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: isMobile? size.height * 0.5:size.height*0.32, width:isMobile?  size.width * 0.6:size.width*0.32)),
+                child: Center(
+                    child: Lottie.asset('assets/lottie/car_loading.json',
+                        height:
+                            isMobile ? size.height * 0.5 : size.height * 0.32,
+                        width:
+                            isMobile ? size.width * 0.6 : size.width * 0.32)),
               )
           ],
         ),
@@ -250,16 +355,23 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
     );
   }
 
-  Widget getWidget({required Size size, required String page, required int index, required Map<String, dynamic> json, required BuildContext context,required bool isMobile}) {
+  Widget getWidget(
+      {required Size size,
+      required String page,
+      required int index,
+      required Map<String, dynamic> json,
+      required BuildContext context,
+      required bool isMobile}) {
     switch (json[page][index]['widget']) {
       case "checkBox":
         return SizedBox(
           height: size.height * 0.03,
-          width:isMobile?size.width * 0.05:size.width * 0.024,
+          width: isMobile ? size.width * 0.05 : size.width * 0.024,
           child: Checkbox(
             checkColor: Colors.white,
-            fillColor:
-                json[page][index]['properties']['value'] == true ? const WidgetStatePropertyAll(Colors.black) : const WidgetStatePropertyAll(Colors.white),
+            fillColor: json[page][index]['properties']['value'] == true
+                ? const WidgetStatePropertyAll(Colors.black)
+                : const WidgetStatePropertyAll(Colors.white),
             value: json[page][index]['properties']['value'],
             side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
             onChanged: (value) {
@@ -273,12 +385,16 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
 
         textEditingController.text = json[page][index]['properties']['value'];
 
-        textEditingController.selection = TextSelection.fromPosition(TextPosition(offset: textEditingController.text.length));
+        textEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: textEditingController.text.length));
 
         return Container(
           height: size.height * 0.11,
-          width: isMobile?size.width * 0.62:size.width * 0.32,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, border: Border.all(color: Colors.black)),
+          width: isMobile ? size.width * 0.62 : size.width * 0.32,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              border: Border.all(color: Colors.black)),
           child: TextField(
               textInputAction: TextInputAction.done,
               controller: textEditingController,
@@ -290,11 +406,13 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
                 counterText: '',
                 enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                 focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 hintStyle: TextStyle(color: Colors.black38),
               ),
               onChanged: (value) {
-                _serviceBloc.state.json![page][index]['properties']['value'] = value;
+                _serviceBloc.state.json![page][index]['properties']['value'] =
+                    value;
               }),
         );
       case "dropDown":
@@ -332,7 +450,7 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
             },
             buttonStyleData: ButtonStyleData(
               height: size.height * 0.04,
-              width: isMobile?size.width * 0.5:size.width * 0.32,
+              width: isMobile ? size.width * 0.5 : size.width * 0.32,
               padding: const EdgeInsets.only(left: 14, right: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -344,7 +462,9 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
               elevation: 0,
             ),
             iconStyleData: const IconStyleData(
-              icon: Icon(!false ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded),
+              icon: Icon(!false
+                  ? Icons.keyboard_arrow_down_rounded
+                  : Icons.keyboard_arrow_up_rounded),
               iconSize: 14,
               iconEnabledColor: Colors.black,
               iconDisabledColor: Colors.black,
@@ -386,14 +506,17 @@ class _InspectionViewState extends State<InspectionView> with ConnectivityMixin 
                   (e) => ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(
-                      json[page][index]['properties']['options'][options.indexOf(e)],
+                      json[page][index]['properties']['options']
+                          [options.indexOf(e)],
                       style: const TextStyle(fontSize: 13),
                     ),
                     leading: Radio<int>(
                       value: options.indexOf(e) + 1,
                       groupValue: json[page][index]['properties']['value'],
-                      activeColor: Colors.white, // Change the active radio button color here
-                      fillColor: WidgetStateProperty.all(Colors.black), // Change the fill color when selected
+                      activeColor: Colors
+                          .white, // Change the active radio button color here
+                      fillColor: WidgetStateProperty.all(
+                          Colors.black), // Change the fill color when selected
                       splashRadius: 20, // Change the splash radius when clicked
                       onChanged: (value) {
                         json[page][index]['properties']['value'] = value;

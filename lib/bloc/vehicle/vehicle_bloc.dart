@@ -5,12 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../logger/logger.dart';
+import '../../navigations/navigator_service.dart';
 part 'vehicle_event.dart';
 part 'vehicle_state.dart';
 
 class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
-  VehicleBloc({required Repository repo})
-      : _repo = repo,
+  NavigatorService? navigator;
+  VehicleBloc({Repository? repo, this.navigator})
+      : _repo = repo!,
         super(VehicleState(status: VehicleStatus.initial)) {
     on<AddVehicleEvent>(
         _onAddVehicle as EventHandler<AddVehicleEvent, VehicleState>);
