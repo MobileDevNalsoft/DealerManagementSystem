@@ -1,9 +1,6 @@
 import 'package:dms/inits/init.dart';
 import 'package:dms/navigations/navigator_service.dart';
-import 'package:dms/views/jobcard_details.dart';
-import 'package:dms/views/login.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -11,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../bloc/service/service_bloc.dart';
+import 'custom_widgets/clipped_buttons.dart';
 import 'list_of_jobcards.dart';
 
 class MyJobcards extends StatefulWidget {
@@ -53,9 +51,10 @@ class _MyJobcardsState extends State<MyJobcards> {
       tag: 'myJobCards',
       transitionOnUserGestures: true,
       child: Scaffold(
+        // Prevent the layout from resizing to avoid bottom inset issues
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          scrolledUnderElevation: 0,
+          // Remove the shadow when scrolling under the app bar
           elevation: 0,
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
@@ -110,6 +109,7 @@ class _MyJobcardsState extends State<MyJobcards> {
               )),
           centerTitle: true,
           actions: [
+            // this drop down will display the logout button when pressed.
             DropdownButtonHideUnderline(
               child: DropdownButton2<String>(
                 isExpanded: true,
@@ -227,15 +227,24 @@ class _MyJobcardsState extends State<MyJobcards> {
                       child: SizedBox(
                         height: size.height * 0.16,
                         width: size.width * (isMobile ? 0.95 : 0.4),
-                        child: ClipPath(
+                        child: ClipShadowPath(
+                          // ticket clipper clips the child widget in the shape of ticket.
                           clipper: TicketClipper(),
-                          clipBehavior: Clip.antiAlias,
-                          child: Card(
+                          shadow: const BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 5,
+                            blurStyle: BlurStyle.normal,
+                            spreadRadius: 1,
+                          ),
+                          child: Container(
                             margin: EdgeInsets.symmetric(
                               vertical: size.height * 0.006,
                             ),
-                            color: Colors.white,
-                            elevation: 3,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -271,9 +280,8 @@ class _MyJobcardsState extends State<MyJobcards> {
                                                               20)),
                                               enableFeedback: true,
                                               onTap: () {
-                                                state.jobCardNo = state
-                                                    .myJobCards![index]
-                                                    .jobCardNo!;
+                                                state.service =
+                                                    state.myJobCards![index];
                                                 navigator.push('/jobCardNo');
                                               },
                                               child: Text(

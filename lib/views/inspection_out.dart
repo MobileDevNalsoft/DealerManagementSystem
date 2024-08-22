@@ -1,17 +1,12 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
-import 'package:dms/views/gate_pass.dart';
-import 'package:dms/views/list_of_jobcards.dart';
-import 'package:dms/views/quality_check.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import '../bloc/multi/multi_bloc.dart';
+
 import '../bloc/service/service_bloc.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
@@ -24,12 +19,16 @@ class InspectionOut extends StatefulWidget {
 }
 
 class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
+  // controllers
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
   final SliderButtonController _sliderButtonController =
       SliderButtonController();
 
+  // bloc variables
   late ServiceBloc _serviceBloc;
+
+  // navigation service
   final NavigatorService navigator = getIt<NavigatorService>();
 
   @override
@@ -38,6 +37,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
 
     _serviceBloc = context.read<ServiceBloc>();
 
+    // initialize required statuses
     _serviceBloc.state.inspectionJsonUploadStatus =
         InspectionJsonUploadStatus.initial;
 
@@ -46,15 +46,20 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
 
   @override
   Widget build(BuildContext context) {
+    // responsive UI
     Size size = MediaQuery.of(context).size;
+    bool isMobile = size.shortestSide < 500;
 
     return GestureDetector(
       onTap: () {
+        // unfocuses all the current focused widgets
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        // restricts widget resizing when keyboard appears
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          // Remove shadow effect when scrolling
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.black45,
@@ -73,6 +78,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                       offset: const Offset(0, 0))
                 ]),
             child: Transform(
+              // Slightly shift the icon to the left for better alignment
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
@@ -127,6 +133,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {
+              // Show loading animation while data is being fetched
               case GetInspectionStatus.loading:
                 return Transform(
                   transform: Matrix4.translationValues(0, -40, 0),
@@ -136,12 +143,14 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                   ),
                 );
               case GetInspectionStatus.success:
+                // Extract button text from JSON data
                 List<String> buttonsText = [];
 
                 for (var entry in state.json!.entries) {
                   buttonsText.add(entry.key);
                 }
 
+                // Build the UI for buttons and content pages
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -156,6 +165,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                           controller: _autoScrollController,
                           children: buttonsText
                               .map((e) => AutoScrollTag(
+                                    // Use AutoScrollTag widget to auto scroll the buttons list UI to make the buttons visible corresponding to the page index.
                                     key: ValueKey(buttonsText.indexOf(e)),
                                     controller: _autoScrollController,
                                     index: buttonsText.indexOf(e),
@@ -194,13 +204,17 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                     ),
                     Gap(size.height * 0.01),
                     Expanded(
+                      // Outer SizedBox: Likely used for layout constraints or alignment purposes.
                       child: SizedBox(
                         width: size.width,
                         child: PageView.builder(
+                          // Creates a scrollable view with multiple pages based on the number of items in state.json
                           itemCount: state.json!.length,
                           controller: _pageController,
                           onPageChanged: (value) {
+                            // Updates the service bloc with the current page index
                             _serviceBloc.add(PageChange(index: value));
+                            // Scrolls Buttons list corresponding to the current page index
                             _autoScrollController.scrollToIndex(value,
                                 duration: const Duration(milliseconds: 500),
                                 preferPosition: AutoScrollPosition.begin);
@@ -210,12 +224,14 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                               Column(
                                 children: [
                                   Expanded(
+                                    // Creates a list view for each page
                                     child: ListView.builder(
                                       itemCount: state
                                               .json![buttonsText[pageIndex]]
                                               .length -
                                           1,
                                       itemBuilder: (context, index) {
+                                        // sets slider position based on each page status in json
                                         _sliderButtonController.position =
                                             state.json![buttonsText[pageIndex]]
                                                         .last['status'] ==
@@ -228,6 +244,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                         "Rejected"
                                                     ? Position.left
                                                     : Position.middle;
+                                        // Renders a column for each item in the list
                                         return Column(
                                           children: [
                                             Gap(size.height * 0.01),
@@ -251,13 +268,15 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                   ),
                                                 ),
                                                 Gap(size.width * 0.05),
+                                                // Dynamically renders a widget based on the index, page, and other data
                                                 getWidget(
                                                     context: context,
                                                     index: index,
                                                     page:
                                                         buttonsText[pageIndex],
                                                     json: state.json!,
-                                                    size: size),
+                                                    size: size,
+                                                    isMobile: isMobile),
                                               ],
                                             ),
                                           ],
@@ -265,6 +284,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                       },
                                     ),
                                   ),
+                                  // slider button to accept or reject each part inspection
                                   CustomSliderButton(
                                     height: size.height * 0.06,
                                     width: size.width * 0.6,
@@ -377,6 +397,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
     );
   }
 
+  // dialog to show when inspection out to be submitted
   void showSubmitDialog(
       {required Size size, required ServiceState state, required String page}) {
     showDialog(
@@ -476,6 +497,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
         });
   }
 
+  // dialog to show when part inspection is rejected
   void showReasonDialog(
       {required Size size,
       required ServiceState state,
@@ -604,184 +626,5 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                 buttonPadding: EdgeInsets.zero),
           );
         });
-  }
-
-  Widget getWidget(
-      {required Size size,
-      required String page,
-      required int index,
-      required Map<String, dynamic> json,
-      required BuildContext context}) {
-    switch (json[page][index]['widget']) {
-      case "checkBox":
-        return SizedBox(
-          height: size.height * 0.03,
-          width: size.width * 0.05,
-          child: Checkbox(
-            checkColor: Colors.white,
-            fillColor: json[page][index]['properties']['value'] == true
-                ? const WidgetStatePropertyAll(Colors.black)
-                : const WidgetStatePropertyAll(Colors.white),
-            value: json[page][index]['properties']['value'],
-            side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
-            onChanged: (value) {
-              json[page][index]['properties']['value'] = value;
-              _serviceBloc.add(InspectionJsonUpdated(json: json));
-            },
-          ),
-        );
-      case "textField":
-        TextEditingController textEditingController = TextEditingController();
-
-        textEditingController.text = json[page][index]['properties']['value'];
-
-        textEditingController.selection = TextSelection.fromPosition(
-            TextPosition(offset: textEditingController.text.length));
-
-        return Container(
-          height: size.height * 0.11,
-          width: size.width * 0.62,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              border: Border.all(color: Colors.black)),
-          child: TextField(
-              textInputAction: TextInputAction.done,
-              controller: textEditingController,
-              cursorColor: Colors.black,
-              minLines: 1,
-              maxLines: 5,
-              maxLength: 200,
-              decoration: const InputDecoration(
-                counterText: '',
-                enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                hintStyle: TextStyle(color: Colors.black38),
-              ),
-              onChanged: (value) {
-                textEditingController.text = value;
-                _serviceBloc.state.json![page][index]['properties']['value'] =
-                    value;
-              }),
-        );
-      case "dropDown":
-        List<String> items = [];
-
-        for (String s in json[page][index]['properties']['items']) {
-          items.add(s);
-        }
-
-        if (json[page][index]['properties']['value'] == '') {
-          json[page][index]['properties']['value'] = items[0];
-        }
-
-        return DropdownButtonHideUnderline(
-          child: DropdownButton2<String>(
-            onMenuStateChange: (isOpen) {},
-            isExpanded: true,
-            items: items
-                .map((String item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList(),
-            value: json[page][index]['properties']['value'],
-            onChanged: (String? value) {
-              json[page][index]['properties']['value'] = value;
-              _serviceBloc.add(InspectionJsonUpdated(json: json));
-            },
-            buttonStyleData: ButtonStyleData(
-              height: size.height * 0.04,
-              width: size.width * 0.5,
-              padding: const EdgeInsets.only(left: 14, right: 14),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.black,
-                ),
-                color: Colors.white,
-              ),
-              elevation: 0,
-            ),
-            iconStyleData: const IconStyleData(
-              icon: Icon(!false
-                  ? Icons.keyboard_arrow_down_rounded
-                  : Icons.keyboard_arrow_up_rounded),
-              iconSize: 14,
-              iconEnabledColor: Colors.black,
-              iconDisabledColor: Colors.black,
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight: size.height * 0.3,
-              width: size.width * 0.5,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              offset: const Offset(0, 0),
-              scrollbarTheme: ScrollbarThemeData(
-                radius: const Radius.circular(40),
-                thickness: WidgetStateProperty.all<double>(6),
-                thumbVisibility: WidgetStateProperty.all<bool>(true),
-              ),
-            ),
-            menuItemStyleData: const MenuItemStyleData(
-              height: 30,
-              padding: EdgeInsets.only(left: 14, right: 14),
-            ),
-          ),
-        );
-      case "radioButtons":
-        List<String> options = [];
-
-        for (String s in json[page][index]['properties']['options']) {
-          options.add(s);
-        }
-
-        return SizedBox(
-          height: size.height * 0.25,
-          width: size.width * 0.6,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: options
-                .map(
-                  (e) => ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      json[page][index]['properties']['options']
-                          [options.indexOf(e)],
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                    leading: Radio<int>(
-                      value: options.indexOf(e) + 1,
-                      groupValue: json[page][index]['properties']['value'],
-                      activeColor: Colors
-                          .white, // Change the active radio button color here
-                      fillColor: WidgetStateProperty.all(
-                          Colors.black), // Change the fill color when selected
-                      splashRadius: 20, // Change the splash radius when clicked
-                      onChanged: (value) {
-                        json[page][index]['properties']['value'] = value;
-                        context.read<MultiBloc>().add(
-                            RadioOptionChanged(selectedRadioOption: value!));
-                      },
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        );
-    }
-
-    return const SizedBox();
   }
 }

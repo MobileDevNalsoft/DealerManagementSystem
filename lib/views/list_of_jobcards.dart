@@ -1,19 +1,17 @@
+import 'dart:math' as math;
+
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
-import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
 import '../inits/init.dart';
-import '../models/services.dart';
 import 'custom_widgets/clipped_buttons.dart';
-import 'custom_widgets/loginformfield.dart';
-import 'jobcard_details.dart';
-import 'dart:math' as math;
 
 class ListOfJobcards extends StatefulWidget {
   const ListOfJobcards({super.key});
@@ -47,9 +45,6 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
 
   @override
   Widget build(BuildContext context) {
-    // responsive UI
-    Size size = MediaQuery.of(context).size;
-
     return SafeArea(
         child: Hero(
       tag: 'listOfJobCards',
@@ -65,7 +60,7 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
-                return JobCardPage();
+                return const JobCardPage();
               },
             )),
       ),
@@ -79,8 +74,8 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    // The shrinkOffset is a distance from [maxExtent] towards [minExtent] representing the current amount by which the sliver has been shrunk.
     Size size = MediaQuery.of(context).size;
-    print('shrinkOffset $shrinkOffset');
     return ClipShadowPath(
         shadow: shrinkOffset < 40
             ? BoxShadow(
@@ -95,7 +90,8 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                 spreadRadius: 25,
                 color: Colors.transparent,
                 offset: Offset(0, 0)),
-        clipper: BackgroundWaveClipper(),
+        clipper:
+            BackgroundWaveClipper(), // this clipper is used to clip the appbar to give wave effect
         child: Stack(
           children: [
             Container(
@@ -152,6 +148,7 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
       oldDelegate.maxExtent != maxExtent || oldDelegate.minExtent != minExtent;
 }
 
+// this is used to create search bar that sticks to the app bar and allows sliverlist to scroll beneath it
 class SliverHeader extends SliverPersistentHeaderDelegate {
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
@@ -187,6 +184,7 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
                 onTapOutside: (event) => focusNode.unfocus(),
                 onChanged: (value) {
                   controller.text = value;
+                  // triggers search job cards events for the value entered in the search field
                   context
                       .read<ServiceBloc>()
                       .add(SearchJobCards(searchText: value));
@@ -610,6 +608,7 @@ class JobCardPage extends StatelessWidget {
                               : 7)),
               if (state.getJobCardStatus == GetJobCardStatus.success &&
                   state.filteredJobCards!.isEmpty)
+                // used to create scroll effect even when the job cards are empty
                 SliverToBoxAdapter(
                   child: Column(
                     children: [

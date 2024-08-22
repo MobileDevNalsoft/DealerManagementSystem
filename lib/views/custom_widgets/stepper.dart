@@ -2,21 +2,19 @@ import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
-import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:dms/views/gate_pass.dart';
-import 'package:dms/views/inspection_out.dart';
-import 'package:dms/views/quality_check.dart';
 import 'package:flutter/material.dart' hide Stepper, Step;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../inits/init.dart';
+import '../../logger/logger.dart';
 import '../../navigations/navigator_service.dart';
 
+// this class is used to create a stepper widget to show the flow of the job card status in job card details.
 class Stepper extends StatefulWidget {
   Stepper({super.key, required this.steps});
 
@@ -35,6 +33,7 @@ class _StepperState extends State<Stepper> {
   }
 }
 
+// this class creates step widget for each step in the stepper.
 class Step extends StatefulWidget {
   Step(
       {super.key,
@@ -66,11 +65,9 @@ class _StepState extends State<Step> with ConnectivityMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     return LayoutBuilder(builder: (context, constraints) {
-      print('current ${widget.currentStep}');
-      print('activeStep ${widget.activeStep}');
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +77,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
               child: Text(
                 widget.title,
                 textAlign: TextAlign.center,
-                style:  TextStyle(fontSize: (isMobile?12:14)),
+                style: TextStyle(fontSize: (isMobile ? 12 : 14)),
               )),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -109,8 +106,6 @@ class _StepState extends State<Step> with ConnectivityMixin {
                         ),
                       InkWell(
                         onTap: () async {
-                          print('current ${widget.currentStep}');
-                          print('activeStep ${widget.activeStep}');
                           if (!isConnected()) {
                             DMSCustomWidgets.DMSFlushbar(size, context,
                                 message: 'Looks like you'
@@ -143,6 +138,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                   pendingParts = await loadSvgImage(
                                       svgImage:
                                           'assets/images/image_pending.svg');
+                                  // ignore: use_build_context_synchronously
                                   context.read<MultiBloc>().add(
                                       MultiBlocStatusChange(
                                           status: MultiStateStatus.initial));
@@ -154,7 +150,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                           pendingParts: pendingParts,
                                           jobCardNo: widget.jobCardNo));
                                 } catch (e) {
-                                  print(" caught an error $e");
+                                  Log.e(" caught an error $e");
                                 }
 
                               case 3:
@@ -174,12 +170,12 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                   : widget.currentStep == widget.activeStep
                                       ? Colors.green.shade100
                                       : Colors.grey.shade300,
-                          maxRadius: (isMobile?25:40),
+                          maxRadius: (isMobile ? 25 : 40),
                           child: Image.asset(
                             'assets/images/${widget.icons[widget.currentStep]}.png',
                             fit: BoxFit.cover,
-                            height: (isMobile?30:40),
-                            width: (isMobile?30:40),
+                            height: (isMobile ? 30 : 40),
+                            width: (isMobile ? 30 : 40),
                           ),
                         ),
                       )
@@ -193,7 +189,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                   width: constraints.maxWidth * 0.7,
                   child: Text(
                     widget.statusLines[widget.currentStep],
-                    style:  TextStyle(fontSize: isMobile?12:14),
+                    style: TextStyle(fontSize: isMobile ? 12 : 14),
                   ),
                 ),
               if (widget.currentStep == widget.activeStep &&
@@ -210,7 +206,8 @@ class _StepState extends State<Step> with ConnectivityMixin {
           ),
           if (widget.currentStep < widget.stepperLength - 1)
             Padding(
-              padding: EdgeInsets.only(left: constraints.maxWidth * (isMobile?0.173:0.185)),
+              padding: EdgeInsets.only(
+                  left: constraints.maxWidth * (isMobile ? 0.173 : 0.185)),
               child: SizedBox(
                 height: constraints.maxWidth * 0.1,
                 child: VerticalDivider(

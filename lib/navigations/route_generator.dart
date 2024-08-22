@@ -4,7 +4,7 @@ import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:dms/views/gate_pass.dart';
-import 'package:dms/views/home_view.dart';
+import 'package:dms/views/home.dart';
 import 'package:dms/views/inspection_in.dart';
 import 'package:dms/views/inspection_out.dart';
 import 'package:dms/views/jobcard_details.dart';
@@ -17,7 +17,6 @@ import 'package:dms/views/service_history.dart';
 import 'package:dms/views/vehicle_examination.dart';
 import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
-
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

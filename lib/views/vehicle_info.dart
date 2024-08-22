@@ -45,7 +45,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
     super.initState();
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
-    _serviceBloc.add(ClearServices());
+    _serviceBloc.state.services = [];
+    _serviceBloc.state.getServiceStatus = GetServiceStatus.initial;
     _vehicleBloc
         .add(UpdateState(vehicle: Vehicle(), status: VehicleStatus.initial));
   }
@@ -217,13 +218,16 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                             index]
                                                                         .jobCardNo!
                                                                     : 'JC-MAD-633',
-                                                                style:  TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        isMobile?13:15,
-                                                                    ),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize:
+                                                                      isMobile
+                                                                          ? 13
+                                                                          : 15,
+                                                                ),
                                                               )
                                                             ],
                                                           ),
@@ -235,8 +239,14 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                   (isMobile
                                                                       ? 0.05
                                                                       : 0.008)),
-                                                               Icon(Icons
-                                                                  .calendar_month_outlined,size: isMobile?null:size.width*0.022,),
+                                                              Icon(
+                                                                Icons
+                                                                    .calendar_month_outlined,
+                                                                size: isMobile
+                                                                    ? null
+                                                                    : size.width *
+                                                                        0.022,
+                                                              ),
                                                               Gap(size.width *
                                                                   (isMobile
                                                                       ? 0.02
@@ -262,9 +272,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                             .services![index]
                                                                             .scheduledDate!
                                                                         : '12022004',
-                                                                    style:  TextStyle(
-                                                                        fontSize:
-                                                                           isMobile? 13:15,
+                                                                    style: TextStyle(
+                                                                        fontSize: isMobile
+                                                                            ? 13
+                                                                            : 15,
                                                                         fontWeight:
                                                                             FontWeight.w600),
                                                                   ),
@@ -276,7 +287,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                               0.01),
                                                         ],
                                                       ),
-                                                      Gap(size.width * (isMobile?0.01:0.008)),
+                                                      Gap(size.width *
+                                                          (isMobile
+                                                              ? 0.01
+                                                              : 0.008)),
                                                       Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -285,7 +299,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Gap(size.height * 0.004),
+                                                          Gap(size.height *
+                                                              0.004),
                                                           Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -293,11 +308,18 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                             children: [
                                                               Gap(size.width *
                                                                   0.058),
-                                                               Icon(Icons
-                                                                  .mark_unread_chat_alt_outlined,size: isMobile?null:size.width*0.022),
+                                                              Icon(
+                                                                  Icons
+                                                                      .mark_unread_chat_alt_outlined,
+                                                                  size: isMobile
+                                                                      ? null
+                                                                      : size.width *
+                                                                          0.022),
                                                               // Image.asset('assets/images/status.png', scale: size.width * 0.058),
                                                               Gap(size.width *
-                                                                  (isMobile?0.02:0.016)),
+                                                                  (isMobile
+                                                                      ? 0.02
+                                                                      : 0.016)),
                                                               Text(
                                                                 textAlign:
                                                                     TextAlign
@@ -309,9 +331,11 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                             .jobType ??
                                                                         '123123123'
                                                                     : '123123123',
-                                                                style:  TextStyle(
+                                                                style: TextStyle(
                                                                     fontSize:
-                                                                       isMobile? 13:15,
+                                                                        isMobile
+                                                                            ? 13
+                                                                            : 15,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600),
@@ -327,10 +351,17 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                             children: [
                                                               Gap(size.width *
                                                                   0.058),
-                                                               Icon(Icons
-                                                                  .location_on_outlined,size: isMobile?null:size.width*0.022),
+                                                              Icon(
+                                                                  Icons
+                                                                      .location_on_outlined,
+                                                                  size: isMobile
+                                                                      ? null
+                                                                      : size.width *
+                                                                          0.022),
                                                               Gap(size.width *
-                                                                  (isMobile?0.02:0.016)),
+                                                                  (isMobile
+                                                                      ? 0.02
+                                                                      : 0.016)),
                                                               Text(
                                                                 textAlign:
                                                                     TextAlign
@@ -342,9 +373,11 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                             .location ??
                                                                         'Location27'
                                                                     : 'Location27',
-                                                                style:  TextStyle(
+                                                                style: TextStyle(
                                                                     fontSize:
-                                                                       isMobile? 13:15,
+                                                                        isMobile
+                                                                            ? 13
+                                                                            : 15,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600),
@@ -447,9 +480,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                   Padding(
                     padding: EdgeInsets.only(
                         top: size.height * (isMobile ? 0.056 : 0.04),
-                        left: size.width * (isMobile?0.1:0.056)),
+                        left: size.width * (isMobile ? 0.1 : 0.056)),
                     child: BlocBuilder<VehicleBloc, VehicleState>(
-                      
                       builder: (context, state) {
                         return Skeletonizer(
                           enabled: context.watch<VehicleBloc>().state.status ==

@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -619,4 +620,190 @@ class InitCapCaseTextFormatter extends TextInputFormatter {
       selection: newValue.selection,
     );
   }
+}
+
+// returns widget dynamically according to the widget name extracted from json.
+Widget getWidget(
+    {required Size size,
+    required String page,
+    required int index,
+    required Map<String, dynamic> json,
+    required BuildContext context,
+    required bool isMobile}) {
+  ServiceBloc _serviceBloc = context.read<ServiceBloc>();
+  // Switch statement to handle different widget types based on "widget" key in JSON
+  switch (json[page][index]['widget']) {
+    case "checkBox":
+      // Return a Checkbox widget with specific properties and behavior
+      return SizedBox(
+        height: size.height * 0.03,
+        width: isMobile ? size.width * 0.05 : size.width * 0.024,
+        child: Checkbox(
+          checkColor: Colors.white,
+          fillColor: json[page][index]['properties']['value'] == true
+              ? const WidgetStatePropertyAll(Colors.black)
+              : const WidgetStatePropertyAll(Colors.white),
+          value: json[page][index]['properties']['value'],
+          side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
+          onChanged: (value) {
+            json[page][index]['properties']['value'] = value;
+            _serviceBloc.add(InspectionJsonUpdated(json: json));
+          },
+        ),
+      );
+    case "textField":
+      // Return a TextField widget with specific properties and behavior
+      TextEditingController textEditingController = TextEditingController();
+
+      textEditingController.text = json[page][index]['properties']['value'];
+
+      textEditingController.selection = TextSelection.fromPosition(
+          TextPosition(offset: textEditingController.text.length));
+
+      return Container(
+        height: size.height * 0.11,
+        width: isMobile ? size.width * 0.62 : size.width * 0.32,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            border: Border.all(color: Colors.black)),
+        child: TextField(
+            textInputAction: TextInputAction.done,
+            controller: textEditingController,
+            cursorColor: Colors.black,
+            minLines: 1,
+            maxLines: 5,
+            maxLength: 200,
+            decoration: const InputDecoration(
+              counterText: '',
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+              contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              hintStyle: TextStyle(color: Colors.black38),
+            ),
+            onChanged: (value) {
+              _serviceBloc.state.json![page][index]['properties']['value'] =
+                  value;
+            }),
+      );
+    case "dropDown":
+      // Return a DropdownButton2 widget with specific properties and behavior
+      // Create a list of items based on the JSON properties
+      List<String> items = [];
+
+      for (String s in json[page][index]['properties']['items']) {
+        items.add(s);
+      }
+
+      if (json[page][index]['properties']['value'] == '') {
+        json[page][index]['properties']['value'] = items[0];
+      }
+
+      return DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          onMenuStateChange: (isOpen) {},
+          isExpanded: true,
+          items: items
+              .map((String item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ))
+              .toList(),
+          value: json[page][index]['properties']['value'],
+          onChanged: (String? value) {
+            json[page][index]['properties']['value'] = value;
+            _serviceBloc.add(InspectionJsonUpdated(json: json));
+          },
+          buttonStyleData: ButtonStyleData(
+            height: size.height * 0.04,
+            width: isMobile ? size.width * 0.5 : size.width * 0.32,
+            padding: const EdgeInsets.only(left: 14, right: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Colors.black,
+              ),
+              color: Colors.white,
+            ),
+            elevation: 0,
+          ),
+          iconStyleData: const IconStyleData(
+            icon: Icon(!false
+                ? Icons.keyboard_arrow_down_rounded
+                : Icons.keyboard_arrow_up_rounded),
+            iconSize: 14,
+            iconEnabledColor: Colors.black,
+            iconDisabledColor: Colors.black,
+          ),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: size.height * 0.3,
+            width: size.width * 0.5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            offset: const Offset(0, 0),
+            scrollbarTheme: ScrollbarThemeData(
+              radius: const Radius.circular(40),
+              thickness: WidgetStateProperty.all<double>(6),
+              thumbVisibility: WidgetStateProperty.all<bool>(true),
+            ),
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 30,
+            padding: EdgeInsets.only(left: 14, right: 14),
+          ),
+        ),
+      );
+    case "radioButtons":
+      // Return a column of Radio widgets with specific properties and behavior
+      List<String> options = [];
+
+      for (String s in json[page][index]['properties']['options']) {
+        options.add(s);
+      }
+
+      return SizedBox(
+        height: size.height * 0.25,
+        width: size.width * 0.6,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: options
+              .map(
+                (e) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    json[page][index]['properties']['options']
+                        [options.indexOf(e)],
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                  leading: Radio<int>(
+                    value: options.indexOf(e) + 1,
+                    groupValue: json[page][index]['properties']['value'],
+                    activeColor: Colors
+                        .white, // Change the active radio button color here
+                    fillColor: WidgetStateProperty.all(
+                        Colors.black), // Change the fill color when selected
+                    splashRadius: 20, // Change the splash radius when clicked
+                    onChanged: (value) {
+                      json[page][index]['properties']['value'] = value;
+                      _serviceBloc.add(InspectionJsonUpdated(json: json));
+                    },
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      );
+  }
+
+  // If no matching widget is found, return an empty SizedBox
+  return const SizedBox();
 }

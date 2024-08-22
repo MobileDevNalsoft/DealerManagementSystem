@@ -7,6 +7,9 @@ import 'package:shimmer/shimmer.dart';
 class CustomSliderButton extends StatefulWidget {
   final double height;
   final double width;
+
+  /// controller for managing the slider button's state
+  /// (position and callbacks).
   final SliderButtonController? controller;
   final Decoration decoration;
   final Widget leftLabel;
@@ -34,16 +37,19 @@ class CustomSliderButton extends StatefulWidget {
 }
 
 class _CustomSliderButtonState extends State<CustomSliderButton> {
+  /// Internal state variables to track slider positions.
   late double _startPosition;
   late double _rightPosition;
   late double _leftPosition;
 
+  /// The controller instance, either provided or created internally.
   late SliderButtonController _sliderButtonController;
   @override
   void initState() {
     super.initState();
     _initController();
 
+    /// Calculate initial positions based on widget properties.
     _leftPosition = widget.width * 0.35;
     _startPosition = widget.width * 0.735;
     _rightPosition = widget.width * 1.12;
@@ -57,10 +63,13 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     }
   }
 
+  /// Initializes the `_sliderButtonController` based on the provided
+  /// controller or creates a new one.
   void _initController() {
     _sliderButtonController = widget.controller ?? SliderButtonController();
   }
 
+  /// Handles horizontal drag updates on the slider button.
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       _sliderButtonController.setCurrentPosition = details.localPosition.dx;
@@ -77,6 +86,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     });
   }
 
+  /// Handles horizontal drag end events on the slider button.
   void _onPanEnd(DragEndDetails details) {
     setState(() {
       if (_sliderButtonController.currentPosition == _rightPosition) {
@@ -103,6 +113,12 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
       }
     }
 
+    /// This widget creates a draggable slider with visual feedback using a
+    /// [GestureDetector] and a [Stack] of UI elements.
+    ///
+    /// The widget listens for horizontal drag events and updates the position of
+    /// a slider button based on the user's finger movement.  It also displays
+    /// visual feedback based on the slider button's position.
     return GestureDetector(
       onHorizontalDragUpdate: _onPanUpdate,
       onHorizontalDragEnd: _onPanEnd,
@@ -125,6 +141,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: Shimmer.fromColors(
+                          // This defines the shimmer animation for the left label.
                           direction: ShimmerDirection.rtl,
                           baseColor: Colors.red,
                           highlightColor: Colors.grey.shade100,
@@ -139,6 +156,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                     alignment: Alignment.centerRight,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 16.0),
+                      // This defines the shimmer animation for the right label.
                       child: Shimmer.fromColors(
                           baseColor: Colors.green,
                           highlightColor: Colors.grey.shade100,
@@ -181,6 +199,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   }
 }
 
+// controller that is used to controll the position of slider button.
 class SliderButtonController extends ChangeNotifier {
   Position position;
   double currentPosition;
