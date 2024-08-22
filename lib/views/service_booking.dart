@@ -12,7 +12,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// ignore: depend_on_referenced_packages
 import 'package:shimmer/shimmer.dart';
 import '../inits/init.dart';
 import '../logger/logger.dart';
@@ -121,13 +120,14 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
+//Fetching sales persons with names statring from 'ab'
     _multiBloc.add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
     Future.delayed(Duration(milliseconds: 600), () {
       vehRegNumFocus.requestFocus();
     });
-
+ // Fetching locations if not already fetched.
     if (_serviceBloc.state.locations == null) {
       _serviceBloc.add(GetServiceLocations());
     }
@@ -184,6 +184,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     }
   }
 
+  //To clear all the text fields once the service data is uploaded.
   void clearFields() {
     vehRegNumController.clear();
     customerController.clear();
@@ -199,6 +200,17 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     remarksController.clear();
   }
 
+// removing focus for all the fields when needed.
+  void unFocusFields() {
+    bookingFocus.unfocus();
+    altContFocus.unfocus();
+    altContPhoneNoFocus.unfocus();
+    spFocus.unfocus();
+    bayFocus.unfocus();
+    jobTypeFocus.unfocus();
+    custConcernsFocus.unfocus();
+    remarksFocus.unfocus();}
+  
   void disposeFields() {
     vehRegNumController.dispose();
     customerController.dispose();
@@ -262,6 +274,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
             return PopScope(
               canPop: index == 1 ? false : true,
               onPopInvoked: (didPop) async {
+                //Navigating to page 1 when user is in page 2
                 if (index == 1) {
                   pageController.animateToPage(0,
                       duration: const Duration(milliseconds: 500),
@@ -349,9 +362,10 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1]),
                         ),
-                        child: index == 0
-                            ? BlocBuilder<ServiceBloc, ServiceState>(
-                                builder: (context, state) {
+                        child: 
+                        //Service booking first page
+                        index == 0
+                            ? BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
                                 switch (state.serviceLocationsStatus) {
                                   case GetServiceLocationsStatus.loading:
                                     return Transform(
@@ -368,6 +382,8 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                 : size.width * 0.32),
                                       ),
                                     );
+
+                                  //After fetching the locations   
                                   case GetServiceLocationsStatus.success:
                                     return ListView(
                                       controller: page1ScrollController,
@@ -525,6 +541,8 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                         page1ScrollController),
                                               ],
                                             ),
+
+                                            // view more dialog box
                                             Row(
                                               children: [
                                                 Gap(isMobile
@@ -664,7 +682,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                             : null) ??
                                                         (kmsController
                                                                 .text.isEmpty
-                                                            ? "lms cannot be empty"
+                                                            ? "kms cannot be empty"
                                                             : null);
 
                                                 if (message != null) {
@@ -687,32 +705,19 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                               child: Container(
                                                   alignment: Alignment.center,
                                                   height: size.height * 0.045,
-                                                  width: isMobile
-                                                      ? size.width * 0.2
-                                                      : size.width * 0.08,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: Colors.black,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            blurRadius: 10,
-                                                            blurStyle:
-                                                                BlurStyle.outer,
-                                                            spreadRadius: 0,
-                                                            color: Colors.orange
-                                                                .shade200,
-                                                            offset:
-                                                                const Offset(
-                                                                    0, 0))
-                                                      ]),
-                                                  child: Text(
+                                                  width:isMobile?  size.width * 0.2:size.width*0.08,
+                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 10,
+                                                        blurStyle: BlurStyle.outer,
+                                                        spreadRadius: 0,
+                                                        color: Colors.orange.shade200,
+                                                        offset: const Offset(0, 0))
+                                                  ]),
+                                                  child: const Text(
                                                     textAlign: TextAlign.center,
                                                     'next',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16),
+                                                    style: TextStyle(color: Colors.white, fontSize: 16),
                                                   )),
                                             ),
                                             if (MediaQuery.of(context)
@@ -731,7 +736,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                     );
                                 }
                               })
-                            : ListView(
+                            : 
+                             //Service booking second  page
+                            ListView(
                                 controller: page2ScrollController,
                                 children: [
                                   Column(
@@ -806,6 +813,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                 height: size.height *
                                                     (isMobile ? 0.005 : 0.015),
                                               ),
+                                              // Sales person searchable dropdown with inital values starting from letting 'ab' 
                                               BlocBuilder<MultiBloc,
                                                   MultiBlocState>(
                                                 builder: (context, state) {
@@ -816,8 +824,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                               DMSCustomWidgets.DMSFlushbar(
                                                                   size, context,
                                                                   message:
-                                                                      'Looks like you'
-                                                                      're offline. Please check your connection and try again.',
+                                                                      'Looks like you''re offline. Please check your connection and try again.',
                                                                   icon:
                                                                       const Icon(
                                                                     Icons.error,
@@ -955,6 +962,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                             listener: (context, state) {
                                               switch (
                                                   state.serviceUploadStatus) {
+                                                    //Navigating to Inspection in after successful upload of service booking
                                                 case ServiceUploadStatus
                                                       .success:
                                                   DMSCustomWidgets.DMSFlushbar(
@@ -973,6 +981,8 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                       .instance.primaryFocus
                                                       ?.unfocus();
                                                   clearFields();
+                                                  sliderButtonController.position = SliderButtonPosition.left;
+                                                  //Handling failure case from the backend (eg. Found multiple records with same location.)  
                                                 case ServiceUploadStatus
                                                       .failure:
                                                   sliderButtonController
@@ -1042,7 +1052,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                 .instance
                                                                 .primaryFocus
                                                                 ?.unfocus();
-
+                                                            // Validating the textfields and displaying appropriate error snackbars.
                                                             String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
                                                                 _altPersonContactNoValidation(
                                                                     altContPhoneNoController
@@ -1212,7 +1222,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
   }
 
   String? _salesPersonValidator(String value, List<String?> salesPersons) {
-    print(salesPersons);
     if (value.isEmpty) {
       return "Sales Person cannot be empty";
     } else if (!salesPersons.contains(value.split('-')[0])) {
@@ -1356,14 +1365,14 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void initState() {
     super.initState();
     _initController();
-    _position = widget.size.maxWidth * 0.01;
-    _startPosition = widget.size.maxWidth * 0.01;
-    _endPosition = widget.isMobile
-        ? widget.size.maxWidth * 0.8
-        : widget.size.maxWidth * 0.825;
-    print(
-        "stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus} ${_sliderController._position}");
-    _sliderController.currentPosition = widget.size.maxWidth * 0.01;
+   
+    
+    _position = widget.size.maxWidth*0.01;
+    _startPosition =widget.size.maxWidth*0.01;
+    _endPosition =widget.isMobile? widget.size.maxWidth*0.8:widget.size.maxWidth*0.825;
+    _sliderController.currentPosition = widget.size.maxWidth*0.01;
+
+    //Updating the initial position of the slider
     if (_sliderController.position == SliderButtonPosition.right) {
       _sliderController.currentPosition = _endPosition;
     } else if (_sliderController.position == SliderButtonPosition.left) {
@@ -1375,12 +1384,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     _sliderController = widget.sliderController;
   }
 
-  void _onPanStart(DragStartDetails details) {
-    // setState(() {
-    //   _isSliding = true;
-    // });
-  }
-
+  //Slider in motion
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       _sliderController.currentPosition = details.localPosition.dx;
@@ -1396,6 +1400,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     });
   }
 
+  //on Slider motion end 
   void _onPanEnd(DragEndDetails details) async {
     if (_sliderController.currentPosition <= widget.size.maxWidth / 2) {
       setState(() {
@@ -1407,37 +1412,32 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     }
     await widget.onDismissed();
     setState(() {
-      print(
-          "status from state ${context.read<ServiceBloc>().state.serviceUploadStatus}");
-      if (context.read<ServiceBloc>().state.serviceUploadStatus ==
-          ServiceUploadStatus.initial) {
+      // Updating the posiition based on the Service upload status 
+      if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
         _sliderController.currentPosition = _startPosition;
         _sliderController.position = SliderButtonPosition.left;
-        // _position = _startPosition;
-      } else if (context.read<ServiceBloc>().state.serviceUploadStatus ==
-          ServiceUploadStatus.loading) {
+        
+      } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
         _sliderController.currentPosition = _endPosition;
         _sliderController.position = SliderButtonPosition.right;
-        // _position = _endPosition;
+        
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("from build ${_sliderController.position}");
+    // updating the slider postion in the controller
     if (_sliderController.position != SliderButtonPosition.moving) {
       if (_sliderController.position == SliderButtonPosition.right) {
         _sliderController.currentPosition = _endPosition;
       } else if (_sliderController.position == SliderButtonPosition.left) {
-        print("inside left");
         _sliderController.currentPosition = _startPosition;
       }
     }
     print(
         "from build current position${_sliderController.currentPosition} ${_startPosition} ${_endPosition}");
     return GestureDetector(
-      onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
       child: Stack(

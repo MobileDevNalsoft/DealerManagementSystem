@@ -121,7 +121,7 @@ class _CommentsState extends State<Comments>
                               controller: commentsController,
                               maxLines: 10,
                               cursorColor: Colors.white,
-                              style: const TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                   hintStyle: const TextStyle(
                                       fontSize: 16, color: Colors.white60),
@@ -129,7 +129,7 @@ class _CommentsState extends State<Comments>
                                       const Color.fromRGBO(38, 38, 40, 1),
                                   filled: true,
                                   contentPadding:
-                                      const EdgeInsets.only(left: 16, top: 16),
+                                      EdgeInsets.only(left: 16, top: 16),
                                   hintText: "Comments",
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16.0),
@@ -380,8 +380,7 @@ class _CommentsState extends State<Comments>
                     context.read<MultiBloc>().add(
                         ModifyVehicleInteractionStatus(
                             selectedBodyPart: "", isTapped: false));
-                    // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
-                    // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
+
                     print("git herer");
                     return;
                   }
@@ -441,7 +440,7 @@ class _CommentsState extends State<Comments>
                       ),
                     );
 
-                    return;
+                    // return;
                   }
                   // Provider.of<BodySelectorViewModel>(context, listen: false)
                   //     .isTapped = false;

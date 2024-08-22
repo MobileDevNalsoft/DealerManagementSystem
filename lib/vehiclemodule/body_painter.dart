@@ -1,17 +1,8 @@
-import 'dart:ui' as ui; // Import the 'ui' library
-
-import 'package:another_flushbar/flushbar.dart';
+import 'dart:ui' as ui;
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
-import 'package:dms/models/vehicle_parts_media.dart';
-import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/wrapper_ex.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/semantics.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:svg_path_parser/svg_path_parser.dart';
 import 'package:touchable/touchable.dart';
@@ -48,19 +39,26 @@ class BodyPainter extends CustomPainter {
 
     final Matrix4 matrix4 = Matrix4.identity();
 
+    //For tab screens
     if (contextSize.width > 1050) {
+      //scale
       var xScale = contextSize.width / contextSize.width * 0.4;
       var yScale = contextSize.height * 0.96 / contextSize.height * 0.7;
 
+      //position
       double translateX = (contextSize.width - contextSize.width * 1.2 * xScale) / 2;
       double translateY = (contextSize.height * 0.96 - contextSize.height * 1 * yScale) / 2;
 
       matrix4.translate(translateX, translateY);
       matrix4.scale(xScale, yScale);
-    } else {
+    } 
+    // For mobile screens
+    else {
+      //scale
       var xScale = contextSize.width / contextSize.width * 0.38;
       var yScale = contextSize.height * 0.94 / contextSize.height * 0.6;
 
+      //position
       double translateX = (contextSize.width - contextSize.width * 1.5 * xScale) / 2;
       double translateY = (contextSize.height * 0.96 - contextSize.height * yScale) / 2;
 
@@ -91,6 +89,8 @@ class BodyPainter extends CustomPainter {
         paint.color = Color.fromRGBO(133, 127, 127, 0.612);
       }
       if (context.read<MultiBloc>().state.selectedGeneralBodyPart == muscle.name) {
+
+        //color of the selected part 
         paint.color = Colors.white;
       }
 
@@ -98,21 +98,13 @@ class BodyPainter extends CustomPainter {
         path.transform(matrix4.storage),
         paint,
         onTapDown: (details) {
-          print("details ${details.localPosition}");
+          // on tap actions is only for parts 
           if (!muscle.name.startsWith('text')) {
-            print(" name from painter${muscle.name} ${context.read<MultiBloc>().state.isTapped}");
             context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: muscle.name, isTapped: true));
-            // Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = muscle.name;
-            // Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = true;
+
           }
         },
-        // onTapUp: (details) {
-        //   print("tap up");
-        //   if (displayAcceptedStatus) {
-        //     Provider.of<BodySelectorViewModel>(context, listen: false).isTapped = false;
-        //     Provider.of<BodySelectorViewModel>(context, listen: false).selectedGeneralBodyPart = "";
-        //   }
-        // },
+      
       );
       if (displayAcceptedStatus && context.read<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(muscle.name)) {
         if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[muscle.name]!.isAccepted == true) {

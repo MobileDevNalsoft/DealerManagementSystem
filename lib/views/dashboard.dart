@@ -24,6 +24,7 @@ class _DashBoardState extends State<DashBoard> {
     Size size = MediaQuery.of(context).size;
 
     // Wrap the entire dashboard with a Hero widget for transitions
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     return Hero(
       tag: 'dashboard',
       transitionOnUserGestures: true,
@@ -39,7 +40,10 @@ class _DashBoardState extends State<DashBoard> {
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045),
+            margin: EdgeInsets.only(
+                left: size.width * 0.045,
+                top: isMobile ? 0 : size.height * 0.008,
+                bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
@@ -56,7 +60,7 @@ class _DashBoardState extends State<DashBoard> {
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
                   onPressed: () {
-                    navigator.pop();
+                    Navigator.pop(context);
                   },
                   icon: const Icon(Icons.arrow_back_rounded,
                       color: Colors.white)),
@@ -65,9 +69,9 @@ class _DashBoardState extends State<DashBoard> {
           title: Container(
               alignment: Alignment.center,
               height: size.height * 0.05,
-              width: size.width * 0.45,
+              width: isMobile ? size.width * 0.45 : size.width * 0.32,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  shape: BoxShape.circle,
                   color: Colors.black,
                   boxShadow: [
                     BoxShadow(
@@ -160,6 +164,40 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                             // Another black background with inner shadow on top of the first one
+                            Positioned(
+                              top: 4,
+                              right: size.width * 0.018,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                margin: EdgeInsets.all(size.width * 0.02),
+                                padding: EdgeInsets.all(size.width * 0.02),
+                                height: size.height * 0.11,
+                                width: size.width * 0.45,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Colors.white),
+                                    color: Colors.black54,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          blurRadius: 10,
+                                          blurStyle: BlurStyle.outer,
+                                          spreadRadius: 0,
+                                          color: Colors.black26,
+                                          offset: Offset(0, 0))
+                                    ]),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              margin: EdgeInsets.all(size.width * 0.02),
+                              padding: EdgeInsets.all(size.width * 0.02),
+                              height: size.height * 0.11,
+                              width: size.width * 0.45,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black,
+                              ),
+                            ),
                             Positioned(
                               top: 4,
                               right: size.width * 0.018,
@@ -306,6 +344,40 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                             Container(
+                              margin: EdgeInsets.all(size.width * 0.02),
+                              padding: EdgeInsets.all(size.width * 0.02),
+                              alignment: Alignment.centerLeft,
+                              height: size.height * 0.11,
+                              width: size.width * 0.45,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black,
+                              ),
+                            ),
+                            Positioned(
+                              top: 4,
+                              right: size.width * 0.018,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                margin: EdgeInsets.all(size.width * 0.02),
+                                padding: EdgeInsets.all(size.width * 0.02),
+                                height: size.height * 0.11,
+                                width: size.width * 0.45,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Colors.white),
+                                    color: Colors.black54,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          blurRadius: 10,
+                                          blurStyle: BlurStyle.outer,
+                                          spreadRadius: 0,
+                                          color: Colors.black26,
+                                          offset: Offset(0, 0))
+                                    ]),
+                              ),
+                            ),
+                            Container(
                                 margin: EdgeInsets.all(size.width * 0.02),
                                 padding: EdgeInsets.all(size.width * 0.02),
                                 alignment: Alignment.centerLeft,
@@ -374,6 +446,7 @@ class _DashBoardState extends State<DashBoard> {
                   ],
                 ),
               ),
+
               // This section builds the top portion of the job card stats widget
               Expanded(
                 flex: 1,
@@ -394,74 +467,74 @@ class _DashBoardState extends State<DashBoard> {
               ),
               // This section builds the bar chart
               Expanded(
-                flex: 6,
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.black),
-                  width: size.width * 0.9,
-                  child: BarChart(BarChartData(
-                      // Define the data and styling for the chart
-                      alignment: BarChartAlignment.spaceAround,
-                      borderData: FlBorderData(show: false),
-                      maxY:
-                          values.reduce((v, e) => v > e ? v : e).toDouble() + 5,
-                      backgroundColor: Colors.transparent,
-                      gridData: const FlGridData(
-                        show: false,
-                      ),
-                      groupsSpace: 30,
-                      barTouchData: BarTouchData(
-                          // Configure bar interaction
-                          enabled: true,
-                          touchTooltipData: BarTouchTooltipData(
-                            getTooltipColor: (group) {
-                              return Colors.transparent;
-                            },
-                            tooltipPadding: EdgeInsets.zero,
-                            tooltipMargin: 8,
-                            getTooltipItem:
-                                (group, groupIndex, rod, rodIndex) =>
-                                    BarTooltipItem(
-                                        (rod.toY.round()).toString(),
-                                        const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
-                          )),
-                      titlesData: FlTitlesData(
-                          // Define chart titles and labels
-                          topTitles: const AxisTitles(),
-                          rightTitles: const AxisTitles(),
-                          leftTitles: const AxisTitles(),
-                          bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 30,
-                            getTitlesWidget: (value, meta) => Text(
-                              statuses[int.parse(meta.formattedValue)],
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ))),
-                      barGroups: values // Define bar data
-                          .map((e) => BarChartGroupData(
-                                x: values.indexOf(e),
-                                showingTooltipIndicators: [
-                                  0
-                                ], // Show tooltip on first bar in group
-                                barRods: [
-                                  BarChartRodData(
-                                      toY: e.toDouble(),
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      color: Colors.orange.shade200,
-                                      borderRadius: BorderRadius.circular(2),
-                                      width: 15,
-                                      fromY: 0)
-                                ],
-                              ))
-                          .toList())),
-                ),
-              ),
+                  flex: 6,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.black),
+                    width: size.width * 0.9,
+                    child: BarChart(BarChartData(
+                        // Define the data and styling for the chart
+                        alignment: BarChartAlignment.spaceAround,
+                        borderData: FlBorderData(show: false),
+                        maxY:
+                            values.reduce((v, e) => v > e ? v : e).toDouble() +
+                                5,
+                        backgroundColor: Colors.transparent,
+                        gridData: const FlGridData(
+                          show: false,
+                        ),
+                        groupsSpace: 30,
+                        barTouchData: BarTouchData(
+                            // Configure bar interaction
+                            enabled: true,
+                            touchTooltipData: BarTouchTooltipData(
+                              getTooltipColor: (group) {
+                                return Colors.transparent;
+                              },
+                              tooltipPadding: EdgeInsets.zero,
+                              tooltipMargin: 8,
+                              getTooltipItem:
+                                  (group, groupIndex, rod, rodIndex) =>
+                                      BarTooltipItem(
+                                          (rod.toY.round()).toString(),
+                                          const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold)),
+                            )),
+                        titlesData: FlTitlesData(
+                            // Define chart titles and labels
+                            topTitles: const AxisTitles(),
+                            rightTitles: const AxisTitles(),
+                            leftTitles: const AxisTitles(),
+                            bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 30,
+                              getTitlesWidget: (value, meta) => Text(
+                                statuses[int.parse(meta.formattedValue)],
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ))),
+                        barGroups: values // Define bar data
+                            .map((e) => BarChartGroupData(
+                                  x: values.indexOf(e),
+                                  showingTooltipIndicators: [
+                                    0
+                                  ], // Show tooltip on first bar in group
+                                  barRods: [
+                                    BarChartRodData(
+                                        toY: e.toDouble(),
+                                        borderSide: const BorderSide(
+                                            color: Colors.white),
+                                        color: Colors.orange.shade200,
+                                        borderRadius: BorderRadius.circular(2),
+                                        width: 15,
+                                        fromY: 0)
+                                  ],
+                                ))
+                            .toList())),
+                  )),
               Expanded(
                 flex: 4,
                 child: Gap(size.height * 0.6),

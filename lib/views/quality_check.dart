@@ -5,7 +5,7 @@ import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction
 import 'package:dms/inits/init.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/wrapper_ex.dart';
+import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/inspection_out.dart';
 import 'package:dms/views/list_of_jobcards.dart';
@@ -49,8 +49,8 @@ class _QualityCheckState extends State<QualityCheck>
   @override
   void initState() {
     super.initState();
-    _interactionBloc = _interactionBloc;
-    _multiBloc = _multiBloc;
+    _interactionBloc = context.read<VehiclePartsInteractionBloc>();
+    _multiBloc = context.read<MultiBloc>();
     _interactionBloc.state.mapMedia = {};
     // remove widget.jobCardNo for release version.
     _interactionBloc.add(FetchVehicleMediaEvent(
@@ -97,7 +97,7 @@ class _QualityCheckState extends State<QualityCheck>
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
-                  navigator.pop();
+                  Navigator.pop(context);
                 },
                 icon:
                     const Icon(Icons.arrow_back_rounded, color: Colors.white)),
@@ -118,7 +118,7 @@ class _QualityCheckState extends State<QualityCheck>
                       color: Colors.orange.shade200,
                       offset: const Offset(0, 0))
                 ]),
-            child: const Center(
+            child: Center(
               child: Text(
                 textAlign: TextAlign.center,
                 'Quality Check',
@@ -174,7 +174,7 @@ class _QualityCheckState extends State<QualityCheck>
                         if (!isConnected()) {
                           DMSCustomWidgets.DMSFlushbar(size, context,
                               message: 'Please check the internet connectivity',
-                              icon: const Icon(Icons.error));
+                              icon: Icon(Icons.error));
                           return;
                         }
                         String message = "";
@@ -269,7 +269,7 @@ class _QualityCheckState extends State<QualityCheck>
                               }
                             }
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.zoom_in_rounded,
                             color: Colors.white,
                           ),
@@ -295,7 +295,7 @@ class _QualityCheckState extends State<QualityCheck>
                             }
                           }
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.zoom_out_rounded,
                           color: Colors.white,
                         ),
@@ -449,11 +449,7 @@ class _QualityCheckState extends State<QualityCheck>
                                             ],
                                           ),
                                         ),
-                                        !context
-                                                .read<
-                                                    VehiclePartsInteractionBloc>()
-                                                .state
-                                                .mapMedia
+                                        !_interactionBloc.state.mapMedia
                                                 .containsKey(context
                                                     .watch<MultiBloc>()
                                                     .state
@@ -1238,11 +1234,8 @@ class _QualityCheckState extends State<QualityCheck>
                                                   },
                                                 ),
                                                 const Gap(16),
-                                                if (context
-                                                            .read<
-                                                                VehiclePartsInteractionBloc>()
-                                                            .state
-                                                            .mapMedia[
+                                                if (_interactionBloc
+                                                            .state.mapMedia[
                                                         context
                                                             .read<MultiBloc>()
                                                             .state
@@ -1263,9 +1256,7 @@ class _QualityCheckState extends State<QualityCheck>
                                                               .isAccepted ==
                                                           false) {
                                                         rejectionController = TextEditingController(
-                                                            text: context
-                                                                    .read<
-                                                                        VehiclePartsInteractionBloc>()
+                                                            text: _interactionBloc
                                                                     .state
                                                                     .mapMedia[context
                                                                         .read<
@@ -1444,7 +1435,7 @@ class _QualityCheckState extends State<QualityCheck>
                     default:
                   }
                 },
-                child: const SizedBox(),
+                child: SizedBox(),
               )
             ],
           ),
@@ -1535,7 +1526,7 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
             bodyPartName: _multiBloc.state.selectedGeneralBodyPart,
             isAccepted: true));
       });
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 1));
       widget.onDismissed();
       return;
     } else if (_position <= _leftPosition + 20) {
