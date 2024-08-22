@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
@@ -11,10 +9,7 @@ import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/list_of_jobcards.dart';
-import 'package:dms/views/jobcard_details.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
@@ -32,6 +27,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
   FocusNode focusNode = FocusNode();
   late List<Widget> clipperWidgets;
   late Size size;
+
 
   Timer? _debounce;
 
@@ -53,9 +49,12 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
   List<Widget> initalizeWidgets() {
     size = MediaQuery.of(context).size;
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    // Clipper widgets vehicle details and srvice history are present in a stack and swap each other dynamically.
     return clipperWidgets = [
       Stack(
         children: [
+          // Service history of the vehicle  
           VehicleInfoClippedButton(
             decorationColor:
                 context.watch<MultiBloc>().state.reverseClippedWidgets!
@@ -65,7 +64,9 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 ? Colors.black
                 : Colors.transparent,
             flipX: true,
+             
             child: Transform.flip(
+              // Makes the entire child to flip with respect to x-axis
               flipX: true,
               child: Column(
                 children: [
@@ -126,10 +127,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         }
                       },
                       builder: (context, state) {
-                        print("service status ${state.getServiceStatus}");
+                        // Service history of the vehicle  
                         return CustomScrollView(
                           slivers: [
-                            (state.services == null || state.services!.isEmpty)
+                            (state.services == null || state.services!.isEmpty)// vehicle with no services 
                                 ? SliverToBoxAdapter(
                                     child: Center(
                                         heightFactor:
@@ -216,7 +217,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                         .services![
                                                                             index]
                                                                         .jobCardNo!
-                                                                    : 'JC-MAD-633',
+                                                                    : 'null',
                                                                 style:  TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -261,7 +262,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                         ? state
                                                                             .services![index]
                                                                             .scheduledDate!
-                                                                        : '12022004',
+                                                                        : '-',
                                                                     style:  TextStyle(
                                                                         fontSize:
                                                                            isMobile? 13:15,
@@ -307,8 +308,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                             .success
                                                                     ? state.services![index]
                                                                             .jobType ??
-                                                                        '123123123'
-                                                                    : '123123123',
+                                                                        'null'
+                                                                    : 'null',
                                                                 style:  TextStyle(
                                                                     fontSize:
                                                                        isMobile? 13:15,
@@ -340,8 +341,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                                             .success
                                                                     ? state.services![index]
                                                                             .location ??
-                                                                        'Location27'
-                                                                    : 'Location27',
+                                                                        'null'
+                                                                    : 'null',
                                                                 style:  TextStyle(
                                                                     fontSize:
                                                                        isMobile? 13:15,
@@ -373,18 +374,19 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               ),
             ),
           ),
+
+          // Present above the "Vehicle details" and on click swaps the stack elements to display the vehicle detials
           Positioned(
             top: 18,
             left: 0,
             child: InkWell(
               splashColor: Colors.transparent,
               onTap: () {
-                print("inside service");
                 context
                     .read<MultiBloc>()
                     .add(AddClippedWidgets(reverseClippedWidgets: false));
               },
-              child: Container(
+              child: SizedBox(
                 width: size.width * (isMobile ? 0.4 : 0.24),
                 height: size.height * (isMobile ? 0.1 : 0.12),
               ),
@@ -394,6 +396,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
       ),
       Stack(
         children: [
+          //Vehicle details clipped widget
           VehicleInfoClippedButton(
               decorationColor:
                   !context.watch<MultiBloc>().state.reverseClippedWidgets!
@@ -489,6 +492,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                   )
                 ],
               )),
+              // Present above the heading "Servce history" and on click swaps the stack elements to display the service history detials
           Positioned(
             top: 18,
             right: 0,
@@ -598,84 +602,84 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               InkWell(
                 onTap: () => focusNode.requestFocus(),
                 overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Expanded(
-                    //   flex: 10,
-                    // child:
-                    Container(
-                      alignment: Alignment.center,
-                      // margin: EdgeInsets.only(left: size.width * (isMobile?0.03:0.32)),
-                      padding: EdgeInsets.only(top: size.height * 0.033),
-                      height: size.height * 0.06,
-                      width: size.width * (isMobile ? 0.8 : 0.32),
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              bottomLeft: Radius.circular(10)),
-                          color: Colors.white60),
-                      child: TextFormField(
-                        controller: vehicleRegNoController,
-                        focusNode: focusNode,
-                        style: const TextStyle(color: Colors.black),
-                        onTapOutside: (event) => focusNode.unfocus(),
-                        onChanged: (value) {
-                          vehicleRegNoController.text =
-                              vehicleRegNoController.text.toUpperCase();
-                          if (_debounce?.isActive ?? false) _debounce!.cancel();
-                          _debounce =
-                              Timer(const Duration(milliseconds: 300), () {
-                            if (!isConnected()) {
-                              DMSCustomWidgets.DMSFlushbar(size, context,
-                                  message: 'Looks like you'
-                                      're offline. Please check your connection and try again.',
-                                  icon: const Icon(
-                                    Icons.error,
-                                    color: Colors.white,
-                                  ));
-                              return;
-                            }
-                            context.read<VehicleBloc>().add(
-                                FetchVehicleCustomer(
-                                    registrationNo:
-                                        vehicleRegNoController.text));
-                            context.read<ServiceBloc>().add(GetServiceHistory(
-                                query: 'vehicle_history',
-                                vehicleRegNo: vehicleRegNoController.text));
-                          });
-                        },
-                        cursorColor: Colors.black,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 16),
-                          hintStyle:
-                              TextStyle(color: Colors.black38, fontSize: 14),
-                          hintText: 'Vehicle Registration Number',
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: size.width*0.02),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                      
+                      child:
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(top: size.height * 0.033),
+                        height: size.height * 0.06,
+                        width: size.width * (isMobile ? 0.8 : 0.32),
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                bottomLeft: Radius.circular(10)),
+                            color: Colors.white60),
+                        child: TextFormField(
+                          controller: vehicleRegNoController,
+                          focusNode: focusNode,
+                          style: const TextStyle(color: Colors.black),
+                          onTapOutside: (event) => focusNode.unfocus(),
+                          onChanged: (value) {
+                  
+                            //making a call to the api once the user stop typing instead of multiple calls using debounce
+                            vehicleRegNoController.text =
+                                vehicleRegNoController.text.toUpperCase();
+                            if (_debounce?.isActive ?? false) _debounce!.cancel();
+                            _debounce =
+                                Timer(const Duration(milliseconds: 300), () {
+                              if (!isConnected()) {
+                                DMSCustomWidgets.DMSFlushbar(size, context,
+                                    message: 'Looks like you'
+                                        're offline. Please check your connection and try again.',
+                                    icon: const Icon(
+                                      Icons.error,
+                                      color: Colors.white,
+                                    ));
+                                return;
+                              }
+                              context.read<VehicleBloc>().add(
+                                  FetchVehicleCustomer(
+                                      registrationNo:
+                                          vehicleRegNoController.text));
+                              context.read<ServiceBloc>().add(GetServiceHistory(
+                                  query: 'vehicle_history',
+                                  vehicleRegNo: vehicleRegNoController.text));
+                            });
+                          },
+                          cursorColor: Colors.black,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 16),
+                            hintStyle:
+                                TextStyle(color: Colors.black38, fontSize: 14),
+                            hintText: 'Vehicle Registration Number',
+                          ),
                         ),
                       ),
-                    ),
-                    // ),
-                    // Expanded(
-                    //   flex: 2,
-                    // child:
-                    Container(
-                      // margin: EdgeInsets.only(right: size.width *(isMobile?0.03:0.32)),
-                      width: size.width * (isMobile ? 0.14 : 0.04),
-                      height: size.height * 0.06,
-                      decoration: const BoxDecoration(
-                          color: Colors.black38,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
-                      child: const Icon(
-                        Icons.search_rounded,
-                        color: Colors.white60,
                       ),
-                    ),
-                    // )
-                  ],
+                      Container(
+                        width: size.width * (isMobile ? 0.14 : 0.04),
+                        height: size.height * 0.06,
+                        decoration: const BoxDecoration(
+                            color: Colors.black38,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                bottomRight: Radius.circular(10))),
+                        child: const Icon(
+                          Icons.search_rounded,
+                          color: Colors.white60,
+                        ),
+                      ),
+                      // )
+                    ],
+                  ),
                 ),
               ),
               Expanded(
@@ -685,7 +689,6 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     : 6,
                 child: BlocBuilder<VehicleBloc, VehicleState>(
                   builder: (context, state) {
-                    print("building");
                     switch (state.status) {
                       case VehicleStatus.vehicleAlreadyAdded:
                         return Stack(
@@ -717,6 +720,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                             ),
                           );
                         }
+                        // if vehicle not found 
                         return Transform(
                           transform: Matrix4.translationValues(
                               0, size.height * 0.1, 0),

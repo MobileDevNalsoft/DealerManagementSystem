@@ -69,8 +69,6 @@ class _StepState extends State<Step> with ConnectivityMixin {
      bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     return LayoutBuilder(builder: (context, constraints) {
-      print('current ${widget.currentStep}');
-      print('activeStep ${widget.activeStep}');
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,8 +107,6 @@ class _StepState extends State<Step> with ConnectivityMixin {
                         ),
                       InkWell(
                         onTap: () async {
-                          print('current ${widget.currentStep}');
-                          print('activeStep ${widget.activeStep}');
                           if (!isConnected()) {
                             DMSCustomWidgets.DMSFlushbar(size, context,
                                 message: 'Looks like you'
@@ -154,7 +150,10 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                           pendingParts: pendingParts,
                                           jobCardNo: widget.jobCardNo));
                                 } catch (e) {
-                                  print(" caught an error $e");
+                                  context.read<MultiBloc>().add(
+                                    MultiBlocStatusChange(
+                                        status: MultiStateStatus.failure));
+                                  
                                 }
 
                               case 3:
