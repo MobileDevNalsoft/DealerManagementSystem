@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
+// this custom text form field is used in login button for username and password.
 class CustomTextFormField extends StatelessWidget {
   TextEditingController? cont;
   String? hntTxt;
@@ -33,7 +34,7 @@ class CustomTextFormField extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.05,
-      width: isMobile?null:size.width*0.3,
+      width: isMobile ? null : size.width * 0.3,
       margin: EdgeInsets.symmetric(
         horizontal: size.width * 0.08,
       ),

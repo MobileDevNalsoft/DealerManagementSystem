@@ -8,20 +8,25 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../bloc/service/service_bloc.dart';
-import '../models/services.dart';
 import '../navigations/navigator_service.dart';
 import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatelessWidget {
   JobCardDetails({super.key});
 
+  // Get the NavigatorService instance using GetIt dependency injection
   final NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   Widget build(BuildContext context) {
+    // responsive UI
     Size size = MediaQuery.of(context).size;
- bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    // Get the ServiceBloc instance from the context using BlocProvider
     final ServiceBloc _serviceBloc = context.read<ServiceBloc>();
+
+    // Define the stages of the work flow
     List<String> dmsFlow = [
       'New',
       'Work in progress',
@@ -30,6 +35,7 @@ class JobCardDetails extends StatelessWidget {
       'Completed'
     ];
 
+    // Define icon names for each stage
     List<String> icons = [
       'initiated',
       'work_in_progress',
@@ -38,6 +44,7 @@ class JobCardDetails extends StatelessWidget {
       'completed'
     ];
 
+    // Define status lines based on current stage and service creation date
     List<String> statusLines = [
       'JC created on ${_serviceBloc.state.service!.creationDate}',
       'Vehicle Service is done',
@@ -46,6 +53,7 @@ class JobCardDetails extends StatelessWidget {
       'Service Completed'
     ];
 
+    // Define status lines for stages that are still pending
     List<String> pendingStatusLines = [
       '',
       'Vehicle Service is in progress',
@@ -55,15 +63,21 @@ class JobCardDetails extends StatelessWidget {
     ];
 
     return Scaffold(
+        // Prevent the layout from resizing to avoid bottom inset issues
         resizeToAvoidBottomInset: false,
+        // Don't extend the content behind the app bar
         extendBodyBehindAppBar: false,
         appBar: AppBar(
+          // Remove the shadow when scrolling under the app bar
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-                  margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
+            margin: EdgeInsets.only(
+                left: size.width * 0.045,
+                top: isMobile ? 0 : size.height * 0.008,
+                bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
@@ -126,9 +140,9 @@ class JobCardDetails extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: size.height * 0.04),
                     height: size.height * 0.32,
-                    width: size.width *(isMobile? 0.9:0.48),
+                    width: size.width * (isMobile ? 0.9 : 0.48),
                     padding: EdgeInsets.symmetric(
-                        horizontal: size.width * (isMobile? 0.05:0.032),
+                        horizontal: size.width * (isMobile ? 0.05 : 0.032),
                         vertical: size.height * 0.03),
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -138,29 +152,34 @@ class JobCardDetails extends StatelessWidget {
                         buildDetailRow(
                             'Job Card Number',
                             _serviceBloc.state.service!.jobCardNo.toString(),
-                            size,isMobile),
+                            size,
+                            isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow(
                             'Vehicle Registration Number',
                             _serviceBloc.state.service!.registrationNo
                                 .toString(),
-                            size,isMobile),
+                            size,
+                            isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow(
                             'Location',
                             _serviceBloc.state.service!.location.toString(),
-                            size,isMobile),
+                            size,
+                            isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow(
                             'Job Type',
                             _serviceBloc.state.service!.jobType.toString(),
-                            size,isMobile),
+                            size,
+                            isMobile),
                         Gap(size.height * 0.03),
                         buildDetailRow(
                             'Scheduled Date',
                             _serviceBloc.state.service!.scheduledDate
                                 .toString(),
-                            size,isMobile)
+                            size,
+                            isMobile)
                       ],
                     ),
                   ),
@@ -168,7 +187,7 @@ class JobCardDetails extends StatelessWidget {
                     child: Container(
                         margin: EdgeInsets.only(top: size.height * 0.032),
                         padding: EdgeInsets.only(top: size.height * 0.01),
-                        width: size.width * (isMobile?0.93:0.48),
+                        width: size.width * (isMobile ? 0.93 : 0.48),
                         decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -185,11 +204,14 @@ class JobCardDetails extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                             Text(
+                            Text(
                               'Status',
-                              style: TextStyle(fontWeight: FontWeight.bold,fontSize:isMobile? 14:16),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: isMobile ? 14 : 16),
                             ),
                             Gap(size.height * 0.01),
+                            // creates stepper widget to show the status of the job card
                             Expanded(
                                 child: Stepper(
                               steps: dmsFlow
@@ -216,6 +238,7 @@ class JobCardDetails extends StatelessWidget {
             ),
             if (context.watch<MultiBloc>().state.status ==
                 MultiStateStatus.loading)
+              // shows loader widget based on the multistate bloc status.
               Container(
                 color: Colors.blueGrey.withOpacity(0.25),
                 child: Center(
@@ -226,6 +249,7 @@ class JobCardDetails extends StatelessWidget {
         ));
   }
 
+  // this method is used to create a detail row with key value pairs in the UI
   Widget buildDetailRow(String key, String value, Size size, bool isMobile) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -233,7 +257,7 @@ class JobCardDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: size.width * (isMobile?0.4:0.16),
+            width: size.width * (isMobile ? 0.4 : 0.16),
             child: Text(
               key,
               softWrap: true,
@@ -241,7 +265,7 @@ class JobCardDetails extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: size.width * (isMobile?0.4:0.16),
+            width: size.width * (isMobile ? 0.4 : 0.16),
             child: Text(
               textAlign: TextAlign.right,
               value,

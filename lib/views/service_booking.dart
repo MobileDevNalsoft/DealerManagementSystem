@@ -127,7 +127,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     Future.delayed(Duration(milliseconds: 600), () {
       vehRegNumFocus.requestFocus();
     });
- // Fetching locations if not already fetched.
+    // Fetching locations if not already fetched.
     if (_serviceBloc.state.locations == null) {
       _serviceBloc.add(GetServiceLocations());
     }
@@ -209,8 +209,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     bayFocus.unfocus();
     jobTypeFocus.unfocus();
     custConcernsFocus.unfocus();
-    remarksFocus.unfocus();}
-  
+    remarksFocus.unfocus();
+  }
+
   void disposeFields() {
     vehRegNumController.dispose();
     customerController.dispose();
@@ -362,570 +363,645 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1]),
                         ),
-                        child: 
-                        //Service booking first page
-                        index == 0
-                            ? BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
-                                switch (state.serviceLocationsStatus) {
-                                  case GetServiceLocationsStatus.loading:
-                                    return Transform(
-                                      transform:
-                                          Matrix4.translationValues(0, -40, 0),
-                                      child: Center(
-                                        child: Lottie.asset(
-                                            'assets/lottie/car_loading.json',
-                                            height: isMobile
-                                                ? size.height * 0.5
-                                                : size.height * 0.32,
-                                            width: isMobile
-                                                ? size.width * 0.6
-                                                : size.width * 0.32),
-                                      ),
-                                    );
+                        child:
+                            //Service booking first page
+                            index == 0
+                                ? BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                    switch (state.serviceLocationsStatus) {
+                                      case GetServiceLocationsStatus.loading:
+                                        return Transform(
+                                          transform: Matrix4.translationValues(
+                                              0, -40, 0),
+                                          child: Center(
+                                            child: Lottie.asset(
+                                                'assets/lottie/car_loading.json',
+                                                height: isMobile
+                                                    ? size.height * 0.5
+                                                    : size.height * 0.32,
+                                                width: isMobile
+                                                    ? size.width * 0.6
+                                                    : size.width * 0.32),
+                                          ),
+                                        );
 
-                                  //After fetching the locations   
-                                  case GetServiceLocationsStatus.success:
-                                    return ListView(
-                                      controller: page1ScrollController,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                      //After fetching the locations
+                                      case GetServiceLocationsStatus.success:
+                                        return ListView(
+                                          controller: page1ScrollController,
                                           children: [
-                                            Gap(size.height * 0.13),
                                             Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
-                                                DMSCustomWidgets.SearchableDropDown(
-                                                    size: size,
-                                                    hint: 'Location',
-                                                    items: state.locations!,
-                                                    icon: dropDownUp
-                                                        ? const Icon(
-                                                            Icons.arrow_drop_up)
-                                                        : const Icon(Icons
-                                                            .arrow_drop_down),
-                                                    focus: locFocus,
-                                                    typeAheadController:
-                                                        locTypeAheadController,
-                                                    scrollController:
-                                                        page1ScrollController,
-                                                    isMobile: isMobile),
-                                                Gap(size.height *
-                                                    (isMobile ? 0.01 : 0.03)),
-                                                BlocConsumer<VehicleBloc,
-                                                    VehicleState>(
-                                                  listener: (context, state) {
-                                                    switch (state.status) {
-                                                      case VehicleStatus
-                                                            .vehicleAlreadyAdded:
-                                                        customerController
-                                                                .text =
-                                                            state.vehicle!
-                                                                .cusotmerName!;
-                                                      case VehicleStatus
-                                                            .newVehicle:
-                                                        FocusManager.instance
-                                                            .primaryFocus
-                                                            ?.unfocus();
-                                                        if (navigator
-                                                            .navigatorkey
-                                                            .currentState!
-                                                            .mounted) {
-                                                          showRegistrationDialog(
-                                                              size: size,
-                                                              state: state);
-                                                        }
-                                                      case VehicleStatus
-                                                            .failure:
-                                                        DMSCustomWidgets
-                                                            .DMSFlushbar(
-                                                                size, context,
-                                                                message:
-                                                                    'Something went wrong. Please try again later',
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ));
-                                                      default:
-                                                        null;
-                                                    }
-                                                  },
-                                                  builder: (context, state) {
-                                                    return DMSCustomWidgets.CustomDataCard(
-                                                        context: context,
+                                                Gap(size.height * 0.13),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    DMSCustomWidgets.SearchableDropDown(
                                                         size: size,
-                                                        hint:
-                                                            'Vehicle Registration Number',
-                                                        inputFormatters: [
-                                                          UpperCaseTextFormatter()
-                                                        ],
-                                                        icon: state.status ==
-                                                                VehicleStatus
-                                                                    .vehicleAlreadyAdded
+                                                        hint: 'Location',
+                                                        items: state.locations!,
+                                                        icon: dropDownUp
                                                             ? const Icon(Icons
-                                                                .check_circle_rounded)
-                                                            : null,
-                                                        isMobile: isMobile,
-                                                        textcontroller:
-                                                            vehRegNumController,
-                                                        focusNode:
-                                                            vehRegNumFocus,
+                                                                .arrow_drop_up)
+                                                            : const Icon(Icons
+                                                                .arrow_drop_down),
+                                                        focus: locFocus,
+                                                        typeAheadController:
+                                                            locTypeAheadController,
                                                         scrollController:
-                                                            page1ScrollController);
-                                                  },
-                                                ),
-                                                Gap(size.height *
-                                                    (isMobile ? 0.01 : 0.03)),
-                                                BlocBuilder<VehicleBloc,
-                                                    VehicleState>(
-                                                  builder: (context, state) {
-                                                    return DMSCustomWidgets
-                                                        .CustomDataCard(
-                                                            context: context,
-                                                            size: size,
-                                                            hint:
-                                                                'Customer Name',
-                                                            isMobile: isMobile,
-                                                            textcontroller:
-                                                                customerController,
-                                                            onChange: (p0) {
-                                                              customerController
-                                                                      .text =
-                                                                  state.vehicle!
-                                                                      .cusotmerName!;
-                                                            },
-                                                            focusNode:
-                                                                customerFocus,
-                                                            scrollController:
-                                                                page1ScrollController);
-                                                  },
-                                                ),
-                                                Gap(size.height *
-                                                    (isMobile ? 0.01 : 0.03)),
-                                                BlocBuilder<MultiBloc,
-                                                    MultiBlocState>(
-                                                  builder: (context, state) {
-                                                    return DMSCustomWidgets
-                                                        .ScheduleDateCalendar(
-                                                      context: context,
-                                                      date: state.date,
-                                                      size: size,
-                                                      isMobile: isMobile,
-                                                    );
-                                                  },
-                                                ),
-                                                Gap(size.height *
-                                                    (isMobile ? 0.01 : 0.03)),
-                                                DMSCustomWidgets.CustomDataCard(
-                                                    context: context,
-                                                    key: targetKey,
-                                                    size: size,
-                                                    hint: 'KMS',
-                                                    isMobile: isMobile,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    inputFormatters: [
-                                                      FilteringTextInputFormatter
-                                                          .digitsOnly,
-                                                    ],
-                                                    textcontroller:
-                                                        kmsController,
-                                                    focusNode: kmsFocus,
-                                                    scrollController:
-                                                        page1ScrollController),
-                                              ],
-                                            ),
-
-                                            // view more dialog box
-                                            Row(
-                                              children: [
-                                                Gap(isMobile
-                                                    ? (size.width * 0.7)
-                                                    : (size.width * 0.595)),
-                                                BlocBuilder<VehicleBloc,
-                                                    VehicleState>(
-                                                  builder: (context, state) {
-                                                    if (state.status ==
-                                                        VehicleStatus
-                                                            .vehicleAlreadyAdded) {
-                                                      return ElevatedButton(
-                                                          onPressed: () {
+                                                            page1ScrollController,
+                                                        isMobile: isMobile),
+                                                    Gap(size.height *
+                                                        (isMobile
+                                                            ? 0.01
+                                                            : 0.03)),
+                                                    BlocConsumer<VehicleBloc,
+                                                        VehicleState>(
+                                                      listener:
+                                                          (context, state) {
+                                                        switch (state.status) {
+                                                          case VehicleStatus
+                                                                .vehicleAlreadyAdded:
+                                                            customerController
+                                                                    .text =
+                                                                state.vehicle!
+                                                                    .cusotmerName!;
+                                                          case VehicleStatus
+                                                                .newVehicle:
                                                             FocusManager
                                                                 .instance
                                                                 .primaryFocus
                                                                 ?.unfocus();
-                                                            CustomWidgets
-                                                                .CustomDialogBox(
-                                                                    context:
-                                                                        context,
-                                                                    contentPadding: EdgeInsets.symmetric(
-                                                                        vertical: isMobile
-                                                                            ? 20
-                                                                            : 40,
-                                                                        horizontal: isMobile
-                                                                            ? 12
-                                                                            : 40),
-                                                                    child: DMSCustomWidgets
-                                                                        .CustomDataFields(
-                                                                      context:
-                                                                          context,
-                                                                      propertyList: [
-                                                                        "Chassis no.",
-                                                                        "Make",
-                                                                        "Model",
-                                                                        "Varient",
-                                                                        "Color"
-                                                                      ],
-                                                                      valueList: [
-                                                                        state.vehicle!.chassisNumber ??
-                                                                            "",
-                                                                        state.vehicle!.make ??
-                                                                            "",
-                                                                        state.vehicle!.model ??
-                                                                            "",
-                                                                        state.vehicle!.varient ??
-                                                                            "",
-                                                                        state.vehicle!.color ??
-                                                                            ""
-                                                                      ],
-                                                                      propertyFontStyle: TextStyle(
-                                                                          fontSize: isMobile
-                                                                              ? 16
-                                                                              : 18,
-                                                                          fontFamily:
-                                                                              'Montserrat',
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                      valueFontStyle: TextStyle(
-                                                                          fontSize: isMobile
-                                                                              ? 16
-                                                                              : 18,
-                                                                          fontFamily:
-                                                                              'Roboto'),
+                                                            if (navigator
+                                                                .navigatorkey
+                                                                .currentState!
+                                                                .mounted) {
+                                                              showRegistrationDialog(
+                                                                  size: size,
+                                                                  state: state);
+                                                            }
+                                                          case VehicleStatus
+                                                                .failure:
+                                                            DMSCustomWidgets
+                                                                .DMSFlushbar(
+                                                                    size,
+                                                                    context,
+                                                                    message:
+                                                                        'Something went wrong. Please try again later',
+                                                                    icon:
+                                                                        const Icon(
+                                                                      Icons
+                                                                          .error,
+                                                                      color: Colors
+                                                                          .white,
                                                                     ));
-                                                          },
-                                                          style: ElevatedButton.styleFrom(
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              minimumSize: isMobile
-                                                                  ? const Size(
-                                                                      65, 10)
-                                                                  : const Size(
-                                                                      80.0,
-                                                                      20.0),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              5))),
-                                                          child: Text(
-                                                            'view more',
-                                                            style: TextStyle(
+                                                          default:
+                                                            null;
+                                                        }
+                                                      },
+                                                      builder:
+                                                          (context, state) {
+                                                        return DMSCustomWidgets.CustomDataCard(
+                                                            context: context,
+                                                            size: size,
+                                                            hint:
+                                                                'Vehicle Registration Number',
+                                                            inputFormatters: [
+                                                              UpperCaseTextFormatter()
+                                                            ],
+                                                            icon: state.status ==
+                                                                    VehicleStatus
+                                                                        .vehicleAlreadyAdded
+                                                                ? const Icon(Icons
+                                                                    .check_circle_rounded)
+                                                                : null,
+                                                            isMobile: isMobile,
+                                                            textcontroller:
+                                                                vehRegNumController,
+                                                            focusNode:
+                                                                vehRegNumFocus,
+                                                            scrollController:
+                                                                page1ScrollController);
+                                                      },
+                                                    ),
+                                                    Gap(size.height *
+                                                        (isMobile
+                                                            ? 0.01
+                                                            : 0.03)),
+                                                    BlocBuilder<VehicleBloc,
+                                                        VehicleState>(
+                                                      builder:
+                                                          (context, state) {
+                                                        return DMSCustomWidgets
+                                                            .CustomDataCard(
+                                                                context:
+                                                                    context,
+                                                                size: size,
+                                                                hint:
+                                                                    'Customer Name',
+                                                                isMobile:
+                                                                    isMobile,
+                                                                textcontroller:
+                                                                    customerController,
+                                                                onChange: (p0) {
+                                                                  customerController
+                                                                          .text =
+                                                                      state
+                                                                          .vehicle!
+                                                                          .cusotmerName!;
+                                                                },
+                                                                focusNode:
+                                                                    customerFocus,
+                                                                scrollController:
+                                                                    page1ScrollController);
+                                                      },
+                                                    ),
+                                                    Gap(size.height *
+                                                        (isMobile
+                                                            ? 0.01
+                                                            : 0.03)),
+                                                    BlocBuilder<MultiBloc,
+                                                        MultiBlocState>(
+                                                      builder:
+                                                          (context, state) {
+                                                        return DMSCustomWidgets
+                                                            .ScheduleDateCalendar(
+                                                          context: context,
+                                                          date: state.date,
+                                                          size: size,
+                                                          isMobile: isMobile,
+                                                        );
+                                                      },
+                                                    ),
+                                                    Gap(size.height *
+                                                        (isMobile
+                                                            ? 0.01
+                                                            : 0.03)),
+                                                    DMSCustomWidgets
+                                                        .CustomDataCard(
+                                                            context: context,
+                                                            key: targetKey,
+                                                            size: size,
+                                                            hint: 'KMS',
+                                                            isMobile: isMobile,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .number,
+                                                            inputFormatters: [
+                                                              FilteringTextInputFormatter
+                                                                  .digitsOnly,
+                                                            ],
+                                                            textcontroller:
+                                                                kmsController,
+                                                            focusNode: kmsFocus,
+                                                            scrollController:
+                                                                page1ScrollController),
+                                                  ],
+                                                ),
+                                                Gap(size.height * 0.02),
+                                                // view more dialog box
+                                                Row(
+                                                  children: [
+                                                    Gap(isMobile
+                                                        ? (size.width * 0.7)
+                                                        : (size.width * 0.595)),
+                                                    BlocBuilder<VehicleBloc,
+                                                        VehicleState>(
+                                                      builder:
+                                                          (context, state) {
+                                                        if (state.status ==
+                                                            VehicleStatus
+                                                                .vehicleAlreadyAdded) {
+                                                          return GestureDetector(
+                                                              onTap: () {
+                                                                FocusManager
+                                                                    .instance
+                                                                    .primaryFocus
+                                                                    ?.unfocus();
+                                                                CustomWidgets
+                                                                    .CustomDialogBox(
+                                                                        context:
+                                                                            context,
+                                                                        contentPadding: EdgeInsets.symmetric(
+                                                                            vertical: isMobile
+                                                                                ? 20
+                                                                                : 40,
+                                                                            horizontal: isMobile
+                                                                                ? 12
+                                                                                : 40),
+                                                                        child: DMSCustomWidgets
+                                                                            .CustomDataFields(
+                                                                          context:
+                                                                              context,
+                                                                          propertyList: [
+                                                                            "Chassis no.",
+                                                                            "Make",
+                                                                            "Model",
+                                                                            "Varient",
+                                                                            "Color"
+                                                                          ],
+                                                                          valueList: [
+                                                                            state.vehicle!.chassisNumber ??
+                                                                                "",
+                                                                            state.vehicle!.make ??
+                                                                                "",
+                                                                            state.vehicle!.model ??
+                                                                                "",
+                                                                            state.vehicle!.varient ??
+                                                                                "",
+                                                                            state.vehicle!.color ??
+                                                                                ""
+                                                                          ],
+                                                                          propertyFontStyle: TextStyle(
+                                                                              fontSize: isMobile ? 16 : 18,
+                                                                              fontFamily: 'Montserrat',
+                                                                              fontWeight: FontWeight.bold),
+                                                                          valueFontStyle: TextStyle(
+                                                                              fontSize: isMobile ? 16 : 18,
+                                                                              fontFamily: 'Roboto'),
+                                                                        ));
+                                                              },
+                                                              child: Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  height:
+                                                                      size.height *
+                                                                          0.025,
+                                                                  width: isMobile
+                                                                      ? size.width *
+                                                                          0.18
+                                                                      : size.width *
+                                                                          0.08,
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10),
+                                                                      color: Colors
+                                                                          .black,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            blurRadius:
+                                                                                10,
+                                                                            blurStyle: BlurStyle
+                                                                                .outer,
+                                                                            spreadRadius:
+                                                                                0,
+                                                                            color:
+                                                                                Colors.orange.shade200,
+                                                                            offset: const Offset(0, 0))
+                                                                      ]),
+                                                                  child:
+                                                                      const Text(
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    'view more',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            12),
+                                                                  )));
+                                                        } else {
+                                                          return SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.05,
+                                                          );
+                                                        }
+                                                      },
+                                                    ),
+                                                    Spacer(
+                                                      flex: isMobile
+                                                          ? (size.width * 0.1)
+                                                              .round()
+                                                          : (size.width * 0.3)
+                                                              .round(),
+                                                    )
+                                                  ],
+                                                ),
+                                                Gap(size.height * 0.05),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    FocusManager
+                                                        .instance.primaryFocus
+                                                        ?.unfocus();
+
+                                                    String? message =
+                                                        (!isConnected()
+                                                                ? 'Looks like you'
+                                                                    're offline. Please check your connection and try again.'
+                                                                : null) ??
+                                                            _locationValidator(
+                                                                locTypeAheadController
+                                                                    .text) ??
+                                                            (vehRegNumController
+                                                                    .text
+                                                                    .isEmpty
+                                                                ? "vehicle registration number cannot be empty"
+                                                                : null) ??
+                                                            (context
+                                                                        .read<
+                                                                            MultiBloc>()
+                                                                        .state
+                                                                        .date ==
+                                                                    null
+                                                                ? "schedule date cannot be empty"
+                                                                : null) ??
+                                                            (kmsController.text
+                                                                    .isEmpty
+                                                                ? "kms cannot be empty"
+                                                                : null);
+
+                                                    if (message != null) {
+                                                      DMSCustomWidgets
+                                                          .DMSFlushbar(
+                                                              size, context,
+                                                              message: message,
+                                                              icon: const Icon(
+                                                                Icons.error,
                                                                 color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                    isMobile
-                                                                        ? 12
-                                                                        : 14),
-                                                          ));
+                                                                    .white,
+                                                              ));
+                                                      return;
                                                     } else {
-                                                      return SizedBox(
-                                                        height:
-                                                            size.height * 0.05,
-                                                      );
+                                                      pageController.animateToPage(
+                                                          1,
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      500),
+                                                          curve: Curves.ease);
                                                     }
                                                   },
+                                                  child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height:
+                                                          size.height * 0.045,
+                                                      width: isMobile
+                                                          ? size.width * 0.2
+                                                          : size.width * 0.08,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: Colors.black,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                blurRadius: 10,
+                                                                blurStyle:
+                                                                    BlurStyle
+                                                                        .outer,
+                                                                spreadRadius: 0,
+                                                                color: Colors
+                                                                    .orange
+                                                                    .shade200,
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 0))
+                                                          ]),
+                                                      child: const Text(
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        'next',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16),
+                                                      )),
                                                 ),
-                                                Spacer(
-                                                  flex: isMobile
-                                                      ? (size.width * 0.1)
-                                                          .round()
-                                                      : (size.width * 0.3)
-                                                          .round(),
-                                                )
+                                                if (MediaQuery.of(context)
+                                                        .viewInsets
+                                                        .bottom !=
+                                                    0)
+                                                  Gap(size.height *
+                                                      (isMobile ? 0.4 : 0.5)),
                                               ],
                                             ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
-
-                                                String? message =
-                                                    (!isConnected()
-                                                            ? 'Looks like you'
-                                                                're offline. Please check your connection and try again.'
-                                                            : null) ??
-                                                        _locationValidator(
-                                                            locTypeAheadController
-                                                                .text) ??
-                                                        (vehRegNumController
-                                                                .text.isEmpty
-                                                            ? "vehicle registration number cannot be empty"
-                                                            : null) ??
-                                                        (context
-                                                                    .read<
-                                                                        MultiBloc>()
-                                                                    .state
-                                                                    .date ==
-                                                                null
-                                                            ? "schedule date cannot be empty"
-                                                            : null) ??
-                                                        (kmsController
-                                                                .text.isEmpty
-                                                            ? "kms cannot be empty"
-                                                            : null);
-
-                                                if (message != null) {
-                                                  DMSCustomWidgets.DMSFlushbar(
-                                                      size, context,
-                                                      message: message,
-                                                      icon: const Icon(
-                                                        Icons.error,
-                                                        color: Colors.white,
-                                                      ));
-                                                  return;
-                                                } else {
-                                                  pageController.animateToPage(
-                                                      1,
-                                                      duration: const Duration(
-                                                          milliseconds: 500),
-                                                      curve: Curves.ease);
-                                                }
-                                              },
-                                              child: Container(
-                                                  alignment: Alignment.center,
-                                                  height: size.height * 0.045,
-                                                  width:isMobile?  size.width * 0.2:size.width*0.08,
-                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 10,
-                                                        blurStyle: BlurStyle.outer,
-                                                        spreadRadius: 0,
-                                                        color: Colors.orange.shade200,
-                                                        offset: const Offset(0, 0))
-                                                  ]),
-                                                  child: const Text(
-                                                    textAlign: TextAlign.center,
-                                                    'next',
-                                                    style: TextStyle(color: Colors.white, fontSize: 16),
-                                                  )),
-                                            ),
-                                            if (MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom !=
-                                                0)
-                                              Gap(size.height *
-                                                  (isMobile ? 0.4 : 0.5)),
                                           ],
-                                        ),
-                                      ],
-                                    );
-                                  default:
-                                    return const Center(
-                                      child: Text('Error'),
-                                    );
-                                }
-                              })
-                            : 
-                             //Service booking second  page
-                            ListView(
-                                controller: page2ScrollController,
-                                children: [
-                                  Column(
+                                        );
+                                      default:
+                                        return const Center(
+                                          child: Text('Error'),
+                                        );
+                                    }
+                                  })
+                                :
+                                //Service booking second  page
+                                ListView(
+                                    controller: page2ScrollController,
                                     children: [
                                       Column(
                                         children: [
-                                          SizedBox(
-                                            height: size.height * (0.05),
-                                          ),
                                           Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
                                             children: [
-                                              DMSCustomWidgets.SearchableDropDown(
-                                                  items: ["Online", "Walk-in"],
-                                                  size: size,
-                                                  hint: 'Booking Source',
-                                                  isMobile: isMobile,
-                                                  focus: bookingFocus,
-                                                  typeAheadController:
-                                                      bookingTypeAheadController,
-                                                  icon: bookingSourceDropDownUp
-                                                      ? const Icon(
-                                                          Icons.arrow_drop_up)
-                                                      : const Icon(Icons
-                                                          .arrow_drop_down),
-                                                  scrollController:
-                                                      page2ScrollController),
                                               SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.005 : 0.015),
+                                                height: size.height * (0.05),
                                               ),
-                                              DMSCustomWidgets.CustomDataCard(
-                                                  context: context,
-                                                  size: size,
-                                                  hint:
-                                                      'Alternate Contact Person',
-                                                  inputFormatters: [
-                                                    InitCapCaseTextFormatter()
-                                                  ],
-                                                  isMobile: isMobile,
-                                                  focusNode: altContFocus,
-                                                  textcontroller:
-                                                      altContController,
-                                                  scrollController:
-                                                      page2ScrollController),
-                                              SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.005 : 0.015),
-                                              ),
-                                              DMSCustomWidgets.CustomDataCard(
-                                                  context: context,
-                                                  size: size,
-                                                  hint:
-                                                      'Alternate Person Contact No.',
-                                                  isMobile: isMobile,
-                                                  focusNode:
-                                                      altContPhoneNoFocus,
-                                                  textcontroller:
-                                                      altContPhoneNoController,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly,
-                                                    LengthLimitingTextInputFormatter(
-                                                        10)
-                                                  ],
-                                                  scrollController:
-                                                      page2ScrollController),
-                                              SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.005 : 0.015),
-                                              ),
-                                              // Sales person searchable dropdown with inital values starting from letting 'ab' 
-                                              BlocBuilder<MultiBloc,
-                                                  MultiBlocState>(
-                                                builder: (context, state) {
-                                                  return DMSCustomWidgets
-                                                      .SearchableDropDown(
-                                                          onChanged: (p0) {
-                                                            if (!isConnected()) {
-                                                              DMSCustomWidgets.DMSFlushbar(
-                                                                  size, context,
-                                                                  message:
-                                                                      'Looks like you''re offline. Please check your connection and try again.',
-                                                                  icon:
-                                                                      const Icon(
-                                                                    Icons.error,
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ));
-                                                              return;
-                                                            }
-                                                            spTypeAheadController
-                                                                .text = p0;
-                                                            if (p0.length >=
-                                                                3) {
-                                                              context
-                                                                  .read<
-                                                                      MultiBloc>()
-                                                                  .add(GetSalesPersons(
-                                                                      searchText:
-                                                                          p0));
-                                                            } else {
-                                                              context
-                                                                  .read<
-                                                                      MultiBloc>()
-                                                                  .state
-                                                                  .salesPersons = null;
-                                                            }
-                                                          },
-                                                          size: size,
-                                                          items: state.salesPersons ==
-                                                                  null
-                                                              ? []
-                                                              : state
-                                                                  .salesPersons!
-                                                                  .map((e) =>
-                                                                      "${e.empName}-${e.empId}")
-                                                                  .toList(),
-                                                          hint: 'Sales Person',
-                                                          icon: salesPersonDropDownUp
-                                                              ? const Icon(Icons
-                                                                  .arrow_drop_up)
-                                                              : const Icon(Icons
-                                                                  .arrow_drop_down),
-                                                          isMobile: isMobile,
-                                                          isLoading: state
-                                                                      .status ==
-                                                                  MultiStateStatus
-                                                                      .loading
-                                                              ? true
-                                                              : false,
-                                                          focus: spFocus,
-                                                          typeAheadController:
-                                                              spTypeAheadController,
-                                                          suggestionsController:
-                                                              suggestionsController,
-                                                          scrollController:
-                                                              page2ScrollController);
-                                                },
-                                              ),
-                                              SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.005 : 0.015),
-                                              ),
-                                              DMSCustomWidgets.SearchableDropDown(
-                                                  items: bayList,
-                                                  size: size,
-                                                  hint: 'Bay',
-                                                  isMobile: isMobile,
-                                                  icon: bayDropDownUp
-                                                      ? const Icon(
-                                                          Icons.arrow_drop_up)
-                                                      : const Icon(Icons
-                                                          .arrow_drop_down),
-                                                  focus: bayFocus,
-                                                  typeAheadController:
-                                                      bayTypeAheadController,
-                                                  scrollController:
-                                                      page2ScrollController),
-                                              SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.005 : 0.015),
-                                              ),
-                                              DMSCustomWidgets.SearchableDropDown(
-                                                  size: size,
-                                                  hint: 'Job Type',
-                                                  items: jobTypeList,
-                                                  icon: jobTypeDropDownUp
-                                                      ? const Icon(
-                                                          Icons.arrow_drop_up)
-                                                      : const Icon(Icons
-                                                          .arrow_drop_down),
-                                                  focus: jobTypeFocus,
-                                                  typeAheadController:
-                                                      jobTypeTypeAheadController,
-                                                  isMobile: isMobile,
-                                                  scrollController:
-                                                      page2ScrollController),
-                                              SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.005 : 0.015),
-                                              ),
-                                              DMSCustomWidgets
-                                                  .CustomTextFieldCard(
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  DMSCustomWidgets.SearchableDropDown(
+                                                      items: [
+                                                        "Online",
+                                                        "Walk-in"
+                                                      ],
+                                                      size: size,
+                                                      hint: 'Booking Source',
+                                                      isMobile: isMobile,
+                                                      focus: bookingFocus,
+                                                      typeAheadController:
+                                                          bookingTypeAheadController,
+                                                      icon: bookingSourceDropDownUp
+                                                          ? const Icon(Icons
+                                                              .arrow_drop_up)
+                                                          : const Icon(Icons
+                                                              .arrow_drop_down),
+                                                      scrollController:
+                                                          page2ScrollController),
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.005
+                                                            : 0.015),
+                                                  ),
+                                                  DMSCustomWidgets.CustomDataCard(
+                                                      context: context,
+                                                      size: size,
+                                                      hint:
+                                                          'Alternate Contact Person',
+                                                      inputFormatters: [
+                                                        InitCapCaseTextFormatter()
+                                                      ],
+                                                      isMobile: isMobile,
+                                                      focusNode: altContFocus,
+                                                      textcontroller:
+                                                          altContController,
+                                                      scrollController:
+                                                          page2ScrollController),
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.005
+                                                            : 0.015),
+                                                  ),
+                                                  DMSCustomWidgets.CustomDataCard(
+                                                      context: context,
+                                                      size: size,
+                                                      hint:
+                                                          'Alternate Person Contact No.',
+                                                      isMobile: isMobile,
+                                                      focusNode:
+                                                          altContPhoneNoFocus,
+                                                      textcontroller:
+                                                          altContPhoneNoController,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter
+                                                            .digitsOnly,
+                                                        LengthLimitingTextInputFormatter(
+                                                            10)
+                                                      ],
+                                                      scrollController:
+                                                          page2ScrollController),
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.005
+                                                            : 0.015),
+                                                  ),
+                                                  // Sales person searchable dropdown with inital values starting from letting 'ab'
+                                                  BlocBuilder<MultiBloc,
+                                                      MultiBlocState>(
+                                                    builder: (context, state) {
+                                                      return DMSCustomWidgets
+                                                          .SearchableDropDown(
+                                                              onChanged: (p0) {
+                                                                if (!isConnected()) {
+                                                                  DMSCustomWidgets.DMSFlushbar(
+                                                                      size,
+                                                                      context,
+                                                                      message:
+                                                                          'Looks like you'
+                                                                          're offline. Please check your connection and try again.',
+                                                                      icon:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .error,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ));
+                                                                  return;
+                                                                }
+                                                                spTypeAheadController
+                                                                    .text = p0;
+                                                                if (p0.length >=
+                                                                    3) {
+                                                                  context
+                                                                      .read<
+                                                                          MultiBloc>()
+                                                                      .add(GetSalesPersons(
+                                                                          searchText:
+                                                                              p0));
+                                                                } else {
+                                                                  context
+                                                                      .read<
+                                                                          MultiBloc>()
+                                                                      .state
+                                                                      .salesPersons = null;
+                                                                }
+                                                              },
+                                                              size: size,
+                                                              items: state.salesPersons ==
+                                                                      null
+                                                                  ? []
+                                                                  : state
+                                                                      .salesPersons!
+                                                                      .map((e) =>
+                                                                          "${e.empName}-${e.empId}")
+                                                                      .toList(),
+                                                              hint:
+                                                                  'Sales Person',
+                                                              icon: salesPersonDropDownUp
+                                                                  ? const Icon(Icons
+                                                                      .arrow_drop_up)
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .arrow_drop_down),
+                                                              isMobile:
+                                                                  isMobile,
+                                                              isLoading: state
+                                                                          .status ==
+                                                                      MultiStateStatus
+                                                                          .loading
+                                                                  ? true
+                                                                  : false,
+                                                              focus: spFocus,
+                                                              typeAheadController:
+                                                                  spTypeAheadController,
+                                                              suggestionsController:
+                                                                  suggestionsController,
+                                                              scrollController:
+                                                                  page2ScrollController);
+                                                    },
+                                                  ),
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.005
+                                                            : 0.015),
+                                                  ),
+                                                  DMSCustomWidgets.SearchableDropDown(
+                                                      items: bayList,
+                                                      size: size,
+                                                      hint: 'Bay',
+                                                      isMobile: isMobile,
+                                                      icon: bayDropDownUp
+                                                          ? const Icon(Icons
+                                                              .arrow_drop_up)
+                                                          : const Icon(Icons
+                                                              .arrow_drop_down),
+                                                      focus: bayFocus,
+                                                      typeAheadController:
+                                                          bayTypeAheadController,
+                                                      scrollController:
+                                                          page2ScrollController),
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.005
+                                                            : 0.015),
+                                                  ),
+                                                  DMSCustomWidgets.SearchableDropDown(
+                                                      size: size,
+                                                      hint: 'Job Type',
+                                                      items: jobTypeList,
+                                                      icon: jobTypeDropDownUp
+                                                          ? const Icon(Icons
+                                                              .arrow_drop_up)
+                                                          : const Icon(Icons
+                                                              .arrow_drop_down),
+                                                      focus: jobTypeFocus,
+                                                      typeAheadController:
+                                                          jobTypeTypeAheadController,
+                                                      isMobile: isMobile,
+                                                      scrollController:
+                                                          page2ScrollController),
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.005
+                                                            : 0.015),
+                                                  ),
+                                                  DMSCustomWidgets.CustomTextFieldCard(
                                                       size: size,
                                                       hint: 'Customer Concerns',
                                                       context: context,
@@ -936,148 +1012,164 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                           custConcernsFocus,
                                                       textcontroller:
                                                           custConcernsController),
-                                              SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.005 : 0.015),
-                                              ),
-                                              DMSCustomWidgets
-                                                  .CustomTextFieldCard(
-                                                      size: size,
-                                                      hint: 'Remarks',
-                                                      context: context,
-                                                      scrollController:
-                                                          page2ScrollController,
-                                                      isMobile: isMobile,
-                                                      focusNode: remarksFocus,
-                                                      textcontroller:
-                                                          remarksController),
-                                              SizedBox(
-                                                height: size.height *
-                                                    (isMobile ? 0.05 : 0.015),
-                                              ),
-                                            ],
-                                          ),
-                                          BlocConsumer<ServiceBloc,
-                                              ServiceState>(
-                                            listener: (context, state) {
-                                              switch (
-                                                  state.serviceUploadStatus) {
-                                                    //Navigating to Inspection in after successful upload of service booking
-                                                case ServiceUploadStatus
-                                                      .success:
-                                                  DMSCustomWidgets.DMSFlushbar(
-                                                      size, context,
-                                                      message:
-                                                          'Service Added Successfully');
-                                                  context
-                                                      .read<MultiBloc>()
-                                                      .state
-                                                      .date = null;
-                                                  _vehicleBloc.state
-                                                      .registrationNo = null;
-                                                  navigator.pushAndRemoveUntil(
-                                                      '/inspectionIn', '/home');
-                                                  FocusManager
-                                                      .instance.primaryFocus
-                                                      ?.unfocus();
-                                                  clearFields();
-                                                  sliderButtonController.position = SliderButtonPosition.left;
-                                                  //Handling failure case from the backend (eg. Found multiple records with same location.)  
-                                                case ServiceUploadStatus
-                                                      .failure:
-                                                  sliderButtonController
-                                                          .position =
-                                                      SliderButtonPosition.left;
-                                                  DMSCustomWidgets.DMSFlushbar(
-                                                      size, context,
-                                                      message:
-                                                          'Something went wrong. Please try again later',
-                                                      icon: const Icon(
-                                                        Icons.error,
-                                                        color: Colors.white,
-                                                      ));
-                                                default:
-                                                  null;
-                                              }
-                                            },
-                                            builder: (context, state) {
-                                              return BlocBuilder<MultiBloc,
-                                                  MultiBlocState>(
-                                                builder: (context, state) {
-                                                  return SizedBox(
-                                                    width: isMobile
-                                                        ? size.width * 0.56
-                                                        : size.width * 0.2,
-                                                    child: LayoutBuilder(
-                                                      builder: (context,
-                                                          contraints) {
-                                                        return CustomSliderButton(
-                                                          isMobile: isMobile,
-                                                          sliderController:
-                                                              sliderButtonController,
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.005
+                                                            : 0.015),
+                                                  ),
+                                                  DMSCustomWidgets
+                                                      .CustomTextFieldCard(
+                                                          size: size,
+                                                          hint: 'Remarks',
                                                           context: context,
-                                                          size: contraints,
-                                                          label: const Text(
-                                                            "Proceed to receive",
-                                                            style: TextStyle(
-                                                                color: Color(
-                                                                    0xff4a4a4a),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontSize: 17),
-                                                          ),
+                                                          scrollController:
+                                                              page2ScrollController,
+                                                          isMobile: isMobile,
+                                                          focusNode:
+                                                              remarksFocus,
+                                                          textcontroller:
+                                                              remarksController),
+                                                  SizedBox(
+                                                    height: size.height *
+                                                        (isMobile
+                                                            ? 0.05
+                                                            : 0.015),
+                                                  ),
+                                                ],
+                                              ),
+                                              BlocConsumer<ServiceBloc,
+                                                  ServiceState>(
+                                                listener: (context, state) {
+                                                  switch (state
+                                                      .serviceUploadStatus) {
+                                                    //Navigating to Inspection in after successful upload of service booking
+                                                    case ServiceUploadStatus
+                                                          .success:
+                                                      DMSCustomWidgets.DMSFlushbar(
+                                                          size, context,
+                                                          message:
+                                                              'Service Added Successfully');
+                                                      context
+                                                          .read<MultiBloc>()
+                                                          .state
+                                                          .date = null;
+                                                      _vehicleBloc.state
+                                                              .registrationNo =
+                                                          null;
+                                                      navigator
+                                                          .pushAndRemoveUntil(
+                                                              '/inspectionIn',
+                                                              '/home');
+                                                      FocusManager
+                                                          .instance.primaryFocus
+                                                          ?.unfocus();
+                                                      clearFields();
+                                                      sliderButtonController
+                                                              .position =
+                                                          SliderButtonPosition
+                                                              .left;
+                                                    //Handling failure case from the backend (eg. Found multiple records with same location.)
+                                                    case ServiceUploadStatus
+                                                          .failure:
+                                                      sliderButtonController
+                                                              .position =
+                                                          SliderButtonPosition
+                                                              .left;
+                                                      DMSCustomWidgets.DMSFlushbar(
+                                                          size, context,
+                                                          message:
+                                                              'Something went wrong. Please try again later',
                                                           icon: const Icon(
-                                                            Icons
-                                                                .arrow_forward_ios_rounded,
+                                                            Icons.error,
                                                             color: Colors.white,
-                                                          ),
-                                                          onDismissed:
-                                                              () async {
-                                                            if (!isConnected()) {
-                                                              DMSCustomWidgets.DMSFlushbar(
-                                                                  size, context,
-                                                                  message:
-                                                                      'Looks like you'
-                                                                      're offline. Please check your connection and try again.',
-                                                                  icon:
-                                                                      const Icon(
-                                                                    Icons.error,
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ));
-                                                              return;
-                                                            }
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                            // Validating the textfields and displaying appropriate error snackbars.
-                                                            String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
-                                                                _altPersonContactNoValidation(
-                                                                    altContPhoneNoController
-                                                                        .text) ??
-                                                                _salesPersonValidator(
-                                                                    spTypeAheadController
-                                                                        .text,
-                                                                    (state.salesPersons ??
-                                                                            [])
-                                                                        .map((e) => e
-                                                                            .empName)
-                                                                        .toList()) ??
-                                                                _bayValidator(
-                                                                    bayTypeAheadController
-                                                                        .text,
-                                                                    bayList) ??
-                                                                _jobTypeValidator(
-                                                                    jobTypeTypeAheadController
-                                                                        .text,
-                                                                    jobTypeList);
+                                                          ));
+                                                    default:
+                                                      null;
+                                                  }
+                                                },
+                                                builder: (context, state) {
+                                                  return BlocBuilder<MultiBloc,
+                                                      MultiBlocState>(
+                                                    builder: (context, state) {
+                                                      return SizedBox(
+                                                        width: isMobile
+                                                            ? size.width * 0.56
+                                                            : size.width * 0.2,
+                                                        child: LayoutBuilder(
+                                                          builder: (context,
+                                                              contraints) {
+                                                            return CustomSliderButton(
+                                                              isMobile:
+                                                                  isMobile,
+                                                              sliderController:
+                                                                  sliderButtonController,
+                                                              context: context,
+                                                              size: contraints,
+                                                              label: const Text(
+                                                                "Proceed to receive",
+                                                                style: TextStyle(
+                                                                    color: Color(
+                                                                        0xff4a4a4a),
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontSize:
+                                                                        17),
+                                                              ),
+                                                              icon: const Icon(
+                                                                Icons
+                                                                    .arrow_forward_ios_rounded,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                              onDismissed:
+                                                                  () async {
+                                                                if (!isConnected()) {
+                                                                  DMSCustomWidgets.DMSFlushbar(
+                                                                      size,
+                                                                      context,
+                                                                      message:
+                                                                          'Looks like you'
+                                                                          're offline. Please check your connection and try again.',
+                                                                      icon:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .error,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ));
+                                                                  return;
+                                                                }
+                                                                FocusManager
+                                                                    .instance
+                                                                    .primaryFocus
+                                                                    ?.unfocus();
+                                                                // Validating the textfields and displaying appropriate error snackbars.
+                                                                String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
+                                                                    _altPersonContactNoValidation(
+                                                                        altContPhoneNoController
+                                                                            .text) ??
+                                                                    _salesPersonValidator(
+                                                                        spTypeAheadController
+                                                                            .text,
+                                                                        (state.salesPersons ??
+                                                                                [])
+                                                                            .map((e) => e
+                                                                                .empName)
+                                                                            .toList()) ??
+                                                                    _bayValidator(
+                                                                        bayTypeAheadController
+                                                                            .text,
+                                                                        bayList) ??
+                                                                    _jobTypeValidator(
+                                                                        jobTypeTypeAheadController
+                                                                            .text,
+                                                                        jobTypeList);
 
-                                                            if (message !=
-                                                                null) {
-                                                              DMSCustomWidgets
-                                                                  .DMSFlushbar(
+                                                                if (message !=
+                                                                    null) {
+                                                                  DMSCustomWidgets.DMSFlushbar(
                                                                       size,
                                                                       context,
                                                                       message:
@@ -1089,82 +1181,85 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                         color: Colors
                                                                             .white,
                                                                       ));
-                                                            } else {
-                                                              Service service = Service(
-                                                                  registrationNo:
-                                                                      vehRegNumController
-                                                                          .text,
-                                                                  location:
-                                                                      locTypeAheadController
-                                                                          .text,
-                                                                  customerName:
-                                                                      customerController
-                                                                          .text,
-                                                                  scheduledDate: state.date
-                                                                      .toString()
-                                                                      .substring(
-                                                                          0, 10),
-                                                                  kms: int.parse(
-                                                                      kmsController
-                                                                          .text),
-                                                                  bookingSource:
-                                                                      bookingTypeAheadController
-                                                                          .text,
-                                                                  alternateContactPerson:
-                                                                      altContController
-                                                                          .text,
-                                                                  alternatePersonContactNo: altContPhoneNoController
-                                                                          .text
-                                                                          .isNotEmpty
-                                                                      ? int.parse(altContPhoneNoController.text)
-                                                                      : null,
-                                                                  salesPerson: spTypeAheadController.text.split('-')[0],
-                                                                  bay: bayTypeAheadController.text,
-                                                                  jobType: jobTypeTypeAheadController.text,
-                                                                  jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
-                                                                  customerConcerns: custConcernsController.text,
-                                                                  remarks: remarksController.text);
-                                                              _serviceBloc.state
-                                                                      .jobCardNo =
-                                                                  service
-                                                                      .jobCardNo!;
+                                                                } else {
+                                                                  Service service = Service(
+                                                                      registrationNo:
+                                                                          vehRegNumController
+                                                                              .text,
+                                                                      location:
+                                                                          locTypeAheadController
+                                                                              .text,
+                                                                      customerName:
+                                                                          customerController
+                                                                              .text,
+                                                                      scheduledDate: state
+                                                                          .date
+                                                                          .toString()
+                                                                          .substring(
+                                                                              0, 10),
+                                                                      kms: int.parse(
+                                                                          kmsController
+                                                                              .text),
+                                                                      bookingSource:
+                                                                          bookingTypeAheadController
+                                                                              .text,
+                                                                      alternateContactPerson:
+                                                                          altContController
+                                                                              .text,
+                                                                      alternatePersonContactNo: altContPhoneNoController
+                                                                              .text
+                                                                              .isNotEmpty
+                                                                          ? int.parse(altContPhoneNoController.text)
+                                                                          : null,
+                                                                      salesPerson: spTypeAheadController.text.split('-')[0],
+                                                                      bay: bayTypeAheadController.text,
+                                                                      jobType: jobTypeTypeAheadController.text,
+                                                                      jobCardNo: 'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
+                                                                      customerConcerns: custConcernsController.text,
+                                                                      remarks: remarksController.text);
+                                                                  _serviceBloc
+                                                                          .state
+                                                                          .jobCardNo =
+                                                                      service
+                                                                          .jobCardNo!;
 
-                                                              Log.d(service
-                                                                  .toJson());
-                                                              context
-                                                                  .read<
-                                                                      ServiceBloc>()
-                                                                  .add(ServiceAdded(
-                                                                      service:
-                                                                          service));
-                                                              _vehicleBloc.state
-                                                                      .status =
-                                                                  VehicleStatus
-                                                                      .initial;
-                                                            }
+                                                                  Log.d(service
+                                                                      .toJson());
+                                                                  context
+                                                                      .read<
+                                                                          ServiceBloc>()
+                                                                      .add(ServiceAdded(
+                                                                          service:
+                                                                              service));
+                                                                  _vehicleBloc
+                                                                          .state
+                                                                          .status =
+                                                                      VehicleStatus
+                                                                          .initial;
+                                                                }
+                                                              },
+                                                            );
                                                           },
-                                                        );
-                                                      },
-                                                    ),
+                                                        ),
+                                                      );
+                                                    },
                                                   );
                                                 },
-                                              );
-                                            },
+                                              ),
+                                              if (MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom !=
+                                                  0)
+                                                SizedBox(
+                                                  height: size.height *
+                                                      (isMobile ? 0.4 : 0.5),
+                                                ),
+                                            ],
                                           ),
-                                          if (MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom !=
-                                              0)
-                                            SizedBox(
-                                              height: size.height *
-                                                  (isMobile ? 0.4 : 0.5),
-                                            ),
                                         ],
                                       ),
                                     ],
-                                  ),
-                                ],
-                              )),
+                                  )),
                     if (context.watch<VehicleBloc>().state.status ==
                             VehicleStatus.loading ||
                         context
@@ -1365,12 +1460,13 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void initState() {
     super.initState();
     _initController();
-   
-    
-    _position = widget.size.maxWidth*0.01;
-    _startPosition =widget.size.maxWidth*0.01;
-    _endPosition =widget.isMobile? widget.size.maxWidth*0.8:widget.size.maxWidth*0.825;
-    _sliderController.currentPosition = widget.size.maxWidth*0.01;
+
+    _position = widget.size.maxWidth * 0.01;
+    _startPosition = widget.size.maxWidth * 0.01;
+    _endPosition = widget.isMobile
+        ? widget.size.maxWidth * 0.8
+        : widget.size.maxWidth * 0.825;
+    _sliderController.currentPosition = widget.size.maxWidth * 0.01;
 
     //Updating the initial position of the slider
     if (_sliderController.position == SliderButtonPosition.right) {
@@ -1400,7 +1496,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     });
   }
 
-  //on Slider motion end 
+  //on Slider motion end
   void _onPanEnd(DragEndDetails details) async {
     if (_sliderController.currentPosition <= widget.size.maxWidth / 2) {
       setState(() {
@@ -1412,15 +1508,15 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     }
     await widget.onDismissed();
     setState(() {
-      // Updating the posiition based on the Service upload status 
-      if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
+      // Updating the posiition based on the Service upload status
+      if (context.read<ServiceBloc>().state.serviceUploadStatus ==
+          ServiceUploadStatus.initial) {
         _sliderController.currentPosition = _startPosition;
         _sliderController.position = SliderButtonPosition.left;
-        
-      } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
+      } else if (context.read<ServiceBloc>().state.serviceUploadStatus ==
+          ServiceUploadStatus.loading) {
         _sliderController.currentPosition = _endPosition;
         _sliderController.position = SliderButtonPosition.right;
-        
       }
     });
   }

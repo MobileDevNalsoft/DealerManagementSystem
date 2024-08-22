@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
@@ -14,15 +13,14 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
-class AddVehicleView extends StatefulWidget {
-  const AddVehicleView({super.key});
+class AddVehicle extends StatefulWidget {
+  const AddVehicle({super.key});
 
   @override
-  State<AddVehicleView> createState() => _AddVehicleViewState();
+  State<AddVehicle> createState() => _AddVehicleState();
 }
 
-class _AddVehicleViewState extends State<AddVehicleView>
-    with ConnectivityMixin {
+class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
   // TextEditing Controllers
 
   TextEditingController vehicleRegNumberController = TextEditingController();
@@ -97,32 +95,38 @@ class _AddVehicleViewState extends State<AddVehicleView>
 
   late FixedExtentScrollController yearPickerController;
 
+  // misc variables
   int index = 0;
 
+  // drop down dynamic icon variables
   bool makeDropDownUp = false;
   bool insuranceCompanyDropDownUp = false;
+  late Size size;
+
+  // bloc variables
   late MultiBloc _multiBloc;
   late VehicleBloc _vehicleBloc;
   late ServiceBloc _serviceBloc;
-  late Size size;
 
+  // navigator service
   NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   void initState() {
     super.initState();
-    clearFields();
+    // Get references to Blocs using context.read
     _multiBloc = context.read<MultiBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _serviceBloc = context.read<ServiceBloc>();
 
     _multiBloc.state.year = DateTime.now().year;
+
+    // If vehicle registration number exists in VehicleBloc state, set it in the text field controller
     yearPickerController = FixedExtentScrollController(initialItem: index);
     if (_vehicleBloc.state.registrationNo != null) {
       vehicleRegNumberController.text = _vehicleBloc.state.registrationNo!;
     }
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
-    // customerContactNumberFocus.addListener(_onCustomerContactNoFocusChange);
     _vehicleBloc.state.status = VehicleStatus.initial;
 
     makeFocus.addListener(() {
@@ -137,15 +141,19 @@ class _AddVehicleViewState extends State<AddVehicleView>
   }
 
   void _onRegNoFocusChange() {
+    // Check internet connectivity
     if (isConnected()) {
+      // If focus is lost and vehicle reg no. text field is not empty, customer name text field is empty, trigger vehicle check with Bloc
       if (!vehicleRegNumberFocus.hasFocus &&
-          vehicleRegNumberController.text.isNotEmpty) {
+          vehicleRegNumberController.text.isNotEmpty &&
+          customerNameController.text.isEmpty) {
         _vehicleBloc.state.status = VehicleStatus.initial;
         _vehicleBloc.add(VehicleCheck(
             registrationNo: vehicleRegNumberController
                 .text)); // manage this api with customer check in service booking so that this api is no more required.
       }
     } else {
+      // Show an error message if offline
       DMSCustomWidgets.DMSFlushbar(size, context,
           message: 'Looks like you'
               're offline. Please check your connection and try again.',
@@ -156,6 +164,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
     }
   }
 
+  // this method can be used to clear all the textfield at once
   void clearFields() {
     vehicleRegNumberController.clear();
     vehicleTypeController.clear();
@@ -174,6 +183,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
     financialDetailsController.clear();
   }
 
+  // this method is used to dispose all the controllers and focus nodes at once
   void disposeFields() {
     vehicleRegNumberController.dispose();
     vehicleTypeController.dispose();
@@ -205,11 +215,11 @@ class _AddVehicleViewState extends State<AddVehicleView>
     mfgYearFocus.dispose();
     insuranceCompanyFocus.dispose();
     financialDetailsFocus.dispose();
+    yearPickerController.dispose();
   }
 
   @override
   void dispose() {
-    yearPickerController.dispose();
     _vehicleBloc.state.registrationNo = null;
     disposeFields();
     super.dispose();
@@ -217,13 +227,17 @@ class _AddVehicleViewState extends State<AddVehicleView>
 
   @override
   Widget build(BuildContext context) {
+    // It guarantees that an instance of WidgetsBinding exists, which is crucial for the Flutter framework to function correctly.
     WidgetsFlutterBinding.ensureInitialized();
 
+    // dynamic size according the device dimensions.
     size = MediaQuery.of(context).size;
     double fieldWidth;
     double fieldHeight;
 
     bool isMobile = size.width < 650;
+
+    // setting the orientation of UI according to the device dimensions dynamically.
     if (isMobile) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
       fieldWidth = size.width * 0.8;
@@ -237,14 +251,18 @@ class _AddVehicleViewState extends State<AddVehicleView>
 
     return GestureDetector(
       onTap: () {
+        // unfocuses all the widgets that are in focus.
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Hero(
         tag: 'addVehicle',
         child: Scaffold(
+            // restricts resizing of widget when keyboard is visible.
             resizeToAvoidBottomInset: false,
+            // restricts extension of the scaffold body behind the appbar
             extendBodyBehindAppBar: false,
             appBar: AppBar(
+              // ensures scrollable widgets doesnt scroll underneath the appbar.
               scrolledUnderElevation: 0,
               elevation: 0,
               backgroundColor: Colors.black45,
@@ -266,6 +284,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                   transform: Matrix4.translationValues(-3, 0, 0),
                   child: IconButton(
                       onPressed: () {
+                        // pops the current page from the stack
                         navigator.pop();
                       },
                       icon: const Icon(Icons.arrow_back_rounded,
@@ -314,7 +333,8 @@ class _AddVehicleViewState extends State<AddVehicleView>
                         stops: [0.1, 0.5, 1]),
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize:
+                        MainAxisSize.min, // Ensures children are packed tightly
                     children: [
                       Gap(
                         size.height * 0.05,
@@ -324,12 +344,16 @@ class _AddVehicleViewState extends State<AddVehicleView>
                         child: SizedBox(
                             width: fieldWidth,
                             child: SingleChildScrollView(
-                              controller: scrollController,
+                              controller:
+                                  scrollController, // Allows scrolling if the form content exceeds the available height.
                               child: StaggeredGrid.count(
+                                // staggered grid allows developer to give different field heights to the children.
+                                // Creates a grid layout for form fields, adapting to different screen sizes.
                                 crossAxisCount: isMobile ? 1 : 2,
                                 mainAxisSpacing: 8,
                                 crossAxisSpacing: 16,
                                 children: [
+                                  // List of form fields using custom widgets.
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: vehicleRegNumberFocus,
                                       size: size,
@@ -389,7 +413,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       focusNode: modelFocus,
                                       size: size,
                                       inputFormatters: [
-                                        InitCapCaseTextFormatter()
+                                        InitCapCaseTextFormatter() // forces the text entered in the text field to be init cap case
                                       ],
                                       hint: "Model",
                                       isMobile: isMobile,
@@ -401,7 +425,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       size: size,
                                       hint: "Variant",
                                       inputFormatters: [
-                                        InitCapCaseTextFormatter()
+                                        InitCapCaseTextFormatter() // forces the text entered in the text field to be init cap case
                                       ],
                                       isMobile: isMobile,
                                       textcontroller: variantController,
@@ -412,7 +436,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       size: size,
                                       hint: "Color",
                                       inputFormatters: [
-                                        UpperCaseTextFormatter()
+                                        UpperCaseTextFormatter() // forces the text entered in the text field to be upper case
                                       ],
                                       isMobile: isMobile,
                                       textcontroller: colorController,
@@ -423,9 +447,11 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       size: size,
                                       hint: "KMS",
                                       isMobile: isMobile,
-                                      keyboardType: TextInputType.number,
+                                      keyboardType: TextInputType
+                                          .number, // opens only num keypad
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.digitsOnly,
+                                        FilteringTextInputFormatter
+                                            .digitsOnly, // allows only numbers entry in to the text field
                                       ],
                                       textcontroller: kmsController,
                                       scrollController: scrollController,
@@ -468,7 +494,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       size: size,
                                       hint: "Customer Name",
                                       inputFormatters: [
-                                        InitCapCaseTextFormatter()
+                                        InitCapCaseTextFormatter() // forces the text entered in the text field to be init cap case
                                       ],
                                       isMobile: isMobile,
                                       scrollController: scrollController,
@@ -483,8 +509,10 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       hint: "Customer Contact No.",
                                       isMobile: isMobile,
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.digitsOnly,
-                                        LengthLimitingTextInputFormatter(10)
+                                        FilteringTextInputFormatter
+                                            .digitsOnly, // allows only numbers entry in to the text field
+                                        LengthLimitingTextInputFormatter(
+                                            10) // restricts the text field content length to 10
                                       ],
                                       textcontroller:
                                           customerContactNumberController,
@@ -498,7 +526,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                         size: size,
                                         hint: "Customer Address",
                                         inputFormatters: [
-                                          InitCapCaseTextFormatter()
+                                          InitCapCaseTextFormatter() // forces the text entered in the text field to be init cap case
                                         ],
                                         isMobile: isMobile,
                                         scrollController: scrollController,
@@ -506,6 +534,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                             customerAddressController,
                                         context: context),
                                   ),
+                                  // adds sized box if key board is opened to scroll text fields to a visible position
                                   if (MediaQuery.viewInsetsOf(context).bottom !=
                                       0)
                                     StaggeredGridTile.extent(
@@ -525,6 +554,8 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                 case VehicleStatus.success:
                                   if (navigator
                                       .navigatorkey.currentState!.mounted) {
+                                    // checks if this page is in the stack.
+                                    // shows registration dialog if the vehicle registration is successful.
                                     showRegistrationDialog(
                                         size: size,
                                         state: state,
@@ -553,6 +584,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                         rejectText: 'later',
                                         onAccept: () {
                                           state.status = VehicleStatus.initial;
+                                          // on accept navigate to the servicebooking page with registration number filled pre filled.
                                           state.registrationNo =
                                               vehicleRegNumberController.text;
                                           navigator.pushAndRemoveUntil(
@@ -568,6 +600,8 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                 case VehicleStatus.vehicleAlreadyAdded:
                                   if (navigator
                                       .navigatorkey.currentState!.mounted) {
+                                    // checks if this page is in the stack.
+                                    // shows registration dialog if the vehicle registration is already done.
                                     showRegistrationDialog(
                                       size: size,
                                       state: state,
@@ -603,6 +637,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       rejectText: 'retry',
                                       onAccept: () {
                                         state.status = VehicleStatus.initial;
+                                        // on accept navigate to the servicebooking page with registration number filled pre filled.
                                         state.registrationNo =
                                             vehicleRegNumberController.text;
                                         navigator.pushAndRemoveUntil(
@@ -611,6 +646,8 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       },
                                       onReject: () {
                                         state.status = VehicleStatus.initial;
+
+                                        // on reject user can retype the vehicle registration number if previous one is wrong.
                                         navigator.pop();
                                         vehicleRegNumberFocus.requestFocus();
                                       },
@@ -631,6 +668,8 @@ class _AddVehicleViewState extends State<AddVehicleView>
                             child: GestureDetector(
                               onTap: () {
                                 FocusManager.instance.primaryFocus?.unfocus();
+
+                                // message is assigned with a String according to the validations.
                                 String? message =
                                     _vehicleRegistrationNoValidator(
                                             vehicleRegNumberController.text) ??
@@ -653,6 +692,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                                     .text)
                                             : null);
 
+                                // shows a snackbar with the message if message variable is not null.
                                 if (message != null) {
                                   DMSCustomWidgets.DMSFlushbar(size, context,
                                       message: message,
@@ -661,6 +701,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                         color: Colors.white,
                                       ));
                                 } else {
+                                  // populate the vehicle object with all the required details to be pushed to db
                                   Vehicle vehicle = Vehicle(
                                       vehicleRegNumber:
                                           vehicleRegNumberController.text,
@@ -687,8 +728,9 @@ class _AddVehicleViewState extends State<AddVehicleView>
                                       customerName: customerNameController.text,
                                       customerAddress:
                                           customerAddressController.text);
-                                  context
-                                      .read<VehicleBloc>()
+
+                                  // trigger event with the vehicle object as parameter which triggers the repo method to push data to the db
+                                  _vehicleBloc
                                       .add(AddVehicleEvent(vehicle: vehicle));
                                 }
                               },
@@ -718,14 +760,15 @@ class _AddVehicleViewState extends State<AddVehicleView>
                             )),
                       ),
                       Expanded(
-                        child: Gap(size.height * 0.15),
                         flex: 2,
+                        child: Gap(size.height * 0.15),
                       )
                     ],
                   ),
                 ),
                 if (context.watch<VehicleBloc>().state.status ==
                     VehicleStatus.loading)
+                  // shows the loading animation according to the vehicle status in vehicle bloc.
                   Container(
                     color: Colors.black54,
                     child: Center(
@@ -829,6 +872,7 @@ class _AddVehicleViewState extends State<AddVehicleView>
   }
 }
 
+// validates vehicle registration number according to the conditions and regex used.
 String? _vehicleRegistrationNoValidator(String value) {
   if (value.isEmpty) {
     return "Vehicle Registration No. can't be empty";
@@ -838,6 +882,7 @@ String? _vehicleRegistrationNoValidator(String value) {
   return null;
 }
 
+// validates customer contact number according to the conditions and regex used.
 String? _customerContactNoValidation(String value) {
   RegExp contactNoRegex = RegExp(r'^\d{10}$');
   if (value.isEmpty) {
@@ -848,6 +893,7 @@ String? _customerContactNoValidation(String value) {
   return null;
 }
 
+// validates chassis number according to the conditions and regex used.
 String? _chassisNoValidation(String value) {
   // RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
@@ -861,6 +907,7 @@ String? _chassisNoValidation(String value) {
   return null;
 }
 
+// validates engine number according to the conditions and regex used.
 String? _engineNoValidation(String value) {
   RegExp engineNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
   if (value.isEmpty) {
@@ -872,6 +919,7 @@ String? _engineNoValidation(String value) {
   return null;
 }
 
+// validates name according to the conditions and regex used.
 String? _nameValidation(String value) {
   RegExp customerNameRegex = RegExp(r'^[A-Za-z ]*$');
   if (value.isEmpty) {

@@ -300,7 +300,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (_) =>
-                                              const InspectionView()));
+                                              const InspectionIn()));
                                 case ServiceUploadStatus.failure:
                                   DMSCustomWidgets.DMSFlushbar(size, context,
                                       message:
@@ -456,7 +456,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const AddVehicleView()));
+                                    builder: (_) => const AddVehicle()));
                           },
                           child: Column(
                             children: [
@@ -488,7 +488,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const AddVehicleView()));
+                                    builder: (_) => const AddVehicle()));
                           },
                           child: Column(
                             children: [

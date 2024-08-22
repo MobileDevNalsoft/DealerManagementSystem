@@ -13,14 +13,14 @@ import 'package:syncfusion_flutter_core/theme.dart';
 
 import '../navigations/navigator_service.dart';
 
-class ServiceHistoryView extends StatefulWidget {
-  const ServiceHistoryView({super.key});
+class ServiceHistory extends StatefulWidget {
+  const ServiceHistory({super.key});
 
   @override
-  State<ServiceHistoryView> createState() => _ServiceHistoryViewState();
+  State<ServiceHistory> createState() => _ServiceHistoryState();
 }
 
-class _ServiceHistoryViewState extends State<ServiceHistoryView> {
+class _ServiceHistoryState extends State<ServiceHistory> {
   late ServiceHistoryDataSource serviceHistoryDataSource;
   DataGridController dataGridController = DataGridController();
   final ServiceState serviceState = ServiceState();

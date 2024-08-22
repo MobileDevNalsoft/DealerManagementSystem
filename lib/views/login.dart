@@ -1,25 +1,26 @@
 import 'dart:io';
+
 import 'package:dms/inits/init.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
-import 'package:dms/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../bloc/authentication/authentication_bloc.dart';
 import '../network_handler_mixin/network_handler.dart';
 import 'custom_widgets/loginformfield.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<Login> createState() => _LoginState();
 }
 
-class _LoginViewState extends State<LoginView> with ConnectivityMixin {
+class _LoginState extends State<Login> with ConnectivityMixin {
   // controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -27,7 +28,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
   // shared preference
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
-  // variable to hold Authentication bloc
+  // bloc variables
   late AuthenticationBloc _authBloc;
 
   @override
@@ -61,33 +62,42 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
+        // shows confirmation dialog to the user to exit the app or stay.
         showConfirmationDialog(size: size);
       },
       child: AspectRatio(
         aspectRatio: size.height / size.width,
         child: GestureDetector(
+          // on tap removes focus of every focused widget in the current page.
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
+            // restricts resizing of widgets when keyboard is visible
             resizeToAvoidBottomInset: false,
+            // This widget listens to the AuthenticationBloc and builds the login UI
             body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) {
                 String? message;
-    
+
+                // Handle different Authentication states
                 switch (state.authenticationStatus) {
                   case AuthenticationStatus.success:
                     message = "Login Successful";
                     sharedPreferences.setBool("isLogged", true);
+                    // Unfocus any currently focused text field
                     FocusManager.instance.primaryFocus?.unfocus();
                     break;
                   case AuthenticationStatus.invalidCredentials:
                     message = "Invalid Credentials";
+                    FocusManager.instance.primaryFocus?.unfocus();
                     break;
                   case AuthenticationStatus.failure:
                     message = "Something went wrong. Please try again later";
+                    FocusManager.instance.primaryFocus?.unfocus();
                   default:
                     message = null;
                 }
-    
+
+                // Show a snackbar with relevant message if needed
                 if (message != null) {
                   DMSCustomWidgets.DMSFlushbar(size, context,
                       message: message,
@@ -116,7 +126,9 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1])),
                       child: Stack(children: [
+                        // Login image for mobile layout
                         if (isMobile)
+                          // clipped container with image on top of login fields
                           ClipShadowPath(
                             shadow: BoxShadow(
                                 blurRadius: 20,
@@ -128,7 +140,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                             child: Container(
                               height: size.height * 0.4,
                               width: size.width,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.black,
                                 image: DecorationImage(
                                     image:
@@ -138,11 +150,12 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                               ),
                             ),
                           ),
+                        // Login image for tab layout
                         if (!isMobile)
                           Container(
                             height: size.height,
                             width: size.width * 0.4,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.black,
                               image: DecorationImage(
                                   image: AssetImage('assets/images/login.png'),
@@ -150,11 +163,14 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                   isAntiAlias: true),
                             ),
                           ),
+                        // Login form positioned below the image
                         Positioned(
-                          top: isMobile?size.height * 0.35:size.height*0.24,
-                          bottom: isMobile?0:null,
-                          left: isMobile?0:size.width*0.45,
-                          right:isMobile? 0:null,
+                          top: isMobile
+                              ? size.height * 0.35
+                              : size.height * 0.24,
+                          bottom: isMobile ? 0 : null,
+                          left: isMobile ? 0 : size.width * 0.45,
+                          right: isMobile ? 0 : null,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -169,6 +185,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                       fontSize: 25),
                                 ),
                               ),
+                              // Custom text field for employee ID
                               CustomTextFormField(
                                 isMobile: isMobile,
                                 hintText: 'employee id',
@@ -178,6 +195,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                               Gap(
                                 size.height * 0.02,
                               ),
+                              // Custom text field for password
                               CustomTextFormField(
                                 isMobile: isMobile,
                                 hintText: 'password',
@@ -188,6 +206,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                 suffixIcon: IconButton(
                                   iconSize: 20,
                                   onPressed: () => {
+                                    //triggers obscurepassword event to upadate the UI of obscure icon button to show or hide the password.
                                     context
                                         .read<AuthenticationBloc>()
                                         .add(ObscurePasswordTapped())
@@ -202,13 +221,15 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  String? message =
-                                      (_emailController.text.isEmpty
-                                              ? "username cannot be empty"
-                                              : null) ??
-                                          _passwordValidator(
-                                              _passwordController.text);
-    
+                                  String? message = (_emailController
+                                              .text.isEmpty
+                                          ? "username cannot be empty"
+                                          : null) ??
+                                      // this method validates the password according to regex and gives instructions.
+                                      _passwordValidator(
+                                          _passwordController.text);
+
+                                  // Show a snackbar with relevant message if needed
                                   if (message != null) {
                                     DMSCustomWidgets.DMSFlushbar(
                                       size,
@@ -220,8 +241,10 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                       ),
                                     );
                                   } else {
+                                    // unfocuses all the focused fields
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
+                                    // triggeres login event and authenticates user info with the info in DB and gets corresponding response
                                     _authBloc.add(LoginButtonPressed(
                                         username: _emailController.text,
                                         password: _passwordController.text));
@@ -232,8 +255,9 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                     margin: EdgeInsets.symmetric(
                                         horizontal: size.width * 0.08),
                                     height: size.height * 0.05,
-                                    width: isMobile?size.width:size.width*0.3,
-    
+                                    width: isMobile
+                                        ? size.width
+                                        : size.width * 0.3,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
                                         color: Colors.black,
@@ -259,13 +283,18 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                     ),
                     if (state.authenticationStatus ==
                         AuthenticationStatus.loading)
+                      // shows the loading widget based on the status.
                       Container(
                         color: Colors.white54,
                         child: Center(
                             child: Lottie.asset(
                                 'assets/lottie/login_loading.json',
-                                height:isMobile?size.height * 0.4:size.height * 0.24,
-                                width: isMobile?size.width * 0.4:size.width * 0.24)),
+                                height: isMobile
+                                    ? size.height * 0.4
+                                    : size.height * 0.24,
+                                width: isMobile
+                                    ? size.width * 0.4
+                                    : size.width * 0.24)),
                       )
                   ],
                 );
@@ -277,9 +306,12 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
     );
   }
 
+  /// This function displays a confirmation dialog asking the user if they want to exit the app.
   void showConfirmationDialog({required Size size}) {
     showDialog(
         context: context,
+
+        /// Disables dismissing the dialog by tapping outside the dialog area.
         barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
@@ -313,6 +345,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
+                              // Close the dialog (cancel action)
                               Navigator.pop(context);
                             },
                             style: TextButton.styleFrom(
@@ -331,7 +364,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              exit(0);
+                              exit(0); // Exit the app
                             },
                             style: TextButton.styleFrom(
                                 fixedSize:
@@ -347,12 +380,15 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                   )
                 ],
               ),
+
+              /// Remove default padding around actions (buttons).
               actionsPadding: EdgeInsets.zero,
               buttonPadding: EdgeInsets.zero);
         });
   }
 }
 
+/// This class defines a custom clipper for creating a wave-like shape.
 class ImageClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -373,6 +409,9 @@ class ImageClipper extends CustomClipper<Path> {
       oldClipper != this;
 }
 
+/// This function validates a password string.
+///
+/// It checks for emptiness and minimum length (10 characters).
 String? _passwordValidator(String value) {
   if (value.isEmpty) {
     return "password cannot be empty";

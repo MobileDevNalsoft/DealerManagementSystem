@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DMSCustomWidgets {
+  /// This widget creates a searchable dropdown field.
   static Widget SearchableDropDown(
       {required Size size,
       required String hint,
@@ -25,10 +27,12 @@ class DMSCustomWidgets {
       SuggestionsController? suggestionsController,
       bool isLoading = false,
       Icon? icon}) {
+    // Refresh the suggestions if a SuggestionsController is provided
     if (suggestionsController != null) {
       suggestionsController.refresh();
     }
 
+    // Define the size of the widget based on whether it's mobile or not
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
@@ -37,6 +41,7 @@ class DMSCustomWidgets {
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: TypeAheadField(
+          // Use the provided suggestions controller or create a new list based on items
           suggestionsController: suggestionsController,
           controller: typeAheadController,
           focusNode: focus,
@@ -44,13 +49,17 @@ class DMSCustomWidgets {
             return Padding(
               padding: EdgeInsets.only(top: size.height * 0.005),
               child: TextFormField(
+                // Call the onChanged function when the text changes
                 onChanged: onChanged,
+                // Focus the field when tapped
                 onTap: () {
+                  // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
                   context.read<MultiBloc>().add(OnFocusChange(
                       focusNode: focusNode,
                       scrollController: scrollController,
                       context: context));
                 },
+                // Unfocus the field when tapped outside
                 onTapOutside: (event) => focusNode.unfocus(),
                 cursorColor: Colors.black,
                 inputFormatters: [
@@ -68,6 +77,7 @@ class DMSCustomWidgets {
                     color: Colors.black38,
                     fontWeight: FontWeight.normal,
                   ),
+                  // Remove all borders for a cleaner look
                   border: InputBorder.none, // Removes all borders
                 ),
                 controller: controller,
@@ -75,6 +85,7 @@ class DMSCustomWidgets {
               ),
             );
           },
+          // Filter suggestions based on the pattern entered
           suggestionsCallback: (pattern) {
             if (suggestionsController == null) {
               return items
@@ -84,7 +95,9 @@ class DMSCustomWidgets {
             }
             return items;
           },
+          // Hide the suggestions list when the field loses focus
           hideOnUnfocus: true,
+          // Display a message when no suggestions are found
           emptyBuilder: (context) => Container(
             height: size.height * 0.038,
             width: size.width,
@@ -98,9 +111,11 @@ class DMSCustomWidgets {
                 : null,
           ),
           onSelected: (suggestion) {
+            // removes focus when an item from the suggestion list is selected.
             FocusManager.instance.primaryFocus?.unfocus();
             typeAheadController.text = suggestion;
           },
+          // defines widget that to be built for each item in the suggestions list
           itemBuilder: (context, suggestion) => Container(
             height: size.height * 0.038,
             color: Colors.white,
@@ -115,6 +130,7 @@ class DMSCustomWidgets {
     );
   }
 
+  // This widget creates a custom data card for text input
   // ignore: non_constant_identifier_names
   static Widget CustomDataCard(
       {required Size size,
@@ -133,6 +149,7 @@ class DMSCustomWidgets {
       Widget? suffixIcon,
       FocusNode? focusNode}) {
     return SizedBox(
+      // Set the card height and width based on mobile status
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
@@ -141,6 +158,7 @@ class DMSCustomWidgets {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Transform(
+          // Adjust vertical position slightly for mobile layout
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
             onChanged: onChange,
@@ -149,6 +167,8 @@ class DMSCustomWidgets {
             inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
             onTap: () {
+              // Trigger event on focus change in MultiBloc
+              // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
               context.read<MultiBloc>().add(OnFocusChange(
                   focusNode: focusNode!,
                   scrollController: scrollController,
@@ -160,10 +180,12 @@ class DMSCustomWidgets {
             cursorColor: Colors.black,
             controller: textcontroller,
             style: TextStyle(
-              fontSize: isMobile ? 13 : 14,
+              fontSize:
+                  isMobile ? 13 : 14, // Adjust font size for mobile layout
             ),
-            maxLength: 25,
-            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            maxLength: 25, // Set maximum allowed characters
+            maxLengthEnforcement:
+                MaxLengthEnforcement.enforced, // Enforce max length
             decoration: InputDecoration(
                 suffix: suffixIcon,
                 contentPadding: EdgeInsets.symmetric(
@@ -176,6 +198,7 @@ class DMSCustomWidgets {
                   fontWeight: FontWeight.normal,
                 ),
                 suffixIcon: Transform(
+                  // Adjust vertical position of suffix icon slightly
                   transform: Matrix4.translationValues(0, -2, 0),
                   child: icon,
                 ),
@@ -186,6 +209,8 @@ class DMSCustomWidgets {
     );
   }
 
+  // This widget creates a custom text field card
+  // This function defines a reusable widget named `CustomTextFieldCard`.
   // ignore: non_constant_identifier_names
   static Widget CustomTextFieldCard(
       {required Size size,
@@ -198,6 +223,7 @@ class DMSCustomWidgets {
       Widget? icon,
       required bool isMobile}) {
     return SizedBox(
+      // Set the height and width of the card based on mobile/non-mobile
       height: isMobile ? size.height * 0.1 : size.height * 0.13,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: Card(
@@ -212,18 +238,20 @@ class DMSCustomWidgets {
           focusNode: focusNode,
           inputFormatters: inputFormatters,
           onTap: () {
+            // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
             context.read<MultiBloc>().add(OnFocusChange(
                 focusNode: focusNode!,
                 scrollController: scrollController,
                 context: context));
           },
+          // Set text field properties
           minLines: 1,
           maxLines: 5,
           maxLength: 200,
           decoration: InputDecoration(
             counterText: "",
             contentPadding: const EdgeInsets.only(left: 15, top: 0),
-            border: InputBorder.none,
+            border: InputBorder.none, // Remove default border
             hintText: hint,
             hintStyle: const TextStyle(
                 color: Colors.black45, fontWeight: FontWeight.normal),
@@ -233,6 +261,7 @@ class DMSCustomWidgets {
     );
   }
 
+  /// This widget displays a clickable card to select a schedule date using a calendar dialog.
   // ignore: non_constant_identifier_names
   static Widget ScheduleDateCalendar(
       {context, required Size size, required bool isMobile, DateTime? date}) {
@@ -250,6 +279,7 @@ class DMSCustomWidgets {
                     height: size.height * 0.4,
                     width: size.width * (isMobile ? 1 : 0.35),
                     child: SfDateRangePicker(
+                      // Configure date range picker options
                       enablePastDates: false,
                       view: DateRangePickerView.month,
                       allowViewNavigation: true,
@@ -264,6 +294,7 @@ class DMSCustomWidgets {
                         Navigator.pop(context);
                       },
                       onSubmit: (p0) {
+                        // Handle submit action (update selected date)
                         context
                             .read<MultiBloc>()
                             .add(DateChanged(date: p0 as DateTime));
@@ -304,6 +335,7 @@ class DMSCustomWidgets {
     );
   }
 
+  // used to create data fields with key value pairs
   static Widget CustomDataFields(
       {required BuildContext context,
       double? contentPadding,
@@ -358,22 +390,29 @@ class DMSCustomWidgets {
     ]);
   }
 
+  /// This widget builds a custom year picker for selecting a vehicle's manufacturing year.
   static Widget CustomYearPicker(
       {required Size size,
       required bool isMobile,
       required BuildContext context,
       required FixedExtentScrollController yearPickerController,
       int? year}) {
+    // Get the current year
     int now = DateTime.now().year;
     return SizedBox(
+      /// Set height and width based on device type
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
         onTap: () {
+          // Unfocus any currently focused widget
           FocusManager.instance.primaryFocus?.unfocus();
+          // Update the year picker controller with initial selection based on current year and pre-selected year (if any)
           yearPickerController =
               FixedExtentScrollController(initialItem: now - (year ?? 0));
+
+          // Show the year picker dialog using CupertinoModalPopup
           showCupertinoModalPopup(
             context: context,
             builder: (context) => CupertinoActionSheet(
@@ -386,6 +425,7 @@ class DMSCustomWidgets {
                       looping: true,
                       scrollController: yearPickerController,
                       onSelectedItemChanged: (value) {
+                        // Update the MultiBloc state with the selected year
                         context
                             .read<MultiBloc>()
                             .add(YearChanged(year: now - value));
@@ -397,6 +437,8 @@ class DMSCustomWidgets {
                           const CupertinoPickerDefaultSelectionOverlay(
                         background: Colors.white30,
                       ),
+
+                      /// Generate list of year Text widgets from current year back to 1980
                       children: List.generate(
                         now - 1980,
                         (index) => Center(
@@ -407,6 +449,8 @@ class DMSCustomWidgets {
                       )),
                 )
               ],
+
+              /// Set cancel button for the dialog
               cancelButton: TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
@@ -424,6 +468,7 @@ class DMSCustomWidgets {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
               child: Text(
+                /// Display "MFG Year" if no year is selected, otherwise display the selected year
                 year == null ? 'MFG Year' : year.toString(),
                 style: TextStyle(
                     color: year == null ? Colors.black38 : Colors.black),
@@ -433,6 +478,7 @@ class DMSCustomWidgets {
     );
   }
 
+  // This function shows a custom DMS dialog
   static showDMSDialog({
     required BuildContext context,
     required String text,
@@ -442,10 +488,13 @@ class DMSCustomWidgets {
     required void Function()? onReject,
     Widget? leadingIcon,
   }) {
+    // Get the screen size
     Size size = MediaQuery.of(context).size;
 
+    // Show an AlertDialog with customizations
     showDialog(
         context: context,
+        // Prevent dismissal by tapping outside the dialog
         barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
@@ -509,14 +558,20 @@ class DMSCustomWidgets {
                   )
                 ],
               ),
-              actionsPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero);
+              actionsPadding:
+                  EdgeInsets.zero, // Remove default padding around buttons
+              buttonPadding:
+                  EdgeInsets.zero); // Remove default padding around buttons
         });
   }
 
+// This function displays a custom flushbar message on the screen
   static Future DMSFlushbar(Size size, BuildContext context,
       {String message = 'message', Widget? icon}) async {
+    // Check if the device is mobile based on screen size
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    // Show the flushbar using Flushbar package
     await Flushbar(
       backgroundColor: Colors.black,
       blockBackgroundInteraction: true,
@@ -542,6 +597,7 @@ class DMSCustomWidgets {
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
+  /// Converts all input text to uppercase.
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -553,12 +609,201 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 }
 
 class InitCapCaseTextFormatter extends TextInputFormatter {
+  /// Capitalizes the first letter of each word in the input text.
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
+      // This implementation only capitalizes the first letter of the entire string.
+      // For proper word capitalization, more complex logic is required.
       text: newValue.text[0].toUpperCase() + newValue.text.substring(1),
       selection: newValue.selection,
     );
   }
+}
+
+// returns widget dynamically according to the widget name extracted from json.
+Widget getWidget(
+    {required Size size,
+    required String page,
+    required int index,
+    required Map<String, dynamic> json,
+    required BuildContext context,
+    required bool isMobile}) {
+  ServiceBloc _serviceBloc = context.read<ServiceBloc>();
+  // Switch statement to handle different widget types based on "widget" key in JSON
+  switch (json[page][index]['widget']) {
+    case "checkBox":
+      // Return a Checkbox widget with specific properties and behavior
+      return SizedBox(
+        height: size.height * 0.03,
+        width: isMobile ? size.width * 0.05 : size.width * 0.024,
+        child: Checkbox(
+          checkColor: Colors.white,
+          fillColor: json[page][index]['properties']['value'] == true
+              ? const WidgetStatePropertyAll(Colors.black)
+              : const WidgetStatePropertyAll(Colors.white),
+          value: json[page][index]['properties']['value'],
+          side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
+          onChanged: (value) {
+            json[page][index]['properties']['value'] = value;
+            _serviceBloc.add(InspectionJsonUpdated(json: json));
+          },
+        ),
+      );
+    case "textField":
+      // Return a TextField widget with specific properties and behavior
+      TextEditingController textEditingController = TextEditingController();
+
+      textEditingController.text = json[page][index]['properties']['value'];
+
+      textEditingController.selection = TextSelection.fromPosition(
+          TextPosition(offset: textEditingController.text.length));
+
+      return Container(
+        height: size.height * 0.11,
+        width: isMobile ? size.width * 0.62 : size.width * 0.32,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            border: Border.all(color: Colors.black)),
+        child: TextField(
+            textInputAction: TextInputAction.done,
+            controller: textEditingController,
+            cursorColor: Colors.black,
+            minLines: 1,
+            maxLines: 5,
+            maxLength: 200,
+            decoration: const InputDecoration(
+              counterText: '',
+              enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+              contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              hintStyle: TextStyle(color: Colors.black38),
+            ),
+            onChanged: (value) {
+              _serviceBloc.state.json![page][index]['properties']['value'] =
+                  value;
+            }),
+      );
+    case "dropDown":
+      // Return a DropdownButton2 widget with specific properties and behavior
+      // Create a list of items based on the JSON properties
+      List<String> items = [];
+
+      for (String s in json[page][index]['properties']['items']) {
+        items.add(s);
+      }
+
+      if (json[page][index]['properties']['value'] == '') {
+        json[page][index]['properties']['value'] = items[0];
+      }
+
+      return DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          onMenuStateChange: (isOpen) {},
+          isExpanded: true,
+          items: items
+              .map((String item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ))
+              .toList(),
+          value: json[page][index]['properties']['value'],
+          onChanged: (String? value) {
+            json[page][index]['properties']['value'] = value;
+            _serviceBloc.add(InspectionJsonUpdated(json: json));
+          },
+          buttonStyleData: ButtonStyleData(
+            height: size.height * 0.04,
+            width: isMobile ? size.width * 0.5 : size.width * 0.32,
+            padding: const EdgeInsets.only(left: 14, right: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Colors.black,
+              ),
+              color: Colors.white,
+            ),
+            elevation: 0,
+          ),
+          iconStyleData: const IconStyleData(
+            icon: Icon(!false
+                ? Icons.keyboard_arrow_down_rounded
+                : Icons.keyboard_arrow_up_rounded),
+            iconSize: 14,
+            iconEnabledColor: Colors.black,
+            iconDisabledColor: Colors.black,
+          ),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: size.height * 0.3,
+            width: size.width * 0.5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            offset: const Offset(0, 0),
+            scrollbarTheme: ScrollbarThemeData(
+              radius: const Radius.circular(40),
+              thickness: WidgetStateProperty.all<double>(6),
+              thumbVisibility: WidgetStateProperty.all<bool>(true),
+            ),
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 30,
+            padding: EdgeInsets.only(left: 14, right: 14),
+          ),
+        ),
+      );
+    case "radioButtons":
+      // Return a column of Radio widgets with specific properties and behavior
+      List<String> options = [];
+
+      for (String s in json[page][index]['properties']['options']) {
+        options.add(s);
+      }
+
+      return SizedBox(
+        height: size.height * 0.25,
+        width: size.width * 0.6,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: options
+              .map(
+                (e) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    json[page][index]['properties']['options']
+                        [options.indexOf(e)],
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                  leading: Radio<int>(
+                    value: options.indexOf(e) + 1,
+                    groupValue: json[page][index]['properties']['value'],
+                    activeColor: Colors
+                        .white, // Change the active radio button color here
+                    fillColor: WidgetStateProperty.all(
+                        Colors.black), // Change the fill color when selected
+                    splashRadius: 20, // Change the splash radius when clicked
+                    onChanged: (value) {
+                      json[page][index]['properties']['value'] = value;
+                      _serviceBloc.add(InspectionJsonUpdated(json: json));
+                    },
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      );
+  }
+
+  // If no matching widget is found, return an empty SizedBox
+  return const SizedBox();
 }

@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/sample/service_main.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:o3d/o3d.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
 
@@ -19,22 +17,21 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView>
     with TickerProviderStateMixin, ConnectivityMixin {
+  // Service to handle navigation within the app
   final NavigatorService navigator = getIt<NavigatorService>();
-
-  @override
-  void initState() {
-    super.initState();
-    
-  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    // Check if the screen is considered mobile based on shortest side
     bool isMobile = size.shortestSide < 500;
 
     return PopScope(
+      // Disable default back button behavior
       canPop: false,
       onPopInvoked: (didPop) {
+        // Show confirmation dialog when exiting the app
         DMSCustomWidgets.showDMSDialog(
             context: context,
             text: 'Are you sure you want to exit the app ?',
@@ -44,12 +41,15 @@ class _HomeViewState extends State<HomeView>
               exit(0);
             },
             onReject: () {
+              // Go back one screen if user cancels exit
               navigator.pop();
             });
       },
       child: Scaffold(
+        // Prevent keyboard from resizing content
         resizeToAvoidBottomInset: false,
         body: Container(
+          // Fill the entire screen
           height: double.infinity,
           width: double.infinity,
           decoration: const BoxDecoration(
@@ -62,18 +62,19 @@ class _HomeViewState extends State<HomeView>
               Column(
                 children: [
                   Gap(size.height * 0.18),
-                    Image.asset(
-                      'assets/images/dashboard_car.png',
-                      height: 200,
-                      width: 200,
-                    ),
+                  Image.asset(
+                    'assets/images/dashboard_car.png',
+                    height: 200,
+                    width: 200,
+                  ),
                   Gap(size.height * 0.3),
                   InkWell(
                     onTap: () {
+                      // Check internet connection
                       if (isConnected()) {
-                       
                         navigator.push('/serviceBooking');
                       } else {
+                        // Show an error message if offline
                         DMSCustomWidgets.DMSFlushbar(size, context,
                             message: 'Looks like you'
                                 're offline. Please check your connection and try again.',
@@ -124,7 +125,7 @@ class _HomeViewState extends State<HomeView>
                 ],
               ),
               Positioned(
-                top: -size.height * 0.4,
+                top: -size.height * 0.4, // moves child widget to top
                 bottom: 0,
                 left: 0,
                 right: 0,
@@ -134,9 +135,11 @@ class _HomeViewState extends State<HomeView>
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
+                        // check the internet connection
                         if (isConnected()) {
                           navigator.push('/addVehicle');
                         } else {
+                          // Show an error message if offline
                           DMSCustomWidgets.DMSFlushbar(size, context,
                               message: 'Looks like you'
                                   're offline. Please check your connection and try again.',
@@ -150,6 +153,7 @@ class _HomeViewState extends State<HomeView>
                         tag: 'addVehicle',
                         transitionOnUserGestures: true,
                         child: ClippedButton(
+                          // creates a custom button shape according to the path in the clipper
                           clipper: ButtonClipper(),
                           image: 'add_vehicle_icon.png',
                           imageHeight: size.height * 0.1,
@@ -315,46 +319,4 @@ class _HomeViewState extends State<HomeView>
       ),
     );
   }
-}
-
-class ButtonClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(size.width - 33.5, 20);
-    path.quadraticBezierTo(size.width - 18, 28, size.width - 13.4, 40.2);
-    path.lineTo(size.width - 5, size.height - 70);
-    path.quadraticBezierTo(size.width + 3.35, size.height - 30.15,
-        size.width - 20.1, size.height - 20.1);
-    path.lineTo(0, size.height);
-    path.lineTo(0, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
-}
-
-class ButtonClipperMid extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(0, 25);
-    path.lineTo(size.width - 40, 5);
-    path.quadraticBezierTo(size.width - 10, -5, size.width - 5, 20);
-    path.cubicTo(size.width, size.height * 0.4, size.width, size.height * 0.6,
-        size.width - 5, size.height - 20);
-    path.quadraticBezierTo(
-        size.width - 10, size.height + 5, size.width - 40, size.height - 5);
-    path.lineTo(0, size.height - 25);
-    path.lineTo(0, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
 }

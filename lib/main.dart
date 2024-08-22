@@ -9,7 +9,7 @@ import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/views/home_view.dart';
+import 'package:dms/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
