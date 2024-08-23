@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../inits/init.dart';
 
 class ServiceMainSample extends StatefulWidget {
@@ -449,7 +449,7 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                             onTap: () {
                               context.read<VehicleBloc>().state.status = VehicleStatus.initial;
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ServiceHistoryView(),
+                                builder: (context) => const ServiceHistory(),
                               ));
                             },
                             child: Column(

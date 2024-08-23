@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 
 import '../../logger/logger.dart';
 import '../../navigations/navigator_service.dart';
+
 part 'vehicle_event.dart';
 part 'vehicle_state.dart';
 

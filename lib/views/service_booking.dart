@@ -15,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../inits/init.dart';
-import '../logger/logger.dart';
 import '../navigations/navigator_service.dart';
 
 class ServiceBooking extends StatefulWidget {
@@ -430,7 +429,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                         context: context,
                                                         key: targetKey,
                                                         size: size,
-                                                        hint: 'KMS',
+                                                        hint: '*KMS',
                                                         isMobile: isMobile,
                                                         keyboardType: TextInputType.number,
                                                         inputFormatters: [
@@ -441,7 +440,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                         scrollController: page1ScrollController),
                                                   ],
                                                 ),
-
+                                                Gap(size.height * 0.02),
                                                 // view more dialog box
                                                 Row(
                                                   children: [
@@ -449,8 +448,8 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                     BlocBuilder<VehicleBloc, VehicleState>(
                                                       builder: (context, state) {
                                                         if (state.status == VehicleStatus.vehicleAlreadyAdded) {
-                                                          return ElevatedButton(
-                                                              onPressed: () {
+                                                          return GestureDetector(
+                                                              onTap: () {
                                                                 FocusManager.instance.primaryFocus?.unfocus();
                                                                 CustomWidgets.CustomDialogBox(
                                                                     context: context,
@@ -471,15 +470,26 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                       valueFontStyle: TextStyle(fontSize: isMobile ? 16 : 18, fontFamily: 'Roboto'),
                                                                     ));
                                                               },
-                                                              style: ElevatedButton.styleFrom(
-                                                                  backgroundColor: Colors.white,
-                                                                  minimumSize: isMobile ? const Size(65, 10) : const Size(80.0, 20.0),
-                                                                  padding: EdgeInsets.zero,
-                                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-                                                              child: Text(
-                                                                'view more',
-                                                                style: TextStyle(color: Colors.black, fontSize: isMobile ? 12 : 14),
-                                                              ));
+                                                              child: Container(
+                                                                  alignment: Alignment.center,
+                                                                  height: size.height * 0.025,
+                                                                  width: isMobile ? size.width * 0.18 : size.width * 0.08,
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(10),
+                                                                      color: Colors.black,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                            blurRadius: 10,
+                                                                            blurStyle: BlurStyle.outer,
+                                                                            spreadRadius: 0,
+                                                                            color: Colors.orange.shade200,
+                                                                            offset: const Offset(0, 0))
+                                                                      ]),
+                                                                  child: const Text(
+                                                                    textAlign: TextAlign.center,
+                                                                    'view more',
+                                                                    style: TextStyle(color: Colors.white, fontSize: 12),
+                                                                  )));
                                                         } else {
                                                           return SizedBox(
                                                             height: size.height * 0.05,
@@ -492,6 +502,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                     )
                                                   ],
                                                 ),
+                                                Gap(size.height * 0.05),
                                                 GestureDetector(
                                                   onTap: () {
                                                     FocusManager.instance.primaryFocus?.unfocus();
@@ -564,7 +575,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   DMSCustomWidgets.SearchableDropDown(
                                                       items: ["Online", "Walk-in"],
                                                       size: size,
-                                                      hint: 'Booking Source',
+                                                      hint: '*Booking Source',
                                                       isMobile: isMobile,
                                                       focus: bookingFocus,
                                                       typeAheadController: bookingTypeAheadController,
@@ -605,7 +616,8 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                           onChanged: (p0) {
                                                             if (!isConnected()) {
                                                               DMSCustomWidgets.DMSFlushbar(size, context,
-                                                                  message: 'Looks like you' 're offline. Please check your connection and try again.',
+                                                                  message: 'Looks like you'
+                                                                      're offline. Please check your connection and try again.',
                                                                   icon: const Icon(
                                                                     Icons.error,
                                                                     color: Colors.white,
@@ -623,7 +635,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                           items: state.salesPersons == null
                                                               ? []
                                                               : state.salesPersons!.map((e) => "${e.empName}-${e.empId}").toList(),
-                                                          hint: 'Sales Person',
+                                                          hint: '*Sales Person',
                                                           icon: salesPersonDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
                                                           isMobile: isMobile,
                                                           isLoading: state.status == MultiStateStatus.loading ? true : false,
@@ -639,7 +651,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   DMSCustomWidgets.SearchableDropDown(
                                                       items: bayList,
                                                       size: size,
-                                                      hint: 'Bay',
+                                                      hint: '*Bay',
                                                       isMobile: isMobile,
                                                       icon: bayDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
                                                       focus: bayFocus,
@@ -650,7 +662,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   ),
                                                   DMSCustomWidgets.SearchableDropDown(
                                                       size: size,
-                                                      hint: 'Job Type',
+                                                      hint: '*Job Type',
                                                       items: jobTypeList,
                                                       icon: jobTypeDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
                                                       focus: jobTypeFocus,
@@ -692,6 +704,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                       DMSCustomWidgets.DMSFlushbar(size, context, message: 'Service Added Successfully');
                                                       context.read<MultiBloc>().state.date = null;
                                                       _vehicleBloc.state.registrationNo = null;
+                                                      _vehicleBloc.state.status = VehicleStatus.initial;
                                                       navigator.pushAndRemoveUntil('/inspectionIn', '/home');
                                                       FocusManager.instance.primaryFocus?.unfocus();
                                                       clearFields();
@@ -740,7 +753,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                       ));
                                                                   return;
                                                                 }
-                                                                FocusManager.instance.primaryFocus?.unfocus();
                                                                 // Validating the textfields and displaying appropriate error snackbars.
                                                                 String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
                                                                     _altPersonContactNoValidation(altContPhoneNoController.text) ??
@@ -775,11 +787,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                           'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
                                                                       customerConcerns: custConcernsController.text,
                                                                       remarks: remarksController.text);
-                                                                  _serviceBloc.state.jobCardNo = service.jobCardNo!;
+                                                                  _serviceBloc.state.service = service;
 
-                                                                  Log.d(service.toJson());
-                                                                  context.read<ServiceBloc>().add(ServiceAdded(service: service));
-                                                                  _vehicleBloc.state.status = VehicleStatus.initial;
+                                                                  _serviceBloc.add(ServiceAdded(service: service));
                                                                 }
                                                               },
                                                             );

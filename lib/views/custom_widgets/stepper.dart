@@ -11,8 +11,10 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../inits/init.dart';
+import '../../logger/logger.dart';
 import '../../navigations/navigator_service.dart';
 
+// this class is used to create a stepper widget to show the flow of the job card status in job card details.
 class Stepper extends StatefulWidget {
   Stepper({super.key, required this.steps});
 
@@ -31,6 +33,7 @@ class _StepperState extends State<Stepper> {
   }
 }
 
+// this class creates step widget for each step in the stepper.
 class Step extends StatefulWidget {
   Step(
       {super.key,
@@ -62,7 +65,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
@@ -74,19 +77,15 @@ class _StepState extends State<Step> with ConnectivityMixin {
               child: Text(
                 widget.title,
                 textAlign: TextAlign.center,
-                style:  TextStyle(fontSize: (isMobile?12:14)),
+                style: TextStyle(fontSize: (isMobile ? 12 : 14)),
               )),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                    left: constraints.minWidth * 0.095,
-                    top: constraints.minWidth *
-                        (widget.currentStep == widget.activeStep ? 0 : 0.0)),
+                padding: EdgeInsets.only(left: constraints.minWidth * 0.095, top: constraints.minWidth * (widget.currentStep == widget.activeStep ? 0 : 0.0)),
                 child: SizedBox(
-                  height: constraints.maxWidth *
-                      (widget.currentStep == widget.activeStep ? 0.2 : 0.15),
+                  height: constraints.maxWidth * (widget.currentStep == widget.activeStep ? 0.2 : 0.15),
                   width: constraints.maxWidth * 0.2,
                   child: Stack(
                     alignment: Alignment.center,
@@ -116,28 +115,18 @@ class _StepState extends State<Step> with ConnectivityMixin {
                           if (widget.currentStep == widget.activeStep) {
                             switch (widget.activeStep) {
                               case 2:
-                                context.read<MultiBloc>().add(
-                                    MultiBlocStatusChange(
-                                        status: MultiStateStatus.loading));
+                                context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
                                 List<GeneralBodyPart> generalParts;
                                 List<GeneralBodyPart> rejectedParts;
                                 List<GeneralBodyPart> acceptedParts;
                                 List<GeneralBodyPart> pendingParts;
                                 try {
-                                  generalParts = await loadSvgImage(
-                                      svgImage: 'assets/images/image.svg');
-                                  rejectedParts = await loadSvgImage(
-                                      svgImage:
-                                          'assets/images/image_reject.svg');
-                                  acceptedParts = await loadSvgImage(
-                                      svgImage:
-                                          'assets/images/image_accept.svg');
-                                  pendingParts = await loadSvgImage(
-                                      svgImage:
-                                          'assets/images/image_pending.svg');
-                                  context.read<MultiBloc>().add(
-                                      MultiBlocStatusChange(
-                                          status: MultiStateStatus.initial));
+                                  generalParts = await loadSvgImage(svgImage: 'assets/images/image.svg');
+                                  rejectedParts = await loadSvgImage(svgImage: 'assets/images/image_reject.svg');
+                                  acceptedParts = await loadSvgImage(svgImage: 'assets/images/image_accept.svg');
+                                  pendingParts = await loadSvgImage(svgImage: 'assets/images/image_pending.svg');
+                                  // ignore: use_build_context_synchronously
+                                  context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.initial));
                                   navigator.push('/qualityCheck',
                                       arguments: GeneralBodyParts(
                                           generalParts: generalParts,
@@ -153,9 +142,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                 }
 
                               case 3:
-                                context.read<ServiceBloc>().add(
-                                    GetInspectionDetails(
-                                        jobCardNo: widget.jobCardNo));
+                                context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
                                 navigator.push('/inspectionOut');
                               case 4:
                                 navigator.push('/gatePass');
@@ -163,18 +150,17 @@ class _StepState extends State<Step> with ConnectivityMixin {
                           }
                         },
                         child: CircleAvatar(
-                          backgroundColor:
-                              widget.currentStep < widget.activeStep
-                                  ? Colors.green.shade300
-                                  : widget.currentStep == widget.activeStep
-                                      ? Colors.green.shade100
-                                      : Colors.grey.shade300,
-                          maxRadius: (isMobile?25:40),
+                          backgroundColor: widget.currentStep < widget.activeStep
+                              ? Colors.green.shade300
+                              : widget.currentStep == widget.activeStep
+                                  ? Colors.green.shade100
+                                  : Colors.grey.shade300,
+                          maxRadius: (isMobile ? 25 : 40),
                           child: Image.asset(
                             'assets/images/${widget.icons[widget.currentStep]}.png',
                             fit: BoxFit.cover,
-                            height: (isMobile?30:40),
-                            width: (isMobile?30:40),
+                            height: (isMobile ? 30 : 40),
+                            width: (isMobile ? 30 : 40),
                           ),
                         ),
                       )
@@ -182,18 +168,15 @@ class _StepState extends State<Step> with ConnectivityMixin {
                   ),
                 ),
               ),
-              if (widget.currentStep <= widget.activeStep - 1 ||
-                  (widget.activeStep == 0 && widget.currentStep < 1))
+              if (widget.currentStep <= widget.activeStep - 1 || (widget.activeStep == 0 && widget.currentStep < 1))
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(
                     widget.statusLines[widget.currentStep],
-                    style:  TextStyle(fontSize: isMobile?12:14),
+                    style: TextStyle(fontSize: isMobile ? 12 : 14),
                   ),
                 ),
-              if (widget.currentStep == widget.activeStep &&
-                  widget.currentStep < widget.stepperLength &&
-                  widget.activeStep != 0)
+              if (widget.currentStep == widget.activeStep && widget.currentStep < widget.stepperLength && widget.activeStep != 0)
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(
@@ -205,7 +188,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
           ),
           if (widget.currentStep < widget.stepperLength - 1)
             Padding(
-              padding: EdgeInsets.only(left: constraints.maxWidth * (isMobile?0.173:0.185)),
+              padding: EdgeInsets.only(left: constraints.maxWidth * (isMobile ? 0.173 : 0.185)),
               child: SizedBox(
                 height: constraints.maxWidth * 0.1,
                 child: VerticalDivider(
@@ -218,8 +201,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                 ),
               ),
             ),
-          if (widget.currentStep == widget.stepperLength - 1)
-            Gap(constraints.maxWidth * 0.1)
+          if (widget.currentStep == widget.stepperLength - 1) Gap(constraints.maxWidth * 0.1)
         ],
       );
     });

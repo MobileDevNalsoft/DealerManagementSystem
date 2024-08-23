@@ -4,7 +4,9 @@ import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../logger/logger.dart';
+
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 

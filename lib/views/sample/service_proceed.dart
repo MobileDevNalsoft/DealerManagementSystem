@@ -3,8 +3,10 @@ import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/models/vehicle.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/inspection_in.dart';
@@ -69,6 +71,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
   List<String> bayList = ["Service Bay", "Express Maintenance Bay", "Body Repair Bay", "Tire Service Bays", "Diagnostic Bay", "Wash Bay"];
 
   late ServiceBloc _serviceBloc;
+  NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   void initState() {
@@ -104,7 +107,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
           backgroundColor: const Color.fromARGB(255, 145, 19, 19),
           leading: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                navigator.pop();
               },
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           title: const Text(
@@ -267,7 +270,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   DMSCustomWidgets.DMSFlushbar(size, context, message: 'Service Added Successfully');
 
                                   context.read<MultiBloc>().state.date = null;
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const InspectionView()));
+                                  navigator.pushReplacement("/inspectionIn");
                                 case ServiceUploadStatus.failure:
                                   DMSCustomWidgets.DMSFlushbar(size, context,
                                       message: 'Something went wrong. Please try again later',
@@ -385,7 +388,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const AddVehicleView()));
+                            navigator.pushReplacement("/addVehicle");
                           },
                           child: Column(
                             children: [
@@ -410,7 +413,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                           onTap: () {
                             context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial, vehicle: Vehicle()));
                             widget.clearFields!();
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const AddVehicleView()));
+                            navigator.pushReplacement("/addVehicle");
                           },
                           child: Column(
                             children: [

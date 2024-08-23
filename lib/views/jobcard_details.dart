@@ -7,24 +7,31 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../bloc/service/service_bloc.dart';
-import '../models/services.dart';
 import '../navigations/navigator_service.dart';
 import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatelessWidget {
   JobCardDetails({super.key});
 
+  // Get the NavigatorService instance using GetIt dependency injection
   final NavigatorService navigator = getIt<NavigatorService>();
 
   @override
   Widget build(BuildContext context) {
+    // responsive UI
     Size size = MediaQuery.of(context).size;
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    // Get the ServiceBloc instance from the context using BlocProvider
     final ServiceBloc _serviceBloc = context.read<ServiceBloc>();
+
+    // Define the stages of the work flow
     List<String> dmsFlow = ['New', 'Work in progress', 'Quality Check', 'Inspection Out', 'Completed'];
 
+    // Define icon names for each stage
     List<String> icons = ['initiated', 'work_in_progress', 'quality_check', 'inspection_out', 'completed'];
 
+    // Define status lines based on current stage and service creation date
     List<String> statusLines = [
       'JC created on ${_serviceBloc.state.service!.creationDate}',
       'Vehicle Service is done',
@@ -33,6 +40,7 @@ class JobCardDetails extends StatelessWidget {
       'Service Completed'
     ];
 
+    // Define status lines for stages that are still pending
     List<String> pendingStatusLines = [
       '',
       'Vehicle Service is in progress',
@@ -42,9 +50,12 @@ class JobCardDetails extends StatelessWidget {
     ];
 
     return Scaffold(
+        // Prevent the layout from resizing to avoid bottom inset issues
         resizeToAvoidBottomInset: false,
+        // Don't extend the content behind the app bar
         extendBodyBehindAppBar: false,
         appBar: AppBar(
+          // Remove the shadow when scrolling under the app bar
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.black45,
@@ -125,6 +136,7 @@ class JobCardDetails extends StatelessWidget {
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 16),
                             ),
                             Gap(size.height * 0.01),
+                            // creates stepper widget to show the status of the job card
                             Expanded(
                                 child: Stepper(
                               steps: dmsFlow
@@ -147,6 +159,7 @@ class JobCardDetails extends StatelessWidget {
               ),
             ),
             if (context.watch<MultiBloc>().state.status == MultiStateStatus.loading)
+              // shows loader widget based on the multistate bloc status.
               Container(
                 color: Colors.blueGrey.withOpacity(0.25),
                 child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
@@ -155,6 +168,7 @@ class JobCardDetails extends StatelessWidget {
         ));
   }
 
+  // this method is used to create a detail row with key value pairs in the UI
   Widget buildDetailRow(String key, String value, Size size, bool isMobile) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
+// this custom text form field is used in login button for username and password.
 class CustomTextFormField extends StatelessWidget {
   TextEditingController? cont;
   String? hntTxt;

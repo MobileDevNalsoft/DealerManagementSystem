@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/multi/multi_bloc.dart';
 
 // ignore: must_be_immutable
+// this class is used to create a custom clipped button in home page.
 class ClippedButton extends StatefulWidget {
   ClippedButton(
       {super.key,
@@ -70,6 +71,7 @@ class _ClippedButtonState extends State<ClippedButton> with TickerProviderStateM
   }
 }
 
+// this class is used to create clipped buttons in vehicle info page
 class VehicleInfoClippedButton extends StatelessWidget {
   bool flipX;
   Widget child;
@@ -98,6 +100,7 @@ class VehicleInfoClippedButton extends StatelessWidget {
   }
 }
 
+// this class is used to add shadow along the clipped path
 @immutable
 class ClipShadowPath extends StatelessWidget {
   final Shadow shadow;
@@ -123,6 +126,7 @@ class ClipShadowPath extends StatelessWidget {
   }
 }
 
+// this class is used to paint the shadow along the path that is clipped.
 class _ClipShadowShadowPainter extends CustomPainter {
   final Shadow shadow;
   final CustomClipper<Path> clipper;
@@ -142,6 +146,46 @@ class _ClipShadowShadowPainter extends CustomPainter {
   }
 }
 
+// this class is used to clip buttons in the home page
+class ButtonClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(size.width - 33.5, 20);
+    path.quadraticBezierTo(size.width - 18, 28, size.width - 13.4, 40.2);
+    path.lineTo(size.width - 5, size.height - 70);
+    path.quadraticBezierTo(size.width + 3.35, size.height - 30.15, size.width - 20.1, size.height - 20.1);
+    path.lineTo(0, size.height);
+    path.lineTo(0, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
+}
+
+// this class is used to clip buttons in the home page
+class ButtonClipperMid extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, 25);
+    path.lineTo(size.width - 40, 5);
+    path.quadraticBezierTo(size.width - 10, -5, size.width - 5, 20);
+    path.cubicTo(size.width, size.height * 0.4, size.width, size.height * 0.6, size.width - 5, size.height - 20);
+    path.quadraticBezierTo(size.width - 10, size.height + 5, size.width - 40, size.height - 5);
+    path.lineTo(0, size.height - 25);
+    path.lineTo(0, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
+}
+
+// this custom clipper is used to clip widgets in vehicle info page
 class VehicleInfoClipper extends CustomClipper<Path> {
   @override
   getClip(Size size) {

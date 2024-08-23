@@ -24,32 +24,18 @@ void main() async {
     create: (context) => Repository(api: getIt()),
     child: MultiBlocProvider(
       providers: [
-        BlocProvider(
-            create: (_) => VehicleBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) => CustomerBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) => ServiceBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) => MultiBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) =>
-                AuthenticationBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) =>
-                VehiclePartsInteractionBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => VehicleBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => CustomerBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => ServiceBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => MultiBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => AuthenticationBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => VehiclePartsInteractionBloc(repo: getIt(), navigator: getIt())),
       ],
       child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,
-        theme: ThemeData(
-            fontFamily: 'Gilroy',
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.white, primary: Colors.black)),
+        theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: !sharedPreferences.containsKey('isLogged') ||
-                sharedPreferences.getBool('isLogged') == false
-            ? '/login'
-            : '/home',
+        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/home',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
       ),
@@ -79,7 +65,6 @@ class MyNavigationObserver extends NavigatorObserver {
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    print(
-        "newRoute:  ${newRoute!.settings.name} oldRoute: ${oldRoute!.settings.name}");
+    print("newRoute:  ${newRoute!.settings.name} oldRoute: ${oldRoute!.settings.name}");
   }
 }

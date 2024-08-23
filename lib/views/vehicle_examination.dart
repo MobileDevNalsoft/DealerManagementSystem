@@ -168,7 +168,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                     left: isMobile ? size.width * 0.04 : null,
                     right: isMobile ? null : size.width * 0.16,
                     top: isMobile ? 150 : size.width * 0.08,
-                    child: CommentsView(
+                    child: Comments(
                       vehiclePartMedia: context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] ??
                           VehiclePartMedia(name: context.read<MultiBloc>().state.selectedGeneralBodyPart, isUploaded: false),
                     )),

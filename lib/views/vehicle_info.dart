@@ -41,7 +41,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
     super.initState();
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
-    _serviceBloc.add(ClearServices());
+    _serviceBloc.state.services = [];
+    _serviceBloc.state.getServiceStatus = GetServiceStatus.initial;
     _vehicleBloc.add(UpdateState(vehicle: Vehicle(), status: VehicleStatus.initial));
   }
 

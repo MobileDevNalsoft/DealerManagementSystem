@@ -33,16 +33,12 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<InspectionJsonAdded>(_onInspectionJsonAdded);
     on<GetJson>(_onGetJson);
     on<JobCardStatusUpdated>(_onJobCardStatusUpdated);
-    on<BottomNavigationBarClicked>(_onBottomNavigationBarClicked);
-    on<UpdateSliderPosition>(_onUpdateSliderPosition);
-    on<DropDownOpenClose>(_onDropDownOpenClose);
     on<GetInspectionDetails>(_onGetInspectionDetails);
     on<GetGatePass>(_onGetGatePass);
     on<SearchJobCards>(_onSearchJobCards);
     on<DropDownOpen>(_onDropDownOpen);
     on<GetMyJobCards>(_onGetMyJobCards);
     on<ModifyGatePassStatus>(_onModifyGatePassStatus);
-    on<ClearServices>(_onClearServices);
   }
 
   final Repository _repo;
@@ -53,12 +49,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   void _onDropDownOpen(DropDownOpen event, Emitter<ServiceState> emit) {
     emit(state);
-  }
-
-  void _onUpdateSliderPosition(UpdateSliderPosition event, Emitter<ServiceState> emit) {
-    emit(state.copyWith(
-      sliderPosition: event.position,
-    ));
   }
 
   void _onSearchJobCards(SearchJobCards event, Emitter<ServiceState> emit) async {
@@ -140,14 +130,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         emit(state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.failure));
       },
     );
-  }
-
-  void _onBottomNavigationBarClicked(BottomNavigationBarClicked event, Emitter<ServiceState> emit) {
-    emit(state.copyWith(bottomNavigationBarActiveIndex: event.index));
-  }
-
-  void _onDropDownOpenClose(DropDownOpenClose event, Emitter<ServiceState> emit) {
-    emit(state.copyWith(dropDownOpen: event.isOpen));
   }
 
   Future<void> _onServiceAdded(ServiceAdded event, Emitter<ServiceState> emit) async {
@@ -341,9 +323,5 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   void _onModifyGatePassStatus(ModifyGatePassStatus event, Emitter<ServiceState> emit) {
     emit(state.copyWith(gatePassStatus: event.status));
-  }
-
-  void _onClearServices(ClearServices event, Emitter<ServiceState> emit) {
-    emit(state.copyWith(services: [], getServiceStatus: GetServiceStatus.initial));
   }
 }

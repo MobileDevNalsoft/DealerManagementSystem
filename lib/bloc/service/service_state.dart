@@ -61,7 +61,7 @@ final class ServiceState {
   SVGStatus? svgStatus;
   String? jobCardNo;
   Service? service;
-  final List<Service>? services;
+  List<Service>? services;
   final List<Service>? jobCards;
   final List<Service>? myJobCards;
   final List<dynamic>? locations;
