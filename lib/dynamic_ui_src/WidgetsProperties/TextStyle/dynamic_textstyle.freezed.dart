@@ -36,15 +36,12 @@ mixin _$DynamicTextStyle {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicTextStyleCopyWith<DynamicTextStyle> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicTextStyleCopyWith<DynamicTextStyle> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicTextStyleCopyWith<$Res> {
-  factory $DynamicTextStyleCopyWith(
-          DynamicTextStyle value, $Res Function(DynamicTextStyle) then) =
-      _$DynamicTextStyleCopyWithImpl<$Res, DynamicTextStyle>;
+  factory $DynamicTextStyleCopyWith(DynamicTextStyle value, $Res Function(DynamicTextStyle) then) = _$DynamicTextStyleCopyWithImpl<$Res, DynamicTextStyle>;
   @useResult
   $Res call(
       {bool inherit,
@@ -63,8 +60,7 @@ abstract class $DynamicTextStyleCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicTextStyleCopyWithImpl<$Res, $Val extends DynamicTextStyle>
-    implements $DynamicTextStyleCopyWith<$Res> {
+class _$DynamicTextStyleCopyWithImpl<$Res, $Val extends DynamicTextStyle> implements $DynamicTextStyleCopyWith<$Res> {
   _$DynamicTextStyleCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -147,10 +143,8 @@ class _$DynamicTextStyleCopyWithImpl<$Res, $Val extends DynamicTextStyle>
 }
 
 /// @nodoc
-abstract class _$$DynamicTextStyleImplCopyWith<$Res>
-    implements $DynamicTextStyleCopyWith<$Res> {
-  factory _$$DynamicTextStyleImplCopyWith(_$DynamicTextStyleImpl value,
-          $Res Function(_$DynamicTextStyleImpl) then) =
+abstract class _$$DynamicTextStyleImplCopyWith<$Res> implements $DynamicTextStyleCopyWith<$Res> {
+  factory _$$DynamicTextStyleImplCopyWith(_$DynamicTextStyleImpl value, $Res Function(_$DynamicTextStyleImpl) then) =
       __$$DynamicTextStyleImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -171,12 +165,9 @@ abstract class _$$DynamicTextStyleImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicTextStyleImplCopyWithImpl<$Res>
-    extends _$DynamicTextStyleCopyWithImpl<$Res, _$DynamicTextStyleImpl>
+class __$$DynamicTextStyleImplCopyWithImpl<$Res> extends _$DynamicTextStyleCopyWithImpl<$Res, _$DynamicTextStyleImpl>
     implements _$$DynamicTextStyleImplCopyWith<$Res> {
-  __$$DynamicTextStyleImplCopyWithImpl(_$DynamicTextStyleImpl _value,
-      $Res Function(_$DynamicTextStyleImpl) _then)
-      : super(_value, _then);
+  __$$DynamicTextStyleImplCopyWithImpl(_$DynamicTextStyleImpl _value, $Res Function(_$DynamicTextStyleImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -271,8 +262,7 @@ class _$DynamicTextStyleImpl implements _DynamicTextStyle {
       this.height})
       : _fontFamilyFallback = fontFamilyFallback;
 
-  factory _$DynamicTextStyleImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicTextStyleImplFromJson(json);
+  factory _$DynamicTextStyleImpl.fromJson(Map<String, dynamic> json) => _$$DynamicTextStyleImplFromJson(json);
 
   @override
   @JsonKey()
@@ -296,8 +286,7 @@ class _$DynamicTextStyleImpl implements _DynamicTextStyle {
   List<String>? get fontFamilyFallback {
     final value = _fontFamilyFallback;
     if (value == null) return null;
-    if (_fontFamilyFallback is EqualUnmodifiableListView)
-      return _fontFamilyFallback;
+    if (_fontFamilyFallback is EqualUnmodifiableListView) return _fontFamilyFallback;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -323,53 +312,28 @@ class _$DynamicTextStyleImpl implements _DynamicTextStyle {
             other is _$DynamicTextStyleImpl &&
             (identical(other.inherit, inherit) || other.inherit == inherit) &&
             (identical(other.color, color) || other.color == color) &&
-            (identical(other.backgroundColor, backgroundColor) ||
-                other.backgroundColor == backgroundColor) &&
-            (identical(other.styleFromTheme, styleFromTheme) ||
-                other.styleFromTheme == styleFromTheme) &&
-            (identical(other.fontSize, fontSize) ||
-                other.fontSize == fontSize) &&
-            (identical(other.fontWeight, fontWeight) ||
-                other.fontWeight == fontWeight) &&
-            (identical(other.fontStyle, fontStyle) ||
-                other.fontStyle == fontStyle) &&
-            (identical(other.fontFamily, fontFamily) ||
-                other.fontFamily == fontFamily) &&
-            const DeepCollectionEquality()
-                .equals(other._fontFamilyFallback, _fontFamilyFallback) &&
-            (identical(other.letterSpacing, letterSpacing) ||
-                other.letterSpacing == letterSpacing) &&
-            (identical(other.wordSpacing, wordSpacing) ||
-                other.wordSpacing == wordSpacing) &&
-            (identical(other.textBaseline, textBaseline) ||
-                other.textBaseline == textBaseline) &&
+            (identical(other.backgroundColor, backgroundColor) || other.backgroundColor == backgroundColor) &&
+            (identical(other.styleFromTheme, styleFromTheme) || other.styleFromTheme == styleFromTheme) &&
+            (identical(other.fontSize, fontSize) || other.fontSize == fontSize) &&
+            (identical(other.fontWeight, fontWeight) || other.fontWeight == fontWeight) &&
+            (identical(other.fontStyle, fontStyle) || other.fontStyle == fontStyle) &&
+            (identical(other.fontFamily, fontFamily) || other.fontFamily == fontFamily) &&
+            const DeepCollectionEquality().equals(other._fontFamilyFallback, _fontFamilyFallback) &&
+            (identical(other.letterSpacing, letterSpacing) || other.letterSpacing == letterSpacing) &&
+            (identical(other.wordSpacing, wordSpacing) || other.wordSpacing == wordSpacing) &&
+            (identical(other.textBaseline, textBaseline) || other.textBaseline == textBaseline) &&
             (identical(other.height, height) || other.height == height));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      inherit,
-      color,
-      backgroundColor,
-      styleFromTheme,
-      fontSize,
-      fontWeight,
-      fontStyle,
-      fontFamily,
-      const DeepCollectionEquality().hash(_fontFamilyFallback),
-      letterSpacing,
-      wordSpacing,
-      textBaseline,
-      height);
+  int get hashCode => Object.hash(runtimeType, inherit, color, backgroundColor, styleFromTheme, fontSize, fontWeight, fontStyle, fontFamily,
+      const DeepCollectionEquality().hash(_fontFamilyFallback), letterSpacing, wordSpacing, textBaseline, height);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicTextStyleImplCopyWith<_$DynamicTextStyleImpl> get copyWith =>
-      __$$DynamicTextStyleImplCopyWithImpl<_$DynamicTextStyleImpl>(
-          this, _$identity);
+  _$$DynamicTextStyleImplCopyWith<_$DynamicTextStyleImpl> get copyWith => __$$DynamicTextStyleImplCopyWithImpl<_$DynamicTextStyleImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -395,8 +359,7 @@ abstract class _DynamicTextStyle implements DynamicTextStyle {
       final TextBaseline? textBaseline,
       final double? height}) = _$DynamicTextStyleImpl;
 
-  factory _DynamicTextStyle.fromJson(Map<String, dynamic> json) =
-      _$DynamicTextStyleImpl.fromJson;
+  factory _DynamicTextStyle.fromJson(Map<String, dynamic> json) = _$DynamicTextStyleImpl.fromJson;
 
   @override
   bool get inherit;
@@ -426,6 +389,5 @@ abstract class _DynamicTextStyle implements DynamicTextStyle {
   double? get height;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicTextStyleImplCopyWith<_$DynamicTextStyleImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicTextStyleImplCopyWith<_$DynamicTextStyleImpl> get copyWith => throw _privateConstructorUsedError;
 }

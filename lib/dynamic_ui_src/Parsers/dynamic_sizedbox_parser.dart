@@ -9,15 +9,13 @@ class DynamicSizedBoxParser extends JsonToWidgetParser<DynamicSizedBox> {
   const DynamicSizedBoxParser();
 
   @override
-  DynamicSizedBox getModel(Map<String, dynamic> json) =>
-      DynamicSizedBox.fromJson(json);
+  DynamicSizedBox getModel(Map<String, dynamic> json) => DynamicSizedBox.fromJson(json);
 
   @override
   String get type => WidgetType.sizedBox.name;
 
   @override
-  Widget parse(BuildContext context, DynamicSizedBox model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicSizedBox model, [Map<String, dynamic>? functions]) {
     return SizedBox(
       key: model.key ? GlobalKey() : null,
       width: model.width,

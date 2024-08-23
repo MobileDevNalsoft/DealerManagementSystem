@@ -16,8 +16,7 @@ class DynamicBoxShadow with _$DynamicBoxShadow {
     @Default(BlurStyle.normal) BlurStyle? blurStyle,
   }) = _DynamicBoxShadow;
 
-  factory DynamicBoxShadow.fromJson(Map<String, dynamic> json) =>
-      _$DynamicBoxShadowFromJson(json);
+  factory DynamicBoxShadow.fromJson(Map<String, dynamic> json) => _$DynamicBoxShadowFromJson(json);
 }
 
 extension DynamicBoxShadowParser on DynamicBoxShadow? {

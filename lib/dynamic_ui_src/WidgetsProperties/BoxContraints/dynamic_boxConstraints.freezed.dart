@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-DynamicBoxConstraints _$DynamicBoxConstraintsFromJson(
-    Map<String, dynamic> json) {
+DynamicBoxConstraints _$DynamicBoxConstraintsFromJson(Map<String, dynamic> json) {
   return _DynamicBoxConstraints.fromJson(json);
 }
 
@@ -28,24 +27,19 @@ mixin _$DynamicBoxConstraints {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicBoxConstraintsCopyWith<DynamicBoxConstraints> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicBoxConstraintsCopyWith<DynamicBoxConstraints> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicBoxConstraintsCopyWith<$Res> {
-  factory $DynamicBoxConstraintsCopyWith(DynamicBoxConstraints value,
-          $Res Function(DynamicBoxConstraints) then) =
+  factory $DynamicBoxConstraintsCopyWith(DynamicBoxConstraints value, $Res Function(DynamicBoxConstraints) then) =
       _$DynamicBoxConstraintsCopyWithImpl<$Res, DynamicBoxConstraints>;
   @useResult
-  $Res call(
-      {double minWidth, double maxWidth, double minHeight, double maxHeight});
+  $Res call({double minWidth, double maxWidth, double minHeight, double maxHeight});
 }
 
 /// @nodoc
-class _$DynamicBoxConstraintsCopyWithImpl<$Res,
-        $Val extends DynamicBoxConstraints>
-    implements $DynamicBoxConstraintsCopyWith<$Res> {
+class _$DynamicBoxConstraintsCopyWithImpl<$Res, $Val extends DynamicBoxConstraints> implements $DynamicBoxConstraintsCopyWith<$Res> {
   _$DynamicBoxConstraintsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -83,26 +77,18 @@ class _$DynamicBoxConstraintsCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$DynamicBoxConstraintsImplCopyWith<$Res>
-    implements $DynamicBoxConstraintsCopyWith<$Res> {
-  factory _$$DynamicBoxConstraintsImplCopyWith(
-          _$DynamicBoxConstraintsImpl value,
-          $Res Function(_$DynamicBoxConstraintsImpl) then) =
+abstract class _$$DynamicBoxConstraintsImplCopyWith<$Res> implements $DynamicBoxConstraintsCopyWith<$Res> {
+  factory _$$DynamicBoxConstraintsImplCopyWith(_$DynamicBoxConstraintsImpl value, $Res Function(_$DynamicBoxConstraintsImpl) then) =
       __$$DynamicBoxConstraintsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double minWidth, double maxWidth, double minHeight, double maxHeight});
+  $Res call({double minWidth, double maxWidth, double minHeight, double maxHeight});
 }
 
 /// @nodoc
-class __$$DynamicBoxConstraintsImplCopyWithImpl<$Res>
-    extends _$DynamicBoxConstraintsCopyWithImpl<$Res,
-        _$DynamicBoxConstraintsImpl>
+class __$$DynamicBoxConstraintsImplCopyWithImpl<$Res> extends _$DynamicBoxConstraintsCopyWithImpl<$Res, _$DynamicBoxConstraintsImpl>
     implements _$$DynamicBoxConstraintsImplCopyWith<$Res> {
-  __$$DynamicBoxConstraintsImplCopyWithImpl(_$DynamicBoxConstraintsImpl _value,
-      $Res Function(_$DynamicBoxConstraintsImpl) _then)
-      : super(_value, _then);
+  __$$DynamicBoxConstraintsImplCopyWithImpl(_$DynamicBoxConstraintsImpl _value, $Res Function(_$DynamicBoxConstraintsImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -136,14 +122,9 @@ class __$$DynamicBoxConstraintsImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DynamicBoxConstraintsImpl implements _DynamicBoxConstraints {
-  const _$DynamicBoxConstraintsImpl(
-      {required this.minWidth,
-      required this.maxWidth,
-      required this.minHeight,
-      required this.maxHeight});
+  const _$DynamicBoxConstraintsImpl({required this.minWidth, required this.maxWidth, required this.minHeight, required this.maxHeight});
 
-  factory _$DynamicBoxConstraintsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicBoxConstraintsImplFromJson(json);
+  factory _$DynamicBoxConstraintsImpl.fromJson(Map<String, dynamic> json) => _$$DynamicBoxConstraintsImplFromJson(json);
 
   @override
   final double minWidth;
@@ -164,27 +145,21 @@ class _$DynamicBoxConstraintsImpl implements _DynamicBoxConstraints {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DynamicBoxConstraintsImpl &&
-            (identical(other.minWidth, minWidth) ||
-                other.minWidth == minWidth) &&
-            (identical(other.maxWidth, maxWidth) ||
-                other.maxWidth == maxWidth) &&
-            (identical(other.minHeight, minHeight) ||
-                other.minHeight == minHeight) &&
-            (identical(other.maxHeight, maxHeight) ||
-                other.maxHeight == maxHeight));
+            (identical(other.minWidth, minWidth) || other.minWidth == minWidth) &&
+            (identical(other.maxWidth, maxWidth) || other.maxWidth == maxWidth) &&
+            (identical(other.minHeight, minHeight) || other.minHeight == minHeight) &&
+            (identical(other.maxHeight, maxHeight) || other.maxHeight == maxHeight));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, minWidth, maxWidth, minHeight, maxHeight);
+  int get hashCode => Object.hash(runtimeType, minWidth, maxWidth, minHeight, maxHeight);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicBoxConstraintsImplCopyWith<_$DynamicBoxConstraintsImpl>
-      get copyWith => __$$DynamicBoxConstraintsImplCopyWithImpl<
-          _$DynamicBoxConstraintsImpl>(this, _$identity);
+  _$$DynamicBoxConstraintsImplCopyWith<_$DynamicBoxConstraintsImpl> get copyWith =>
+      __$$DynamicBoxConstraintsImplCopyWithImpl<_$DynamicBoxConstraintsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -201,8 +176,7 @@ abstract class _DynamicBoxConstraints implements DynamicBoxConstraints {
       required final double minHeight,
       required final double maxHeight}) = _$DynamicBoxConstraintsImpl;
 
-  factory _DynamicBoxConstraints.fromJson(Map<String, dynamic> json) =
-      _$DynamicBoxConstraintsImpl.fromJson;
+  factory _DynamicBoxConstraints.fromJson(Map<String, dynamic> json) = _$DynamicBoxConstraintsImpl.fromJson;
 
   @override
   double get minWidth;
@@ -214,6 +188,5 @@ abstract class _DynamicBoxConstraints implements DynamicBoxConstraints {
   double get maxHeight;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicBoxConstraintsImplCopyWith<_$DynamicBoxConstraintsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$DynamicBoxConstraintsImplCopyWith<_$DynamicBoxConstraintsImpl> get copyWith => throw _privateConstructorUsedError;
 }

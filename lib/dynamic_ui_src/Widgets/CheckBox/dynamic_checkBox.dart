@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../WidgetsProperties/BorderSide/dynamic_border_side.dart';
@@ -25,6 +24,5 @@ class DynamicCheckBox with _$DynamicCheckBox {
     @Default(false) bool isError,
   }) = _DynamicCheckBox;
 
-  factory DynamicCheckBox.fromJson(Map<String, dynamic> json) =>
-      _$DynamicCheckBoxFromJson(json);
+  factory DynamicCheckBox.fromJson(Map<String, dynamic> json) => _$DynamicCheckBoxFromJson(json);
 }

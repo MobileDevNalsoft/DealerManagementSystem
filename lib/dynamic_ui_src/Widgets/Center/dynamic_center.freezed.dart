@@ -26,23 +26,18 @@ mixin _$DynamicCenter {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicCenterCopyWith<DynamicCenter> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicCenterCopyWith<DynamicCenter> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicCenterCopyWith<$Res> {
-  factory $DynamicCenterCopyWith(
-          DynamicCenter value, $Res Function(DynamicCenter) then) =
-      _$DynamicCenterCopyWithImpl<$Res, DynamicCenter>;
+  factory $DynamicCenterCopyWith(DynamicCenter value, $Res Function(DynamicCenter) then) = _$DynamicCenterCopyWithImpl<$Res, DynamicCenter>;
   @useResult
-  $Res call(
-      {double? widthFactor, double? heightFactor, Map<String, dynamic>? child});
+  $Res call({double? widthFactor, double? heightFactor, Map<String, dynamic>? child});
 }
 
 /// @nodoc
-class _$DynamicCenterCopyWithImpl<$Res, $Val extends DynamicCenter>
-    implements $DynamicCenterCopyWith<$Res> {
+class _$DynamicCenterCopyWithImpl<$Res, $Val extends DynamicCenter> implements $DynamicCenterCopyWith<$Res> {
   _$DynamicCenterCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -75,24 +70,16 @@ class _$DynamicCenterCopyWithImpl<$Res, $Val extends DynamicCenter>
 }
 
 /// @nodoc
-abstract class _$$DynamicCenterImplCopyWith<$Res>
-    implements $DynamicCenterCopyWith<$Res> {
-  factory _$$DynamicCenterImplCopyWith(
-          _$DynamicCenterImpl value, $Res Function(_$DynamicCenterImpl) then) =
-      __$$DynamicCenterImplCopyWithImpl<$Res>;
+abstract class _$$DynamicCenterImplCopyWith<$Res> implements $DynamicCenterCopyWith<$Res> {
+  factory _$$DynamicCenterImplCopyWith(_$DynamicCenterImpl value, $Res Function(_$DynamicCenterImpl) then) = __$$DynamicCenterImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double? widthFactor, double? heightFactor, Map<String, dynamic>? child});
+  $Res call({double? widthFactor, double? heightFactor, Map<String, dynamic>? child});
 }
 
 /// @nodoc
-class __$$DynamicCenterImplCopyWithImpl<$Res>
-    extends _$DynamicCenterCopyWithImpl<$Res, _$DynamicCenterImpl>
-    implements _$$DynamicCenterImplCopyWith<$Res> {
-  __$$DynamicCenterImplCopyWithImpl(
-      _$DynamicCenterImpl _value, $Res Function(_$DynamicCenterImpl) _then)
-      : super(_value, _then);
+class __$$DynamicCenterImplCopyWithImpl<$Res> extends _$DynamicCenterCopyWithImpl<$Res, _$DynamicCenterImpl> implements _$$DynamicCenterImplCopyWith<$Res> {
+  __$$DynamicCenterImplCopyWithImpl(_$DynamicCenterImpl _value, $Res Function(_$DynamicCenterImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -120,15 +107,10 @@ class __$$DynamicCenterImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$DynamicCenterImpl
-    with DiagnosticableTreeMixin
-    implements _DynamicCenter {
-  const _$DynamicCenterImpl(
-      {this.widthFactor, this.heightFactor, final Map<String, dynamic>? child})
-      : _child = child;
+class _$DynamicCenterImpl with DiagnosticableTreeMixin implements _DynamicCenter {
+  const _$DynamicCenterImpl({this.widthFactor, this.heightFactor, final Map<String, dynamic>? child}) : _child = child;
 
-  factory _$DynamicCenterImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicCenterImplFromJson(json);
+  factory _$DynamicCenterImpl.fromJson(Map<String, dynamic> json) => _$$DynamicCenterImplFromJson(json);
 
   @override
   final double? widthFactor;
@@ -164,23 +146,19 @@ class _$DynamicCenterImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DynamicCenterImpl &&
-            (identical(other.widthFactor, widthFactor) ||
-                other.widthFactor == widthFactor) &&
-            (identical(other.heightFactor, heightFactor) ||
-                other.heightFactor == heightFactor) &&
+            (identical(other.widthFactor, widthFactor) || other.widthFactor == widthFactor) &&
+            (identical(other.heightFactor, heightFactor) || other.heightFactor == heightFactor) &&
             const DeepCollectionEquality().equals(other._child, _child));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, widthFactor, heightFactor,
-      const DeepCollectionEquality().hash(_child));
+  int get hashCode => Object.hash(runtimeType, widthFactor, heightFactor, const DeepCollectionEquality().hash(_child));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicCenterImplCopyWith<_$DynamicCenterImpl> get copyWith =>
-      __$$DynamicCenterImplCopyWithImpl<_$DynamicCenterImpl>(this, _$identity);
+  _$$DynamicCenterImplCopyWith<_$DynamicCenterImpl> get copyWith => __$$DynamicCenterImplCopyWithImpl<_$DynamicCenterImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -191,13 +169,9 @@ class _$DynamicCenterImpl
 }
 
 abstract class _DynamicCenter implements DynamicCenter {
-  const factory _DynamicCenter(
-      {final double? widthFactor,
-      final double? heightFactor,
-      final Map<String, dynamic>? child}) = _$DynamicCenterImpl;
+  const factory _DynamicCenter({final double? widthFactor, final double? heightFactor, final Map<String, dynamic>? child}) = _$DynamicCenterImpl;
 
-  factory _DynamicCenter.fromJson(Map<String, dynamic> json) =
-      _$DynamicCenterImpl.fromJson;
+  factory _DynamicCenter.fromJson(Map<String, dynamic> json) = _$DynamicCenterImpl.fromJson;
 
   @override
   double? get widthFactor;
@@ -207,6 +181,5 @@ abstract class _DynamicCenter implements DynamicCenter {
   Map<String, dynamic>? get child;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicCenterImplCopyWith<_$DynamicCenterImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicCenterImplCopyWith<_$DynamicCenterImpl> get copyWith => throw _privateConstructorUsedError;
 }

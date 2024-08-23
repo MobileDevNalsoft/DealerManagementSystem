@@ -26,22 +26,18 @@ mixin _$DynamicGap {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicGapCopyWith<DynamicGap> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicGapCopyWith<DynamicGap> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicGapCopyWith<$Res> {
-  factory $DynamicGapCopyWith(
-          DynamicGap value, $Res Function(DynamicGap) then) =
-      _$DynamicGapCopyWithImpl<$Res, DynamicGap>;
+  factory $DynamicGapCopyWith(DynamicGap value, $Res Function(DynamicGap) then) = _$DynamicGapCopyWithImpl<$Res, DynamicGap>;
   @useResult
   $Res call({bool key, bool max, double value});
 }
 
 /// @nodoc
-class _$DynamicGapCopyWithImpl<$Res, $Val extends DynamicGap>
-    implements $DynamicGapCopyWith<$Res> {
+class _$DynamicGapCopyWithImpl<$Res, $Val extends DynamicGap> implements $DynamicGapCopyWith<$Res> {
   _$DynamicGapCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -74,23 +70,16 @@ class _$DynamicGapCopyWithImpl<$Res, $Val extends DynamicGap>
 }
 
 /// @nodoc
-abstract class _$$DynamicGapImplCopyWith<$Res>
-    implements $DynamicGapCopyWith<$Res> {
-  factory _$$DynamicGapImplCopyWith(
-          _$DynamicGapImpl value, $Res Function(_$DynamicGapImpl) then) =
-      __$$DynamicGapImplCopyWithImpl<$Res>;
+abstract class _$$DynamicGapImplCopyWith<$Res> implements $DynamicGapCopyWith<$Res> {
+  factory _$$DynamicGapImplCopyWith(_$DynamicGapImpl value, $Res Function(_$DynamicGapImpl) then) = __$$DynamicGapImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool key, bool max, double value});
 }
 
 /// @nodoc
-class __$$DynamicGapImplCopyWithImpl<$Res>
-    extends _$DynamicGapCopyWithImpl<$Res, _$DynamicGapImpl>
-    implements _$$DynamicGapImplCopyWith<$Res> {
-  __$$DynamicGapImplCopyWithImpl(
-      _$DynamicGapImpl _value, $Res Function(_$DynamicGapImpl) _then)
-      : super(_value, _then);
+class __$$DynamicGapImplCopyWithImpl<$Res> extends _$DynamicGapCopyWithImpl<$Res, _$DynamicGapImpl> implements _$$DynamicGapImplCopyWith<$Res> {
+  __$$DynamicGapImplCopyWithImpl(_$DynamicGapImpl _value, $Res Function(_$DynamicGapImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -119,11 +108,9 @@ class __$$DynamicGapImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DynamicGapImpl implements _DynamicGap {
-  const _$DynamicGapImpl(
-      {this.key = false, this.max = false, this.value = 0.0});
+  const _$DynamicGapImpl({this.key = false, this.max = false, this.value = 0.0});
 
-  factory _$DynamicGapImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicGapImplFromJson(json);
+  factory _$DynamicGapImpl.fromJson(Map<String, dynamic> json) => _$$DynamicGapImplFromJson(json);
 
   @override
   @JsonKey()
@@ -157,8 +144,7 @@ class _$DynamicGapImpl implements _DynamicGap {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicGapImplCopyWith<_$DynamicGapImpl> get copyWith =>
-      __$$DynamicGapImplCopyWithImpl<_$DynamicGapImpl>(this, _$identity);
+  _$$DynamicGapImplCopyWith<_$DynamicGapImpl> get copyWith => __$$DynamicGapImplCopyWithImpl<_$DynamicGapImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -169,11 +155,9 @@ class _$DynamicGapImpl implements _DynamicGap {
 }
 
 abstract class _DynamicGap implements DynamicGap {
-  const factory _DynamicGap(
-      {final bool key, final bool max, final double value}) = _$DynamicGapImpl;
+  const factory _DynamicGap({final bool key, final bool max, final double value}) = _$DynamicGapImpl;
 
-  factory _DynamicGap.fromJson(Map<String, dynamic> json) =
-      _$DynamicGapImpl.fromJson;
+  factory _DynamicGap.fromJson(Map<String, dynamic> json) = _$DynamicGapImpl.fromJson;
 
   @override
   bool get key;
@@ -183,6 +167,5 @@ abstract class _DynamicGap implements DynamicGap {
   double get value;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicGapImplCopyWith<_$DynamicGapImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicGapImplCopyWith<_$DynamicGapImpl> get copyWith => throw _privateConstructorUsedError;
 }

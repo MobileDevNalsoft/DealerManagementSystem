@@ -27,22 +27,18 @@ mixin _$DynamicEdgeInsets {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicEdgeInsetsCopyWith<DynamicEdgeInsets> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicEdgeInsetsCopyWith<DynamicEdgeInsets> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicEdgeInsetsCopyWith<$Res> {
-  factory $DynamicEdgeInsetsCopyWith(
-          DynamicEdgeInsets value, $Res Function(DynamicEdgeInsets) then) =
-      _$DynamicEdgeInsetsCopyWithImpl<$Res, DynamicEdgeInsets>;
+  factory $DynamicEdgeInsetsCopyWith(DynamicEdgeInsets value, $Res Function(DynamicEdgeInsets) then) = _$DynamicEdgeInsetsCopyWithImpl<$Res, DynamicEdgeInsets>;
   @useResult
   $Res call({double? left, double? top, double? right, double? bottom});
 }
 
 /// @nodoc
-class _$DynamicEdgeInsetsCopyWithImpl<$Res, $Val extends DynamicEdgeInsets>
-    implements $DynamicEdgeInsetsCopyWith<$Res> {
+class _$DynamicEdgeInsetsCopyWithImpl<$Res, $Val extends DynamicEdgeInsets> implements $DynamicEdgeInsetsCopyWith<$Res> {
   _$DynamicEdgeInsetsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -80,10 +76,8 @@ class _$DynamicEdgeInsetsCopyWithImpl<$Res, $Val extends DynamicEdgeInsets>
 }
 
 /// @nodoc
-abstract class _$$DynamicEdgeInsetsImplCopyWith<$Res>
-    implements $DynamicEdgeInsetsCopyWith<$Res> {
-  factory _$$DynamicEdgeInsetsImplCopyWith(_$DynamicEdgeInsetsImpl value,
-          $Res Function(_$DynamicEdgeInsetsImpl) then) =
+abstract class _$$DynamicEdgeInsetsImplCopyWith<$Res> implements $DynamicEdgeInsetsCopyWith<$Res> {
+  factory _$$DynamicEdgeInsetsImplCopyWith(_$DynamicEdgeInsetsImpl value, $Res Function(_$DynamicEdgeInsetsImpl) then) =
       __$$DynamicEdgeInsetsImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -91,12 +85,9 @@ abstract class _$$DynamicEdgeInsetsImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicEdgeInsetsImplCopyWithImpl<$Res>
-    extends _$DynamicEdgeInsetsCopyWithImpl<$Res, _$DynamicEdgeInsetsImpl>
+class __$$DynamicEdgeInsetsImplCopyWithImpl<$Res> extends _$DynamicEdgeInsetsCopyWithImpl<$Res, _$DynamicEdgeInsetsImpl>
     implements _$$DynamicEdgeInsetsImplCopyWith<$Res> {
-  __$$DynamicEdgeInsetsImplCopyWithImpl(_$DynamicEdgeInsetsImpl _value,
-      $Res Function(_$DynamicEdgeInsetsImpl) _then)
-      : super(_value, _then);
+  __$$DynamicEdgeInsetsImplCopyWithImpl(_$DynamicEdgeInsetsImpl _value, $Res Function(_$DynamicEdgeInsetsImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -132,8 +123,7 @@ class __$$DynamicEdgeInsetsImplCopyWithImpl<$Res>
 class _$DynamicEdgeInsetsImpl implements _DynamicEdgeInsets {
   const _$DynamicEdgeInsetsImpl({this.left, this.top, this.right, this.bottom});
 
-  factory _$DynamicEdgeInsetsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicEdgeInsetsImplFromJson(json);
+  factory _$DynamicEdgeInsetsImpl.fromJson(Map<String, dynamic> json) => _$$DynamicEdgeInsetsImplFromJson(json);
 
   @override
   final double? left;
@@ -167,9 +157,7 @@ class _$DynamicEdgeInsetsImpl implements _DynamicEdgeInsets {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicEdgeInsetsImplCopyWith<_$DynamicEdgeInsetsImpl> get copyWith =>
-      __$$DynamicEdgeInsetsImplCopyWithImpl<_$DynamicEdgeInsetsImpl>(
-          this, _$identity);
+  _$$DynamicEdgeInsetsImplCopyWith<_$DynamicEdgeInsetsImpl> get copyWith => __$$DynamicEdgeInsetsImplCopyWithImpl<_$DynamicEdgeInsetsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -180,14 +168,9 @@ class _$DynamicEdgeInsetsImpl implements _DynamicEdgeInsets {
 }
 
 abstract class _DynamicEdgeInsets implements DynamicEdgeInsets {
-  const factory _DynamicEdgeInsets(
-      {final double? left,
-      final double? top,
-      final double? right,
-      final double? bottom}) = _$DynamicEdgeInsetsImpl;
+  const factory _DynamicEdgeInsets({final double? left, final double? top, final double? right, final double? bottom}) = _$DynamicEdgeInsetsImpl;
 
-  factory _DynamicEdgeInsets.fromJson(Map<String, dynamic> json) =
-      _$DynamicEdgeInsetsImpl.fromJson;
+  factory _DynamicEdgeInsets.fromJson(Map<String, dynamic> json) = _$DynamicEdgeInsetsImpl.fromJson;
 
   @override
   double? get left;
@@ -199,6 +182,5 @@ abstract class _DynamicEdgeInsets implements DynamicEdgeInsets {
   double? get bottom;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicEdgeInsetsImplCopyWith<_$DynamicEdgeInsetsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicEdgeInsetsImplCopyWith<_$DynamicEdgeInsetsImpl> get copyWith => throw _privateConstructorUsedError;
 }

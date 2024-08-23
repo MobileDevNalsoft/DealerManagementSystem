@@ -21,8 +21,7 @@ class DynamicMaterialColor with _$DynamicMaterialColor {
     required String shade900,
   }) = _DynamicMaterialColor;
 
-  factory DynamicMaterialColor.fromJson(Map<String, dynamic> json) =>
-      _$DynamicMaterialColorFromJson(json);
+  factory DynamicMaterialColor.fromJson(Map<String, dynamic> json) => _$DynamicMaterialColorFromJson(json);
 }
 
 extension DynamicThemeParser on DynamicMaterialColor {

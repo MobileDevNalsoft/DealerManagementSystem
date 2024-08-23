@@ -15,8 +15,7 @@ class DynamicGapParser extends JsonToWidgetParser<DynamicGap> {
   String get type => WidgetType.gap.name;
 
   @override
-  Widget parse(BuildContext context, DynamicGap model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicGap model, [Map<String, dynamic>? functions]) {
     return model.max ? MaxGap(model.value) : Gap(model.value);
   }
 }

@@ -7,6 +7,5 @@ abstract class JsonToWidgetParser<T> {
 
   T getModel(Map<String, dynamic> json);
 
-  Widget parse(BuildContext context, T model,
-      [Map<String, dynamic>? functions]);
+  Widget parse(BuildContext context, T model, [Map<String, dynamic>? functions]);
 }

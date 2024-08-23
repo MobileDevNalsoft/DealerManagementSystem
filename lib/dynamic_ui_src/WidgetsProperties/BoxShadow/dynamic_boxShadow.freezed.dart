@@ -28,29 +28,20 @@ mixin _$DynamicBoxShadow {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicBoxShadowCopyWith<DynamicBoxShadow> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicBoxShadowCopyWith<DynamicBoxShadow> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicBoxShadowCopyWith<$Res> {
-  factory $DynamicBoxShadowCopyWith(
-          DynamicBoxShadow value, $Res Function(DynamicBoxShadow) then) =
-      _$DynamicBoxShadowCopyWithImpl<$Res, DynamicBoxShadow>;
+  factory $DynamicBoxShadowCopyWith(DynamicBoxShadow value, $Res Function(DynamicBoxShadow) then) = _$DynamicBoxShadowCopyWithImpl<$Res, DynamicBoxShadow>;
   @useResult
-  $Res call(
-      {String? color,
-      double? blurRadius,
-      DynamicOffset offset,
-      double? spreadRadius,
-      BlurStyle? blurStyle});
+  $Res call({String? color, double? blurRadius, DynamicOffset offset, double? spreadRadius, BlurStyle? blurStyle});
 
   $DynamicOffsetCopyWith<$Res> get offset;
 }
 
 /// @nodoc
-class _$DynamicBoxShadowCopyWithImpl<$Res, $Val extends DynamicBoxShadow>
-    implements $DynamicBoxShadowCopyWith<$Res> {
+class _$DynamicBoxShadowCopyWithImpl<$Res, $Val extends DynamicBoxShadow> implements $DynamicBoxShadowCopyWith<$Res> {
   _$DynamicBoxShadowCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -101,31 +92,21 @@ class _$DynamicBoxShadowCopyWithImpl<$Res, $Val extends DynamicBoxShadow>
 }
 
 /// @nodoc
-abstract class _$$DynamicBoxShadowImplCopyWith<$Res>
-    implements $DynamicBoxShadowCopyWith<$Res> {
-  factory _$$DynamicBoxShadowImplCopyWith(_$DynamicBoxShadowImpl value,
-          $Res Function(_$DynamicBoxShadowImpl) then) =
+abstract class _$$DynamicBoxShadowImplCopyWith<$Res> implements $DynamicBoxShadowCopyWith<$Res> {
+  factory _$$DynamicBoxShadowImplCopyWith(_$DynamicBoxShadowImpl value, $Res Function(_$DynamicBoxShadowImpl) then) =
       __$$DynamicBoxShadowImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? color,
-      double? blurRadius,
-      DynamicOffset offset,
-      double? spreadRadius,
-      BlurStyle? blurStyle});
+  $Res call({String? color, double? blurRadius, DynamicOffset offset, double? spreadRadius, BlurStyle? blurStyle});
 
   @override
   $DynamicOffsetCopyWith<$Res> get offset;
 }
 
 /// @nodoc
-class __$$DynamicBoxShadowImplCopyWithImpl<$Res>
-    extends _$DynamicBoxShadowCopyWithImpl<$Res, _$DynamicBoxShadowImpl>
+class __$$DynamicBoxShadowImplCopyWithImpl<$Res> extends _$DynamicBoxShadowCopyWithImpl<$Res, _$DynamicBoxShadowImpl>
     implements _$$DynamicBoxShadowImplCopyWith<$Res> {
-  __$$DynamicBoxShadowImplCopyWithImpl(_$DynamicBoxShadowImpl _value,
-      $Res Function(_$DynamicBoxShadowImpl) _then)
-      : super(_value, _then);
+  __$$DynamicBoxShadowImplCopyWithImpl(_$DynamicBoxShadowImpl _value, $Res Function(_$DynamicBoxShadowImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -165,14 +146,9 @@ class __$$DynamicBoxShadowImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DynamicBoxShadowImpl implements _DynamicBoxShadow {
   const _$DynamicBoxShadowImpl(
-      {this.color,
-      this.blurRadius = 0.0,
-      this.offset = const DynamicOffset(dx: 0, dy: 0),
-      this.spreadRadius = 0.0,
-      this.blurStyle = BlurStyle.normal});
+      {this.color, this.blurRadius = 0.0, this.offset = const DynamicOffset(dx: 0, dy: 0), this.spreadRadius = 0.0, this.blurStyle = BlurStyle.normal});
 
-  factory _$DynamicBoxShadowImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicBoxShadowImplFromJson(json);
+  factory _$DynamicBoxShadowImpl.fromJson(Map<String, dynamic> json) => _$$DynamicBoxShadowImplFromJson(json);
 
   @override
   final String? color;
@@ -200,26 +176,20 @@ class _$DynamicBoxShadowImpl implements _DynamicBoxShadow {
         (other.runtimeType == runtimeType &&
             other is _$DynamicBoxShadowImpl &&
             (identical(other.color, color) || other.color == color) &&
-            (identical(other.blurRadius, blurRadius) ||
-                other.blurRadius == blurRadius) &&
+            (identical(other.blurRadius, blurRadius) || other.blurRadius == blurRadius) &&
             (identical(other.offset, offset) || other.offset == offset) &&
-            (identical(other.spreadRadius, spreadRadius) ||
-                other.spreadRadius == spreadRadius) &&
-            (identical(other.blurStyle, blurStyle) ||
-                other.blurStyle == blurStyle));
+            (identical(other.spreadRadius, spreadRadius) || other.spreadRadius == spreadRadius) &&
+            (identical(other.blurStyle, blurStyle) || other.blurStyle == blurStyle));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, color, blurRadius, offset, spreadRadius, blurStyle);
+  int get hashCode => Object.hash(runtimeType, color, blurRadius, offset, spreadRadius, blurStyle);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicBoxShadowImplCopyWith<_$DynamicBoxShadowImpl> get copyWith =>
-      __$$DynamicBoxShadowImplCopyWithImpl<_$DynamicBoxShadowImpl>(
-          this, _$identity);
+  _$$DynamicBoxShadowImplCopyWith<_$DynamicBoxShadowImpl> get copyWith => __$$DynamicBoxShadowImplCopyWithImpl<_$DynamicBoxShadowImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -237,8 +207,7 @@ abstract class _DynamicBoxShadow implements DynamicBoxShadow {
       final double? spreadRadius,
       final BlurStyle? blurStyle}) = _$DynamicBoxShadowImpl;
 
-  factory _DynamicBoxShadow.fromJson(Map<String, dynamic> json) =
-      _$DynamicBoxShadowImpl.fromJson;
+  factory _DynamicBoxShadow.fromJson(Map<String, dynamic> json) = _$DynamicBoxShadowImpl.fromJson;
 
   @override
   String? get color;
@@ -252,6 +221,5 @@ abstract class _DynamicBoxShadow implements DynamicBoxShadow {
   BlurStyle? get blurStyle;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicBoxShadowImplCopyWith<_$DynamicBoxShadowImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicBoxShadowImplCopyWith<_$DynamicBoxShadowImpl> get copyWith => throw _privateConstructorUsedError;
 }

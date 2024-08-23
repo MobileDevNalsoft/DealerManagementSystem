@@ -29,12 +29,10 @@ class DynamicGridView with _$DynamicGridView {
     @Default([]) List<Map<String, dynamic>> children,
     int? semanticChildCount,
     @Default(DragStartBehavior.start) DragStartBehavior dragStartBehavior,
-    @Default(ScrollViewKeyboardDismissBehavior.manual)
-    ScrollViewKeyboardDismissBehavior keyboardDismissBehavior,
+    @Default(ScrollViewKeyboardDismissBehavior.manual) ScrollViewKeyboardDismissBehavior keyboardDismissBehavior,
     String? restorationId,
     @Default(Clip.hardEdge) Clip clipBehavior,
   }) = _DynamicGridView;
 
-  factory DynamicGridView.fromJson(Map<String, dynamic> json) =>
-      _$DynamicGridViewFromJson(json);
+  factory DynamicGridView.fromJson(Map<String, dynamic> json) => _$DynamicGridViewFromJson(json);
 }

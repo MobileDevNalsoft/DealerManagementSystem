@@ -34,15 +34,12 @@ mixin _$DynamicRect {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicRectCopyWith<DynamicRect> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicRectCopyWith<DynamicRect> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicRectCopyWith<$Res> {
-  factory $DynamicRectCopyWith(
-          DynamicRect value, $Res Function(DynamicRect) then) =
-      _$DynamicRectCopyWithImpl<$Res, DynamicRect>;
+  factory $DynamicRectCopyWith(DynamicRect value, $Res Function(DynamicRect) then) = _$DynamicRectCopyWithImpl<$Res, DynamicRect>;
   @useResult
   $Res call(
       {DynamicRectType rectType,
@@ -63,8 +60,7 @@ abstract class $DynamicRectCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicRectCopyWithImpl<$Res, $Val extends DynamicRect>
-    implements $DynamicRectCopyWith<$Res> {
+class _$DynamicRectCopyWithImpl<$Res, $Val extends DynamicRect> implements $DynamicRectCopyWith<$Res> {
   _$DynamicRectCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -173,11 +169,8 @@ class _$DynamicRectCopyWithImpl<$Res, $Val extends DynamicRect>
 }
 
 /// @nodoc
-abstract class _$$DynamicRectImplCopyWith<$Res>
-    implements $DynamicRectCopyWith<$Res> {
-  factory _$$DynamicRectImplCopyWith(
-          _$DynamicRectImpl value, $Res Function(_$DynamicRectImpl) then) =
-      __$$DynamicRectImplCopyWithImpl<$Res>;
+abstract class _$$DynamicRectImplCopyWith<$Res> implements $DynamicRectCopyWith<$Res> {
+  factory _$$DynamicRectImplCopyWith(_$DynamicRectImpl value, $Res Function(_$DynamicRectImpl) then) = __$$DynamicRectImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -202,12 +195,8 @@ abstract class _$$DynamicRectImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicRectImplCopyWithImpl<$Res>
-    extends _$DynamicRectCopyWithImpl<$Res, _$DynamicRectImpl>
-    implements _$$DynamicRectImplCopyWith<$Res> {
-  __$$DynamicRectImplCopyWithImpl(
-      _$DynamicRectImpl _value, $Res Function(_$DynamicRectImpl) _then)
-      : super(_value, _then);
+class __$$DynamicRectImplCopyWithImpl<$Res> extends _$DynamicRectCopyWithImpl<$Res, _$DynamicRectImpl> implements _$$DynamicRectImplCopyWith<$Res> {
+  __$$DynamicRectImplCopyWithImpl(_$DynamicRectImpl _value, $Res Function(_$DynamicRectImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -277,20 +266,9 @@ class __$$DynamicRectImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DynamicRectImpl implements _DynamicRect {
   const _$DynamicRectImpl(
-      {required this.rectType,
-      this.center,
-      this.a,
-      this.b,
-      this.width,
-      this.height,
-      this.left,
-      this.top,
-      this.right,
-      this.bottom,
-      this.radius});
+      {required this.rectType, this.center, this.a, this.b, this.width, this.height, this.left, this.top, this.right, this.bottom, this.radius});
 
-  factory _$DynamicRectImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicRectImplFromJson(json);
+  factory _$DynamicRectImpl.fromJson(Map<String, dynamic> json) => _$$DynamicRectImplFromJson(json);
 
   @override
   final DynamicRectType rectType;
@@ -325,8 +303,7 @@ class _$DynamicRectImpl implements _DynamicRect {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DynamicRectImpl &&
-            (identical(other.rectType, rectType) ||
-                other.rectType == rectType) &&
+            (identical(other.rectType, rectType) || other.rectType == rectType) &&
             (identical(other.center, center) || other.center == center) &&
             (identical(other.a, a) || other.a == a) &&
             (identical(other.b, b) || other.b == b) &&
@@ -341,14 +318,12 @@ class _$DynamicRectImpl implements _DynamicRect {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, rectType, center, a, b, width,
-      height, left, top, right, bottom, radius);
+  int get hashCode => Object.hash(runtimeType, rectType, center, a, b, width, height, left, top, right, bottom, radius);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicRectImplCopyWith<_$DynamicRectImpl> get copyWith =>
-      __$$DynamicRectImplCopyWithImpl<_$DynamicRectImpl>(this, _$identity);
+  _$$DynamicRectImplCopyWith<_$DynamicRectImpl> get copyWith => __$$DynamicRectImplCopyWithImpl<_$DynamicRectImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -372,8 +347,7 @@ abstract class _DynamicRect implements DynamicRect {
       final double? bottom,
       final double? radius}) = _$DynamicRectImpl;
 
-  factory _DynamicRect.fromJson(Map<String, dynamic> json) =
-      _$DynamicRectImpl.fromJson;
+  factory _DynamicRect.fromJson(Map<String, dynamic> json) = _$DynamicRectImpl.fromJson;
 
   @override
   DynamicRectType get rectType;
@@ -399,6 +373,5 @@ abstract class _DynamicRect implements DynamicRect {
   double? get radius;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicRectImplCopyWith<_$DynamicRectImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicRectImplCopyWith<_$DynamicRectImpl> get copyWith => throw _privateConstructorUsedError;
 }

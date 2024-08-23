@@ -35,15 +35,12 @@ mixin _$DynamicText {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicTextCopyWith<DynamicText> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicTextCopyWith<DynamicText> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicTextCopyWith<$Res> {
-  factory $DynamicTextCopyWith(
-          DynamicText value, $Res Function(DynamicText) then) =
-      _$DynamicTextCopyWithImpl<$Res, DynamicText>;
+  factory $DynamicTextCopyWith(DynamicText value, $Res Function(DynamicText) then) = _$DynamicTextCopyWithImpl<$Res, DynamicText>;
   @useResult
   $Res call(
       {String data,
@@ -63,8 +60,7 @@ abstract class $DynamicTextCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicTextCopyWithImpl<$Res, $Val extends DynamicText>
-    implements $DynamicTextCopyWith<$Res> {
+class _$DynamicTextCopyWithImpl<$Res, $Val extends DynamicText> implements $DynamicTextCopyWith<$Res> {
   _$DynamicTextCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -154,11 +150,8 @@ class _$DynamicTextCopyWithImpl<$Res, $Val extends DynamicText>
 }
 
 /// @nodoc
-abstract class _$$DynamicTextImplCopyWith<$Res>
-    implements $DynamicTextCopyWith<$Res> {
-  factory _$$DynamicTextImplCopyWith(
-          _$DynamicTextImpl value, $Res Function(_$DynamicTextImpl) then) =
-      __$$DynamicTextImplCopyWithImpl<$Res>;
+abstract class _$$DynamicTextImplCopyWith<$Res> implements $DynamicTextCopyWith<$Res> {
+  factory _$$DynamicTextImplCopyWith(_$DynamicTextImpl value, $Res Function(_$DynamicTextImpl) then) = __$$DynamicTextImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -180,12 +173,8 @@ abstract class _$$DynamicTextImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicTextImplCopyWithImpl<$Res>
-    extends _$DynamicTextCopyWithImpl<$Res, _$DynamicTextImpl>
-    implements _$$DynamicTextImplCopyWith<$Res> {
-  __$$DynamicTextImplCopyWithImpl(
-      _$DynamicTextImpl _value, $Res Function(_$DynamicTextImpl) _then)
-      : super(_value, _then);
+class __$$DynamicTextImplCopyWithImpl<$Res> extends _$DynamicTextCopyWithImpl<$Res, _$DynamicTextImpl> implements _$$DynamicTextImplCopyWith<$Res> {
+  __$$DynamicTextImplCopyWithImpl(_$DynamicTextImpl _value, $Res Function(_$DynamicTextImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -274,8 +263,7 @@ class _$DynamicTextImpl implements _DynamicText {
       this.selectionColor})
       : _children = children;
 
-  factory _$DynamicTextImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicTextImplFromJson(json);
+  factory _$DynamicTextImpl.fromJson(Map<String, dynamic> json) => _$$DynamicTextImplFromJson(json);
 
   @override
   final String data;
@@ -322,48 +310,26 @@ class _$DynamicTextImpl implements _DynamicText {
             (identical(other.data, data) || other.data == data) &&
             const DeepCollectionEquality().equals(other._children, _children) &&
             (identical(other.style, style) || other.style == style) &&
-            (identical(other.textAlign, textAlign) ||
-                other.textAlign == textAlign) &&
-            (identical(other.textDirection, textDirection) ||
-                other.textDirection == textDirection) &&
-            (identical(other.softWrap, softWrap) ||
-                other.softWrap == softWrap) &&
-            (identical(other.overflow, overflow) ||
-                other.overflow == overflow) &&
-            (identical(other.textScaleFactor, textScaleFactor) ||
-                other.textScaleFactor == textScaleFactor) &&
-            (identical(other.maxLines, maxLines) ||
-                other.maxLines == maxLines) &&
-            (identical(other.semanticsLabel, semanticsLabel) ||
-                other.semanticsLabel == semanticsLabel) &&
-            (identical(other.textWidthBasis, textWidthBasis) ||
-                other.textWidthBasis == textWidthBasis) &&
-            (identical(other.selectionColor, selectionColor) ||
-                other.selectionColor == selectionColor));
+            (identical(other.textAlign, textAlign) || other.textAlign == textAlign) &&
+            (identical(other.textDirection, textDirection) || other.textDirection == textDirection) &&
+            (identical(other.softWrap, softWrap) || other.softWrap == softWrap) &&
+            (identical(other.overflow, overflow) || other.overflow == overflow) &&
+            (identical(other.textScaleFactor, textScaleFactor) || other.textScaleFactor == textScaleFactor) &&
+            (identical(other.maxLines, maxLines) || other.maxLines == maxLines) &&
+            (identical(other.semanticsLabel, semanticsLabel) || other.semanticsLabel == semanticsLabel) &&
+            (identical(other.textWidthBasis, textWidthBasis) || other.textWidthBasis == textWidthBasis) &&
+            (identical(other.selectionColor, selectionColor) || other.selectionColor == selectionColor));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      data,
-      const DeepCollectionEquality().hash(_children),
-      style,
-      textAlign,
-      textDirection,
-      softWrap,
-      overflow,
-      textScaleFactor,
-      maxLines,
-      semanticsLabel,
-      textWidthBasis,
-      selectionColor);
+  int get hashCode => Object.hash(runtimeType, data, const DeepCollectionEquality().hash(_children), style, textAlign, textDirection, softWrap, overflow,
+      textScaleFactor, maxLines, semanticsLabel, textWidthBasis, selectionColor);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicTextImplCopyWith<_$DynamicTextImpl> get copyWith =>
-      __$$DynamicTextImplCopyWithImpl<_$DynamicTextImpl>(this, _$identity);
+  _$$DynamicTextImplCopyWith<_$DynamicTextImpl> get copyWith => __$$DynamicTextImplCopyWithImpl<_$DynamicTextImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -388,8 +354,7 @@ abstract class _DynamicText implements DynamicText {
       final TextWidthBasis? textWidthBasis,
       final String? selectionColor}) = _$DynamicTextImpl;
 
-  factory _DynamicText.fromJson(Map<String, dynamic> json) =
-      _$DynamicTextImpl.fromJson;
+  factory _DynamicText.fromJson(Map<String, dynamic> json) = _$DynamicTextImpl.fromJson;
 
   @override
   String get data;
@@ -417,8 +382,7 @@ abstract class _DynamicText implements DynamicText {
   String? get selectionColor;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicTextImplCopyWith<_$DynamicTextImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicTextImplCopyWith<_$DynamicTextImpl> get copyWith => throw _privateConstructorUsedError;
 }
 
 DynamicTextSpan _$DynamicTextSpanFromJson(Map<String, dynamic> json) {
@@ -433,25 +397,20 @@ mixin _$DynamicTextSpan {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicTextSpanCopyWith<DynamicTextSpan> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicTextSpanCopyWith<DynamicTextSpan> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicTextSpanCopyWith<$Res> {
-  factory $DynamicTextSpanCopyWith(
-          DynamicTextSpan value, $Res Function(DynamicTextSpan) then) =
-      _$DynamicTextSpanCopyWithImpl<$Res, DynamicTextSpan>;
+  factory $DynamicTextSpanCopyWith(DynamicTextSpan value, $Res Function(DynamicTextSpan) then) = _$DynamicTextSpanCopyWithImpl<$Res, DynamicTextSpan>;
   @useResult
-  $Res call(
-      {String? data, DynamicTextStyle? style, Map<String, dynamic>? onTap});
+  $Res call({String? data, DynamicTextStyle? style, Map<String, dynamic>? onTap});
 
   $DynamicTextStyleCopyWith<$Res>? get style;
 }
 
 /// @nodoc
-class _$DynamicTextSpanCopyWithImpl<$Res, $Val extends DynamicTextSpan>
-    implements $DynamicTextSpanCopyWith<$Res> {
+class _$DynamicTextSpanCopyWithImpl<$Res, $Val extends DynamicTextSpan> implements $DynamicTextSpanCopyWith<$Res> {
   _$DynamicTextSpanCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -496,27 +455,20 @@ class _$DynamicTextSpanCopyWithImpl<$Res, $Val extends DynamicTextSpan>
 }
 
 /// @nodoc
-abstract class _$$DynamicTextSpanImplCopyWith<$Res>
-    implements $DynamicTextSpanCopyWith<$Res> {
-  factory _$$DynamicTextSpanImplCopyWith(_$DynamicTextSpanImpl value,
-          $Res Function(_$DynamicTextSpanImpl) then) =
-      __$$DynamicTextSpanImplCopyWithImpl<$Res>;
+abstract class _$$DynamicTextSpanImplCopyWith<$Res> implements $DynamicTextSpanCopyWith<$Res> {
+  factory _$$DynamicTextSpanImplCopyWith(_$DynamicTextSpanImpl value, $Res Function(_$DynamicTextSpanImpl) then) = __$$DynamicTextSpanImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? data, DynamicTextStyle? style, Map<String, dynamic>? onTap});
+  $Res call({String? data, DynamicTextStyle? style, Map<String, dynamic>? onTap});
 
   @override
   $DynamicTextStyleCopyWith<$Res>? get style;
 }
 
 /// @nodoc
-class __$$DynamicTextSpanImplCopyWithImpl<$Res>
-    extends _$DynamicTextSpanCopyWithImpl<$Res, _$DynamicTextSpanImpl>
+class __$$DynamicTextSpanImplCopyWithImpl<$Res> extends _$DynamicTextSpanCopyWithImpl<$Res, _$DynamicTextSpanImpl>
     implements _$$DynamicTextSpanImplCopyWith<$Res> {
-  __$$DynamicTextSpanImplCopyWithImpl(
-      _$DynamicTextSpanImpl _value, $Res Function(_$DynamicTextSpanImpl) _then)
-      : super(_value, _then);
+  __$$DynamicTextSpanImplCopyWithImpl(_$DynamicTextSpanImpl _value, $Res Function(_$DynamicTextSpanImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -545,12 +497,9 @@ class __$$DynamicTextSpanImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DynamicTextSpanImpl implements _DynamicTextSpan {
-  const _$DynamicTextSpanImpl(
-      {this.data, this.style, final Map<String, dynamic>? onTap})
-      : _onTap = onTap;
+  const _$DynamicTextSpanImpl({this.data, this.style, final Map<String, dynamic>? onTap}) : _onTap = onTap;
 
-  factory _$DynamicTextSpanImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicTextSpanImplFromJson(json);
+  factory _$DynamicTextSpanImpl.fromJson(Map<String, dynamic> json) => _$$DynamicTextSpanImplFromJson(json);
 
   @override
   final String? data;
@@ -583,15 +532,12 @@ class _$DynamicTextSpanImpl implements _DynamicTextSpan {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, data, style, const DeepCollectionEquality().hash(_onTap));
+  int get hashCode => Object.hash(runtimeType, data, style, const DeepCollectionEquality().hash(_onTap));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicTextSpanImplCopyWith<_$DynamicTextSpanImpl> get copyWith =>
-      __$$DynamicTextSpanImplCopyWithImpl<_$DynamicTextSpanImpl>(
-          this, _$identity);
+  _$$DynamicTextSpanImplCopyWith<_$DynamicTextSpanImpl> get copyWith => __$$DynamicTextSpanImplCopyWithImpl<_$DynamicTextSpanImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -602,13 +548,9 @@ class _$DynamicTextSpanImpl implements _DynamicTextSpan {
 }
 
 abstract class _DynamicTextSpan implements DynamicTextSpan {
-  const factory _DynamicTextSpan(
-      {final String? data,
-      final DynamicTextStyle? style,
-      final Map<String, dynamic>? onTap}) = _$DynamicTextSpanImpl;
+  const factory _DynamicTextSpan({final String? data, final DynamicTextStyle? style, final Map<String, dynamic>? onTap}) = _$DynamicTextSpanImpl;
 
-  factory _DynamicTextSpan.fromJson(Map<String, dynamic> json) =
-      _$DynamicTextSpanImpl.fromJson;
+  factory _DynamicTextSpan.fromJson(Map<String, dynamic> json) = _$DynamicTextSpanImpl.fromJson;
 
   @override
   String? get data;
@@ -618,6 +560,5 @@ abstract class _DynamicTextSpan implements DynamicTextSpan {
   Map<String, dynamic>? get onTap;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicTextSpanImplCopyWith<_$DynamicTextSpanImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicTextSpanImplCopyWith<_$DynamicTextSpanImpl> get copyWith => throw _privateConstructorUsedError;
 }

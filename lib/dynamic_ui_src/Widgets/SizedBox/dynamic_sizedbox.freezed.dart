@@ -27,23 +27,18 @@ mixin _$DynamicSizedBox {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicSizedBoxCopyWith<DynamicSizedBox> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicSizedBoxCopyWith<DynamicSizedBox> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicSizedBoxCopyWith<$Res> {
-  factory $DynamicSizedBoxCopyWith(
-          DynamicSizedBox value, $Res Function(DynamicSizedBox) then) =
-      _$DynamicSizedBoxCopyWithImpl<$Res, DynamicSizedBox>;
+  factory $DynamicSizedBoxCopyWith(DynamicSizedBox value, $Res Function(DynamicSizedBox) then) = _$DynamicSizedBoxCopyWithImpl<$Res, DynamicSizedBox>;
   @useResult
-  $Res call(
-      {bool key, double height, double width, Map<String, dynamic>? child});
+  $Res call({bool key, double height, double width, Map<String, dynamic>? child});
 }
 
 /// @nodoc
-class _$DynamicSizedBoxCopyWithImpl<$Res, $Val extends DynamicSizedBox>
-    implements $DynamicSizedBoxCopyWith<$Res> {
+class _$DynamicSizedBoxCopyWithImpl<$Res, $Val extends DynamicSizedBox> implements $DynamicSizedBoxCopyWith<$Res> {
   _$DynamicSizedBoxCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -81,24 +76,17 @@ class _$DynamicSizedBoxCopyWithImpl<$Res, $Val extends DynamicSizedBox>
 }
 
 /// @nodoc
-abstract class _$$DynamicSizedBoxImplCopyWith<$Res>
-    implements $DynamicSizedBoxCopyWith<$Res> {
-  factory _$$DynamicSizedBoxImplCopyWith(_$DynamicSizedBoxImpl value,
-          $Res Function(_$DynamicSizedBoxImpl) then) =
-      __$$DynamicSizedBoxImplCopyWithImpl<$Res>;
+abstract class _$$DynamicSizedBoxImplCopyWith<$Res> implements $DynamicSizedBoxCopyWith<$Res> {
+  factory _$$DynamicSizedBoxImplCopyWith(_$DynamicSizedBoxImpl value, $Res Function(_$DynamicSizedBoxImpl) then) = __$$DynamicSizedBoxImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool key, double height, double width, Map<String, dynamic>? child});
+  $Res call({bool key, double height, double width, Map<String, dynamic>? child});
 }
 
 /// @nodoc
-class __$$DynamicSizedBoxImplCopyWithImpl<$Res>
-    extends _$DynamicSizedBoxCopyWithImpl<$Res, _$DynamicSizedBoxImpl>
+class __$$DynamicSizedBoxImplCopyWithImpl<$Res> extends _$DynamicSizedBoxCopyWithImpl<$Res, _$DynamicSizedBoxImpl>
     implements _$$DynamicSizedBoxImplCopyWith<$Res> {
-  __$$DynamicSizedBoxImplCopyWithImpl(
-      _$DynamicSizedBoxImpl _value, $Res Function(_$DynamicSizedBoxImpl) _then)
-      : super(_value, _then);
+  __$$DynamicSizedBoxImplCopyWithImpl(_$DynamicSizedBoxImpl _value, $Res Function(_$DynamicSizedBoxImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -131,18 +119,10 @@ class __$$DynamicSizedBoxImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$DynamicSizedBoxImpl
-    with DiagnosticableTreeMixin
-    implements _DynamicSizedBox {
-  const _$DynamicSizedBoxImpl(
-      {this.key = false,
-      this.height = 0.0,
-      this.width = 0.0,
-      final Map<String, dynamic>? child})
-      : _child = child;
+class _$DynamicSizedBoxImpl with DiagnosticableTreeMixin implements _DynamicSizedBox {
+  const _$DynamicSizedBoxImpl({this.key = false, this.height = 0.0, this.width = 0.0, final Map<String, dynamic>? child}) : _child = child;
 
-  factory _$DynamicSizedBoxImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicSizedBoxImplFromJson(json);
+  factory _$DynamicSizedBoxImpl.fromJson(Map<String, dynamic> json) => _$$DynamicSizedBoxImplFromJson(json);
 
   @override
   @JsonKey()
@@ -192,15 +172,12 @@ class _$DynamicSizedBoxImpl
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, key, height, width,
-      const DeepCollectionEquality().hash(_child));
+  int get hashCode => Object.hash(runtimeType, key, height, width, const DeepCollectionEquality().hash(_child));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicSizedBoxImplCopyWith<_$DynamicSizedBoxImpl> get copyWith =>
-      __$$DynamicSizedBoxImplCopyWithImpl<_$DynamicSizedBoxImpl>(
-          this, _$identity);
+  _$$DynamicSizedBoxImplCopyWith<_$DynamicSizedBoxImpl> get copyWith => __$$DynamicSizedBoxImplCopyWithImpl<_$DynamicSizedBoxImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -211,14 +188,9 @@ class _$DynamicSizedBoxImpl
 }
 
 abstract class _DynamicSizedBox implements DynamicSizedBox {
-  const factory _DynamicSizedBox(
-      {final bool key,
-      final double height,
-      final double width,
-      final Map<String, dynamic>? child}) = _$DynamicSizedBoxImpl;
+  const factory _DynamicSizedBox({final bool key, final double height, final double width, final Map<String, dynamic>? child}) = _$DynamicSizedBoxImpl;
 
-  factory _DynamicSizedBox.fromJson(Map<String, dynamic> json) =
-      _$DynamicSizedBoxImpl.fromJson;
+  factory _DynamicSizedBox.fromJson(Map<String, dynamic> json) = _$DynamicSizedBoxImpl.fromJson;
 
   @override
   bool get key;
@@ -230,6 +202,5 @@ abstract class _DynamicSizedBox implements DynamicSizedBox {
   Map<String, dynamic>? get child;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicSizedBoxImplCopyWith<_$DynamicSizedBoxImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicSizedBoxImplCopyWith<_$DynamicSizedBoxImpl> get copyWith => throw _privateConstructorUsedError;
 }

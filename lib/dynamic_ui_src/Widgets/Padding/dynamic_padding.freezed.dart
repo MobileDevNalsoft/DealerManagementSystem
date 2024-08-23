@@ -25,15 +25,12 @@ mixin _$DynamicPadding {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicPaddingCopyWith<DynamicPadding> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicPaddingCopyWith<DynamicPadding> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicPaddingCopyWith<$Res> {
-  factory $DynamicPaddingCopyWith(
-          DynamicPadding value, $Res Function(DynamicPadding) then) =
-      _$DynamicPaddingCopyWithImpl<$Res, DynamicPadding>;
+  factory $DynamicPaddingCopyWith(DynamicPadding value, $Res Function(DynamicPadding) then) = _$DynamicPaddingCopyWithImpl<$Res, DynamicPadding>;
   @useResult
   $Res call({DynamicEdgeInsets padding, Map<String, dynamic>? child});
 
@@ -41,8 +38,7 @@ abstract class $DynamicPaddingCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicPaddingCopyWithImpl<$Res, $Val extends DynamicPadding>
-    implements $DynamicPaddingCopyWith<$Res> {
+class _$DynamicPaddingCopyWithImpl<$Res, $Val extends DynamicPadding> implements $DynamicPaddingCopyWith<$Res> {
   _$DynamicPaddingCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -78,11 +74,8 @@ class _$DynamicPaddingCopyWithImpl<$Res, $Val extends DynamicPadding>
 }
 
 /// @nodoc
-abstract class _$$DynamicPaddingImplCopyWith<$Res>
-    implements $DynamicPaddingCopyWith<$Res> {
-  factory _$$DynamicPaddingImplCopyWith(_$DynamicPaddingImpl value,
-          $Res Function(_$DynamicPaddingImpl) then) =
-      __$$DynamicPaddingImplCopyWithImpl<$Res>;
+abstract class _$$DynamicPaddingImplCopyWith<$Res> implements $DynamicPaddingCopyWith<$Res> {
+  factory _$$DynamicPaddingImplCopyWith(_$DynamicPaddingImpl value, $Res Function(_$DynamicPaddingImpl) then) = __$$DynamicPaddingImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DynamicEdgeInsets padding, Map<String, dynamic>? child});
@@ -92,12 +85,8 @@ abstract class _$$DynamicPaddingImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicPaddingImplCopyWithImpl<$Res>
-    extends _$DynamicPaddingCopyWithImpl<$Res, _$DynamicPaddingImpl>
-    implements _$$DynamicPaddingImplCopyWith<$Res> {
-  __$$DynamicPaddingImplCopyWithImpl(
-      _$DynamicPaddingImpl _value, $Res Function(_$DynamicPaddingImpl) _then)
-      : super(_value, _then);
+class __$$DynamicPaddingImplCopyWithImpl<$Res> extends _$DynamicPaddingCopyWithImpl<$Res, _$DynamicPaddingImpl> implements _$$DynamicPaddingImplCopyWith<$Res> {
+  __$$DynamicPaddingImplCopyWithImpl(_$DynamicPaddingImpl _value, $Res Function(_$DynamicPaddingImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -121,12 +110,9 @@ class __$$DynamicPaddingImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DynamicPaddingImpl implements _DynamicPadding {
-  const _$DynamicPaddingImpl(
-      {required this.padding, final Map<String, dynamic>? child})
-      : _child = child;
+  const _$DynamicPaddingImpl({required this.padding, final Map<String, dynamic>? child}) : _child = child;
 
-  factory _$DynamicPaddingImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicPaddingImplFromJson(json);
+  factory _$DynamicPaddingImpl.fromJson(Map<String, dynamic> json) => _$$DynamicPaddingImplFromJson(json);
 
   @override
   final DynamicEdgeInsets padding;
@@ -156,15 +142,12 @@ class _$DynamicPaddingImpl implements _DynamicPadding {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, padding, const DeepCollectionEquality().hash(_child));
+  int get hashCode => Object.hash(runtimeType, padding, const DeepCollectionEquality().hash(_child));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicPaddingImplCopyWith<_$DynamicPaddingImpl> get copyWith =>
-      __$$DynamicPaddingImplCopyWithImpl<_$DynamicPaddingImpl>(
-          this, _$identity);
+  _$$DynamicPaddingImplCopyWith<_$DynamicPaddingImpl> get copyWith => __$$DynamicPaddingImplCopyWithImpl<_$DynamicPaddingImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -175,12 +158,9 @@ class _$DynamicPaddingImpl implements _DynamicPadding {
 }
 
 abstract class _DynamicPadding implements DynamicPadding {
-  const factory _DynamicPadding(
-      {required final DynamicEdgeInsets padding,
-      final Map<String, dynamic>? child}) = _$DynamicPaddingImpl;
+  const factory _DynamicPadding({required final DynamicEdgeInsets padding, final Map<String, dynamic>? child}) = _$DynamicPaddingImpl;
 
-  factory _DynamicPadding.fromJson(Map<String, dynamic> json) =
-      _$DynamicPaddingImpl.fromJson;
+  factory _DynamicPadding.fromJson(Map<String, dynamic> json) = _$DynamicPaddingImpl.fromJson;
 
   @override
   DynamicEdgeInsets get padding;
@@ -188,6 +168,5 @@ abstract class _DynamicPadding implements DynamicPadding {
   Map<String, dynamic>? get child;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicPaddingImplCopyWith<_$DynamicPaddingImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicPaddingImplCopyWith<_$DynamicPaddingImpl> get copyWith => throw _privateConstructorUsedError;
 }

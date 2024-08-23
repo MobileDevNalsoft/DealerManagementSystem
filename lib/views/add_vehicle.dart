@@ -25,8 +25,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
 
   TextEditingController vehicleRegNumberController = TextEditingController();
 
-  TextEditingController customerContactNumberController =
-      TextEditingController();
+  TextEditingController customerContactNumberController = TextEditingController();
 
   TextEditingController customerNameController = TextEditingController();
 
@@ -50,8 +49,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
 
   TextEditingController mfgYearController = TextEditingController();
 
-  TextEditingController insuranceCompanyTypeAheadController =
-      TextEditingController();
+  TextEditingController insuranceCompanyTypeAheadController = TextEditingController();
 
   TextEditingController financialDetailsController = TextEditingController();
 
@@ -144,13 +142,10 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
     // Check internet connectivity
     if (isConnected()) {
       // If focus is lost and vehicle reg no. text field is not empty, customer name text field is empty, trigger vehicle check with Bloc
-      if (!vehicleRegNumberFocus.hasFocus &&
-          vehicleRegNumberController.text.isNotEmpty &&
-          customerNameController.text.isEmpty) {
+      if (!vehicleRegNumberFocus.hasFocus && vehicleRegNumberController.text.isNotEmpty && customerNameController.text.isEmpty) {
         _vehicleBloc.state.status = VehicleStatus.initial;
         _vehicleBloc.add(VehicleCheck(
-            registrationNo: vehicleRegNumberController
-                .text)); // manage this api with customer check in service booking so that this api is no more required.
+            registrationNo: vehicleRegNumberController.text)); // manage this api with customer check in service booking so that this api is no more required.
       }
     } else {
       // Show an error message if offline
@@ -243,8 +238,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
       fieldWidth = size.width * 0.8;
       fieldHeight = size.height * 0.06;
     } else {
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
       fieldWidth = size.width * 0.6;
       fieldHeight = size.height * 0.063;
     }
@@ -269,17 +263,9 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
               leadingWidth: size.width * 0.14,
               leading: Container(
                 margin: EdgeInsets.only(left: size.width * 0.045),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.black,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 0,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0))
-                    ]),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                ]),
                 child: Transform(
                   transform: Matrix4.translationValues(-3, 0, 0),
                   child: IconButton(
@@ -287,32 +273,20 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                         // pops the current page from the stack
                         navigator.pop();
                       },
-                      icon: const Icon(Icons.arrow_back_rounded,
-                          color: Colors.white)),
+                      icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
                 ),
               ),
               title: Container(
                   alignment: Alignment.center,
                   height: size.height * 0.05,
                   width: size.width * 0.45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.black,
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 10,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 0,
-                            color: Colors.orange.shade200,
-                            offset: const Offset(0, 0))
-                      ]),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                    BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                  ]),
                   child: const Text(
                     textAlign: TextAlign.center,
                     'Add Vehicle',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
                   )),
               centerTitle: true,
             ),
@@ -323,18 +297,13 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                   width: size.width,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                        colors: [
-                          Colors.black45,
-                          Colors.black26,
-                          Colors.black45
-                        ],
+                        colors: [Colors.black45, Colors.black26, Colors.black45],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         stops: [0.1, 0.5, 1]),
                   ),
                   child: Column(
-                    mainAxisSize:
-                        MainAxisSize.min, // Ensures children are packed tightly
+                    mainAxisSize: MainAxisSize.min, // Ensures children are packed tightly
                     children: [
                       Gap(
                         size.height * 0.05,
@@ -344,8 +313,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                         child: SizedBox(
                             width: fieldWidth,
                             child: SingleChildScrollView(
-                              controller:
-                                  scrollController, // Allows scrolling if the form content exceeds the available height.
+                              controller: scrollController, // Allows scrolling if the form content exceeds the available height.
                               child: StaggeredGrid.count(
                                 // staggered grid allows developer to give different field heights to the children.
                                 // Creates a grid layout for form fields, adapting to different screen sizes.
@@ -359,21 +327,16 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       size: size,
                                       hint: "Vehicle Reg. No.",
                                       isMobile: isMobile,
-                                      inputFormatters: [
-                                        UpperCaseTextFormatter()
-                                      ],
+                                      inputFormatters: [UpperCaseTextFormatter()],
                                       scrollController: scrollController,
-                                      textcontroller:
-                                          vehicleRegNumberController,
+                                      textcontroller: vehicleRegNumberController,
                                       context: context),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: chassisNumberFocus,
                                       size: size,
                                       hint: "Chassis No.",
                                       isMobile: isMobile,
-                                      inputFormatters: [
-                                        UpperCaseTextFormatter()
-                                      ],
+                                      inputFormatters: [UpperCaseTextFormatter()],
                                       scrollController: scrollController,
                                       textcontroller: chassisNumberController,
                                       context: context),
@@ -381,9 +344,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       focusNode: engineNumberFocus,
                                       size: size,
                                       hint: "Engine No.",
-                                      inputFormatters: [
-                                        UpperCaseTextFormatter()
-                                      ],
+                                      inputFormatters: [UpperCaseTextFormatter()],
                                       isMobile: isMobile,
                                       textcontroller: engineNumberController,
                                       scrollController: scrollController,
@@ -391,23 +352,12 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   DMSCustomWidgets.SearchableDropDown(
                                     size: size,
                                     hint: "Make",
-                                    items: [
-                                      "Maruthi Suzuki",
-                                      "Tata",
-                                      "Mercedes",
-                                      "Hyundai",
-                                      "Kia",
-                                      "Ford",
-                                      "Toyota"
-                                    ],
+                                    items: ["Maruthi Suzuki", "Tata", "Mercedes", "Hyundai", "Kia", "Ford", "Toyota"],
                                     focus: makeFocus,
-                                    typeAheadController:
-                                        makeTypeAheadController,
+                                    typeAheadController: makeTypeAheadController,
                                     isMobile: isMobile,
                                     scrollController: scrollController,
-                                    icon: makeDropDownUp
-                                        ? const Icon(Icons.arrow_drop_up)
-                                        : const Icon(Icons.arrow_drop_down),
+                                    icon: makeDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
                                   ),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: modelFocus,
@@ -447,11 +397,9 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       size: size,
                                       hint: "KMS",
                                       isMobile: isMobile,
-                                      keyboardType: TextInputType
-                                          .number, // opens only num keypad
+                                      keyboardType: TextInputType.number, // opens only num keypad
                                       inputFormatters: [
-                                        FilteringTextInputFormatter
-                                            .digitsOnly, // allows only numbers entry in to the text field
+                                        FilteringTextInputFormatter.digitsOnly, // allows only numbers entry in to the text field
                                       ],
                                       textcontroller: kmsController,
                                       scrollController: scrollController,
@@ -459,12 +407,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   BlocBuilder<MultiBloc, MultiBlocState>(
                                     builder: (context, state) {
                                       return DMSCustomWidgets.CustomYearPicker(
-                                          size: size,
-                                          isMobile: isMobile,
-                                          context: context,
-                                          yearPickerController:
-                                              yearPickerController,
-                                          year: state.year);
+                                          size: size, isMobile: isMobile, context: context, yearPickerController: yearPickerController, year: state.year);
                                     },
                                   ),
                                   DMSCustomWidgets.SearchableDropDown(
@@ -472,21 +415,17 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                     hint: "Insurance Company",
                                     items: ["abc", "xyz", "pqr"],
                                     focus: insuranceCompanyFocus,
-                                    typeAheadController:
-                                        insuranceCompanyTypeAheadController,
+                                    typeAheadController: insuranceCompanyTypeAheadController,
                                     isMobile: isMobile,
                                     scrollController: scrollController,
-                                    icon: insuranceCompanyDropDownUp
-                                        ? const Icon(Icons.arrow_drop_up)
-                                        : const Icon(Icons.arrow_drop_down),
+                                    icon: insuranceCompanyDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
                                   ),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: financialDetailsFocus,
                                       size: size,
                                       hint: "Financial details",
                                       isMobile: isMobile,
-                                      textcontroller:
-                                          financialDetailsController,
+                                      textcontroller: financialDetailsController,
                                       scrollController: scrollController,
                                       context: context),
                                   DMSCustomWidgets.CustomDataCard(
@@ -502,20 +441,15 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       context: context),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: customerContactNumberFocus,
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                              signed: true),
+                                      keyboardType: const TextInputType.numberWithOptions(signed: true),
                                       size: size,
                                       hint: "Customer Contact No.",
                                       isMobile: isMobile,
                                       inputFormatters: [
-                                        FilteringTextInputFormatter
-                                            .digitsOnly, // allows only numbers entry in to the text field
-                                        LengthLimitingTextInputFormatter(
-                                            10) // restricts the text field content length to 10
+                                        FilteringTextInputFormatter.digitsOnly, // allows only numbers entry in to the text field
+                                        LengthLimitingTextInputFormatter(10) // restricts the text field content length to 10
                                       ],
-                                      textcontroller:
-                                          customerContactNumberController,
+                                      textcontroller: customerContactNumberController,
                                       scrollController: scrollController,
                                       context: context),
                                   StaggeredGridTile.extent(
@@ -530,13 +464,11 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                         ],
                                         isMobile: isMobile,
                                         scrollController: scrollController,
-                                        textcontroller:
-                                            customerAddressController,
+                                        textcontroller: customerAddressController,
                                         context: context),
                                   ),
                                   // adds sized box if key board is opened to scroll text fields to a visible position
-                                  if (MediaQuery.viewInsetsOf(context).bottom !=
-                                      0)
+                                  if (MediaQuery.viewInsetsOf(context).bottom != 0)
                                     StaggeredGridTile.extent(
                                       crossAxisCellCount: 1,
                                       mainAxisExtent: fieldHeight * 3,
@@ -552,8 +484,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                             listener: (context, state) {
                               switch (state.status) {
                                 case VehicleStatus.success:
-                                  if (navigator
-                                      .navigatorkey.currentState!.mounted) {
+                                  if (navigator.navigatorkey.currentState!.mounted) {
                                     // checks if this page is in the stack.
                                     // shows registration dialog if the vehicle registration is successful.
                                     showRegistrationDialog(
@@ -562,20 +493,14 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                         statusWidget: Container(
                                             alignment: Alignment.centerLeft,
                                             width: size.width * 0.88,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(16)),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
                                             child: Row(
                                               children: [
-                                                Lottie.asset(
-                                                    "assets/lottie/success.json",
-                                                    repeat: false,
-                                                    width: size.width * 0.08),
+                                                Lottie.asset("assets/lottie/success.json", repeat: false, width: size.width * 0.08),
                                                 const Gap(4),
                                                 const Text(
                                                   'Vehicle Registration is Successful',
-                                                  style: TextStyle(
-                                                      color: Colors.black87),
+                                                  style: TextStyle(color: Colors.black87),
                                                 ),
                                               ],
                                             )),
@@ -585,10 +510,8 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                         onAccept: () {
                                           state.status = VehicleStatus.initial;
                                           // on accept navigate to the servicebooking page with registration number filled pre filled.
-                                          state.registrationNo =
-                                              vehicleRegNumberController.text;
-                                          navigator.pushAndRemoveUntil(
-                                              '/serviceBooking', '/home');
+                                          state.registrationNo = vehicleRegNumberController.text;
+                                          navigator.pushAndRemoveUntil('/serviceBooking', '/home');
                                           clearFields();
                                         },
                                         onReject: () {
@@ -598,8 +521,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   }
 
                                 case VehicleStatus.vehicleAlreadyAdded:
-                                  if (navigator
-                                      .navigatorkey.currentState!.mounted) {
+                                  if (navigator.navigatorkey.currentState!.mounted) {
                                     // checks if this page is in the stack.
                                     // shows registration dialog if the vehicle registration is already done.
                                     showRegistrationDialog(
@@ -608,17 +530,11 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       statusWidget: Container(
                                           alignment: Alignment.centerLeft,
                                           width: size.width * 0.88,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(16)),
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
                                           child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Lottie.asset(
-                                                  "assets/lottie/success.json",
-                                                  repeat: false,
-                                                  width: size.width * 0.08),
+                                              Lottie.asset("assets/lottie/success.json", repeat: false, width: size.width * 0.08),
                                               const Gap(4),
                                               SizedBox(
                                                 width: size.width * 0.58,
@@ -626,8 +542,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                                   'Oops! This Vehicle is already registered with us',
                                                   softWrap: true,
                                                   textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.black87),
+                                                  style: TextStyle(color: Colors.black87),
                                                 ),
                                               ),
                                             ],
@@ -638,10 +553,8 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       onAccept: () {
                                         state.status = VehicleStatus.initial;
                                         // on accept navigate to the servicebooking page with registration number filled pre filled.
-                                        state.registrationNo =
-                                            vehicleRegNumberController.text;
-                                        navigator.pushAndRemoveUntil(
-                                            '/serviceBooking', '/home');
+                                        state.registrationNo = vehicleRegNumberController.text;
+                                        navigator.pushAndRemoveUntil('/serviceBooking', '/home');
                                         clearFields();
                                       },
                                       onReject: () {
@@ -670,27 +583,13 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                 FocusManager.instance.primaryFocus?.unfocus();
 
                                 // message is assigned with a String according to the validations.
-                                String? message =
-                                    _vehicleRegistrationNoValidator(
-                                            vehicleRegNumberController.text) ??
-                                        _chassisNoValidation(
-                                            chassisNumberController.text) ??
-                                        _engineNoValidation(
-                                            engineNumberController.text) ??
-                                        (makeTypeAheadController.text.isEmpty
-                                            ? 'Make cannot be empty'
-                                            : null) ??
-                                        (kmsController.text.isEmpty
-                                            ? 'KMS cannot be empty'
-                                            : null) ??
-                                        _nameValidation(
-                                            customerNameController.text) ??
-                                        (customerContactNumberController
-                                                .text.isEmpty
-                                            ? _customerContactNoValidation(
-                                                customerContactNumberController
-                                                    .text)
-                                            : null);
+                                String? message = _vehicleRegistrationNoValidator(vehicleRegNumberController.text) ??
+                                    _chassisNoValidation(chassisNumberController.text) ??
+                                    _engineNoValidation(engineNumberController.text) ??
+                                    (makeTypeAheadController.text.isEmpty ? 'Make cannot be empty' : null) ??
+                                    (kmsController.text.isEmpty ? 'KMS cannot be empty' : null) ??
+                                    _nameValidation(customerNameController.text) ??
+                                    (customerContactNumberController.text.isEmpty ? _customerContactNoValidation(customerContactNumberController.text) : null);
 
                                 // shows a snackbar with the message if message variable is not null.
                                 if (message != null) {
@@ -703,59 +602,38 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                 } else {
                                   // populate the vehicle object with all the required details to be pushed to db
                                   Vehicle vehicle = Vehicle(
-                                      vehicleRegNumber:
-                                          vehicleRegNumberController.text,
-                                      chassisNumber:
-                                          chassisNumberController.text,
+                                      vehicleRegNumber: vehicleRegNumberController.text,
+                                      chassisNumber: chassisNumberController.text,
                                       engineNumber: engineNumberController.text,
                                       make: makeTypeAheadController.text,
                                       varient: variantController.text,
                                       color: colorController.text,
-                                      mfgYear: mfgYearController.text.isNotEmpty
-                                          ? int.parse(mfgYearController.text)
-                                          : 0,
-                                      kms: kmsController.text.isNotEmpty
-                                          ? int.parse(kmsController.text)
-                                          : 0,
-                                      financialDetails:
-                                          financialDetailsController.text,
+                                      mfgYear: mfgYearController.text.isNotEmpty ? int.parse(mfgYearController.text) : 0,
+                                      kms: kmsController.text.isNotEmpty ? int.parse(kmsController.text) : 0,
+                                      financialDetails: financialDetailsController.text,
                                       model: modelController.text,
-                                      insuranceCompany:
-                                          insuranceCompanyTypeAheadController
-                                              .text,
-                                      customerContactNo:
-                                          customerContactNumberController.text,
+                                      insuranceCompany: insuranceCompanyTypeAheadController.text,
+                                      customerContactNo: customerContactNumberController.text,
                                       customerName: customerNameController.text,
-                                      customerAddress:
-                                          customerAddressController.text);
+                                      customerAddress: customerAddressController.text);
 
                                   // trigger event with the vehicle object as parameter which triggers the repo method to push data to the db
-                                  _vehicleBloc
-                                      .add(AddVehicleEvent(vehicle: vehicle));
+                                  _vehicleBloc.add(AddVehicleEvent(vehicle: vehicle));
                                 }
                               },
                               child: Container(
                                   alignment: Alignment.center,
-                                  margin:
-                                      EdgeInsets.only(top: size.height * 0.03),
+                                  margin: EdgeInsets.only(top: size.height * 0.03),
                                   height: size.height * 0.045,
                                   width: size.width * 0.2,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            blurRadius: 10,
-                                            blurStyle: BlurStyle.outer,
-                                            spreadRadius: 0,
-                                            color: Colors.orange.shade200,
-                                            offset: const Offset(0, 0))
-                                      ]),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                                  ]),
                                   child: const Text(
                                     textAlign: TextAlign.center,
                                     'submit',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                                    style: TextStyle(color: Colors.white, fontSize: 16),
                                   )),
                             )),
                       ),
@@ -766,15 +644,11 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                     ],
                   ),
                 ),
-                if (context.watch<VehicleBloc>().state.status ==
-                    VehicleStatus.loading)
+                if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading)
                   // shows the loading animation according to the vehicle status in vehicle bloc.
                   Container(
                     color: Colors.black54,
-                    child: Center(
-                        child: Lottie.asset('assets/lottie/car_loading.json',
-                            height: size.height * 0.5,
-                            width: size.width * 0.6)),
+                    child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6)),
                   )
               ],
             )),
@@ -799,8 +673,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
             canPop: false,
             child: AlertDialog(
                 backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 contentPadding: EdgeInsets.only(top: size.height * 0.01),
                 content: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -825,20 +698,14 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                       height: size.height * 0.05,
                       margin: EdgeInsets.all(size.height * 0.001),
                       decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
+                          color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: TextButton(
                               onPressed: onReject,
-                              style: TextButton.styleFrom(
-                                  fixedSize:
-                                      Size(size.width * 0.3, size.height * 0.1),
-                                  foregroundColor: Colors.white),
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                               child: Text(
                                 rejectText,
                               ),
@@ -851,10 +718,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                           Expanded(
                             child: TextButton(
                               onPressed: onAccept,
-                              style: TextButton.styleFrom(
-                                  fixedSize:
-                                      Size(size.width * 0.3, size.height * 0.1),
-                                  foregroundColor: Colors.white),
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                               child: Text(
                                 acceptText,
                               ),

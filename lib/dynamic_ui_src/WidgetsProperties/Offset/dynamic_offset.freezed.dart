@@ -25,22 +25,18 @@ mixin _$DynamicOffset {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicOffsetCopyWith<DynamicOffset> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicOffsetCopyWith<DynamicOffset> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicOffsetCopyWith<$Res> {
-  factory $DynamicOffsetCopyWith(
-          DynamicOffset value, $Res Function(DynamicOffset) then) =
-      _$DynamicOffsetCopyWithImpl<$Res, DynamicOffset>;
+  factory $DynamicOffsetCopyWith(DynamicOffset value, $Res Function(DynamicOffset) then) = _$DynamicOffsetCopyWithImpl<$Res, DynamicOffset>;
   @useResult
   $Res call({double dx, double dy});
 }
 
 /// @nodoc
-class _$DynamicOffsetCopyWithImpl<$Res, $Val extends DynamicOffset>
-    implements $DynamicOffsetCopyWith<$Res> {
+class _$DynamicOffsetCopyWithImpl<$Res, $Val extends DynamicOffset> implements $DynamicOffsetCopyWith<$Res> {
   _$DynamicOffsetCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -68,23 +64,16 @@ class _$DynamicOffsetCopyWithImpl<$Res, $Val extends DynamicOffset>
 }
 
 /// @nodoc
-abstract class _$$DynamicOffsetImplCopyWith<$Res>
-    implements $DynamicOffsetCopyWith<$Res> {
-  factory _$$DynamicOffsetImplCopyWith(
-          _$DynamicOffsetImpl value, $Res Function(_$DynamicOffsetImpl) then) =
-      __$$DynamicOffsetImplCopyWithImpl<$Res>;
+abstract class _$$DynamicOffsetImplCopyWith<$Res> implements $DynamicOffsetCopyWith<$Res> {
+  factory _$$DynamicOffsetImplCopyWith(_$DynamicOffsetImpl value, $Res Function(_$DynamicOffsetImpl) then) = __$$DynamicOffsetImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double dx, double dy});
 }
 
 /// @nodoc
-class __$$DynamicOffsetImplCopyWithImpl<$Res>
-    extends _$DynamicOffsetCopyWithImpl<$Res, _$DynamicOffsetImpl>
-    implements _$$DynamicOffsetImplCopyWith<$Res> {
-  __$$DynamicOffsetImplCopyWithImpl(
-      _$DynamicOffsetImpl _value, $Res Function(_$DynamicOffsetImpl) _then)
-      : super(_value, _then);
+class __$$DynamicOffsetImplCopyWithImpl<$Res> extends _$DynamicOffsetCopyWithImpl<$Res, _$DynamicOffsetImpl> implements _$$DynamicOffsetImplCopyWith<$Res> {
+  __$$DynamicOffsetImplCopyWithImpl(_$DynamicOffsetImpl _value, $Res Function(_$DynamicOffsetImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -110,8 +99,7 @@ class __$$DynamicOffsetImplCopyWithImpl<$Res>
 class _$DynamicOffsetImpl implements _DynamicOffset {
   const _$DynamicOffsetImpl({required this.dx, required this.dy});
 
-  factory _$DynamicOffsetImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicOffsetImplFromJson(json);
+  factory _$DynamicOffsetImpl.fromJson(Map<String, dynamic> json) => _$$DynamicOffsetImplFromJson(json);
 
   @override
   final double dx;
@@ -139,8 +127,7 @@ class _$DynamicOffsetImpl implements _DynamicOffset {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicOffsetImplCopyWith<_$DynamicOffsetImpl> get copyWith =>
-      __$$DynamicOffsetImplCopyWithImpl<_$DynamicOffsetImpl>(this, _$identity);
+  _$$DynamicOffsetImplCopyWith<_$DynamicOffsetImpl> get copyWith => __$$DynamicOffsetImplCopyWithImpl<_$DynamicOffsetImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -151,12 +138,9 @@ class _$DynamicOffsetImpl implements _DynamicOffset {
 }
 
 abstract class _DynamicOffset implements DynamicOffset {
-  const factory _DynamicOffset(
-      {required final double dx,
-      required final double dy}) = _$DynamicOffsetImpl;
+  const factory _DynamicOffset({required final double dx, required final double dy}) = _$DynamicOffsetImpl;
 
-  factory _DynamicOffset.fromJson(Map<String, dynamic> json) =
-      _$DynamicOffsetImpl.fromJson;
+  factory _DynamicOffset.fromJson(Map<String, dynamic> json) = _$DynamicOffsetImpl.fromJson;
 
   @override
   double get dx;
@@ -164,6 +148,5 @@ abstract class _DynamicOffset implements DynamicOffset {
   double get dy;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicOffsetImplCopyWith<_$DynamicOffsetImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicOffsetImplCopyWith<_$DynamicOffsetImpl> get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:dms/dynamic_ui_src/Utils/alignment_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -26,6 +27,5 @@ class DynamicContainer with _$DynamicContainer {
     @Default(Clip.none) Clip clipBehavior,
   }) = _DynamicContainer;
 
-  factory DynamicContainer.fromJson(Map<String, dynamic> json) =>
-      _$DynamicContainerFromJson(json);
+  factory DynamicContainer.fromJson(Map<String, dynamic> json) => _$DynamicContainerFromJson(json);
 }

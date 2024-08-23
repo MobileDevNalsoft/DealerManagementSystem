@@ -28,8 +28,7 @@ class DynamicGradient with _$DynamicGradient {
     @Default(math.pi * 2) double endAngle,
   }) = _DynamicGradient;
 
-  factory DynamicGradient.fromJson(Map<String, dynamic> json) =>
-      _$DynamicGradientFromJson(json);
+  factory DynamicGradient.fromJson(Map<String, dynamic> json) => _$DynamicGradientFromJson(json);
 }
 
 extension DynamicGradientParser on DynamicGradient {

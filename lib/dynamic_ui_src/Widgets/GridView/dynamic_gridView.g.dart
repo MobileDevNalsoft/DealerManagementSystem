@@ -6,20 +6,13 @@ part of 'dynamic_gridView.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicGridViewImpl _$$DynamicGridViewImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DynamicGridViewImpl(
-      scrollDirection:
-          $enumDecodeNullable(_$AxisEnumMap, json['scrollDirection']) ??
-              Axis.vertical,
+_$DynamicGridViewImpl _$$DynamicGridViewImplFromJson(Map<String, dynamic> json) => _$DynamicGridViewImpl(
+      scrollDirection: $enumDecodeNullable(_$AxisEnumMap, json['scrollDirection']) ?? Axis.vertical,
       reverse: json['reverse'] as bool? ?? false,
       primary: json['primary'] as bool? ?? false,
-      physics:
-          $enumDecodeNullable(_$DynamicScrollPhysicsEnumMap, json['physics']),
+      physics: $enumDecodeNullable(_$DynamicScrollPhysicsEnumMap, json['physics']),
       shrinkWrap: json['shrinkWrap'] as bool? ?? false,
-      padding: json['padding'] == null
-          ? null
-          : DynamicEdgeInsets.fromJson(json['padding']),
+      padding: json['padding'] == null ? null : DynamicEdgeInsets.fromJson(json['padding']),
       crossAxisCount: (json['crossAxisCount'] as num?)?.toInt(),
       mainAxisSpacing: (json['mainAxisSpacing'] as num?)?.toDouble() ?? 0.0,
       crossAxisSpacing: (json['crossAxisSpacing'] as num?)?.toDouble() ?? 0.0,
@@ -29,26 +22,16 @@ _$DynamicGridViewImpl _$$DynamicGridViewImplFromJson(
       addRepaintBoundaries: json['addRepaintBoundaries'] as bool? ?? true,
       addSemanticIndexes: json['addSemanticIndexes'] as bool? ?? true,
       cacheExtent: (json['cacheExtent'] as num?)?.toDouble(),
-      children: (json['children'] as List<dynamic>?)
-              ?.map((e) => e as Map<String, dynamic>)
-              .toList() ??
-          const [],
+      children: (json['children'] as List<dynamic>?)?.map((e) => e as Map<String, dynamic>).toList() ?? const [],
       semanticChildCount: (json['semanticChildCount'] as num?)?.toInt(),
-      dragStartBehavior: $enumDecodeNullable(
-              _$DragStartBehaviorEnumMap, json['dragStartBehavior']) ??
-          DragStartBehavior.start,
-      keyboardDismissBehavior: $enumDecodeNullable(
-              _$ScrollViewKeyboardDismissBehaviorEnumMap,
-              json['keyboardDismissBehavior']) ??
-          ScrollViewKeyboardDismissBehavior.manual,
+      dragStartBehavior: $enumDecodeNullable(_$DragStartBehaviorEnumMap, json['dragStartBehavior']) ?? DragStartBehavior.start,
+      keyboardDismissBehavior:
+          $enumDecodeNullable(_$ScrollViewKeyboardDismissBehaviorEnumMap, json['keyboardDismissBehavior']) ?? ScrollViewKeyboardDismissBehavior.manual,
       restorationId: json['restorationId'] as String?,
-      clipBehavior: $enumDecodeNullable(_$ClipEnumMap, json['clipBehavior']) ??
-          Clip.hardEdge,
+      clipBehavior: $enumDecodeNullable(_$ClipEnumMap, json['clipBehavior']) ?? Clip.hardEdge,
     );
 
-Map<String, dynamic> _$$DynamicGridViewImplToJson(
-        _$DynamicGridViewImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$DynamicGridViewImplToJson(_$DynamicGridViewImpl instance) => <String, dynamic>{
       'scrollDirection': _$AxisEnumMap[instance.scrollDirection]!,
       'reverse': instance.reverse,
       'primary': instance.primary,
@@ -66,10 +49,8 @@ Map<String, dynamic> _$$DynamicGridViewImplToJson(
       'cacheExtent': instance.cacheExtent,
       'children': instance.children,
       'semanticChildCount': instance.semanticChildCount,
-      'dragStartBehavior':
-          _$DragStartBehaviorEnumMap[instance.dragStartBehavior]!,
-      'keyboardDismissBehavior': _$ScrollViewKeyboardDismissBehaviorEnumMap[
-          instance.keyboardDismissBehavior]!,
+      'dragStartBehavior': _$DragStartBehaviorEnumMap[instance.dragStartBehavior]!,
+      'keyboardDismissBehavior': _$ScrollViewKeyboardDismissBehaviorEnumMap[instance.keyboardDismissBehavior]!,
       'restorationId': instance.restorationId,
       'clipBehavior': _$ClipEnumMap[instance.clipBehavior]!,
     };

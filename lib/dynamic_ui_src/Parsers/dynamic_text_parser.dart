@@ -16,8 +16,7 @@ class DynamicTextParser extends JsonToWidgetParser<DynamicText> {
   String get type => WidgetType.text.name;
 
   @override
-  Widget parse(BuildContext context, DynamicText model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicText model, [Map<String, dynamic>? functions]) {
     return Text.rich(
       TextSpan(
         text: model.data,
@@ -36,16 +35,11 @@ class DynamicTextParser extends JsonToWidgetParser<DynamicText> {
       textDirection: model.textDirection,
       softWrap: model.softWrap,
       overflow: model.overflow,
-      textScaler: model.textScaleFactor != null
-          ? TextScaler.linear(model.textScaleFactor!)
-          : TextScaler.noScaling,
+      textScaler: model.textScaleFactor != null ? TextScaler.linear(model.textScaleFactor!) : TextScaler.noScaling,
       maxLines: model.maxLines,
       semanticsLabel: model.semanticsLabel,
       textWidthBasis: model.textWidthBasis,
-      selectionColor: model.selectionColor != null
-          ? Color(int.parse(model.selectionColor!.substring(1, 7), radix: 16) +
-              0xFF000000)
-          : Colors.black,
+      selectionColor: model.selectionColor != null ? Color(int.parse(model.selectionColor!.substring(1, 7), radix: 16) + 0xFF000000) : Colors.black,
     );
   }
 }

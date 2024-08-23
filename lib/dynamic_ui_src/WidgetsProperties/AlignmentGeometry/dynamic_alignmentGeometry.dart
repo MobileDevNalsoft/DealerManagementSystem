@@ -11,8 +11,7 @@ class DynamicAlignmentGeometry with _$DynamicAlignmentGeometry {
     required double dy,
   }) = _DynamicAlignmentGeometry;
 
-  factory DynamicAlignmentGeometry.fromJson(Map<String, dynamic> json) =>
-      _$DynamicAlignmentGeometryFromJson(json);
+  factory DynamicAlignmentGeometry.fromJson(Map<String, dynamic> json) => _$DynamicAlignmentGeometryFromJson(json);
 }
 
 extension DynamicOffsetParser on DynamicAlignmentGeometry {

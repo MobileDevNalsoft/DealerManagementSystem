@@ -14,8 +14,7 @@ class DynamicBorder with _$DynamicBorder {
     @Default(BorderSide.strokeAlignInside) double strokeAlign,
   }) = _DynamicBorder;
 
-  factory DynamicBorder.fromJson(Map<String, dynamic> json) =>
-      _$DynamicBorderFromJson(json);
+  factory DynamicBorder.fromJson(Map<String, dynamic> json) => _$DynamicBorderFromJson(json);
 }
 
 extension DynamicBorderParser on DynamicBorder {

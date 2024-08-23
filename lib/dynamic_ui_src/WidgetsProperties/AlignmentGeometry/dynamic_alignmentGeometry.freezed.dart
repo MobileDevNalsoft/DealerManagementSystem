@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-DynamicAlignmentGeometry _$DynamicAlignmentGeometryFromJson(
-    Map<String, dynamic> json) {
+DynamicAlignmentGeometry _$DynamicAlignmentGeometryFromJson(Map<String, dynamic> json) {
   return _DynamicAlignmentGeometry.fromJson(json);
 }
 
@@ -26,23 +25,19 @@ mixin _$DynamicAlignmentGeometry {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicAlignmentGeometryCopyWith<DynamicAlignmentGeometry> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicAlignmentGeometryCopyWith<DynamicAlignmentGeometry> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicAlignmentGeometryCopyWith<$Res> {
-  factory $DynamicAlignmentGeometryCopyWith(DynamicAlignmentGeometry value,
-          $Res Function(DynamicAlignmentGeometry) then) =
+  factory $DynamicAlignmentGeometryCopyWith(DynamicAlignmentGeometry value, $Res Function(DynamicAlignmentGeometry) then) =
       _$DynamicAlignmentGeometryCopyWithImpl<$Res, DynamicAlignmentGeometry>;
   @useResult
   $Res call({double dx, double dy});
 }
 
 /// @nodoc
-class _$DynamicAlignmentGeometryCopyWithImpl<$Res,
-        $Val extends DynamicAlignmentGeometry>
-    implements $DynamicAlignmentGeometryCopyWith<$Res> {
+class _$DynamicAlignmentGeometryCopyWithImpl<$Res, $Val extends DynamicAlignmentGeometry> implements $DynamicAlignmentGeometryCopyWith<$Res> {
   _$DynamicAlignmentGeometryCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -70,11 +65,8 @@ class _$DynamicAlignmentGeometryCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$DynamicAlignmentGeometryImplCopyWith<$Res>
-    implements $DynamicAlignmentGeometryCopyWith<$Res> {
-  factory _$$DynamicAlignmentGeometryImplCopyWith(
-          _$DynamicAlignmentGeometryImpl value,
-          $Res Function(_$DynamicAlignmentGeometryImpl) then) =
+abstract class _$$DynamicAlignmentGeometryImplCopyWith<$Res> implements $DynamicAlignmentGeometryCopyWith<$Res> {
+  factory _$$DynamicAlignmentGeometryImplCopyWith(_$DynamicAlignmentGeometryImpl value, $Res Function(_$DynamicAlignmentGeometryImpl) then) =
       __$$DynamicAlignmentGeometryImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -82,13 +74,9 @@ abstract class _$$DynamicAlignmentGeometryImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicAlignmentGeometryImplCopyWithImpl<$Res>
-    extends _$DynamicAlignmentGeometryCopyWithImpl<$Res,
-        _$DynamicAlignmentGeometryImpl>
+class __$$DynamicAlignmentGeometryImplCopyWithImpl<$Res> extends _$DynamicAlignmentGeometryCopyWithImpl<$Res, _$DynamicAlignmentGeometryImpl>
     implements _$$DynamicAlignmentGeometryImplCopyWith<$Res> {
-  __$$DynamicAlignmentGeometryImplCopyWithImpl(
-      _$DynamicAlignmentGeometryImpl _value,
-      $Res Function(_$DynamicAlignmentGeometryImpl) _then)
+  __$$DynamicAlignmentGeometryImplCopyWithImpl(_$DynamicAlignmentGeometryImpl _value, $Res Function(_$DynamicAlignmentGeometryImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -115,8 +103,7 @@ class __$$DynamicAlignmentGeometryImplCopyWithImpl<$Res>
 class _$DynamicAlignmentGeometryImpl implements _DynamicAlignmentGeometry {
   const _$DynamicAlignmentGeometryImpl({required this.dx, required this.dy});
 
-  factory _$DynamicAlignmentGeometryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicAlignmentGeometryImplFromJson(json);
+  factory _$DynamicAlignmentGeometryImpl.fromJson(Map<String, dynamic> json) => _$$DynamicAlignmentGeometryImplFromJson(json);
 
   @override
   final double dx;
@@ -144,9 +131,8 @@ class _$DynamicAlignmentGeometryImpl implements _DynamicAlignmentGeometry {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicAlignmentGeometryImplCopyWith<_$DynamicAlignmentGeometryImpl>
-      get copyWith => __$$DynamicAlignmentGeometryImplCopyWithImpl<
-          _$DynamicAlignmentGeometryImpl>(this, _$identity);
+  _$$DynamicAlignmentGeometryImplCopyWith<_$DynamicAlignmentGeometryImpl> get copyWith =>
+      __$$DynamicAlignmentGeometryImplCopyWithImpl<_$DynamicAlignmentGeometryImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -157,12 +143,9 @@ class _$DynamicAlignmentGeometryImpl implements _DynamicAlignmentGeometry {
 }
 
 abstract class _DynamicAlignmentGeometry implements DynamicAlignmentGeometry {
-  const factory _DynamicAlignmentGeometry(
-      {required final double dx,
-      required final double dy}) = _$DynamicAlignmentGeometryImpl;
+  const factory _DynamicAlignmentGeometry({required final double dx, required final double dy}) = _$DynamicAlignmentGeometryImpl;
 
-  factory _DynamicAlignmentGeometry.fromJson(Map<String, dynamic> json) =
-      _$DynamicAlignmentGeometryImpl.fromJson;
+  factory _DynamicAlignmentGeometry.fromJson(Map<String, dynamic> json) = _$DynamicAlignmentGeometryImpl.fromJson;
 
   @override
   double get dx;
@@ -170,6 +153,5 @@ abstract class _DynamicAlignmentGeometry implements DynamicAlignmentGeometry {
   double get dy;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicAlignmentGeometryImplCopyWith<_$DynamicAlignmentGeometryImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$DynamicAlignmentGeometryImplCopyWith<_$DynamicAlignmentGeometryImpl> get copyWith => throw _privateConstructorUsedError;
 }

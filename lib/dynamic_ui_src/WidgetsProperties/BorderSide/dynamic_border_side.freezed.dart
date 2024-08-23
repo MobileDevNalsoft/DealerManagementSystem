@@ -27,26 +27,18 @@ mixin _$DynamicBorderSide {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicBorderSideCopyWith<DynamicBorderSide> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicBorderSideCopyWith<DynamicBorderSide> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicBorderSideCopyWith<$Res> {
-  factory $DynamicBorderSideCopyWith(
-          DynamicBorderSide value, $Res Function(DynamicBorderSide) then) =
-      _$DynamicBorderSideCopyWithImpl<$Res, DynamicBorderSide>;
+  factory $DynamicBorderSideCopyWith(DynamicBorderSide value, $Res Function(DynamicBorderSide) then) = _$DynamicBorderSideCopyWithImpl<$Res, DynamicBorderSide>;
   @useResult
-  $Res call(
-      {String? color,
-      double width,
-      double strokeAlign,
-      BorderStyle borderStyle});
+  $Res call({String? color, double width, double strokeAlign, BorderStyle borderStyle});
 }
 
 /// @nodoc
-class _$DynamicBorderSideCopyWithImpl<$Res, $Val extends DynamicBorderSide>
-    implements $DynamicBorderSideCopyWith<$Res> {
+class _$DynamicBorderSideCopyWithImpl<$Res, $Val extends DynamicBorderSide> implements $DynamicBorderSideCopyWith<$Res> {
   _$DynamicBorderSideCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -84,27 +76,18 @@ class _$DynamicBorderSideCopyWithImpl<$Res, $Val extends DynamicBorderSide>
 }
 
 /// @nodoc
-abstract class _$$DynamicBorderSideImplCopyWith<$Res>
-    implements $DynamicBorderSideCopyWith<$Res> {
-  factory _$$DynamicBorderSideImplCopyWith(_$DynamicBorderSideImpl value,
-          $Res Function(_$DynamicBorderSideImpl) then) =
+abstract class _$$DynamicBorderSideImplCopyWith<$Res> implements $DynamicBorderSideCopyWith<$Res> {
+  factory _$$DynamicBorderSideImplCopyWith(_$DynamicBorderSideImpl value, $Res Function(_$DynamicBorderSideImpl) then) =
       __$$DynamicBorderSideImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? color,
-      double width,
-      double strokeAlign,
-      BorderStyle borderStyle});
+  $Res call({String? color, double width, double strokeAlign, BorderStyle borderStyle});
 }
 
 /// @nodoc
-class __$$DynamicBorderSideImplCopyWithImpl<$Res>
-    extends _$DynamicBorderSideCopyWithImpl<$Res, _$DynamicBorderSideImpl>
+class __$$DynamicBorderSideImplCopyWithImpl<$Res> extends _$DynamicBorderSideCopyWithImpl<$Res, _$DynamicBorderSideImpl>
     implements _$$DynamicBorderSideImplCopyWith<$Res> {
-  __$$DynamicBorderSideImplCopyWithImpl(_$DynamicBorderSideImpl _value,
-      $Res Function(_$DynamicBorderSideImpl) _then)
-      : super(_value, _then);
+  __$$DynamicBorderSideImplCopyWithImpl(_$DynamicBorderSideImpl _value, $Res Function(_$DynamicBorderSideImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -138,14 +121,9 @@ class __$$DynamicBorderSideImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DynamicBorderSideImpl implements _DynamicBorderSide {
-  const _$DynamicBorderSideImpl(
-      {this.color,
-      this.width = 0.0,
-      this.strokeAlign = 0.0,
-      this.borderStyle = BorderStyle.solid});
+  const _$DynamicBorderSideImpl({this.color, this.width = 0.0, this.strokeAlign = 0.0, this.borderStyle = BorderStyle.solid});
 
-  factory _$DynamicBorderSideImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicBorderSideImplFromJson(json);
+  factory _$DynamicBorderSideImpl.fromJson(Map<String, dynamic> json) => _$$DynamicBorderSideImplFromJson(json);
 
   @override
   final String? color;
@@ -171,23 +149,18 @@ class _$DynamicBorderSideImpl implements _DynamicBorderSide {
             other is _$DynamicBorderSideImpl &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.width, width) || other.width == width) &&
-            (identical(other.strokeAlign, strokeAlign) ||
-                other.strokeAlign == strokeAlign) &&
-            (identical(other.borderStyle, borderStyle) ||
-                other.borderStyle == borderStyle));
+            (identical(other.strokeAlign, strokeAlign) || other.strokeAlign == strokeAlign) &&
+            (identical(other.borderStyle, borderStyle) || other.borderStyle == borderStyle));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, color, width, strokeAlign, borderStyle);
+  int get hashCode => Object.hash(runtimeType, color, width, strokeAlign, borderStyle);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicBorderSideImplCopyWith<_$DynamicBorderSideImpl> get copyWith =>
-      __$$DynamicBorderSideImplCopyWithImpl<_$DynamicBorderSideImpl>(
-          this, _$identity);
+  _$$DynamicBorderSideImplCopyWith<_$DynamicBorderSideImpl> get copyWith => __$$DynamicBorderSideImplCopyWithImpl<_$DynamicBorderSideImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -198,14 +171,10 @@ class _$DynamicBorderSideImpl implements _DynamicBorderSide {
 }
 
 abstract class _DynamicBorderSide implements DynamicBorderSide {
-  const factory _DynamicBorderSide(
-      {final String? color,
-      final double width,
-      final double strokeAlign,
-      final BorderStyle borderStyle}) = _$DynamicBorderSideImpl;
+  const factory _DynamicBorderSide({final String? color, final double width, final double strokeAlign, final BorderStyle borderStyle}) =
+      _$DynamicBorderSideImpl;
 
-  factory _DynamicBorderSide.fromJson(Map<String, dynamic> json) =
-      _$DynamicBorderSideImpl.fromJson;
+  factory _DynamicBorderSide.fromJson(Map<String, dynamic> json) = _$DynamicBorderSideImpl.fromJson;
 
   @override
   String? get color;
@@ -217,6 +186,5 @@ abstract class _DynamicBorderSide implements DynamicBorderSide {
   BorderStyle get borderStyle;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicBorderSideImplCopyWith<_$DynamicBorderSideImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicBorderSideImplCopyWith<_$DynamicBorderSideImpl> get copyWith => throw _privateConstructorUsedError;
 }

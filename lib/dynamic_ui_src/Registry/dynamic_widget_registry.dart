@@ -4,8 +4,7 @@ import 'package:dms/logger/logger.dart';
 class DynamicWidgetRegistry {
   DynamicWidgetRegistry._internal();
 
-  static final DynamicWidgetRegistry _singleton =
-      DynamicWidgetRegistry._internal();
+  static final DynamicWidgetRegistry _singleton = DynamicWidgetRegistry._internal();
 
   factory DynamicWidgetRegistry() => _singleton;
 
@@ -26,8 +25,7 @@ class DynamicWidgetRegistry {
   }
 
   Future<dynamic> registerAll(List<JsonToWidgetParser> parsers) {
-    return Future.forEach(
-        parsers, (JsonToWidgetParser parser) => register(parser));
+    return Future.forEach(parsers, (JsonToWidgetParser parser) => register(parser));
   }
 
   JsonToWidgetParser<dynamic>? getParser(String type) {

@@ -15,6 +15,5 @@ class DynamicColumn with _$DynamicColumn {
     @Default([]) List<Map<String, dynamic>> children,
   }) = _DynamicColumn;
 
-  factory DynamicColumn.fromJson(Map<String, dynamic> json) =>
-      _$DynamicColumnFromJson(json);
+  factory DynamicColumn.fromJson(Map<String, dynamic> json) => _$DynamicColumnFromJson(json);
 }

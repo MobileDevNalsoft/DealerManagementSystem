@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-DynamicDecorationImage _$DynamicDecorationImageFromJson(
-    Map<String, dynamic> json) {
+DynamicDecorationImage _$DynamicDecorationImageFromJson(Map<String, dynamic> json) {
   return _DynamicDecorationImage.fromJson(json);
 }
 
@@ -23,8 +22,7 @@ DynamicDecorationImage _$DynamicDecorationImageFromJson(
 mixin _$DynamicDecorationImage {
   String get src => throw _privateConstructorUsedError;
   BoxFit? get fit => throw _privateConstructorUsedError;
-  DynamicDecorationImageType get imageType =>
-      throw _privateConstructorUsedError;
+  DynamicDecorationImageType get imageType => throw _privateConstructorUsedError;
   DynamicAlignment get alignment => throw _privateConstructorUsedError;
   DynamicRect? get centerSlice => throw _privateConstructorUsedError;
   ImageRepeat get repeat => throw _privateConstructorUsedError;
@@ -37,14 +35,12 @@ mixin _$DynamicDecorationImage {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicDecorationImageCopyWith<DynamicDecorationImage> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicDecorationImageCopyWith<DynamicDecorationImage> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicDecorationImageCopyWith<$Res> {
-  factory $DynamicDecorationImageCopyWith(DynamicDecorationImage value,
-          $Res Function(DynamicDecorationImage) then) =
+  factory $DynamicDecorationImageCopyWith(DynamicDecorationImage value, $Res Function(DynamicDecorationImage) then) =
       _$DynamicDecorationImageCopyWithImpl<$Res, DynamicDecorationImage>;
   @useResult
   $Res call(
@@ -65,9 +61,7 @@ abstract class $DynamicDecorationImageCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicDecorationImageCopyWithImpl<$Res,
-        $Val extends DynamicDecorationImage>
-    implements $DynamicDecorationImageCopyWith<$Res> {
+class _$DynamicDecorationImageCopyWithImpl<$Res, $Val extends DynamicDecorationImage> implements $DynamicDecorationImageCopyWith<$Res> {
   _$DynamicDecorationImageCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -157,11 +151,8 @@ class _$DynamicDecorationImageCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$DynamicDecorationImageImplCopyWith<$Res>
-    implements $DynamicDecorationImageCopyWith<$Res> {
-  factory _$$DynamicDecorationImageImplCopyWith(
-          _$DynamicDecorationImageImpl value,
-          $Res Function(_$DynamicDecorationImageImpl) then) =
+abstract class _$$DynamicDecorationImageImplCopyWith<$Res> implements $DynamicDecorationImageCopyWith<$Res> {
+  factory _$$DynamicDecorationImageImplCopyWith(_$DynamicDecorationImageImpl value, $Res Function(_$DynamicDecorationImageImpl) then) =
       __$$DynamicDecorationImageImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -184,14 +175,9 @@ abstract class _$$DynamicDecorationImageImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicDecorationImageImplCopyWithImpl<$Res>
-    extends _$DynamicDecorationImageCopyWithImpl<$Res,
-        _$DynamicDecorationImageImpl>
+class __$$DynamicDecorationImageImplCopyWithImpl<$Res> extends _$DynamicDecorationImageCopyWithImpl<$Res, _$DynamicDecorationImageImpl>
     implements _$$DynamicDecorationImageImplCopyWith<$Res> {
-  __$$DynamicDecorationImageImplCopyWithImpl(
-      _$DynamicDecorationImageImpl _value,
-      $Res Function(_$DynamicDecorationImageImpl) _then)
-      : super(_value, _then);
+  __$$DynamicDecorationImageImplCopyWithImpl(_$DynamicDecorationImageImpl _value, $Res Function(_$DynamicDecorationImageImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -279,8 +265,7 @@ class _$DynamicDecorationImageImpl implements _DynamicDecorationImage {
       this.invertColors = false,
       this.isAntiAlias = false});
 
-  factory _$DynamicDecorationImageImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicDecorationImageImplFromJson(json);
+  factory _$DynamicDecorationImageImpl.fromJson(Map<String, dynamic> json) => _$$DynamicDecorationImageImplFromJson(json);
 
   @override
   final String src;
@@ -328,48 +313,28 @@ class _$DynamicDecorationImageImpl implements _DynamicDecorationImage {
             other is _$DynamicDecorationImageImpl &&
             (identical(other.src, src) || other.src == src) &&
             (identical(other.fit, fit) || other.fit == fit) &&
-            (identical(other.imageType, imageType) ||
-                other.imageType == imageType) &&
-            (identical(other.alignment, alignment) ||
-                other.alignment == alignment) &&
-            (identical(other.centerSlice, centerSlice) ||
-                other.centerSlice == centerSlice) &&
+            (identical(other.imageType, imageType) || other.imageType == imageType) &&
+            (identical(other.alignment, alignment) || other.alignment == alignment) &&
+            (identical(other.centerSlice, centerSlice) || other.centerSlice == centerSlice) &&
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
-            (identical(other.matchTextDirection, matchTextDirection) ||
-                other.matchTextDirection == matchTextDirection) &&
+            (identical(other.matchTextDirection, matchTextDirection) || other.matchTextDirection == matchTextDirection) &&
             (identical(other.scale, scale) || other.scale == scale) &&
             (identical(other.opacity, opacity) || other.opacity == opacity) &&
-            (identical(other.filterQuality, filterQuality) ||
-                other.filterQuality == filterQuality) &&
-            (identical(other.invertColors, invertColors) ||
-                other.invertColors == invertColors) &&
-            (identical(other.isAntiAlias, isAntiAlias) ||
-                other.isAntiAlias == isAntiAlias));
+            (identical(other.filterQuality, filterQuality) || other.filterQuality == filterQuality) &&
+            (identical(other.invertColors, invertColors) || other.invertColors == invertColors) &&
+            (identical(other.isAntiAlias, isAntiAlias) || other.isAntiAlias == isAntiAlias));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      src,
-      fit,
-      imageType,
-      alignment,
-      centerSlice,
-      repeat,
-      matchTextDirection,
-      scale,
-      opacity,
-      filterQuality,
-      invertColors,
-      isAntiAlias);
+      runtimeType, src, fit, imageType, alignment, centerSlice, repeat, matchTextDirection, scale, opacity, filterQuality, invertColors, isAntiAlias);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicDecorationImageImplCopyWith<_$DynamicDecorationImageImpl>
-      get copyWith => __$$DynamicDecorationImageImplCopyWithImpl<
-          _$DynamicDecorationImageImpl>(this, _$identity);
+  _$$DynamicDecorationImageImplCopyWith<_$DynamicDecorationImageImpl> get copyWith =>
+      __$$DynamicDecorationImageImplCopyWithImpl<_$DynamicDecorationImageImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -394,8 +359,7 @@ abstract class _DynamicDecorationImage implements DynamicDecorationImage {
       final bool invertColors,
       final bool isAntiAlias}) = _$DynamicDecorationImageImpl;
 
-  factory _DynamicDecorationImage.fromJson(Map<String, dynamic> json) =
-      _$DynamicDecorationImageImpl.fromJson;
+  factory _DynamicDecorationImage.fromJson(Map<String, dynamic> json) = _$DynamicDecorationImageImpl.fromJson;
 
   @override
   String get src;
@@ -423,6 +387,5 @@ abstract class _DynamicDecorationImage implements DynamicDecorationImage {
   bool get isAntiAlias;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicDecorationImageImplCopyWith<_$DynamicDecorationImageImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$DynamicDecorationImageImplCopyWith<_$DynamicDecorationImageImpl> get copyWith => throw _privateConstructorUsedError;
 }

@@ -22,8 +22,7 @@ class DynamicText with _$DynamicText {
     String? selectionColor,
   }) = _DynamicText;
 
-  factory DynamicText.fromJson(Map<String, dynamic> json) =>
-      _$DynamicTextFromJson(json);
+  factory DynamicText.fromJson(Map<String, dynamic> json) => _$DynamicTextFromJson(json);
 }
 
 @freezed
@@ -34,6 +33,5 @@ class DynamicTextSpan with _$DynamicTextSpan {
     Map<String, dynamic>? onTap,
   }) = _DynamicTextSpan;
 
-  factory DynamicTextSpan.fromJson(Map<String, dynamic> json) =>
-      _$DynamicTextSpanFromJson(json);
+  factory DynamicTextSpan.fromJson(Map<String, dynamic> json) => _$DynamicTextSpanFromJson(json);
 }

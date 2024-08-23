@@ -25,12 +25,10 @@ class DynamicListView with _$DynamicListView {
     Map<String, dynamic>? separator,
     int? semanticChildCount,
     @Default(DragStartBehavior.start) DragStartBehavior dragStartBehavior,
-    @Default(ScrollViewKeyboardDismissBehavior.manual)
-    ScrollViewKeyboardDismissBehavior keyboardDismissBehavior,
+    @Default(ScrollViewKeyboardDismissBehavior.manual) ScrollViewKeyboardDismissBehavior keyboardDismissBehavior,
     String? restorationId,
     @Default(Clip.hardEdge) Clip clipBehavior,
   }) = _DynamicListView;
 
-  factory DynamicListView.fromJson(Map<String, dynamic> json) =>
-      _$DynamicListViewFromJson(json);
+  factory DynamicListView.fromJson(Map<String, dynamic> json) => _$DynamicListViewFromJson(json);
 }

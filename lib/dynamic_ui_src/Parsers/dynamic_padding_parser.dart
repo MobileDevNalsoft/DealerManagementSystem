@@ -10,15 +10,13 @@ class DynamicPaddingParser extends JsonToWidgetParser<DynamicPadding> {
   const DynamicPaddingParser();
 
   @override
-  DynamicPadding getModel(Map<String, dynamic> json) =>
-      DynamicPadding.fromJson(json);
+  DynamicPadding getModel(Map<String, dynamic> json) => DynamicPadding.fromJson(json);
 
   @override
   String get type => WidgetType.padding.name;
 
   @override
-  Widget parse(BuildContext context, DynamicPadding model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicPadding model, [Map<String, dynamic>? functions]) {
     return Padding(
       padding: model.padding.parse,
       child: JsonToWidget.fromJson(model.child, context, functions),

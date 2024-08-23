@@ -38,22 +38,18 @@ mixin _$DynamicGridView {
   List<Map<String, dynamic>> get children => throw _privateConstructorUsedError;
   int? get semanticChildCount => throw _privateConstructorUsedError;
   DragStartBehavior get dragStartBehavior => throw _privateConstructorUsedError;
-  ScrollViewKeyboardDismissBehavior get keyboardDismissBehavior =>
-      throw _privateConstructorUsedError;
+  ScrollViewKeyboardDismissBehavior get keyboardDismissBehavior => throw _privateConstructorUsedError;
   String? get restorationId => throw _privateConstructorUsedError;
   Clip get clipBehavior => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicGridViewCopyWith<DynamicGridView> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicGridViewCopyWith<DynamicGridView> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicGridViewCopyWith<$Res> {
-  factory $DynamicGridViewCopyWith(
-          DynamicGridView value, $Res Function(DynamicGridView) then) =
-      _$DynamicGridViewCopyWithImpl<$Res, DynamicGridView>;
+  factory $DynamicGridViewCopyWith(DynamicGridView value, $Res Function(DynamicGridView) then) = _$DynamicGridViewCopyWithImpl<$Res, DynamicGridView>;
   @useResult
   $Res call(
       {Axis scrollDirection,
@@ -82,8 +78,7 @@ abstract class $DynamicGridViewCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicGridViewCopyWithImpl<$Res, $Val extends DynamicGridView>
-    implements $DynamicGridViewCopyWith<$Res> {
+class _$DynamicGridViewCopyWithImpl<$Res, $Val extends DynamicGridView> implements $DynamicGridViewCopyWith<$Res> {
   _$DynamicGridViewCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -218,11 +213,8 @@ class _$DynamicGridViewCopyWithImpl<$Res, $Val extends DynamicGridView>
 }
 
 /// @nodoc
-abstract class _$$DynamicGridViewImplCopyWith<$Res>
-    implements $DynamicGridViewCopyWith<$Res> {
-  factory _$$DynamicGridViewImplCopyWith(_$DynamicGridViewImpl value,
-          $Res Function(_$DynamicGridViewImpl) then) =
-      __$$DynamicGridViewImplCopyWithImpl<$Res>;
+abstract class _$$DynamicGridViewImplCopyWith<$Res> implements $DynamicGridViewCopyWith<$Res> {
+  factory _$$DynamicGridViewImplCopyWith(_$DynamicGridViewImpl value, $Res Function(_$DynamicGridViewImpl) then) = __$$DynamicGridViewImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -253,12 +245,9 @@ abstract class _$$DynamicGridViewImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicGridViewImplCopyWithImpl<$Res>
-    extends _$DynamicGridViewCopyWithImpl<$Res, _$DynamicGridViewImpl>
+class __$$DynamicGridViewImplCopyWithImpl<$Res> extends _$DynamicGridViewCopyWithImpl<$Res, _$DynamicGridViewImpl>
     implements _$$DynamicGridViewImplCopyWith<$Res> {
-  __$$DynamicGridViewImplCopyWithImpl(
-      _$DynamicGridViewImpl _value, $Res Function(_$DynamicGridViewImpl) _then)
-      : super(_value, _then);
+  __$$DynamicGridViewImplCopyWithImpl(_$DynamicGridViewImpl _value, $Res Function(_$DynamicGridViewImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -401,8 +390,7 @@ class _$DynamicGridViewImpl implements _DynamicGridView {
       this.clipBehavior = Clip.hardEdge})
       : _children = children;
 
-  factory _$DynamicGridViewImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicGridViewImplFromJson(json);
+  factory _$DynamicGridViewImpl.fromJson(Map<String, dynamic> json) => _$$DynamicGridViewImplFromJson(json);
 
   @override
   @JsonKey()
@@ -477,44 +465,27 @@ class _$DynamicGridViewImpl implements _DynamicGridView {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DynamicGridViewImpl &&
-            (identical(other.scrollDirection, scrollDirection) ||
-                other.scrollDirection == scrollDirection) &&
+            (identical(other.scrollDirection, scrollDirection) || other.scrollDirection == scrollDirection) &&
             (identical(other.reverse, reverse) || other.reverse == reverse) &&
             (identical(other.primary, primary) || other.primary == primary) &&
             (identical(other.physics, physics) || other.physics == physics) &&
-            (identical(other.shrinkWrap, shrinkWrap) ||
-                other.shrinkWrap == shrinkWrap) &&
+            (identical(other.shrinkWrap, shrinkWrap) || other.shrinkWrap == shrinkWrap) &&
             (identical(other.padding, padding) || other.padding == padding) &&
-            (identical(other.crossAxisCount, crossAxisCount) ||
-                other.crossAxisCount == crossAxisCount) &&
-            (identical(other.mainAxisSpacing, mainAxisSpacing) ||
-                other.mainAxisSpacing == mainAxisSpacing) &&
-            (identical(other.crossAxisSpacing, crossAxisSpacing) ||
-                other.crossAxisSpacing == crossAxisSpacing) &&
-            (identical(other.childAspectRatio, childAspectRatio) ||
-                other.childAspectRatio == childAspectRatio) &&
-            (identical(other.mainAxisExtent, mainAxisExtent) ||
-                other.mainAxisExtent == mainAxisExtent) &&
-            (identical(other.addAutomaticKeepAlives, addAutomaticKeepAlives) ||
-                other.addAutomaticKeepAlives == addAutomaticKeepAlives) &&
-            (identical(other.addRepaintBoundaries, addRepaintBoundaries) ||
-                other.addRepaintBoundaries == addRepaintBoundaries) &&
-            (identical(other.addSemanticIndexes, addSemanticIndexes) ||
-                other.addSemanticIndexes == addSemanticIndexes) &&
-            (identical(other.cacheExtent, cacheExtent) ||
-                other.cacheExtent == cacheExtent) &&
+            (identical(other.crossAxisCount, crossAxisCount) || other.crossAxisCount == crossAxisCount) &&
+            (identical(other.mainAxisSpacing, mainAxisSpacing) || other.mainAxisSpacing == mainAxisSpacing) &&
+            (identical(other.crossAxisSpacing, crossAxisSpacing) || other.crossAxisSpacing == crossAxisSpacing) &&
+            (identical(other.childAspectRatio, childAspectRatio) || other.childAspectRatio == childAspectRatio) &&
+            (identical(other.mainAxisExtent, mainAxisExtent) || other.mainAxisExtent == mainAxisExtent) &&
+            (identical(other.addAutomaticKeepAlives, addAutomaticKeepAlives) || other.addAutomaticKeepAlives == addAutomaticKeepAlives) &&
+            (identical(other.addRepaintBoundaries, addRepaintBoundaries) || other.addRepaintBoundaries == addRepaintBoundaries) &&
+            (identical(other.addSemanticIndexes, addSemanticIndexes) || other.addSemanticIndexes == addSemanticIndexes) &&
+            (identical(other.cacheExtent, cacheExtent) || other.cacheExtent == cacheExtent) &&
             const DeepCollectionEquality().equals(other._children, _children) &&
-            (identical(other.semanticChildCount, semanticChildCount) ||
-                other.semanticChildCount == semanticChildCount) &&
-            (identical(other.dragStartBehavior, dragStartBehavior) ||
-                other.dragStartBehavior == dragStartBehavior) &&
-            (identical(
-                    other.keyboardDismissBehavior, keyboardDismissBehavior) ||
-                other.keyboardDismissBehavior == keyboardDismissBehavior) &&
-            (identical(other.restorationId, restorationId) ||
-                other.restorationId == restorationId) &&
-            (identical(other.clipBehavior, clipBehavior) ||
-                other.clipBehavior == clipBehavior));
+            (identical(other.semanticChildCount, semanticChildCount) || other.semanticChildCount == semanticChildCount) &&
+            (identical(other.dragStartBehavior, dragStartBehavior) || other.dragStartBehavior == dragStartBehavior) &&
+            (identical(other.keyboardDismissBehavior, keyboardDismissBehavior) || other.keyboardDismissBehavior == keyboardDismissBehavior) &&
+            (identical(other.restorationId, restorationId) || other.restorationId == restorationId) &&
+            (identical(other.clipBehavior, clipBehavior) || other.clipBehavior == clipBehavior));
   }
 
   @JsonKey(ignore: true)
@@ -547,9 +518,7 @@ class _$DynamicGridViewImpl implements _DynamicGridView {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicGridViewImplCopyWith<_$DynamicGridViewImpl> get copyWith =>
-      __$$DynamicGridViewImplCopyWithImpl<_$DynamicGridViewImpl>(
-          this, _$identity);
+  _$$DynamicGridViewImplCopyWith<_$DynamicGridViewImpl> get copyWith => __$$DynamicGridViewImplCopyWithImpl<_$DynamicGridViewImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -583,8 +552,7 @@ abstract class _DynamicGridView implements DynamicGridView {
       final String? restorationId,
       final Clip clipBehavior}) = _$DynamicGridViewImpl;
 
-  factory _DynamicGridView.fromJson(Map<String, dynamic> json) =
-      _$DynamicGridViewImpl.fromJson;
+  factory _DynamicGridView.fromJson(Map<String, dynamic> json) = _$DynamicGridViewImpl.fromJson;
 
   @override
   Axis get scrollDirection;
@@ -630,6 +598,5 @@ abstract class _DynamicGridView implements DynamicGridView {
   Clip get clipBehavior;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicGridViewImplCopyWith<_$DynamicGridViewImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicGridViewImplCopyWith<_$DynamicGridViewImpl> get copyWith => throw _privateConstructorUsedError;
 }

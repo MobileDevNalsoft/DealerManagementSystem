@@ -76,9 +76,7 @@ extension DynamicTextStyleParser on DynamicTextStyle {
 
     return TextStyle(
       inherit: inherit,
-      color: color != null
-          ? Color(int.parse(color!.substring(1, 7), radix: 16) + 0xFF000000)
-          : Colors.black,
+      color: color != null ? Color(int.parse(color!.substring(1, 7), radix: 16) + 0xFF000000) : Colors.black,
       backgroundColor: backgroundColor.toColor(context),
       fontSize: fontSize,
       fontWeight: fontWeight?.value,

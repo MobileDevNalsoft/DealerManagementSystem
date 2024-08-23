@@ -34,14 +34,12 @@ mixin _$DynamicMaterialColor {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicMaterialColorCopyWith<DynamicMaterialColor> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicMaterialColorCopyWith<DynamicMaterialColor> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicMaterialColorCopyWith<$Res> {
-  factory $DynamicMaterialColorCopyWith(DynamicMaterialColor value,
-          $Res Function(DynamicMaterialColor) then) =
+  factory $DynamicMaterialColorCopyWith(DynamicMaterialColor value, $Res Function(DynamicMaterialColor) then) =
       _$DynamicMaterialColorCopyWithImpl<$Res, DynamicMaterialColor>;
   @useResult
   $Res call(
@@ -59,9 +57,7 @@ abstract class $DynamicMaterialColorCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicMaterialColorCopyWithImpl<$Res,
-        $Val extends DynamicMaterialColor>
-    implements $DynamicMaterialColorCopyWith<$Res> {
+class _$DynamicMaterialColorCopyWithImpl<$Res, $Val extends DynamicMaterialColor> implements $DynamicMaterialColorCopyWith<$Res> {
   _$DynamicMaterialColorCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -134,10 +130,8 @@ class _$DynamicMaterialColorCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$DynamicMaterialColorImplCopyWith<$Res>
-    implements $DynamicMaterialColorCopyWith<$Res> {
-  factory _$$DynamicMaterialColorImplCopyWith(_$DynamicMaterialColorImpl value,
-          $Res Function(_$DynamicMaterialColorImpl) then) =
+abstract class _$$DynamicMaterialColorImplCopyWith<$Res> implements $DynamicMaterialColorCopyWith<$Res> {
+  factory _$$DynamicMaterialColorImplCopyWith(_$DynamicMaterialColorImpl value, $Res Function(_$DynamicMaterialColorImpl) then) =
       __$$DynamicMaterialColorImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -156,12 +150,9 @@ abstract class _$$DynamicMaterialColorImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicMaterialColorImplCopyWithImpl<$Res>
-    extends _$DynamicMaterialColorCopyWithImpl<$Res, _$DynamicMaterialColorImpl>
+class __$$DynamicMaterialColorImplCopyWithImpl<$Res> extends _$DynamicMaterialColorCopyWithImpl<$Res, _$DynamicMaterialColorImpl>
     implements _$$DynamicMaterialColorImplCopyWith<$Res> {
-  __$$DynamicMaterialColorImplCopyWithImpl(_$DynamicMaterialColorImpl _value,
-      $Res Function(_$DynamicMaterialColorImpl) _then)
-      : super(_value, _then);
+  __$$DynamicMaterialColorImplCopyWithImpl(_$DynamicMaterialColorImpl _value, $Res Function(_$DynamicMaterialColorImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -243,8 +234,7 @@ class _$DynamicMaterialColorImpl implements _DynamicMaterialColor {
       required this.shade800,
       required this.shade900});
 
-  factory _$DynamicMaterialColorImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicMaterialColorImplFromJson(json);
+  factory _$DynamicMaterialColorImpl.fromJson(Map<String, dynamic> json) => _$$DynamicMaterialColorImplFromJson(json);
 
   @override
   final String primary;
@@ -281,49 +271,26 @@ class _$DynamicMaterialColorImpl implements _DynamicMaterialColor {
             other is _$DynamicMaterialColorImpl &&
             (identical(other.primary, primary) || other.primary == primary) &&
             (identical(other.shade50, shade50) || other.shade50 == shade50) &&
-            (identical(other.shade100, shade100) ||
-                other.shade100 == shade100) &&
-            (identical(other.shade200, shade200) ||
-                other.shade200 == shade200) &&
-            (identical(other.shade300, shade300) ||
-                other.shade300 == shade300) &&
-            (identical(other.shade400, shade400) ||
-                other.shade400 == shade400) &&
-            (identical(other.shade500, shade500) ||
-                other.shade500 == shade500) &&
-            (identical(other.shade600, shade600) ||
-                other.shade600 == shade600) &&
-            (identical(other.shade700, shade700) ||
-                other.shade700 == shade700) &&
-            (identical(other.shade800, shade800) ||
-                other.shade800 == shade800) &&
-            (identical(other.shade900, shade900) ||
-                other.shade900 == shade900));
+            (identical(other.shade100, shade100) || other.shade100 == shade100) &&
+            (identical(other.shade200, shade200) || other.shade200 == shade200) &&
+            (identical(other.shade300, shade300) || other.shade300 == shade300) &&
+            (identical(other.shade400, shade400) || other.shade400 == shade400) &&
+            (identical(other.shade500, shade500) || other.shade500 == shade500) &&
+            (identical(other.shade600, shade600) || other.shade600 == shade600) &&
+            (identical(other.shade700, shade700) || other.shade700 == shade700) &&
+            (identical(other.shade800, shade800) || other.shade800 == shade800) &&
+            (identical(other.shade900, shade900) || other.shade900 == shade900));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      primary,
-      shade50,
-      shade100,
-      shade200,
-      shade300,
-      shade400,
-      shade500,
-      shade600,
-      shade700,
-      shade800,
-      shade900);
+  int get hashCode => Object.hash(runtimeType, primary, shade50, shade100, shade200, shade300, shade400, shade500, shade600, shade700, shade800, shade900);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicMaterialColorImplCopyWith<_$DynamicMaterialColorImpl>
-      get copyWith =>
-          __$$DynamicMaterialColorImplCopyWithImpl<_$DynamicMaterialColorImpl>(
-              this, _$identity);
+  _$$DynamicMaterialColorImplCopyWith<_$DynamicMaterialColorImpl> get copyWith =>
+      __$$DynamicMaterialColorImplCopyWithImpl<_$DynamicMaterialColorImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -347,8 +314,7 @@ abstract class _DynamicMaterialColor implements DynamicMaterialColor {
       required final String shade800,
       required final String shade900}) = _$DynamicMaterialColorImpl;
 
-  factory _DynamicMaterialColor.fromJson(Map<String, dynamic> json) =
-      _$DynamicMaterialColorImpl.fromJson;
+  factory _DynamicMaterialColor.fromJson(Map<String, dynamic> json) = _$DynamicMaterialColorImpl.fromJson;
 
   @override
   String get primary;
@@ -374,6 +340,5 @@ abstract class _DynamicMaterialColor implements DynamicMaterialColor {
   String get shade900;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicMaterialColorImplCopyWith<_$DynamicMaterialColorImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$DynamicMaterialColorImplCopyWith<_$DynamicMaterialColorImpl> get copyWith => throw _privateConstructorUsedError;
 }

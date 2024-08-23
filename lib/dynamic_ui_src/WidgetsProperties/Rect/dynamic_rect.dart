@@ -23,8 +23,7 @@ class DynamicRect with _$DynamicRect {
     double? radius,
   }) = _DynamicRect;
 
-  factory DynamicRect.fromJson(Map<String, dynamic> json) =>
-      _$DynamicRectFromJson(json);
+  factory DynamicRect.fromJson(Map<String, dynamic> json) => _$DynamicRectFromJson(json);
 }
 
 extension DynamicRectParser on DynamicRect {

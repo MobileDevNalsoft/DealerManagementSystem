@@ -35,15 +35,12 @@ mixin _$DynamicGradient {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicGradientCopyWith<DynamicGradient> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicGradientCopyWith<DynamicGradient> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicGradientCopyWith<$Res> {
-  factory $DynamicGradientCopyWith(
-          DynamicGradient value, $Res Function(DynamicGradient) then) =
-      _$DynamicGradientCopyWithImpl<$Res, DynamicGradient>;
+  factory $DynamicGradientCopyWith(DynamicGradient value, $Res Function(DynamicGradient) then) = _$DynamicGradientCopyWithImpl<$Res, DynamicGradient>;
   @useResult
   $Res call(
       {List<String> colors,
@@ -63,8 +60,7 @@ abstract class $DynamicGradientCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicGradientCopyWithImpl<$Res, $Val extends DynamicGradient>
-    implements $DynamicGradientCopyWith<$Res> {
+class _$DynamicGradientCopyWithImpl<$Res, $Val extends DynamicGradient> implements $DynamicGradientCopyWith<$Res> {
   _$DynamicGradientCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -154,11 +150,8 @@ class _$DynamicGradientCopyWithImpl<$Res, $Val extends DynamicGradient>
 }
 
 /// @nodoc
-abstract class _$$DynamicGradientImplCopyWith<$Res>
-    implements $DynamicGradientCopyWith<$Res> {
-  factory _$$DynamicGradientImplCopyWith(_$DynamicGradientImpl value,
-          $Res Function(_$DynamicGradientImpl) then) =
-      __$$DynamicGradientImplCopyWithImpl<$Res>;
+abstract class _$$DynamicGradientImplCopyWith<$Res> implements $DynamicGradientCopyWith<$Res> {
+  factory _$$DynamicGradientImplCopyWith(_$DynamicGradientImpl value, $Res Function(_$DynamicGradientImpl) then) = __$$DynamicGradientImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -180,12 +173,9 @@ abstract class _$$DynamicGradientImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicGradientImplCopyWithImpl<$Res>
-    extends _$DynamicGradientCopyWithImpl<$Res, _$DynamicGradientImpl>
+class __$$DynamicGradientImplCopyWithImpl<$Res> extends _$DynamicGradientCopyWithImpl<$Res, _$DynamicGradientImpl>
     implements _$$DynamicGradientImplCopyWith<$Res> {
-  __$$DynamicGradientImplCopyWithImpl(
-      _$DynamicGradientImpl _value, $Res Function(_$DynamicGradientImpl) _then)
-      : super(_value, _then);
+  __$$DynamicGradientImplCopyWithImpl(_$DynamicGradientImpl _value, $Res Function(_$DynamicGradientImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -275,8 +265,7 @@ class _$DynamicGradientImpl implements _DynamicGradient {
       : _colors = colors,
         _stops = stops;
 
-  factory _$DynamicGradientImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicGradientImplFromJson(json);
+  factory _$DynamicGradientImpl.fromJson(Map<String, dynamic> json) => _$$DynamicGradientImplFromJson(json);
 
   final List<String> _colors;
   @override
@@ -341,43 +330,24 @@ class _$DynamicGradientImpl implements _DynamicGradient {
             (identical(other.begin, begin) || other.begin == begin) &&
             (identical(other.end, end) || other.end == end) &&
             (identical(other.center, center) || other.center == center) &&
-            (identical(other.gradientType, gradientType) ||
-                other.gradientType == gradientType) &&
+            (identical(other.gradientType, gradientType) || other.gradientType == gradientType) &&
             (identical(other.focal, focal) || other.focal == focal) &&
-            (identical(other.tileMode, tileMode) ||
-                other.tileMode == tileMode) &&
-            (identical(other.focalRadius, focalRadius) ||
-                other.focalRadius == focalRadius) &&
+            (identical(other.tileMode, tileMode) || other.tileMode == tileMode) &&
+            (identical(other.focalRadius, focalRadius) || other.focalRadius == focalRadius) &&
             (identical(other.radius, radius) || other.radius == radius) &&
-            (identical(other.startAngle, startAngle) ||
-                other.startAngle == startAngle) &&
-            (identical(other.endAngle, endAngle) ||
-                other.endAngle == endAngle));
+            (identical(other.startAngle, startAngle) || other.startAngle == startAngle) &&
+            (identical(other.endAngle, endAngle) || other.endAngle == endAngle));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_colors),
-      const DeepCollectionEquality().hash(_stops),
-      begin,
-      end,
-      center,
-      gradientType,
-      focal,
-      tileMode,
-      focalRadius,
-      radius,
-      startAngle,
-      endAngle);
+  int get hashCode => Object.hash(runtimeType, const DeepCollectionEquality().hash(_colors), const DeepCollectionEquality().hash(_stops), begin, end, center,
+      gradientType, focal, tileMode, focalRadius, radius, startAngle, endAngle);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicGradientImplCopyWith<_$DynamicGradientImpl> get copyWith =>
-      __$$DynamicGradientImplCopyWithImpl<_$DynamicGradientImpl>(
-          this, _$identity);
+  _$$DynamicGradientImplCopyWith<_$DynamicGradientImpl> get copyWith => __$$DynamicGradientImplCopyWithImpl<_$DynamicGradientImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -402,8 +372,7 @@ abstract class _DynamicGradient implements DynamicGradient {
       final double startAngle,
       final double endAngle}) = _$DynamicGradientImpl;
 
-  factory _DynamicGradient.fromJson(Map<String, dynamic> json) =
-      _$DynamicGradientImpl.fromJson;
+  factory _DynamicGradient.fromJson(Map<String, dynamic> json) = _$DynamicGradientImpl.fromJson;
 
   @override
   List<String> get colors;
@@ -431,6 +400,5 @@ abstract class _DynamicGradient implements DynamicGradient {
   double get endAngle;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicGradientImplCopyWith<_$DynamicGradientImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicGradientImplCopyWith<_$DynamicGradientImpl> get copyWith => throw _privateConstructorUsedError;
 }

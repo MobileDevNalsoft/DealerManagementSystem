@@ -33,13 +33,11 @@ class JsonToWidget {
     DynamicWidgetRegistry.instance.registerAll(_parsers);
   }
 
-  static Widget? fromJson(Map<String, dynamic>? json, context,
-      [Map<String, dynamic>? functions]) {
+  static Widget? fromJson(Map<String, dynamic>? json, context, [Map<String, dynamic>? functions]) {
     try {
       if (json != null) {
         String widgetType = json['type'];
-        JsonToWidgetParser? widgetParser =
-            DynamicWidgetRegistry.instance.getParser(widgetType);
+        JsonToWidgetParser? widgetParser = DynamicWidgetRegistry.instance.getParser(widgetType);
         if (widgetParser != null) {
           final model = widgetParser.getModel(json);
           return widgetParser.parse(context, model, functions);

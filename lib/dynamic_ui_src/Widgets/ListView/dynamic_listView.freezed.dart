@@ -34,22 +34,18 @@ mixin _$DynamicListView {
   Map<String, dynamic>? get separator => throw _privateConstructorUsedError;
   int? get semanticChildCount => throw _privateConstructorUsedError;
   DragStartBehavior get dragStartBehavior => throw _privateConstructorUsedError;
-  ScrollViewKeyboardDismissBehavior get keyboardDismissBehavior =>
-      throw _privateConstructorUsedError;
+  ScrollViewKeyboardDismissBehavior get keyboardDismissBehavior => throw _privateConstructorUsedError;
   String? get restorationId => throw _privateConstructorUsedError;
   Clip get clipBehavior => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicListViewCopyWith<DynamicListView> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicListViewCopyWith<DynamicListView> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicListViewCopyWith<$Res> {
-  factory $DynamicListViewCopyWith(
-          DynamicListView value, $Res Function(DynamicListView) then) =
-      _$DynamicListViewCopyWithImpl<$Res, DynamicListView>;
+  factory $DynamicListViewCopyWith(DynamicListView value, $Res Function(DynamicListView) then) = _$DynamicListViewCopyWithImpl<$Res, DynamicListView>;
   @useResult
   $Res call(
       {Axis scrollDirection,
@@ -74,8 +70,7 @@ abstract class $DynamicListViewCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicListViewCopyWithImpl<$Res, $Val extends DynamicListView>
-    implements $DynamicListViewCopyWith<$Res> {
+class _$DynamicListViewCopyWithImpl<$Res, $Val extends DynamicListView> implements $DynamicListViewCopyWith<$Res> {
   _$DynamicListViewCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -190,11 +185,8 @@ class _$DynamicListViewCopyWithImpl<$Res, $Val extends DynamicListView>
 }
 
 /// @nodoc
-abstract class _$$DynamicListViewImplCopyWith<$Res>
-    implements $DynamicListViewCopyWith<$Res> {
-  factory _$$DynamicListViewImplCopyWith(_$DynamicListViewImpl value,
-          $Res Function(_$DynamicListViewImpl) then) =
-      __$$DynamicListViewImplCopyWithImpl<$Res>;
+abstract class _$$DynamicListViewImplCopyWith<$Res> implements $DynamicListViewCopyWith<$Res> {
+  factory _$$DynamicListViewImplCopyWith(_$DynamicListViewImpl value, $Res Function(_$DynamicListViewImpl) then) = __$$DynamicListViewImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -221,12 +213,9 @@ abstract class _$$DynamicListViewImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicListViewImplCopyWithImpl<$Res>
-    extends _$DynamicListViewCopyWithImpl<$Res, _$DynamicListViewImpl>
+class __$$DynamicListViewImplCopyWithImpl<$Res> extends _$DynamicListViewCopyWithImpl<$Res, _$DynamicListViewImpl>
     implements _$$DynamicListViewImplCopyWith<$Res> {
-  __$$DynamicListViewImplCopyWithImpl(
-      _$DynamicListViewImpl _value, $Res Function(_$DynamicListViewImpl) _then)
-      : super(_value, _then);
+  __$$DynamicListViewImplCopyWithImpl(_$DynamicListViewImpl _value, $Res Function(_$DynamicListViewImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -346,8 +335,7 @@ class _$DynamicListViewImpl implements _DynamicListView {
       : _children = children,
         _separator = separator;
 
-  factory _$DynamicListViewImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicListViewImplFromJson(json);
+  factory _$DynamicListViewImpl.fromJson(Map<String, dynamic> json) => _$$DynamicListViewImplFromJson(json);
 
   @override
   @JsonKey()
@@ -418,36 +406,23 @@ class _$DynamicListViewImpl implements _DynamicListView {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DynamicListViewImpl &&
-            (identical(other.scrollDirection, scrollDirection) ||
-                other.scrollDirection == scrollDirection) &&
+            (identical(other.scrollDirection, scrollDirection) || other.scrollDirection == scrollDirection) &&
             (identical(other.reverse, reverse) || other.reverse == reverse) &&
             (identical(other.primary, primary) || other.primary == primary) &&
             (identical(other.physics, physics) || other.physics == physics) &&
-            (identical(other.shrinkWrap, shrinkWrap) ||
-                other.shrinkWrap == shrinkWrap) &&
+            (identical(other.shrinkWrap, shrinkWrap) || other.shrinkWrap == shrinkWrap) &&
             (identical(other.padding, padding) || other.padding == padding) &&
-            (identical(other.addAutomaticKeepAlives, addAutomaticKeepAlives) ||
-                other.addAutomaticKeepAlives == addAutomaticKeepAlives) &&
-            (identical(other.addRepaintBoundaries, addRepaintBoundaries) ||
-                other.addRepaintBoundaries == addRepaintBoundaries) &&
-            (identical(other.addSemanticIndexes, addSemanticIndexes) ||
-                other.addSemanticIndexes == addSemanticIndexes) &&
-            (identical(other.cacheExtent, cacheExtent) ||
-                other.cacheExtent == cacheExtent) &&
+            (identical(other.addAutomaticKeepAlives, addAutomaticKeepAlives) || other.addAutomaticKeepAlives == addAutomaticKeepAlives) &&
+            (identical(other.addRepaintBoundaries, addRepaintBoundaries) || other.addRepaintBoundaries == addRepaintBoundaries) &&
+            (identical(other.addSemanticIndexes, addSemanticIndexes) || other.addSemanticIndexes == addSemanticIndexes) &&
+            (identical(other.cacheExtent, cacheExtent) || other.cacheExtent == cacheExtent) &&
             const DeepCollectionEquality().equals(other._children, _children) &&
-            const DeepCollectionEquality()
-                .equals(other._separator, _separator) &&
-            (identical(other.semanticChildCount, semanticChildCount) ||
-                other.semanticChildCount == semanticChildCount) &&
-            (identical(other.dragStartBehavior, dragStartBehavior) ||
-                other.dragStartBehavior == dragStartBehavior) &&
-            (identical(
-                    other.keyboardDismissBehavior, keyboardDismissBehavior) ||
-                other.keyboardDismissBehavior == keyboardDismissBehavior) &&
-            (identical(other.restorationId, restorationId) ||
-                other.restorationId == restorationId) &&
-            (identical(other.clipBehavior, clipBehavior) ||
-                other.clipBehavior == clipBehavior));
+            const DeepCollectionEquality().equals(other._separator, _separator) &&
+            (identical(other.semanticChildCount, semanticChildCount) || other.semanticChildCount == semanticChildCount) &&
+            (identical(other.dragStartBehavior, dragStartBehavior) || other.dragStartBehavior == dragStartBehavior) &&
+            (identical(other.keyboardDismissBehavior, keyboardDismissBehavior) || other.keyboardDismissBehavior == keyboardDismissBehavior) &&
+            (identical(other.restorationId, restorationId) || other.restorationId == restorationId) &&
+            (identical(other.clipBehavior, clipBehavior) || other.clipBehavior == clipBehavior));
   }
 
   @JsonKey(ignore: true)
@@ -475,9 +450,7 @@ class _$DynamicListViewImpl implements _DynamicListView {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicListViewImplCopyWith<_$DynamicListViewImpl> get copyWith =>
-      __$$DynamicListViewImplCopyWithImpl<_$DynamicListViewImpl>(
-          this, _$identity);
+  _$$DynamicListViewImplCopyWith<_$DynamicListViewImpl> get copyWith => __$$DynamicListViewImplCopyWithImpl<_$DynamicListViewImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -507,8 +480,7 @@ abstract class _DynamicListView implements DynamicListView {
       final String? restorationId,
       final Clip clipBehavior}) = _$DynamicListViewImpl;
 
-  factory _DynamicListView.fromJson(Map<String, dynamic> json) =
-      _$DynamicListViewImpl.fromJson;
+  factory _DynamicListView.fromJson(Map<String, dynamic> json) = _$DynamicListViewImpl.fromJson;
 
   @override
   Axis get scrollDirection;
@@ -546,6 +518,5 @@ abstract class _DynamicListView implements DynamicListView {
   Clip get clipBehavior;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicListViewImplCopyWith<_$DynamicListViewImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicListViewImplCopyWith<_$DynamicListViewImpl> get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,6 +1,4 @@
-import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -76,8 +74,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
       if (_sliderButtonController.currentPosition >= _rightPosition * 0.9) {
         _sliderButtonController.setPosition = Position.right;
         _sliderButtonController.setCurrentPosition = _rightPosition;
-      } else if (_sliderButtonController.currentPosition <=
-          _leftPosition * 1.3) {
+      } else if (_sliderButtonController.currentPosition <= _leftPosition * 1.3) {
         _sliderButtonController.setPosition = Position.left;
         _sliderButtonController.setCurrentPosition = _leftPosition;
       } else {
@@ -146,10 +143,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                           baseColor: Colors.red,
                           highlightColor: Colors.grey.shade100,
                           enabled: true,
-                          child: _sliderButtonController.currentPosition !=
-                                  _leftPosition
-                              ? widget.leftLabel
-                              : SizedBox()),
+                          child: _sliderButtonController.currentPosition != _leftPosition ? widget.leftLabel : SizedBox()),
                     ),
                   ),
                   Align(
@@ -161,10 +155,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                           baseColor: Colors.green,
                           highlightColor: Colors.grey.shade100,
                           enabled: true,
-                          child: _sliderButtonController.currentPosition !=
-                                  _rightPosition
-                              ? widget.rightLabel
-                              : SizedBox()),
+                          child: _sliderButtonController.currentPosition != _rightPosition ? widget.rightLabel : SizedBox()),
                     ),
                   ),
                 ],
@@ -182,14 +173,10 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 borderRadius: BorderRadius.circular(40),
               ),
               child: Center(
-                  child: (_sliderButtonController.currentPosition ==
-                          _rightPosition)
-                      ? Lottie.asset("assets/lottie/success.json",
-                          repeat: false)
-                      : (_sliderButtonController.currentPosition ==
-                              _leftPosition)
-                          ? Lottie.asset("assets/lottie/error2.json",
-                              repeat: false)
+                  child: (_sliderButtonController.currentPosition == _rightPosition)
+                      ? Lottie.asset("assets/lottie/success.json", repeat: false)
+                      : (_sliderButtonController.currentPosition == _leftPosition)
+                          ? Lottie.asset("assets/lottie/error2.json", repeat: false)
                           : widget.icon),
             ),
           ),
@@ -204,8 +191,7 @@ class SliderButtonController extends ChangeNotifier {
   Position position;
   double currentPosition;
 
-  SliderButtonController(
-      {this.position = Position.middle, this.currentPosition = 0});
+  SliderButtonController({this.position = Position.middle, this.currentPosition = 0});
 
   set setPosition(newPosition) {
     position = newPosition;

@@ -12,6 +12,5 @@ class DynamicCenter with _$DynamicCenter {
     Map<String, dynamic>? child,
   }) = _DynamicCenter;
 
-  factory DynamicCenter.fromJson(Map<String, dynamic> json) =>
-      _$DynamicCenterFromJson(json);
+  factory DynamicCenter.fromJson(Map<String, dynamic> json) => _$DynamicCenterFromJson(json);
 }

@@ -1,9 +1,8 @@
 part of 'authentication_bloc.dart';
 
-enum AuthenticationStatus {initial, loading, success, invalidCredentials, failure}
+enum AuthenticationStatus { initial, loading, success, invalidCredentials, failure }
 
 final class AuthenticationState {
-
   AuthenticationState({this.authenticationStatus, this.obscure});
 
   AuthenticationStatus? authenticationStatus;
@@ -13,10 +12,7 @@ final class AuthenticationState {
     return AuthenticationState(authenticationStatus: AuthenticationStatus.initial, obscure: true);
   }
 
-  AuthenticationState copyWith({AuthenticationStatus? authenticationStatus, bool? obscure}){
-    return AuthenticationState(
-      authenticationStatus: authenticationStatus ?? this.authenticationStatus,
-      obscure: obscure ?? this.obscure
-    );
+  AuthenticationState copyWith({AuthenticationStatus? authenticationStatus, bool? obscure}) {
+    return AuthenticationState(authenticationStatus: authenticationStatus ?? this.authenticationStatus, obscure: obscure ?? this.obscure);
   }
 }

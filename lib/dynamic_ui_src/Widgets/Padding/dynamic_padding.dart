@@ -11,6 +11,5 @@ class DynamicPadding with _$DynamicPadding {
     Map<String, dynamic>? child,
   }) = _DynamicPadding;
 
-  factory DynamicPadding.fromJson(Map<String, dynamic> json) =>
-      _$DynamicPaddingFromJson(json);
+  factory DynamicPadding.fromJson(Map<String, dynamic> json) => _$DynamicPaddingFromJson(json);
 }

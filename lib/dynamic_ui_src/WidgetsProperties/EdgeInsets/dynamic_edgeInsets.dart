@@ -19,19 +19,9 @@ class DynamicEdgeInsets with _$DynamicEdgeInsets {
     Map<String, dynamic> resultantJson;
 
     if (json is num) {
-      resultantJson = {
-        "left": json,
-        "top": json,
-        "right": json,
-        "bottom": json
-      };
+      resultantJson = {"left": json, "top": json, "right": json, "bottom": json};
     } else if (json is Map<String, dynamic> && json.length == 2) {
-      resultantJson = {
-        "left": json['horizontal'],
-        "top": json['vertical'],
-        "right": json['horizontal'],
-        "bottom": json['vertical']
-      };
+      resultantJson = {"left": json['horizontal'], "top": json['vertical'], "right": json['horizontal'], "bottom": json['vertical']};
     } else if (json is Map<String, dynamic>) {
       resultantJson = json;
     } else {

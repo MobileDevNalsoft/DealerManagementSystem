@@ -21,8 +21,7 @@ DynamicColumn _$DynamicColumnFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DynamicColumn {
   MainAxisAlignment get mainAxisAlignment => throw _privateConstructorUsedError;
-  CrossAxisAlignment get crossAxisAlignment =>
-      throw _privateConstructorUsedError;
+  CrossAxisAlignment get crossAxisAlignment => throw _privateConstructorUsedError;
   MainAxisSize get mainAxisSize => throw _privateConstructorUsedError;
   TextDirection? get textDirection => throw _privateConstructorUsedError;
   VerticalDirection get verticalDirection => throw _privateConstructorUsedError;
@@ -30,15 +29,12 @@ mixin _$DynamicColumn {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicColumnCopyWith<DynamicColumn> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicColumnCopyWith<DynamicColumn> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicColumnCopyWith<$Res> {
-  factory $DynamicColumnCopyWith(
-          DynamicColumn value, $Res Function(DynamicColumn) then) =
-      _$DynamicColumnCopyWithImpl<$Res, DynamicColumn>;
+  factory $DynamicColumnCopyWith(DynamicColumn value, $Res Function(DynamicColumn) then) = _$DynamicColumnCopyWithImpl<$Res, DynamicColumn>;
   @useResult
   $Res call(
       {MainAxisAlignment mainAxisAlignment,
@@ -50,8 +46,7 @@ abstract class $DynamicColumnCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicColumnCopyWithImpl<$Res, $Val extends DynamicColumn>
-    implements $DynamicColumnCopyWith<$Res> {
+class _$DynamicColumnCopyWithImpl<$Res, $Val extends DynamicColumn> implements $DynamicColumnCopyWith<$Res> {
   _$DynamicColumnCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -99,11 +94,8 @@ class _$DynamicColumnCopyWithImpl<$Res, $Val extends DynamicColumn>
 }
 
 /// @nodoc
-abstract class _$$DynamicColumnImplCopyWith<$Res>
-    implements $DynamicColumnCopyWith<$Res> {
-  factory _$$DynamicColumnImplCopyWith(
-          _$DynamicColumnImpl value, $Res Function(_$DynamicColumnImpl) then) =
-      __$$DynamicColumnImplCopyWithImpl<$Res>;
+abstract class _$$DynamicColumnImplCopyWith<$Res> implements $DynamicColumnCopyWith<$Res> {
+  factory _$$DynamicColumnImplCopyWith(_$DynamicColumnImpl value, $Res Function(_$DynamicColumnImpl) then) = __$$DynamicColumnImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -116,12 +108,8 @@ abstract class _$$DynamicColumnImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicColumnImplCopyWithImpl<$Res>
-    extends _$DynamicColumnCopyWithImpl<$Res, _$DynamicColumnImpl>
-    implements _$$DynamicColumnImplCopyWith<$Res> {
-  __$$DynamicColumnImplCopyWithImpl(
-      _$DynamicColumnImpl _value, $Res Function(_$DynamicColumnImpl) _then)
-      : super(_value, _then);
+class __$$DynamicColumnImplCopyWithImpl<$Res> extends _$DynamicColumnCopyWithImpl<$Res, _$DynamicColumnImpl> implements _$$DynamicColumnImplCopyWith<$Res> {
+  __$$DynamicColumnImplCopyWithImpl(_$DynamicColumnImpl _value, $Res Function(_$DynamicColumnImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -174,8 +162,7 @@ class _$DynamicColumnImpl implements _DynamicColumn {
       final List<Map<String, dynamic>> children = const []})
       : _children = children;
 
-  factory _$DynamicColumnImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicColumnImplFromJson(json);
+  factory _$DynamicColumnImpl.fromJson(Map<String, dynamic> json) => _$$DynamicColumnImplFromJson(json);
 
   @override
   @JsonKey()
@@ -210,35 +197,23 @@ class _$DynamicColumnImpl implements _DynamicColumn {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DynamicColumnImpl &&
-            (identical(other.mainAxisAlignment, mainAxisAlignment) ||
-                other.mainAxisAlignment == mainAxisAlignment) &&
-            (identical(other.crossAxisAlignment, crossAxisAlignment) ||
-                other.crossAxisAlignment == crossAxisAlignment) &&
-            (identical(other.mainAxisSize, mainAxisSize) ||
-                other.mainAxisSize == mainAxisSize) &&
-            (identical(other.textDirection, textDirection) ||
-                other.textDirection == textDirection) &&
-            (identical(other.verticalDirection, verticalDirection) ||
-                other.verticalDirection == verticalDirection) &&
+            (identical(other.mainAxisAlignment, mainAxisAlignment) || other.mainAxisAlignment == mainAxisAlignment) &&
+            (identical(other.crossAxisAlignment, crossAxisAlignment) || other.crossAxisAlignment == crossAxisAlignment) &&
+            (identical(other.mainAxisSize, mainAxisSize) || other.mainAxisSize == mainAxisSize) &&
+            (identical(other.textDirection, textDirection) || other.textDirection == textDirection) &&
+            (identical(other.verticalDirection, verticalDirection) || other.verticalDirection == verticalDirection) &&
             const DeepCollectionEquality().equals(other._children, _children));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      mainAxisAlignment,
-      crossAxisAlignment,
-      mainAxisSize,
-      textDirection,
-      verticalDirection,
-      const DeepCollectionEquality().hash(_children));
+      runtimeType, mainAxisAlignment, crossAxisAlignment, mainAxisSize, textDirection, verticalDirection, const DeepCollectionEquality().hash(_children));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicColumnImplCopyWith<_$DynamicColumnImpl> get copyWith =>
-      __$$DynamicColumnImplCopyWithImpl<_$DynamicColumnImpl>(this, _$identity);
+  _$$DynamicColumnImplCopyWith<_$DynamicColumnImpl> get copyWith => __$$DynamicColumnImplCopyWithImpl<_$DynamicColumnImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -257,8 +232,7 @@ abstract class _DynamicColumn implements DynamicColumn {
       final VerticalDirection verticalDirection,
       final List<Map<String, dynamic>> children}) = _$DynamicColumnImpl;
 
-  factory _DynamicColumn.fromJson(Map<String, dynamic> json) =
-      _$DynamicColumnImpl.fromJson;
+  factory _DynamicColumn.fromJson(Map<String, dynamic> json) = _$DynamicColumnImpl.fromJson;
 
   @override
   MainAxisAlignment get mainAxisAlignment;
@@ -274,6 +248,5 @@ abstract class _DynamicColumn implements DynamicColumn {
   List<Map<String, dynamic>> get children;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicColumnImplCopyWith<_$DynamicColumnImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicColumnImplCopyWith<_$DynamicColumnImpl> get copyWith => throw _privateConstructorUsedError;
 }

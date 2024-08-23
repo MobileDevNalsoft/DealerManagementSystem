@@ -15,12 +15,10 @@ class DynamicContainerParser extends JsonToWidgetParser<DynamicContainer> {
   String get type => WidgetType.container.name;
 
   @override
-  DynamicContainer getModel(Map<String, dynamic> json) =>
-      DynamicContainer.fromJson(json);
+  DynamicContainer getModel(Map<String, dynamic> json) => DynamicContainer.fromJson(json);
 
   @override
-  Widget parse(BuildContext context, DynamicContainer model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicContainer model, [Map<String, dynamic>? functions]) {
     return Container(
       alignment: model.alignment?.value,
       padding: model.padding?.parse,

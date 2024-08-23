@@ -24,13 +24,11 @@ class RouteGenerator {
       case '/home':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const HomeView(),
+          pageBuilder: (context, animation, secondaryAnimation) => const HomeView(),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final tween = Tween<double>(begin: 0, end: 1)
-                .chain(CurveTween(curve: Curves.easeInOut));
+            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
             final fadeAnimation = animation.drive(tween);
             return FadeTransition(
               opacity: fadeAnimation,
@@ -41,16 +39,14 @@ class RouteGenerator {
       case '/dashboard':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const DashBoard(),
+          pageBuilder: (context, animation, secondaryAnimation) => const DashBoard(),
           transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/addVehicle':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const AddVehicle(),
+          pageBuilder: (context, animation, secondaryAnimation) => const AddVehicle(),
           transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
@@ -70,21 +66,18 @@ class RouteGenerator {
       case '/jobCardDetails':
         return Transitions.slideLeftTransition(JobCardDetails(), settings);
       case '/login':
-        return MaterialPageRoute(
-            builder: (_) => const Login(), settings: settings);
+        return MaterialPageRoute(builder: (_) => const Login(), settings: settings);
       case '/listOfJobCards':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const ListOfJobcards(),
+          pageBuilder: (context, animation, secondaryAnimation) => const ListOfJobcards(),
           transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/myJobCards':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const MyJobcards(),
+          pageBuilder: (context, animation, secondaryAnimation) => const MyJobcards(),
           transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
@@ -104,16 +97,14 @@ class RouteGenerator {
       case '/vehicleInfo':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const VehicleInfo(),
+          pageBuilder: (context, animation, secondaryAnimation) => const VehicleInfo(),
           transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/serviceHistory':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const ServiceHistory(),
+          pageBuilder: (context, animation, secondaryAnimation) => const ServiceHistory(),
           transitionDuration: const Duration(milliseconds: 500),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
@@ -135,25 +126,18 @@ class GeneralBodyParts {
   List<GeneralBodyPart>? rejectedParts;
   List<GeneralBodyPart>? pendingParts;
   String? jobCardNo;
-  GeneralBodyParts(
-      {this.generalParts,
-      this.acceptedParts,
-      this.rejectedParts,
-      this.pendingParts,
-      this.jobCardNo});
+  GeneralBodyParts({this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts, this.jobCardNo});
 }
 
 class Transitions {
-  static PageRouteBuilder<dynamic> slideUpTransition(
-      Widget page, RouteSettings settings) {
+  static PageRouteBuilder<dynamic> slideUpTransition(Widget page, RouteSettings settings) {
     return PageRouteBuilder(
       settings: settings,
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: const Duration(milliseconds: 500),
       reverseTransitionDuration: const Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final tween = Tween(begin: const Offset(0, 1), end: Offset.zero)
-            .chain(CurveTween(curve: Curves.easeIn));
+        final tween = Tween(begin: const Offset(0, 1), end: Offset.zero).chain(CurveTween(curve: Curves.easeIn));
         final offsetAnimation = animation.drive(tween);
         return SlideTransition(
           position: offsetAnimation,
@@ -163,16 +147,14 @@ class Transitions {
     );
   }
 
-  static PageRouteBuilder<dynamic> slideLeftTransition(
-      Widget page, RouteSettings settings) {
+  static PageRouteBuilder<dynamic> slideLeftTransition(Widget page, RouteSettings settings) {
     return PageRouteBuilder(
       settings: settings,
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: const Duration(milliseconds: 500),
       reverseTransitionDuration: const Duration(milliseconds: 300),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final tween = Tween(begin: const Offset(1, 0), end: Offset.zero)
-            .chain(CurveTween(curve: Curves.easeIn));
+        final tween = Tween(begin: const Offset(1, 0), end: Offset.zero).chain(CurveTween(curve: Curves.easeIn));
         final offsetAnimation = animation.drive(tween);
         return SlideTransition(
           position: offsetAnimation,

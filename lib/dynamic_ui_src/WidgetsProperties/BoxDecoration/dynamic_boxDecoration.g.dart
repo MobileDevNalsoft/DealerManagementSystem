@@ -6,38 +6,19 @@ part of 'dynamic_boxDecoration.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicBoxDecorationImpl _$$DynamicBoxDecorationImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DynamicBoxDecorationImpl(
+_$DynamicBoxDecorationImpl _$$DynamicBoxDecorationImplFromJson(Map<String, dynamic> json) => _$DynamicBoxDecorationImpl(
       color: json['color'] as String?,
       opacity: (json['opacity'] as num?)?.toDouble(),
-      backgroundBlendMode:
-          $enumDecodeNullable(_$BlendModeEnumMap, json['backgroundBlendMode']),
-      boxShadow: (json['boxShadow'] as List<dynamic>?)
-          ?.map((e) => e == null
-              ? null
-              : DynamicBoxShadow.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      shape: $enumDecodeNullable(_$BoxShapeEnumMap, json['shape']) ??
-          BoxShape.rectangle,
-      border: json['border'] == null
-          ? null
-          : DynamicBorder.fromJson(json['border'] as Map<String, dynamic>),
-      borderRadius: json['borderRadius'] == null
-          ? null
-          : DynamicBorderRadius.fromJson(json['borderRadius']),
-      image: json['image'] == null
-          ? null
-          : DynamicDecorationImage.fromJson(
-              json['image'] as Map<String, dynamic>),
-      gradient: json['gradient'] == null
-          ? null
-          : DynamicGradient.fromJson(json['gradient'] as Map<String, dynamic>),
+      backgroundBlendMode: $enumDecodeNullable(_$BlendModeEnumMap, json['backgroundBlendMode']),
+      boxShadow: (json['boxShadow'] as List<dynamic>?)?.map((e) => e == null ? null : DynamicBoxShadow.fromJson(e as Map<String, dynamic>)).toList(),
+      shape: $enumDecodeNullable(_$BoxShapeEnumMap, json['shape']) ?? BoxShape.rectangle,
+      border: json['border'] == null ? null : DynamicBorder.fromJson(json['border'] as Map<String, dynamic>),
+      borderRadius: json['borderRadius'] == null ? null : DynamicBorderRadius.fromJson(json['borderRadius']),
+      image: json['image'] == null ? null : DynamicDecorationImage.fromJson(json['image'] as Map<String, dynamic>),
+      gradient: json['gradient'] == null ? null : DynamicGradient.fromJson(json['gradient'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$DynamicBoxDecorationImplToJson(
-        _$DynamicBoxDecorationImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$DynamicBoxDecorationImplToJson(_$DynamicBoxDecorationImpl instance) => <String, dynamic>{
       'color': instance.color,
       'opacity': instance.opacity,
       'backgroundBlendMode': _$BlendModeEnumMap[instance.backgroundBlendMode],

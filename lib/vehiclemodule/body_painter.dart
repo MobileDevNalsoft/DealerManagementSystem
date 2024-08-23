@@ -20,13 +20,7 @@ class BodyPainter extends CustomPainter {
   late double translateX;
   late double translateY;
   BodyPainter(
-      {required this.context,
-      this.generalParts,
-      this.acceptedParts,
-      this.rejectedParts,
-      this.pendingParts,
-      this.uiImage,
-      this.displayAcceptedStatus = false});
+      {required this.context, this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts, this.uiImage, this.displayAcceptedStatus = false});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -51,7 +45,7 @@ class BodyPainter extends CustomPainter {
 
       matrix4.translate(translateX, translateY);
       matrix4.scale(xScale, yScale);
-    } 
+    }
     // For mobile screens
     else {
       //scale
@@ -89,8 +83,7 @@ class BodyPainter extends CustomPainter {
         paint.color = Color.fromRGBO(133, 127, 127, 0.612);
       }
       if (context.read<MultiBloc>().state.selectedGeneralBodyPart == muscle.name) {
-
-        //color of the selected part 
+        //color of the selected part
         paint.color = Colors.white;
       }
 
@@ -98,13 +91,11 @@ class BodyPainter extends CustomPainter {
         path.transform(matrix4.storage),
         paint,
         onTapDown: (details) {
-          // on tap actions is only for parts 
+          // on tap actions is only for parts
           if (!muscle.name.startsWith('text')) {
             context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: muscle.name, isTapped: true));
-
           }
         },
-      
       );
       if (displayAcceptedStatus && context.read<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(muscle.name)) {
         if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[muscle.name]!.isAccepted == true) {

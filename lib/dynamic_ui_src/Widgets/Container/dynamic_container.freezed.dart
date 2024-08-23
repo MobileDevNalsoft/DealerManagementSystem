@@ -23,8 +23,7 @@ mixin _$DynamicContainer {
   DynamicAlignment? get alignment => throw _privateConstructorUsedError;
   DynamicEdgeInsets? get padding => throw _privateConstructorUsedError;
   DynamicBoxDecoration? get decoration => throw _privateConstructorUsedError;
-  DynamicBoxDecoration? get foregroundDecoration =>
-      throw _privateConstructorUsedError;
+  DynamicBoxDecoration? get foregroundDecoration => throw _privateConstructorUsedError;
   String? get color => throw _privateConstructorUsedError;
   double? get opacity => throw _privateConstructorUsedError;
   double? get width => throw _privateConstructorUsedError;
@@ -36,15 +35,12 @@ mixin _$DynamicContainer {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicContainerCopyWith<DynamicContainer> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicContainerCopyWith<DynamicContainer> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicContainerCopyWith<$Res> {
-  factory $DynamicContainerCopyWith(
-          DynamicContainer value, $Res Function(DynamicContainer) then) =
-      _$DynamicContainerCopyWithImpl<$Res, DynamicContainer>;
+  factory $DynamicContainerCopyWith(DynamicContainer value, $Res Function(DynamicContainer) then) = _$DynamicContainerCopyWithImpl<$Res, DynamicContainer>;
   @useResult
   $Res call(
       {DynamicAlignment? alignment,
@@ -68,8 +64,7 @@ abstract class $DynamicContainerCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicContainerCopyWithImpl<$Res, $Val extends DynamicContainer>
-    implements $DynamicContainerCopyWith<$Res> {
+class _$DynamicContainerCopyWithImpl<$Res, $Val extends DynamicContainer> implements $DynamicContainerCopyWith<$Res> {
   _$DynamicContainerCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -176,8 +171,7 @@ class _$DynamicContainerCopyWithImpl<$Res, $Val extends DynamicContainer>
       return null;
     }
 
-    return $DynamicBoxDecorationCopyWith<$Res>(_value.foregroundDecoration!,
-        (value) {
+    return $DynamicBoxDecorationCopyWith<$Res>(_value.foregroundDecoration!, (value) {
       return _then(_value.copyWith(foregroundDecoration: value) as $Val);
     });
   }
@@ -208,10 +202,8 @@ class _$DynamicContainerCopyWithImpl<$Res, $Val extends DynamicContainer>
 }
 
 /// @nodoc
-abstract class _$$DynamicContainerImplCopyWith<$Res>
-    implements $DynamicContainerCopyWith<$Res> {
-  factory _$$DynamicContainerImplCopyWith(_$DynamicContainerImpl value,
-          $Res Function(_$DynamicContainerImpl) then) =
+abstract class _$$DynamicContainerImplCopyWith<$Res> implements $DynamicContainerCopyWith<$Res> {
+  factory _$$DynamicContainerImplCopyWith(_$DynamicContainerImpl value, $Res Function(_$DynamicContainerImpl) then) =
       __$$DynamicContainerImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -242,12 +234,9 @@ abstract class _$$DynamicContainerImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicContainerImplCopyWithImpl<$Res>
-    extends _$DynamicContainerCopyWithImpl<$Res, _$DynamicContainerImpl>
+class __$$DynamicContainerImplCopyWithImpl<$Res> extends _$DynamicContainerCopyWithImpl<$Res, _$DynamicContainerImpl>
     implements _$$DynamicContainerImplCopyWith<$Res> {
-  __$$DynamicContainerImplCopyWithImpl(_$DynamicContainerImpl _value,
-      $Res Function(_$DynamicContainerImpl) _then)
-      : super(_value, _then);
+  __$$DynamicContainerImplCopyWithImpl(_$DynamicContainerImpl _value, $Res Function(_$DynamicContainerImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -336,8 +325,7 @@ class _$DynamicContainerImpl implements _DynamicContainer {
       this.clipBehavior = Clip.none})
       : _child = child;
 
-  factory _$DynamicContainerImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicContainerImplFromJson(json);
+  factory _$DynamicContainerImpl.fromJson(Map<String, dynamic> json) => _$$DynamicContainerImplFromJson(json);
 
   @override
   final DynamicAlignment? alignment;
@@ -383,48 +371,29 @@ class _$DynamicContainerImpl implements _DynamicContainer {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DynamicContainerImpl &&
-            (identical(other.alignment, alignment) ||
-                other.alignment == alignment) &&
+            (identical(other.alignment, alignment) || other.alignment == alignment) &&
             (identical(other.padding, padding) || other.padding == padding) &&
-            (identical(other.decoration, decoration) ||
-                other.decoration == decoration) &&
-            (identical(other.foregroundDecoration, foregroundDecoration) ||
-                other.foregroundDecoration == foregroundDecoration) &&
+            (identical(other.decoration, decoration) || other.decoration == decoration) &&
+            (identical(other.foregroundDecoration, foregroundDecoration) || other.foregroundDecoration == foregroundDecoration) &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.opacity, opacity) || other.opacity == opacity) &&
             (identical(other.width, width) || other.width == width) &&
             (identical(other.height, height) || other.height == height) &&
-            (identical(other.constraints, constraints) ||
-                other.constraints == constraints) &&
+            (identical(other.constraints, constraints) || other.constraints == constraints) &&
             (identical(other.margin, margin) || other.margin == margin) &&
             const DeepCollectionEquality().equals(other._child, _child) &&
-            (identical(other.clipBehavior, clipBehavior) ||
-                other.clipBehavior == clipBehavior));
+            (identical(other.clipBehavior, clipBehavior) || other.clipBehavior == clipBehavior));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      alignment,
-      padding,
-      decoration,
-      foregroundDecoration,
-      color,
-      opacity,
-      width,
-      height,
-      constraints,
-      margin,
-      const DeepCollectionEquality().hash(_child),
-      clipBehavior);
+  int get hashCode => Object.hash(runtimeType, alignment, padding, decoration, foregroundDecoration, color, opacity, width, height, constraints, margin,
+      const DeepCollectionEquality().hash(_child), clipBehavior);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicContainerImplCopyWith<_$DynamicContainerImpl> get copyWith =>
-      __$$DynamicContainerImplCopyWithImpl<_$DynamicContainerImpl>(
-          this, _$identity);
+  _$$DynamicContainerImplCopyWith<_$DynamicContainerImpl> get copyWith => __$$DynamicContainerImplCopyWithImpl<_$DynamicContainerImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -449,8 +418,7 @@ abstract class _DynamicContainer implements DynamicContainer {
       final Map<String, dynamic>? child,
       final Clip clipBehavior}) = _$DynamicContainerImpl;
 
-  factory _DynamicContainer.fromJson(Map<String, dynamic> json) =
-      _$DynamicContainerImpl.fromJson;
+  factory _DynamicContainer.fromJson(Map<String, dynamic> json) = _$DynamicContainerImpl.fromJson;
 
   @override
   DynamicAlignment? get alignment;
@@ -478,6 +446,5 @@ abstract class _DynamicContainer implements DynamicContainer {
   Clip get clipBehavior;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicContainerImplCopyWith<_$DynamicContainerImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicContainerImplCopyWith<_$DynamicContainerImpl> get copyWith => throw _privateConstructorUsedError;
 }

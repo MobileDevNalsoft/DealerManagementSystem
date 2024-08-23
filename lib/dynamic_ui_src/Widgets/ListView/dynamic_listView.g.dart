@@ -6,45 +6,28 @@ part of 'dynamic_listView.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicListViewImpl _$$DynamicListViewImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DynamicListViewImpl(
-      scrollDirection:
-          $enumDecodeNullable(_$AxisEnumMap, json['scrollDirection']) ??
-              Axis.vertical,
+_$DynamicListViewImpl _$$DynamicListViewImplFromJson(Map<String, dynamic> json) => _$DynamicListViewImpl(
+      scrollDirection: $enumDecodeNullable(_$AxisEnumMap, json['scrollDirection']) ?? Axis.vertical,
       reverse: json['reverse'] as bool? ?? false,
       primary: json['primary'] as bool?,
-      physics:
-          $enumDecodeNullable(_$DynamicScrollPhysicsEnumMap, json['physics']),
+      physics: $enumDecodeNullable(_$DynamicScrollPhysicsEnumMap, json['physics']),
       shrinkWrap: json['shrinkWrap'] as bool? ?? false,
-      padding: json['padding'] == null
-          ? null
-          : DynamicEdgeInsets.fromJson(json['padding']),
+      padding: json['padding'] == null ? null : DynamicEdgeInsets.fromJson(json['padding']),
       addAutomaticKeepAlives: json['addAutomaticKeepAlives'] as bool? ?? true,
       addRepaintBoundaries: json['addRepaintBoundaries'] as bool? ?? true,
       addSemanticIndexes: json['addSemanticIndexes'] as bool? ?? true,
       cacheExtent: (json['cacheExtent'] as num?)?.toDouble(),
-      children: (json['children'] as List<dynamic>?)
-              ?.map((e) => e as Map<String, dynamic>)
-              .toList() ??
-          const [],
+      children: (json['children'] as List<dynamic>?)?.map((e) => e as Map<String, dynamic>).toList() ?? const [],
       separator: json['separator'] as Map<String, dynamic>?,
       semanticChildCount: (json['semanticChildCount'] as num?)?.toInt(),
-      dragStartBehavior: $enumDecodeNullable(
-              _$DragStartBehaviorEnumMap, json['dragStartBehavior']) ??
-          DragStartBehavior.start,
-      keyboardDismissBehavior: $enumDecodeNullable(
-              _$ScrollViewKeyboardDismissBehaviorEnumMap,
-              json['keyboardDismissBehavior']) ??
-          ScrollViewKeyboardDismissBehavior.manual,
+      dragStartBehavior: $enumDecodeNullable(_$DragStartBehaviorEnumMap, json['dragStartBehavior']) ?? DragStartBehavior.start,
+      keyboardDismissBehavior:
+          $enumDecodeNullable(_$ScrollViewKeyboardDismissBehaviorEnumMap, json['keyboardDismissBehavior']) ?? ScrollViewKeyboardDismissBehavior.manual,
       restorationId: json['restorationId'] as String?,
-      clipBehavior: $enumDecodeNullable(_$ClipEnumMap, json['clipBehavior']) ??
-          Clip.hardEdge,
+      clipBehavior: $enumDecodeNullable(_$ClipEnumMap, json['clipBehavior']) ?? Clip.hardEdge,
     );
 
-Map<String, dynamic> _$$DynamicListViewImplToJson(
-        _$DynamicListViewImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$DynamicListViewImplToJson(_$DynamicListViewImpl instance) => <String, dynamic>{
       'scrollDirection': _$AxisEnumMap[instance.scrollDirection]!,
       'reverse': instance.reverse,
       'primary': instance.primary,
@@ -58,10 +41,8 @@ Map<String, dynamic> _$$DynamicListViewImplToJson(
       'children': instance.children,
       'separator': instance.separator,
       'semanticChildCount': instance.semanticChildCount,
-      'dragStartBehavior':
-          _$DragStartBehaviorEnumMap[instance.dragStartBehavior]!,
-      'keyboardDismissBehavior': _$ScrollViewKeyboardDismissBehaviorEnumMap[
-          instance.keyboardDismissBehavior]!,
+      'dragStartBehavior': _$DragStartBehaviorEnumMap[instance.dragStartBehavior]!,
+      'keyboardDismissBehavior': _$ScrollViewKeyboardDismissBehaviorEnumMap[instance.keyboardDismissBehavior]!,
       'restorationId': instance.restorationId,
       'clipBehavior': _$ClipEnumMap[instance.clipBehavior]!,
     };

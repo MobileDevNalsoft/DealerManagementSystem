@@ -13,12 +13,10 @@ class DynamicGridViewParser extends JsonToWidgetParser<DynamicGridView> {
   String get type => WidgetType.gridView.name;
 
   @override
-  DynamicGridView getModel(Map<String, dynamic> json) =>
-      DynamicGridView.fromJson(json);
+  DynamicGridView getModel(Map<String, dynamic> json) => DynamicGridView.fromJson(json);
 
   @override
-  Widget parse(BuildContext context, DynamicGridView model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicGridView model, [Map<String, dynamic>? functions]) {
     return GridView.builder(
       scrollDirection: model.scrollDirection,
       reverse: model.reverse,
@@ -36,8 +34,7 @@ class DynamicGridViewParser extends JsonToWidgetParser<DynamicGridView> {
       addRepaintBoundaries: model.addRepaintBoundaries,
       addSemanticIndexes: model.addSemanticIndexes,
       cacheExtent: model.cacheExtent,
-      itemBuilder: (context, index) =>
-          JsonToWidget.fromJson(model.children[index], context, functions),
+      itemBuilder: (context, index) => JsonToWidget.fromJson(model.children[index], context, functions),
       itemCount: model.children.length,
       semanticChildCount: model.semanticChildCount,
       dragStartBehavior: model.dragStartBehavior,

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:customs/src.dart';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
@@ -11,10 +10,7 @@ import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/list_of_jobcards.dart';
-import 'package:dms/views/jobcard_details.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
@@ -47,8 +43,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
     _vehicleBloc = context.read<VehicleBloc>();
     _serviceBloc.state.services = [];
     _serviceBloc.state.getServiceStatus = GetServiceStatus.initial;
-    _vehicleBloc
-        .add(UpdateState(vehicle: Vehicle(), status: VehicleStatus.initial));
+    _vehicleBloc.add(UpdateState(vehicle: Vehicle(), status: VehicleStatus.initial));
   }
 
   List<Widget> initalizeWidgets() {
@@ -58,47 +53,28 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
       Stack(
         children: [
           VehicleInfoClippedButton(
-            decorationColor:
-                context.watch<MultiBloc>().state.reverseClippedWidgets!
-                    ? const Color.fromARGB(136, 109, 108, 108)
-                    : null,
-            shadowColor: context.watch<MultiBloc>().state.reverseClippedWidgets!
-                ? Colors.black
-                : Colors.transparent,
+            decorationColor: context.watch<MultiBloc>().state.reverseClippedWidgets! ? const Color.fromARGB(136, 109, 108, 108) : null,
+            shadowColor: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.black : Colors.transparent,
             flipX: true,
             child: Transform.flip(
               flipX: true,
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(
-                        top: size.height * 0.05,
-                        right: size.width * (isMobile ? 0.07 : 0.04),
-                        bottom: isMobile ? 0 : 8),
+                    padding: EdgeInsets.only(top: size.height * 0.05, right: size.width * (isMobile ? 0.07 : 0.04), bottom: isMobile ? 0 : 8),
                     child: LayoutBuilder(builder: (context, constraints) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Spacer(),
-                          Icon(Icons.history,
-                              color: context
-                                      .watch<MultiBloc>()
-                                      .state
-                                      .reverseClippedWidgets!
-                                  ? Colors.white
-                                  : Colors.black),
+                          Icon(Icons.history, color: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.white : Colors.black),
                           const Gap(4),
                           Text(
                             "Service History",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: isMobile ? 16 : 18,
-                                color: context
-                                        .watch<MultiBloc>()
-                                        .state
-                                        .reverseClippedWidgets!
-                                    ? Colors.white
-                                    : Colors.black),
+                                color: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.white : Colors.black),
                           ),
                         ],
                       );
@@ -106,8 +82,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                   ),
                   if (context.watch<MultiBloc>().state.reverseClippedWidgets!)
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: size.width * (isMobile ? 0.45 : 0.2)),
+                      padding: EdgeInsets.only(left: size.width * (isMobile ? 0.45 : 0.2)),
                       child: SizedBox(
                         width: size.width * (isMobile ? 0.24 : 0.16),
                         child: Divider(
@@ -121,8 +96,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     height: size.height * (isMobile ? 0.3 : 0.32),
                     child: BlocConsumer<ServiceBloc, ServiceState>(
                       listener: (context, state) {
-                        if (state.getServiceStatus ==
-                            GetServiceStatus.success) {
+                        if (state.getServiceStatus == GetServiceStatus.success) {
                           focusNode.unfocus();
                         }
                       },
@@ -133,254 +107,123 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                             (state.services == null || state.services!.isEmpty)
                                 ? SliverToBoxAdapter(
                                     child: Center(
-                                        heightFactor:
-                                            isMobile ? size.height * 0.01 : 8,
+                                        heightFactor: isMobile ? size.height * 0.01 : 8,
                                         child: Text("No services found !",
                                             style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: size.width *
-                                                    (isMobile ? 0.045 : 0.016),
-                                                fontWeight: FontWeight.w300))))
+                                                color: Colors.white, fontSize: size.width * (isMobile ? 0.045 : 0.016), fontWeight: FontWeight.w300))))
                                 : SliverList(
-                                    delegate: SliverChildBuilderDelegate(
-                                        (context, index) {
+                                    delegate: SliverChildBuilderDelegate((context, index) {
                                     return Skeletonizer(
                                         enableSwitchAnimation: true,
-                                        enabled: state.getJobCardStatus ==
-                                                GetJobCardStatus.loading ||
-                                            state.jobCardStatusUpdate ==
-                                                JobCardStatusUpdate.loading,
+                                        enabled: state.getJobCardStatus == GetJobCardStatus.loading || state.jobCardStatusUpdate == JobCardStatusUpdate.loading,
                                         child: SizedBox(
-                                          width: size.width *
-                                              (isMobile ? 0.9 : 0.36),
+                                          width: size.width * (isMobile ? 0.9 : 0.36),
                                           height: size.height * 0.14,
                                           child: ClipPath(
                                             clipper: TicketClipper(),
                                             clipBehavior: Clip.antiAlias,
                                             child: Card(
                                               elevation: 5,
-                                              surfaceTintColor:
-                                                  Colors.orange.shade200,
-                                              shadowColor:
-                                                  Colors.orange.shade200,
+                                              surfaceTintColor: Colors.orange.shade200,
+                                              shadowColor: Colors.orange.shade200,
                                               margin: EdgeInsets.symmetric(
                                                 vertical: size.height * 0.006,
                                               ),
                                               color: Colors.white,
                                               child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 children: [
                                                   Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Gap(size.width * 0.03),
                                                       Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Row(
                                                             children: [
-                                                              Gap(size.width *
-                                                                  (isMobile
-                                                                      ? 0.05
-                                                                      : 0.008)),
+                                                              Gap(size.width * (isMobile ? 0.05 : 0.008)),
                                                               Image.asset(
                                                                 'assets/images/job_card.png',
-                                                                scale: size
-                                                                        .width *
-                                                                    (isMobile
-                                                                        ? 0.05
-                                                                        : 0.012),
-                                                                color: Colors
-                                                                    .black,
+                                                                scale: size.width * (isMobile ? 0.05 : 0.012),
+                                                                color: Colors.black,
                                                               ),
-                                                              Gap(size.width *
-                                                                  (isMobile
-                                                                      ? 0.02
-                                                                      : 0.012)),
+                                                              Gap(size.width * (isMobile ? 0.02 : 0.012)),
                                                               Text(
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                state.getServiceStatus ==
-                                                                        GetServiceStatus
-                                                                            .success
-                                                                    ? state
-                                                                        .services![
-                                                                            index]
-                                                                        .jobCardNo!
+                                                                textAlign: TextAlign.center,
+                                                                state.getServiceStatus == GetServiceStatus.success
+                                                                    ? state.services![index].jobCardNo!
                                                                     : 'JC-MAD-633',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontSize:
-                                                                      isMobile
-                                                                          ? 13
-                                                                          : 15,
+                                                                style: TextStyle(
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: isMobile ? 13 : 15,
                                                                 ),
                                                               )
                                                             ],
                                                           ),
-                                                          Gap(size.width *
-                                                              0.01),
+                                                          Gap(size.width * 0.01),
                                                           Row(
                                                             children: [
-                                                              Gap(size.width *
-                                                                  (isMobile
-                                                                      ? 0.05
-                                                                      : 0.008)),
+                                                              Gap(size.width * (isMobile ? 0.05 : 0.008)),
                                                               Icon(
-                                                                Icons
-                                                                    .calendar_month_outlined,
-                                                                size: isMobile
-                                                                    ? null
-                                                                    : size.width *
-                                                                        0.022,
+                                                                Icons.calendar_month_outlined,
+                                                                size: isMobile ? null : size.width * 0.022,
                                                               ),
-                                                              Gap(size.width *
-                                                                  (isMobile
-                                                                      ? 0.02
-                                                                      : 0.012)),
+                                                              Gap(size.width * (isMobile ? 0.02 : 0.012)),
                                                               SizedBox(
-                                                                width: size
-                                                                        .width *
-                                                                    (isMobile
-                                                                        ? 0.28
-                                                                        : 0.08),
-                                                                child:
-                                                                    SingleChildScrollView(
-                                                                  scrollDirection:
-                                                                      Axis.horizontal,
+                                                                width: size.width * (isMobile ? 0.28 : 0.08),
+                                                                child: SingleChildScrollView(
+                                                                  scrollDirection: Axis.horizontal,
                                                                   child: Text(
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    state.getServiceStatus ==
-                                                                            GetServiceStatus
-                                                                                .success
-                                                                        ? state
-                                                                            .services![index]
-                                                                            .scheduledDate!
+                                                                    textAlign: TextAlign.center,
+                                                                    state.getServiceStatus == GetServiceStatus.success
+                                                                        ? state.services![index].scheduledDate!
                                                                         : '12022004',
-                                                                    style: TextStyle(
-                                                                        fontSize: isMobile
-                                                                            ? 13
-                                                                            : 15,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
+                                                                    style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
                                                                   ),
                                                                 ),
                                                               ),
                                                             ],
                                                           ),
-                                                          Gap(size.width *
-                                                              0.01),
+                                                          Gap(size.width * 0.01),
                                                         ],
                                                       ),
-                                                      Gap(size.width *
-                                                          (isMobile
-                                                              ? 0.01
-                                                              : 0.008)),
+                                                      Gap(size.width * (isMobile ? 0.01 : 0.008)),
                                                       Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
-                                                          Gap(size.height *
-                                                              0.004),
+                                                          Gap(size.height * 0.004),
                                                           Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
+                                                            mainAxisAlignment: MainAxisAlignment.start,
                                                             children: [
-                                                              Gap(size.width *
-                                                                  0.058),
-                                                              Icon(
-                                                                  Icons
-                                                                      .mark_unread_chat_alt_outlined,
-                                                                  size: isMobile
-                                                                      ? null
-                                                                      : size.width *
-                                                                          0.022),
+                                                              Gap(size.width * 0.058),
+                                                              Icon(Icons.mark_unread_chat_alt_outlined, size: isMobile ? null : size.width * 0.022),
                                                               // Image.asset('assets/images/status.png', scale: size.width * 0.058),
-                                                              Gap(size.width *
-                                                                  (isMobile
-                                                                      ? 0.02
-                                                                      : 0.016)),
+                                                              Gap(size.width * (isMobile ? 0.02 : 0.016)),
                                                               Text(
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                state.getServiceStatus ==
-                                                                        GetServiceStatus
-                                                                            .success
-                                                                    ? state.services![index]
-                                                                            .jobType ??
-                                                                        '123123123'
+                                                                textAlign: TextAlign.center,
+                                                                state.getServiceStatus == GetServiceStatus.success
+                                                                    ? state.services![index].jobType ?? '123123123'
                                                                     : '123123123',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        isMobile
-                                                                            ? 13
-                                                                            : 15,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
+                                                                style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
                                                               ),
                                                             ],
                                                           ),
-                                                          Gap(size.width *
-                                                              0.01),
+                                                          Gap(size.width * 0.01),
                                                           Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
+                                                            mainAxisAlignment: MainAxisAlignment.start,
                                                             children: [
-                                                              Gap(size.width *
-                                                                  0.058),
-                                                              Icon(
-                                                                  Icons
-                                                                      .location_on_outlined,
-                                                                  size: isMobile
-                                                                      ? null
-                                                                      : size.width *
-                                                                          0.022),
-                                                              Gap(size.width *
-                                                                  (isMobile
-                                                                      ? 0.02
-                                                                      : 0.016)),
+                                                              Gap(size.width * 0.058),
+                                                              Icon(Icons.location_on_outlined, size: isMobile ? null : size.width * 0.022),
+                                                              Gap(size.width * (isMobile ? 0.02 : 0.016)),
                                                               Text(
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                state.getServiceStatus ==
-                                                                        GetServiceStatus
-                                                                            .success
-                                                                    ? state.services![index]
-                                                                            .location ??
-                                                                        'Location27'
+                                                                textAlign: TextAlign.center,
+                                                                state.getServiceStatus == GetServiceStatus.success
+                                                                    ? state.services![index].location ?? 'Location27'
                                                                     : 'Location27',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        isMobile
-                                                                            ? 13
-                                                                            : 15,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
+                                                                style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
                                                               ),
                                                             ],
                                                           ),
@@ -393,10 +236,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                             ),
                                           ),
                                         ));
-                                  },
-                                        childCount: state.services != null
-                                            ? state.services!.length
-                                            : 0))
+                                  }, childCount: state.services != null ? state.services!.length : 0))
                           ],
                         );
                       },
@@ -413,9 +253,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               splashColor: Colors.transparent,
               onTap: () {
                 print("inside service");
-                context
-                    .read<MultiBloc>()
-                    .add(AddClippedWidgets(reverseClippedWidgets: false));
+                context.read<MultiBloc>().add(AddClippedWidgets(reverseClippedWidgets: false));
               },
               child: Container(
                 width: size.width * (isMobile ? 0.4 : 0.24),
@@ -428,22 +266,13 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
       Stack(
         children: [
           VehicleInfoClippedButton(
-              decorationColor:
-                  !context.watch<MultiBloc>().state.reverseClippedWidgets!
-                      ? Colors.white
-                      : null,
-              shadowColor:
-                  !context.watch<MultiBloc>().state.reverseClippedWidgets!
-                      ? Colors.black
-                      : Colors.transparent,
+              decorationColor: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.white : null,
+              shadowColor: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.black : Colors.transparent,
               child: Column(
                 children: [
                   Align(
                     child: Padding(
-                      padding: EdgeInsets.only(
-                          top: size.height * 0.05,
-                          right: size.width * (isMobile ? 0.45 : 0),
-                          bottom: isMobile ? 0 : 8),
+                      padding: EdgeInsets.only(top: size.height * 0.05, right: size.width * (isMobile ? 0.45 : 0), bottom: isMobile ? 0 : 8),
                       child: LayoutBuilder(builder: (context, constraints) {
                         return Row(
                           children: [
@@ -456,9 +285,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                             const Gap(6),
                             Text(
                               "Vehicle Details",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: isMobile ? 16 : 18),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 16 : 18),
                             ),
                           ],
                         );
@@ -468,8 +295,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                   ),
                   if (!context.watch<MultiBloc>().state.reverseClippedWidgets!)
                     Padding(
-                      padding: EdgeInsets.only(
-                          right: size.width * (isMobile ? 0.45 : 0.2)),
+                      padding: EdgeInsets.only(right: size.width * (isMobile ? 0.45 : 0.2)),
                       child: SizedBox(
                         width: size.width * (isMobile ? 0.24 : 0.16),
                         child: const Divider(
@@ -478,24 +304,17 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       ),
                     ),
                   Padding(
-                    padding: EdgeInsets.only(
-                        top: size.height * (isMobile ? 0.056 : 0.04),
-                        left: size.width * (isMobile ? 0.1 : 0.056)),
+                    padding: EdgeInsets.only(top: size.height * (isMobile ? 0.056 : 0.04), left: size.width * (isMobile ? 0.1 : 0.056)),
                     child: BlocBuilder<VehicleBloc, VehicleState>(
                       builder: (context, state) {
                         return Skeletonizer(
-                          enabled: context.watch<VehicleBloc>().state.status ==
-                              VehicleStatus.loading,
+                          enabled: context.watch<VehicleBloc>().state.status == VehicleStatus.loading,
                           child: DMSCustomWidgets.CustomDataFields(
                               context: context,
-                              contentPadding:
-                                  size.width * (isMobile ? 0.08 : 0.088),
-                              spaceBetweenFields:
-                                  size.width * (isMobile ? 0.03 : 0.014),
-                              propertyFontStyle: const TextStyle(
-                                  fontWeight: FontWeight.w800, fontSize: 18),
-                              valueFontStyle: const TextStyle(
-                                  fontWeight: FontWeight.w400, fontSize: 18),
+                              contentPadding: size.width * (isMobile ? 0.08 : 0.088),
+                              spaceBetweenFields: size.width * (isMobile ? 0.03 : 0.014),
+                              propertyFontStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+                              valueFontStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
                               showColonsBetween: false,
                               propertyList: [
                                 "Vehicle Reg. no.",
@@ -529,9 +348,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               onTap: () {
                 print("inside details");
 
-                context
-                    .read<MultiBloc>()
-                    .add(AddClippedWidgets(reverseClippedWidgets: true));
+                context.read<MultiBloc>().add(AddClippedWidgets(reverseClippedWidgets: true));
               },
               child: Container(
                 width: size.width * (isMobile ? 0.4 : 0.24),
@@ -560,21 +377,11 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-            margin: EdgeInsets.only(
-                left: size.width * 0.045,
-                top: isMobile ? 0 : size.height * 0.008,
-                bottom: isMobile ? 0 : size.height * 0.008),
+            margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 10,
-                      blurStyle: BlurStyle.outer,
-                      spreadRadius: 0,
-                      color: Colors.orange.shade200,
-                      offset: const Offset(0, 0))
-                ]),
+                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
             child: Transform(
               transform: Matrix4.translationValues(-3, 0, 0),
               child: IconButton(
@@ -582,33 +389,21 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     focusNode.unfocus();
                     navigator.pop();
                   },
-                  icon: const Icon(Icons.arrow_back_rounded,
-                      color: Colors.white)),
+                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
             ),
           ),
           title: Container(
               alignment: Alignment.center,
               height: size.height * 0.05,
               width: isMobile ? size.width * 0.45 : size.width * 0.32,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 0,
-                        color: Colors.orange.shade200,
-                        offset: const Offset(0, 0))
-                  ]),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+              ]),
               child: const Center(
                 child: Text(
                   textAlign: TextAlign.center,
                   'Vehicle Info',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
                 ),
               )),
           centerTitle: true,
@@ -643,21 +438,16 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       height: size.height * 0.06,
                       width: size.width * (isMobile ? 0.8 : 0.32),
                       decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              bottomLeft: Radius.circular(10)),
-                          color: Colors.white60),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
                       child: TextFormField(
                         controller: vehicleRegNoController,
                         focusNode: focusNode,
                         style: const TextStyle(color: Colors.black),
                         onTapOutside: (event) => focusNode.unfocus(),
                         onChanged: (value) {
-                          vehicleRegNoController.text =
-                              vehicleRegNoController.text.toUpperCase();
+                          vehicleRegNoController.text = vehicleRegNoController.text.toUpperCase();
                           if (_debounce?.isActive ?? false) _debounce!.cancel();
-                          _debounce =
-                              Timer(const Duration(milliseconds: 300), () {
+                          _debounce = Timer(const Duration(milliseconds: 300), () {
                             if (!isConnected()) {
                               DMSCustomWidgets.DMSFlushbar(size, context,
                                   message: 'Looks like you'
@@ -668,22 +458,15 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                   ));
                               return;
                             }
-                            context.read<VehicleBloc>().add(
-                                FetchVehicleCustomer(
-                                    registrationNo:
-                                        vehicleRegNoController.text));
-                            context.read<ServiceBloc>().add(GetServiceHistory(
-                                query: 'vehicle_history',
-                                vehicleRegNo: vehicleRegNoController.text));
+                            context.read<VehicleBloc>().add(FetchVehicleCustomer(registrationNo: vehicleRegNoController.text));
+                            context.read<ServiceBloc>().add(GetServiceHistory(query: 'vehicle_history', vehicleRegNo: vehicleRegNoController.text));
                           });
                         },
                         cursorColor: Colors.black,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 16),
-                          hintStyle:
-                              TextStyle(color: Colors.black38, fontSize: 14),
+                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                          hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
                           hintText: 'Vehicle Registration Number',
                         ),
                       ),
@@ -697,10 +480,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       width: size.width * (isMobile ? 0.14 : 0.04),
                       height: size.height * 0.06,
                       decoration: const BoxDecoration(
-                          color: Colors.black38,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
+                          color: Colors.black38, borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
                       child: const Icon(
                         Icons.search_rounded,
                         color: Colors.white60,
@@ -711,28 +491,16 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 ),
               ),
               Expanded(
-                flex: context.watch<VehicleBloc>().state.status ==
-                        VehicleStatus.vehicleAlreadyAdded
-                    ? 24
-                    : 6,
+                flex: context.watch<VehicleBloc>().state.status == VehicleStatus.vehicleAlreadyAdded ? 24 : 6,
                 child: BlocBuilder<VehicleBloc, VehicleState>(
                   builder: (context, state) {
                     print("building");
                     switch (state.status) {
                       case VehicleStatus.vehicleAlreadyAdded:
-                        return Stack(
-                            children: context
-                                    .read<MultiBloc>()
-                                    .state
-                                    .reverseClippedWidgets!
-                                ? clipperWidgets.reversed.toList()
-                                : clipperWidgets);
+                        return Stack(children: context.read<MultiBloc>().state.reverseClippedWidgets! ? clipperWidgets.reversed.toList() : clipperWidgets);
                       case VehicleStatus.loading:
                         return Transform(
-                          transform: Matrix4.translationValues(
-                              0,
-                              isMobile ? size.height * 0.15 : size.height * 0.1,
-                              0),
+                          transform: Matrix4.translationValues(0, isMobile ? size.height * 0.15 : size.height * 0.1, 0),
                           child: Lottie.asset(
                             "assets/lottie/steering.json",
                             width: size.width * (isMobile ? 0.6 : 0.16),
@@ -741,8 +509,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       default:
                         if (vehicleRegNoController.text.isEmpty) {
                           return Transform(
-                            transform: Matrix4.translationValues(
-                                0, size.height * 0.15, 0),
+                            transform: Matrix4.translationValues(0, size.height * 0.15, 0),
                             child: Lottie.asset(
                               "assets/lottie/car_search.json",
                               width: size.width * (isMobile ? 0.6 : 0.16),
@@ -750,8 +517,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                           );
                         }
                         return Transform(
-                          transform: Matrix4.translationValues(
-                              0, size.height * 0.1, 0),
+                          transform: Matrix4.translationValues(0, size.height * 0.1, 0),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -770,9 +536,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 flex: 5,
                                 child: Text(
                                   "Vehicle not found",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 20),
+                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
                                 ),
                               ),
                             ],
@@ -783,10 +547,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 ),
               ),
               Expanded(
-                flex: context.watch<VehicleBloc>().state.status ==
-                        VehicleStatus.vehicleAlreadyAdded
-                    ? 2
-                    : 20,
+                flex: context.watch<VehicleBloc>().state.status == VehicleStatus.vehicleAlreadyAdded ? 2 : 20,
                 child: Gap(size.height * 0.01),
               )
             ],

@@ -13,8 +13,7 @@ class DynamicBoxConstraints with _$DynamicBoxConstraints {
     required double maxHeight,
   }) = _DynamicBoxConstraints;
 
-  factory DynamicBoxConstraints.fromJson(Map<String, dynamic> json) =>
-      _$DynamicBoxConstraintsFromJson(json);
+  factory DynamicBoxConstraints.fromJson(Map<String, dynamic> json) => _$DynamicBoxConstraintsFromJson(json);
 }
 
 extension DynamicBoxConstraintsParser on DynamicBoxConstraints {

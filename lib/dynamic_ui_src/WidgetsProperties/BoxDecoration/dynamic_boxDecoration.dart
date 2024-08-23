@@ -25,8 +25,7 @@ class DynamicBoxDecoration with _$DynamicBoxDecoration {
     DynamicGradient? gradient,
   }) = _DynamicBoxDecoration;
 
-  factory DynamicBoxDecoration.fromJson(Map<String, dynamic> json) =>
-      _$DynamicBoxDecorationFromJson(json);
+  factory DynamicBoxDecoration.fromJson(Map<String, dynamic> json) => _$DynamicBoxDecorationFromJson(json);
 }
 
 extension DynamicBoxDecorationParser on DynamicBoxDecoration? {

@@ -109,9 +109,7 @@ extension ColorExt on String? {
         int? intColor = int.tryParse(buffer.toString(), radix: 16);
         intColor = intColor ?? 0x00000000;
         print('opacity $opacity');
-        return opacity != null
-            ? Color(intColor).withOpacity(opacity)
-            : Color(intColor);
+        return opacity != null ? Color(intColor).withOpacity(opacity) : Color(intColor);
     }
   }
 

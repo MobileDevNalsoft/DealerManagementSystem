@@ -27,26 +27,18 @@ mixin _$DynamicBorder {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicBorderCopyWith<DynamicBorder> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicBorderCopyWith<DynamicBorder> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicBorderCopyWith<$Res> {
-  factory $DynamicBorderCopyWith(
-          DynamicBorder value, $Res Function(DynamicBorder) then) =
-      _$DynamicBorderCopyWithImpl<$Res, DynamicBorder>;
+  factory $DynamicBorderCopyWith(DynamicBorder value, $Res Function(DynamicBorder) then) = _$DynamicBorderCopyWithImpl<$Res, DynamicBorder>;
   @useResult
-  $Res call(
-      {String? color,
-      BorderStyle borderStyle,
-      double width,
-      double strokeAlign});
+  $Res call({String? color, BorderStyle borderStyle, double width, double strokeAlign});
 }
 
 /// @nodoc
-class _$DynamicBorderCopyWithImpl<$Res, $Val extends DynamicBorder>
-    implements $DynamicBorderCopyWith<$Res> {
+class _$DynamicBorderCopyWithImpl<$Res, $Val extends DynamicBorder> implements $DynamicBorderCopyWith<$Res> {
   _$DynamicBorderCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -84,27 +76,16 @@ class _$DynamicBorderCopyWithImpl<$Res, $Val extends DynamicBorder>
 }
 
 /// @nodoc
-abstract class _$$DynamicBorderImplCopyWith<$Res>
-    implements $DynamicBorderCopyWith<$Res> {
-  factory _$$DynamicBorderImplCopyWith(
-          _$DynamicBorderImpl value, $Res Function(_$DynamicBorderImpl) then) =
-      __$$DynamicBorderImplCopyWithImpl<$Res>;
+abstract class _$$DynamicBorderImplCopyWith<$Res> implements $DynamicBorderCopyWith<$Res> {
+  factory _$$DynamicBorderImplCopyWith(_$DynamicBorderImpl value, $Res Function(_$DynamicBorderImpl) then) = __$$DynamicBorderImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? color,
-      BorderStyle borderStyle,
-      double width,
-      double strokeAlign});
+  $Res call({String? color, BorderStyle borderStyle, double width, double strokeAlign});
 }
 
 /// @nodoc
-class __$$DynamicBorderImplCopyWithImpl<$Res>
-    extends _$DynamicBorderCopyWithImpl<$Res, _$DynamicBorderImpl>
-    implements _$$DynamicBorderImplCopyWith<$Res> {
-  __$$DynamicBorderImplCopyWithImpl(
-      _$DynamicBorderImpl _value, $Res Function(_$DynamicBorderImpl) _then)
-      : super(_value, _then);
+class __$$DynamicBorderImplCopyWithImpl<$Res> extends _$DynamicBorderCopyWithImpl<$Res, _$DynamicBorderImpl> implements _$$DynamicBorderImplCopyWith<$Res> {
+  __$$DynamicBorderImplCopyWithImpl(_$DynamicBorderImpl _value, $Res Function(_$DynamicBorderImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -138,14 +119,9 @@ class __$$DynamicBorderImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DynamicBorderImpl implements _DynamicBorder {
-  const _$DynamicBorderImpl(
-      {this.color,
-      this.borderStyle = BorderStyle.solid,
-      this.width = 1.0,
-      this.strokeAlign = BorderSide.strokeAlignInside});
+  const _$DynamicBorderImpl({this.color, this.borderStyle = BorderStyle.solid, this.width = 1.0, this.strokeAlign = BorderSide.strokeAlignInside});
 
-  factory _$DynamicBorderImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicBorderImplFromJson(json);
+  factory _$DynamicBorderImpl.fromJson(Map<String, dynamic> json) => _$$DynamicBorderImplFromJson(json);
 
   @override
   final String? color;
@@ -170,23 +146,19 @@ class _$DynamicBorderImpl implements _DynamicBorder {
         (other.runtimeType == runtimeType &&
             other is _$DynamicBorderImpl &&
             (identical(other.color, color) || other.color == color) &&
-            (identical(other.borderStyle, borderStyle) ||
-                other.borderStyle == borderStyle) &&
+            (identical(other.borderStyle, borderStyle) || other.borderStyle == borderStyle) &&
             (identical(other.width, width) || other.width == width) &&
-            (identical(other.strokeAlign, strokeAlign) ||
-                other.strokeAlign == strokeAlign));
+            (identical(other.strokeAlign, strokeAlign) || other.strokeAlign == strokeAlign));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, color, borderStyle, width, strokeAlign);
+  int get hashCode => Object.hash(runtimeType, color, borderStyle, width, strokeAlign);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith =>
-      __$$DynamicBorderImplCopyWithImpl<_$DynamicBorderImpl>(this, _$identity);
+  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith => __$$DynamicBorderImplCopyWithImpl<_$DynamicBorderImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -197,14 +169,9 @@ class _$DynamicBorderImpl implements _DynamicBorder {
 }
 
 abstract class _DynamicBorder implements DynamicBorder {
-  const factory _DynamicBorder(
-      {final String? color,
-      final BorderStyle borderStyle,
-      final double width,
-      final double strokeAlign}) = _$DynamicBorderImpl;
+  const factory _DynamicBorder({final String? color, final BorderStyle borderStyle, final double width, final double strokeAlign}) = _$DynamicBorderImpl;
 
-  factory _DynamicBorder.fromJson(Map<String, dynamic> json) =
-      _$DynamicBorderImpl.fromJson;
+  factory _DynamicBorder.fromJson(Map<String, dynamic> json) = _$DynamicBorderImpl.fromJson;
 
   @override
   String? get color;
@@ -216,6 +183,5 @@ abstract class _DynamicBorder implements DynamicBorder {
   double get strokeAlign;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith => throw _privateConstructorUsedError;
 }

@@ -6,38 +6,21 @@ part of 'dynamic_row.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicRowImpl _$$DynamicRowImplFromJson(Map<String, dynamic> json) =>
-    _$DynamicRowImpl(
-      mainAxisAlignment: $enumDecodeNullable(
-              _$MainAxisAlignmentEnumMap, json['mainAxisAlignment']) ??
-          MainAxisAlignment.start,
-      crossAxisAlignment: $enumDecodeNullable(
-              _$CrossAxisAlignmentEnumMap, json['crossAxisAlignment']) ??
-          CrossAxisAlignment.center,
-      mainAxisSize:
-          $enumDecodeNullable(_$MainAxisSizeEnumMap, json['mainAxisSize']) ??
-              MainAxisSize.max,
-      textDirection:
-          $enumDecodeNullable(_$TextDirectionEnumMap, json['textDirection']),
-      verticalDirection: $enumDecodeNullable(
-              _$VerticalDirectionEnumMap, json['verticalDirection']) ??
-          VerticalDirection.down,
-      children: (json['children'] as List<dynamic>?)
-              ?.map((e) => e as Map<String, dynamic>)
-              .toList() ??
-          const [],
+_$DynamicRowImpl _$$DynamicRowImplFromJson(Map<String, dynamic> json) => _$DynamicRowImpl(
+      mainAxisAlignment: $enumDecodeNullable(_$MainAxisAlignmentEnumMap, json['mainAxisAlignment']) ?? MainAxisAlignment.start,
+      crossAxisAlignment: $enumDecodeNullable(_$CrossAxisAlignmentEnumMap, json['crossAxisAlignment']) ?? CrossAxisAlignment.center,
+      mainAxisSize: $enumDecodeNullable(_$MainAxisSizeEnumMap, json['mainAxisSize']) ?? MainAxisSize.max,
+      textDirection: $enumDecodeNullable(_$TextDirectionEnumMap, json['textDirection']),
+      verticalDirection: $enumDecodeNullable(_$VerticalDirectionEnumMap, json['verticalDirection']) ?? VerticalDirection.down,
+      children: (json['children'] as List<dynamic>?)?.map((e) => e as Map<String, dynamic>).toList() ?? const [],
     );
 
-Map<String, dynamic> _$$DynamicRowImplToJson(_$DynamicRowImpl instance) =>
-    <String, dynamic>{
-      'mainAxisAlignment':
-          _$MainAxisAlignmentEnumMap[instance.mainAxisAlignment]!,
-      'crossAxisAlignment':
-          _$CrossAxisAlignmentEnumMap[instance.crossAxisAlignment]!,
+Map<String, dynamic> _$$DynamicRowImplToJson(_$DynamicRowImpl instance) => <String, dynamic>{
+      'mainAxisAlignment': _$MainAxisAlignmentEnumMap[instance.mainAxisAlignment]!,
+      'crossAxisAlignment': _$CrossAxisAlignmentEnumMap[instance.crossAxisAlignment]!,
       'mainAxisSize': _$MainAxisSizeEnumMap[instance.mainAxisSize]!,
       'textDirection': _$TextDirectionEnumMap[instance.textDirection],
-      'verticalDirection':
-          _$VerticalDirectionEnumMap[instance.verticalDirection]!,
+      'verticalDirection': _$VerticalDirectionEnumMap[instance.verticalDirection]!,
       'children': instance.children,
     };
 

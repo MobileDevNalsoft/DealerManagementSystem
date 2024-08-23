@@ -40,21 +40,11 @@ class _DashBoardState extends State<DashBoard> {
           backgroundColor: Colors.black45,
           leadingWidth: size.width * 0.14,
           leading: Container(
-            margin: EdgeInsets.only(
-                left: size.width * 0.045,
-                top: isMobile ? 0 : size.height * 0.008,
-                bottom: isMobile ? 0 : size.height * 0.008),
+            margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 10,
-                      blurStyle: BlurStyle.outer,
-                      spreadRadius: 0,
-                      color: Colors.orange.shade200,
-                      offset: const Offset(0, 0))
-                ]),
+                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
             child: Transform(
               // Slightly shift the icon to the left for better alignment
               transform: Matrix4.translationValues(-3, 0, 0),
@@ -62,32 +52,20 @@ class _DashBoardState extends State<DashBoard> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(Icons.arrow_back_rounded,
-                      color: Colors.white)),
+                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
             ),
           ),
           title: Container(
               alignment: Alignment.center,
               height: size.height * 0.05,
               width: isMobile ? size.width * 0.45 : size.width * 0.32,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 0,
-                        color: Colors.orange.shade200,
-                        offset: const Offset(0, 0))
-                  ]),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+              ]),
               child: const Text(
                 textAlign: TextAlign.center,
                 'Dashboard',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 16),
+                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
               )),
           centerTitle: true,
         ),
@@ -97,14 +75,10 @@ class _DashBoardState extends State<DashBoard> {
           width: size.width,
           decoration: const BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Colors.black45, Colors.black26, Colors.black45],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.1, 0.5, 1])),
+                  colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1])),
           // This Column widget defines a section with the title "Job Cards This Week" and a container
           child: Column(
-            mainAxisSize:
-                MainAxisSize.min, // Set minimum height for this column
+            mainAxisSize: MainAxisSize.min, // Set minimum height for this column
             children: [
               Gap(size.height * 0.01),
               Expanded(
@@ -115,10 +89,7 @@ class _DashBoardState extends State<DashBoard> {
                     const Expanded(
                       child: Text(
                         'Job Cards This Week',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                       ),
                     )
                   ],
@@ -154,12 +125,7 @@ class _DashBoardState extends State<DashBoard> {
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black12,
                                     boxShadow: const [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          blurStyle: BlurStyle.outer,
-                                          spreadRadius: 0,
-                                          color: Colors.black38,
-                                          offset: Offset(0, 0))
+                                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black38, offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -178,12 +144,7 @@ class _DashBoardState extends State<DashBoard> {
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black54,
                                     boxShadow: const [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          blurStyle: BlurStyle.outer,
-                                          spreadRadius: 0,
-                                          color: Colors.black26,
-                                          offset: Offset(0, 0))
+                                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -212,12 +173,7 @@ class _DashBoardState extends State<DashBoard> {
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black54,
                                     boxShadow: const [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          blurStyle: BlurStyle.outer,
-                                          spreadRadius: 0,
-                                          color: Colors.black26,
-                                          offset: Offset(0, 0))
+                                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -249,8 +205,7 @@ class _DashBoardState extends State<DashBoard> {
                                     const Expanded(
                                       flex: 2,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Expanded(
@@ -264,8 +219,7 @@ class _DashBoardState extends State<DashBoard> {
                                             flex: 1,
                                             child: Text(
                                               '4',
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                              style: TextStyle(color: Colors.white),
                                             ),
                                           ),
                                         ],
@@ -277,8 +231,7 @@ class _DashBoardState extends State<DashBoard> {
                                           alignment: Alignment.bottomRight,
                                           child: Text(
                                             'view all',
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: TextStyle(color: Colors.white),
                                           )),
                                     )
                                   ],
@@ -310,12 +263,7 @@ class _DashBoardState extends State<DashBoard> {
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black12,
                                     boxShadow: const [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          blurStyle: BlurStyle.outer,
-                                          spreadRadius: 0,
-                                          color: Colors.black38,
-                                          offset: Offset(0, 0))
+                                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black38, offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -334,12 +282,7 @@ class _DashBoardState extends State<DashBoard> {
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black54,
                                     boxShadow: const [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          blurStyle: BlurStyle.outer,
-                                          spreadRadius: 0,
-                                          color: Colors.black26,
-                                          offset: Offset(0, 0))
+                                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -368,12 +311,7 @@ class _DashBoardState extends State<DashBoard> {
                                     border: Border.all(color: Colors.white),
                                     color: Colors.black54,
                                     boxShadow: const [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          blurStyle: BlurStyle.outer,
-                                          spreadRadius: 0,
-                                          color: Colors.black26,
-                                          offset: Offset(0, 0))
+                                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
                                     ]),
                               ),
                             ),
@@ -405,8 +343,7 @@ class _DashBoardState extends State<DashBoard> {
                                     const Expanded(
                                       flex: 2,
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Expanded(
@@ -420,8 +357,7 @@ class _DashBoardState extends State<DashBoard> {
                                             flex: 1,
                                             child: Text(
                                               '5',
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                              style: TextStyle(color: Colors.white),
                                             ),
                                           ),
                                         ],
@@ -433,8 +369,7 @@ class _DashBoardState extends State<DashBoard> {
                                           alignment: Alignment.bottomRight,
                                           child: Text(
                                             'view all',
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: TextStyle(color: Colors.white),
                                           )),
                                     )
                                   ],
@@ -456,10 +391,7 @@ class _DashBoardState extends State<DashBoard> {
                     const Expanded(
                       child: Text(
                         "Today's Job Cards Stats",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                       ),
                     )
                   ],
@@ -469,17 +401,13 @@ class _DashBoardState extends State<DashBoard> {
               Expanded(
                   flex: 6,
                   child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.black),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.black),
                     width: size.width * 0.9,
                     child: BarChart(BarChartData(
                         // Define the data and styling for the chart
                         alignment: BarChartAlignment.spaceAround,
                         borderData: FlBorderData(show: false),
-                        maxY:
-                            values.reduce((v, e) => v > e ? v : e).toDouble() +
-                                5,
+                        maxY: values.reduce((v, e) => v > e ? v : e).toDouble() + 5,
                         backgroundColor: Colors.transparent,
                         gridData: const FlGridData(
                           show: false,
@@ -494,13 +422,8 @@ class _DashBoardState extends State<DashBoard> {
                               },
                               tooltipPadding: EdgeInsets.zero,
                               tooltipMargin: 8,
-                              getTooltipItem:
-                                  (group, groupIndex, rod, rodIndex) =>
-                                      BarTooltipItem(
-                                          (rod.toY.round()).toString(),
-                                          const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold)),
+                              getTooltipItem: (group, groupIndex, rod, rodIndex) =>
+                                  BarTooltipItem((rod.toY.round()).toString(), const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                             )),
                         titlesData: FlTitlesData(
                             // Define chart titles and labels
@@ -519,14 +442,11 @@ class _DashBoardState extends State<DashBoard> {
                         barGroups: values // Define bar data
                             .map((e) => BarChartGroupData(
                                   x: values.indexOf(e),
-                                  showingTooltipIndicators: [
-                                    0
-                                  ], // Show tooltip on first bar in group
+                                  showingTooltipIndicators: [0], // Show tooltip on first bar in group
                                   barRods: [
                                     BarChartRodData(
                                         toY: e.toDouble(),
-                                        borderSide: const BorderSide(
-                                            color: Colors.white),
+                                        borderSide: const BorderSide(color: Colors.white),
                                         color: Colors.orange.shade200,
                                         borderRadius: BorderRadius.circular(2),
                                         width: 15,

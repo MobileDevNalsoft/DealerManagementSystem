@@ -1,6 +1,7 @@
 part of 'multi_bloc.dart';
 
 enum MultiStateStatus { initial, loading, success, failure }
+
 class MultiBlocState {
   MultiBlocState(
       {this.date,
@@ -9,11 +10,10 @@ class MultiBlocState {
       this.salesPersons,
       this.selectedRadioOption,
       this.status,
-      this.reverseClippedWidgets=false,
+      this.reverseClippedWidgets = false,
       this.scaleFactor,
-      this.isTapped=false,
-      this.selectedGeneralBodyPart=''
-      });
+      this.isTapped = false,
+      this.selectedGeneralBodyPart = ''});
 
   DateTime? date;
   int? selectedRadioOption;
@@ -24,49 +24,48 @@ class MultiBlocState {
   bool? reverseClippedWidgets;
   double? scaleFactor;
   String selectedGeneralBodyPart;
-  bool isTapped; 
-
+  bool isTapped;
 
   factory MultiBlocState.initial() {
     return MultiBlocState(
-        date: null,
-        year: null,
-        selectedRadioOption: 1,
-        checkBoxStates: {
-          0: false,
-          1: false,
-          2: false,
-          3: false,
-          4: false,
-          5: false,
-          6: false,
-          7: false,
-          8: false,
-          9: false,
-          10: false,
-          11: false,
-          12: false,
-          13: false,
-          14: false,
-          15: false,
-          16: false,
-          17: false
-        },
-        );
+      date: null,
+      year: null,
+      selectedRadioOption: 1,
+      checkBoxStates: {
+        0: false,
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: false,
+        7: false,
+        8: false,
+        9: false,
+        10: false,
+        11: false,
+        12: false,
+        13: false,
+        14: false,
+        15: false,
+        16: false,
+        17: false
+      },
+    );
   }
 
-  MultiBlocState copyWith(
-      {DateTime? date,
-      int? year,
-      List<SalesPerson>? salesPersons,
-      MultiStateStatus? status,
-      int? selectedRadioOption,
-      Map<int, bool>? checkBoxStates,
-      bool? reverseClippedWidgets,
-      double? scaleFactor,
-       String? selectedGeneralBodyPart,
-  bool? isTapped ,
-      }) {
+  MultiBlocState copyWith({
+    DateTime? date,
+    int? year,
+    List<SalesPerson>? salesPersons,
+    MultiStateStatus? status,
+    int? selectedRadioOption,
+    Map<int, bool>? checkBoxStates,
+    bool? reverseClippedWidgets,
+    double? scaleFactor,
+    String? selectedGeneralBodyPart,
+    bool? isTapped,
+  }) {
     return MultiBlocState(
         date: date ?? this.date,
         year: year ?? this.year,
@@ -74,10 +73,9 @@ class MultiBlocState {
         checkBoxStates: checkBoxStates ?? this.checkBoxStates,
         salesPersons: salesPersons ?? this.salesPersons,
         status: status ?? this.status,
-        reverseClippedWidgets: reverseClippedWidgets??this.reverseClippedWidgets,
-        scaleFactor: scaleFactor??this.scaleFactor,
-        isTapped: isTapped??this.isTapped,
-        selectedGeneralBodyPart: selectedGeneralBodyPart??this.selectedGeneralBodyPart
-        );
+        reverseClippedWidgets: reverseClippedWidgets ?? this.reverseClippedWidgets,
+        scaleFactor: scaleFactor ?? this.scaleFactor,
+        isTapped: isTapped ?? this.isTapped,
+        selectedGeneralBodyPart: selectedGeneralBodyPart ?? this.selectedGeneralBodyPart);
   }
 }

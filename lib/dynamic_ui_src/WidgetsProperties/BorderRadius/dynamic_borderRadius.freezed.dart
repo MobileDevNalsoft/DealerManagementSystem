@@ -27,23 +27,19 @@ mixin _$DynamicBorderRadius {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicBorderRadiusCopyWith<DynamicBorderRadius> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicBorderRadiusCopyWith<DynamicBorderRadius> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicBorderRadiusCopyWith<$Res> {
-  factory $DynamicBorderRadiusCopyWith(
-          DynamicBorderRadius value, $Res Function(DynamicBorderRadius) then) =
+  factory $DynamicBorderRadiusCopyWith(DynamicBorderRadius value, $Res Function(DynamicBorderRadius) then) =
       _$DynamicBorderRadiusCopyWithImpl<$Res, DynamicBorderRadius>;
   @useResult
-  $Res call(
-      {double topLeft, double topRight, double bottomLeft, double bottomRight});
+  $Res call({double topLeft, double topRight, double bottomLeft, double bottomRight});
 }
 
 /// @nodoc
-class _$DynamicBorderRadiusCopyWithImpl<$Res, $Val extends DynamicBorderRadius>
-    implements $DynamicBorderRadiusCopyWith<$Res> {
+class _$DynamicBorderRadiusCopyWithImpl<$Res, $Val extends DynamicBorderRadius> implements $DynamicBorderRadiusCopyWith<$Res> {
   _$DynamicBorderRadiusCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -81,24 +77,17 @@ class _$DynamicBorderRadiusCopyWithImpl<$Res, $Val extends DynamicBorderRadius>
 }
 
 /// @nodoc
-abstract class _$$DynamicBorderImplCopyWith<$Res>
-    implements $DynamicBorderRadiusCopyWith<$Res> {
-  factory _$$DynamicBorderImplCopyWith(
-          _$DynamicBorderImpl value, $Res Function(_$DynamicBorderImpl) then) =
-      __$$DynamicBorderImplCopyWithImpl<$Res>;
+abstract class _$$DynamicBorderImplCopyWith<$Res> implements $DynamicBorderRadiusCopyWith<$Res> {
+  factory _$$DynamicBorderImplCopyWith(_$DynamicBorderImpl value, $Res Function(_$DynamicBorderImpl) then) = __$$DynamicBorderImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double topLeft, double topRight, double bottomLeft, double bottomRight});
+  $Res call({double topLeft, double topRight, double bottomLeft, double bottomRight});
 }
 
 /// @nodoc
-class __$$DynamicBorderImplCopyWithImpl<$Res>
-    extends _$DynamicBorderRadiusCopyWithImpl<$Res, _$DynamicBorderImpl>
+class __$$DynamicBorderImplCopyWithImpl<$Res> extends _$DynamicBorderRadiusCopyWithImpl<$Res, _$DynamicBorderImpl>
     implements _$$DynamicBorderImplCopyWith<$Res> {
-  __$$DynamicBorderImplCopyWithImpl(
-      _$DynamicBorderImpl _value, $Res Function(_$DynamicBorderImpl) _then)
-      : super(_value, _then);
+  __$$DynamicBorderImplCopyWithImpl(_$DynamicBorderImpl _value, $Res Function(_$DynamicBorderImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -132,14 +121,9 @@ class __$$DynamicBorderImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DynamicBorderImpl implements _DynamicBorder {
-  const _$DynamicBorderImpl(
-      {this.topLeft = 0.0,
-      this.topRight = 0.0,
-      this.bottomLeft = 0.0,
-      this.bottomRight = 0.0});
+  const _$DynamicBorderImpl({this.topLeft = 0.0, this.topRight = 0.0, this.bottomLeft = 0.0, this.bottomRight = 0.0});
 
-  factory _$DynamicBorderImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicBorderImplFromJson(json);
+  factory _$DynamicBorderImpl.fromJson(Map<String, dynamic> json) => _$$DynamicBorderImplFromJson(json);
 
   @override
   @JsonKey()
@@ -165,24 +149,19 @@ class _$DynamicBorderImpl implements _DynamicBorder {
         (other.runtimeType == runtimeType &&
             other is _$DynamicBorderImpl &&
             (identical(other.topLeft, topLeft) || other.topLeft == topLeft) &&
-            (identical(other.topRight, topRight) ||
-                other.topRight == topRight) &&
-            (identical(other.bottomLeft, bottomLeft) ||
-                other.bottomLeft == bottomLeft) &&
-            (identical(other.bottomRight, bottomRight) ||
-                other.bottomRight == bottomRight));
+            (identical(other.topRight, topRight) || other.topRight == topRight) &&
+            (identical(other.bottomLeft, bottomLeft) || other.bottomLeft == bottomLeft) &&
+            (identical(other.bottomRight, bottomRight) || other.bottomRight == bottomRight));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, topLeft, topRight, bottomLeft, bottomRight);
+  int get hashCode => Object.hash(runtimeType, topLeft, topRight, bottomLeft, bottomRight);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith =>
-      __$$DynamicBorderImplCopyWithImpl<_$DynamicBorderImpl>(this, _$identity);
+  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith => __$$DynamicBorderImplCopyWithImpl<_$DynamicBorderImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -193,14 +172,9 @@ class _$DynamicBorderImpl implements _DynamicBorder {
 }
 
 abstract class _DynamicBorder implements DynamicBorderRadius {
-  const factory _DynamicBorder(
-      {final double topLeft,
-      final double topRight,
-      final double bottomLeft,
-      final double bottomRight}) = _$DynamicBorderImpl;
+  const factory _DynamicBorder({final double topLeft, final double topRight, final double bottomLeft, final double bottomRight}) = _$DynamicBorderImpl;
 
-  factory _DynamicBorder.fromJson(Map<String, dynamic> json) =
-      _$DynamicBorderImpl.fromJson;
+  factory _DynamicBorder.fromJson(Map<String, dynamic> json) = _$DynamicBorderImpl.fromJson;
 
   @override
   double get topLeft;
@@ -212,6 +186,5 @@ abstract class _DynamicBorder implements DynamicBorderRadius {
   double get bottomRight;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicBorderImplCopyWith<_$DynamicBorderImpl> get copyWith => throw _privateConstructorUsedError;
 }

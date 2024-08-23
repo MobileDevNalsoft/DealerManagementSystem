@@ -6,38 +6,22 @@ part of 'dynamic_gradient.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicGradientImpl _$$DynamicGradientImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DynamicGradientImpl(
-      colors:
-          (json['colors'] as List<dynamic>).map((e) => e as String).toList(),
-      stops: (json['stops'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
-      begin: $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['begin']) ??
-          DynamicAlignment.centerLeft,
-      end: $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['end']) ??
-          DynamicAlignment.centerRight,
-      center: $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['center']) ??
-          DynamicAlignment.center,
-      gradientType: $enumDecodeNullable(
-              _$DynamicGradientTypeEnumMap, json['gradientType']) ??
-          DynamicGradientType.linear,
-      focal: json['focal'] == null
-          ? null
-          : DynamicAlignmentGeometry.fromJson(
-              json['focal'] as Map<String, dynamic>),
-      tileMode: $enumDecodeNullable(_$TileModeEnumMap, json['tileMode']) ??
-          TileMode.clamp,
+_$DynamicGradientImpl _$$DynamicGradientImplFromJson(Map<String, dynamic> json) => _$DynamicGradientImpl(
+      colors: (json['colors'] as List<dynamic>).map((e) => e as String).toList(),
+      stops: (json['stops'] as List<dynamic>?)?.map((e) => (e as num).toDouble()).toList(),
+      begin: $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['begin']) ?? DynamicAlignment.centerLeft,
+      end: $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['end']) ?? DynamicAlignment.centerRight,
+      center: $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['center']) ?? DynamicAlignment.center,
+      gradientType: $enumDecodeNullable(_$DynamicGradientTypeEnumMap, json['gradientType']) ?? DynamicGradientType.linear,
+      focal: json['focal'] == null ? null : DynamicAlignmentGeometry.fromJson(json['focal'] as Map<String, dynamic>),
+      tileMode: $enumDecodeNullable(_$TileModeEnumMap, json['tileMode']) ?? TileMode.clamp,
       focalRadius: (json['focalRadius'] as num?)?.toDouble() ?? 0.0,
       radius: (json['radius'] as num?)?.toDouble() ?? 0.5,
       startAngle: (json['startAngle'] as num?)?.toDouble() ?? 0.0,
       endAngle: (json['endAngle'] as num?)?.toDouble() ?? math.pi * 2,
     );
 
-Map<String, dynamic> _$$DynamicGradientImplToJson(
-        _$DynamicGradientImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$DynamicGradientImplToJson(_$DynamicGradientImpl instance) => <String, dynamic>{
       'colors': instance.colors,
       'stops': instance.stops,
       'begin': _$DynamicAlignmentEnumMap[instance.begin]!,

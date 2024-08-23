@@ -15,12 +15,10 @@ class DynamicListViewParser extends JsonToWidgetParser<DynamicListView> {
   String get type => WidgetType.listView.name;
 
   @override
-  DynamicListView getModel(Map<String, dynamic> json) =>
-      DynamicListView.fromJson(json);
+  DynamicListView getModel(Map<String, dynamic> json) => DynamicListView.fromJson(json);
 
   @override
-  Widget parse(BuildContext context, DynamicListView model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicListView model, [Map<String, dynamic>? functions]) {
     return ListView.separated(
       scrollDirection: model.scrollDirection,
       reverse: model.reverse,
@@ -38,11 +36,8 @@ class DynamicListViewParser extends JsonToWidgetParser<DynamicListView> {
       restorationId: model.restorationId,
       clipBehavior: model.clipBehavior,
       itemCount: model.children.length,
-      itemBuilder: (context, index) =>
-          JsonToWidget.fromJson(model.children[index], context, functions),
-      separatorBuilder: (context, _) =>
-          JsonToWidget.fromJson(model.separator, context, functions) ??
-          const SizedBox(),
+      itemBuilder: (context, index) => JsonToWidget.fromJson(model.children[index], context, functions),
+      separatorBuilder: (context, _) => JsonToWidget.fromJson(model.separator, context, functions) ?? const SizedBox(),
     );
   }
 }

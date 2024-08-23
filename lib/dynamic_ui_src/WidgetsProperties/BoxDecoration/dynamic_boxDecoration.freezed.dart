@@ -32,14 +32,12 @@ mixin _$DynamicBoxDecoration {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicBoxDecorationCopyWith<DynamicBoxDecoration> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicBoxDecorationCopyWith<DynamicBoxDecoration> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicBoxDecorationCopyWith<$Res> {
-  factory $DynamicBoxDecorationCopyWith(DynamicBoxDecoration value,
-          $Res Function(DynamicBoxDecoration) then) =
+  factory $DynamicBoxDecorationCopyWith(DynamicBoxDecoration value, $Res Function(DynamicBoxDecoration) then) =
       _$DynamicBoxDecorationCopyWithImpl<$Res, DynamicBoxDecoration>;
   @useResult
   $Res call(
@@ -60,9 +58,7 @@ abstract class $DynamicBoxDecorationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicBoxDecorationCopyWithImpl<$Res,
-        $Val extends DynamicBoxDecoration>
-    implements $DynamicBoxDecorationCopyWith<$Res> {
+class _$DynamicBoxDecorationCopyWithImpl<$Res, $Val extends DynamicBoxDecoration> implements $DynamicBoxDecorationCopyWith<$Res> {
   _$DynamicBoxDecorationCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -173,10 +169,8 @@ class _$DynamicBoxDecorationCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$DynamicBoxDecorationImplCopyWith<$Res>
-    implements $DynamicBoxDecorationCopyWith<$Res> {
-  factory _$$DynamicBoxDecorationImplCopyWith(_$DynamicBoxDecorationImpl value,
-          $Res Function(_$DynamicBoxDecorationImpl) then) =
+abstract class _$$DynamicBoxDecorationImplCopyWith<$Res> implements $DynamicBoxDecorationCopyWith<$Res> {
+  factory _$$DynamicBoxDecorationImplCopyWith(_$DynamicBoxDecorationImpl value, $Res Function(_$DynamicBoxDecorationImpl) then) =
       __$$DynamicBoxDecorationImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -202,12 +196,9 @@ abstract class _$$DynamicBoxDecorationImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicBoxDecorationImplCopyWithImpl<$Res>
-    extends _$DynamicBoxDecorationCopyWithImpl<$Res, _$DynamicBoxDecorationImpl>
+class __$$DynamicBoxDecorationImplCopyWithImpl<$Res> extends _$DynamicBoxDecorationCopyWithImpl<$Res, _$DynamicBoxDecorationImpl>
     implements _$$DynamicBoxDecorationImplCopyWith<$Res> {
-  __$$DynamicBoxDecorationImplCopyWithImpl(_$DynamicBoxDecorationImpl _value,
-      $Res Function(_$DynamicBoxDecorationImpl) _then)
-      : super(_value, _then);
+  __$$DynamicBoxDecorationImplCopyWithImpl(_$DynamicBoxDecorationImpl _value, $Res Function(_$DynamicBoxDecorationImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -278,8 +269,7 @@ class _$DynamicBoxDecorationImpl implements _DynamicBoxDecoration {
       this.gradient})
       : _boxShadow = boxShadow;
 
-  factory _$DynamicBoxDecorationImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicBoxDecorationImplFromJson(json);
+  factory _$DynamicBoxDecorationImpl.fromJson(Map<String, dynamic> json) => _$$DynamicBoxDecorationImplFromJson(json);
 
   @override
   final String? color;
@@ -321,40 +311,25 @@ class _$DynamicBoxDecorationImpl implements _DynamicBoxDecoration {
             other is _$DynamicBoxDecorationImpl &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.opacity, opacity) || other.opacity == opacity) &&
-            (identical(other.backgroundBlendMode, backgroundBlendMode) ||
-                other.backgroundBlendMode == backgroundBlendMode) &&
-            const DeepCollectionEquality()
-                .equals(other._boxShadow, _boxShadow) &&
+            (identical(other.backgroundBlendMode, backgroundBlendMode) || other.backgroundBlendMode == backgroundBlendMode) &&
+            const DeepCollectionEquality().equals(other._boxShadow, _boxShadow) &&
             (identical(other.shape, shape) || other.shape == shape) &&
             (identical(other.border, border) || other.border == border) &&
-            (identical(other.borderRadius, borderRadius) ||
-                other.borderRadius == borderRadius) &&
+            (identical(other.borderRadius, borderRadius) || other.borderRadius == borderRadius) &&
             (identical(other.image, image) || other.image == image) &&
-            (identical(other.gradient, gradient) ||
-                other.gradient == gradient));
+            (identical(other.gradient, gradient) || other.gradient == gradient));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      color,
-      opacity,
-      backgroundBlendMode,
-      const DeepCollectionEquality().hash(_boxShadow),
-      shape,
-      border,
-      borderRadius,
-      image,
-      gradient);
+      runtimeType, color, opacity, backgroundBlendMode, const DeepCollectionEquality().hash(_boxShadow), shape, border, borderRadius, image, gradient);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicBoxDecorationImplCopyWith<_$DynamicBoxDecorationImpl>
-      get copyWith =>
-          __$$DynamicBoxDecorationImplCopyWithImpl<_$DynamicBoxDecorationImpl>(
-              this, _$identity);
+  _$$DynamicBoxDecorationImplCopyWith<_$DynamicBoxDecorationImpl> get copyWith =>
+      __$$DynamicBoxDecorationImplCopyWithImpl<_$DynamicBoxDecorationImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -376,8 +351,7 @@ abstract class _DynamicBoxDecoration implements DynamicBoxDecoration {
       final DynamicDecorationImage? image,
       final DynamicGradient? gradient}) = _$DynamicBoxDecorationImpl;
 
-  factory _DynamicBoxDecoration.fromJson(Map<String, dynamic> json) =
-      _$DynamicBoxDecorationImpl.fromJson;
+  factory _DynamicBoxDecoration.fromJson(Map<String, dynamic> json) = _$DynamicBoxDecorationImpl.fromJson;
 
   @override
   String? get color;
@@ -399,6 +373,5 @@ abstract class _DynamicBoxDecoration implements DynamicBoxDecoration {
   DynamicGradient? get gradient;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicBoxDecorationImplCopyWith<_$DynamicBoxDecorationImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$DynamicBoxDecorationImplCopyWith<_$DynamicBoxDecorationImpl> get copyWith => throw _privateConstructorUsedError;
 }

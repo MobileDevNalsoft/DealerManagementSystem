@@ -19,23 +19,13 @@ class DynamicBorderRadius with _$DynamicBorderRadius {
     Map<String, dynamic> resultantJson;
 
     if (json is num) {
-      resultantJson = {
-        "topLeft": json,
-        "topRight": json,
-        "bottomLeft": json,
-        "bottomRight": json
-      };
+      resultantJson = {"topLeft": json, "topRight": json, "bottomLeft": json, "bottomRight": json};
     } else if (json is List<dynamic> && json.length == 4) {
       bool allElementsNum = json.every((element) => element is num);
       if (!allElementsNum) {
         throw ArgumentError('Invalid input format for DynamicEdgeInsets');
       }
-      resultantJson = {
-        "topLeft": json[0],
-        "topRight": json[1],
-        "bottomLeft": json[2],
-        "bottomRight": json[3]
-      };
+      resultantJson = {"topLeft": json[0], "topRight": json[1], "bottomLeft": json[2], "bottomRight": json[3]};
     } else if (json is Map<String, dynamic>) {
       resultantJson = json;
     } else {

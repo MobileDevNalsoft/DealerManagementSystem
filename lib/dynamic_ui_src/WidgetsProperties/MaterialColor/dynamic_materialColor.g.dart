@@ -6,9 +6,7 @@ part of 'dynamic_materialColor.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicMaterialColorImpl _$$DynamicMaterialColorImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DynamicMaterialColorImpl(
+_$DynamicMaterialColorImpl _$$DynamicMaterialColorImplFromJson(Map<String, dynamic> json) => _$DynamicMaterialColorImpl(
       primary: json['primary'] as String,
       shade50: json['shade50'] as String,
       shade100: json['shade100'] as String,
@@ -22,9 +20,7 @@ _$DynamicMaterialColorImpl _$$DynamicMaterialColorImplFromJson(
       shade900: json['shade900'] as String,
     );
 
-Map<String, dynamic> _$$DynamicMaterialColorImplToJson(
-        _$DynamicMaterialColorImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$DynamicMaterialColorImplToJson(_$DynamicMaterialColorImpl instance) => <String, dynamic>{
       'primary': instance.primary,
       'shade50': instance.shade50,
       'shade100': instance.shade100,

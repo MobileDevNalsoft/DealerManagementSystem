@@ -15,19 +15,14 @@ class DynamicRowParser extends JsonToWidgetParser<DynamicRow> {
   String get type => WidgetType.row.name;
 
   @override
-  Widget parse(BuildContext context, DynamicRow model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicRow model, [Map<String, dynamic>? functions]) {
     return Row(
       mainAxisAlignment: model.mainAxisAlignment,
       crossAxisAlignment: model.crossAxisAlignment,
       mainAxisSize: model.mainAxisSize,
       textDirection: model.textDirection,
       verticalDirection: model.verticalDirection,
-      children: model.children
-          .map((value) =>
-              JsonToWidget.fromJson(value, context, functions) ??
-              const SizedBox())
-          .toList(),
+      children: model.children.map((value) => JsonToWidget.fromJson(value, context, functions) ?? const SizedBox()).toList(),
     );
   }
 }

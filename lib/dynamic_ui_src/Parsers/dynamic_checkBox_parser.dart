@@ -11,15 +11,13 @@ class DynamicCheckBoxParser extends JsonToWidgetParser<DynamicCheckBox> {
   const DynamicCheckBoxParser();
 
   @override
-  DynamicCheckBox getModel(Map<String, dynamic> json) =>
-      DynamicCheckBox.fromJson(json);
+  DynamicCheckBox getModel(Map<String, dynamic> json) => DynamicCheckBox.fromJson(json);
 
   @override
   String get type => WidgetType.checkBox.name;
 
   @override
-  Widget parse(BuildContext context, DynamicCheckBox model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicCheckBox model, [Map<String, dynamic>? functions]) {
     return Checkbox(
         value: model.value,
         onChanged: (value) {
@@ -32,8 +30,7 @@ class DynamicCheckBoxParser extends JsonToWidgetParser<DynamicCheckBox> {
         tristate: model.tristate,
         focusColor: model.focusColor.toColor(context),
         hoverColor: model.hoverColor.toColor(context),
-        overlayColor:
-            WidgetStateProperty.all(model.overlayColor?.parse(context)),
+        overlayColor: WidgetStateProperty.all(model.overlayColor?.parse(context)),
         splashRadius: model.splashRadius,
         autofocus: model.autofocus,
         isError: model.isError);

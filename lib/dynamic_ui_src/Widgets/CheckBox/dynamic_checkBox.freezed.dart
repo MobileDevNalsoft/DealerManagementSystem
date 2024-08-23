@@ -36,15 +36,12 @@ mixin _$DynamicCheckBox {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DynamicCheckBoxCopyWith<DynamicCheckBox> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DynamicCheckBoxCopyWith<DynamicCheckBox> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DynamicCheckBoxCopyWith<$Res> {
-  factory $DynamicCheckBoxCopyWith(
-          DynamicCheckBox value, $Res Function(DynamicCheckBox) then) =
-      _$DynamicCheckBoxCopyWithImpl<$Res, DynamicCheckBox>;
+  factory $DynamicCheckBoxCopyWith(DynamicCheckBox value, $Res Function(DynamicCheckBox) then) = _$DynamicCheckBoxCopyWithImpl<$Res, DynamicCheckBox>;
   @useResult
   $Res call(
       {bool? value,
@@ -67,8 +64,7 @@ abstract class $DynamicCheckBoxCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DynamicCheckBoxCopyWithImpl<$Res, $Val extends DynamicCheckBox>
-    implements $DynamicCheckBoxCopyWith<$Res> {
+class _$DynamicCheckBoxCopyWithImpl<$Res, $Val extends DynamicCheckBox> implements $DynamicCheckBoxCopyWith<$Res> {
   _$DynamicCheckBoxCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -187,11 +183,8 @@ class _$DynamicCheckBoxCopyWithImpl<$Res, $Val extends DynamicCheckBox>
 }
 
 /// @nodoc
-abstract class _$$DynamicCheckBoxImplCopyWith<$Res>
-    implements $DynamicCheckBoxCopyWith<$Res> {
-  factory _$$DynamicCheckBoxImplCopyWith(_$DynamicCheckBoxImpl value,
-          $Res Function(_$DynamicCheckBoxImpl) then) =
-      __$$DynamicCheckBoxImplCopyWithImpl<$Res>;
+abstract class _$$DynamicCheckBoxImplCopyWith<$Res> implements $DynamicCheckBoxCopyWith<$Res> {
+  factory _$$DynamicCheckBoxImplCopyWith(_$DynamicCheckBoxImpl value, $Res Function(_$DynamicCheckBoxImpl) then) = __$$DynamicCheckBoxImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -218,12 +211,9 @@ abstract class _$$DynamicCheckBoxImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$DynamicCheckBoxImplCopyWithImpl<$Res>
-    extends _$DynamicCheckBoxCopyWithImpl<$Res, _$DynamicCheckBoxImpl>
+class __$$DynamicCheckBoxImplCopyWithImpl<$Res> extends _$DynamicCheckBoxCopyWithImpl<$Res, _$DynamicCheckBoxImpl>
     implements _$$DynamicCheckBoxImplCopyWith<$Res> {
-  __$$DynamicCheckBoxImplCopyWithImpl(
-      _$DynamicCheckBoxImpl _value, $Res Function(_$DynamicCheckBoxImpl) _then)
-      : super(_value, _then);
+  __$$DynamicCheckBoxImplCopyWithImpl(_$DynamicCheckBoxImpl _value, $Res Function(_$DynamicCheckBoxImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -317,8 +307,7 @@ class _$DynamicCheckBoxImpl implements _DynamicCheckBox {
       this.autofocus = false,
       this.isError = false});
 
-  factory _$DynamicCheckBoxImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DynamicCheckBoxImplFromJson(json);
+  factory _$DynamicCheckBoxImpl.fromJson(Map<String, dynamic> json) => _$$DynamicCheckBoxImplFromJson(json);
 
   @override
   final bool? value;
@@ -361,54 +350,29 @@ class _$DynamicCheckBoxImpl implements _DynamicCheckBox {
         (other.runtimeType == runtimeType &&
             other is _$DynamicCheckBoxImpl &&
             (identical(other.value, value) || other.value == value) &&
-            (identical(other.activeColor, activeColor) ||
-                other.activeColor == activeColor) &&
-            (identical(other.checkColor, checkColor) ||
-                other.checkColor == checkColor) &&
-            (identical(other.onChanged, onChanged) ||
-                other.onChanged == onChanged) &&
-            (identical(other.fillColor, fillColor) ||
-                other.fillColor == fillColor) &&
-            (identical(other.tristate, tristate) ||
-                other.tristate == tristate) &&
-            (identical(other.focusColor, focusColor) ||
-                other.focusColor == focusColor) &&
-            (identical(other.hoverColor, hoverColor) ||
-                other.hoverColor == hoverColor) &&
+            (identical(other.activeColor, activeColor) || other.activeColor == activeColor) &&
+            (identical(other.checkColor, checkColor) || other.checkColor == checkColor) &&
+            (identical(other.onChanged, onChanged) || other.onChanged == onChanged) &&
+            (identical(other.fillColor, fillColor) || other.fillColor == fillColor) &&
+            (identical(other.tristate, tristate) || other.tristate == tristate) &&
+            (identical(other.focusColor, focusColor) || other.focusColor == focusColor) &&
+            (identical(other.hoverColor, hoverColor) || other.hoverColor == hoverColor) &&
             (identical(other.side, side) || other.side == side) &&
-            (identical(other.overlayColor, overlayColor) ||
-                other.overlayColor == overlayColor) &&
-            (identical(other.splashRadius, splashRadius) ||
-                other.splashRadius == splashRadius) &&
-            (identical(other.autofocus, autofocus) ||
-                other.autofocus == autofocus) &&
+            (identical(other.overlayColor, overlayColor) || other.overlayColor == overlayColor) &&
+            (identical(other.splashRadius, splashRadius) || other.splashRadius == splashRadius) &&
+            (identical(other.autofocus, autofocus) || other.autofocus == autofocus) &&
             (identical(other.isError, isError) || other.isError == isError));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      value,
-      activeColor,
-      checkColor,
-      onChanged,
-      fillColor,
-      tristate,
-      focusColor,
-      hoverColor,
-      side,
-      overlayColor,
-      splashRadius,
-      autofocus,
-      isError);
+  int get hashCode => Object.hash(runtimeType, value, activeColor, checkColor, onChanged, fillColor, tristate, focusColor, hoverColor, side, overlayColor,
+      splashRadius, autofocus, isError);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DynamicCheckBoxImplCopyWith<_$DynamicCheckBoxImpl> get copyWith =>
-      __$$DynamicCheckBoxImplCopyWithImpl<_$DynamicCheckBoxImpl>(
-          this, _$identity);
+  _$$DynamicCheckBoxImplCopyWith<_$DynamicCheckBoxImpl> get copyWith => __$$DynamicCheckBoxImplCopyWithImpl<_$DynamicCheckBoxImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -434,8 +398,7 @@ abstract class _DynamicCheckBox implements DynamicCheckBox {
       final bool autofocus,
       final bool isError}) = _$DynamicCheckBoxImpl;
 
-  factory _DynamicCheckBox.fromJson(Map<String, dynamic> json) =
-      _$DynamicCheckBoxImpl.fromJson;
+  factory _DynamicCheckBox.fromJson(Map<String, dynamic> json) = _$DynamicCheckBoxImpl.fromJson;
 
   @override
   bool? get value;
@@ -465,6 +428,5 @@ abstract class _DynamicCheckBox implements DynamicCheckBox {
   bool get isError;
   @override
   @JsonKey(ignore: true)
-  _$$DynamicCheckBoxImplCopyWith<_$DynamicCheckBoxImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DynamicCheckBoxImplCopyWith<_$DynamicCheckBoxImpl> get copyWith => throw _privateConstructorUsedError;
 }

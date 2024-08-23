@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:customs/src.dart';
 import 'package:dms/bloc/customer/customer_bloc.dart';
 import 'package:dms/custom_methods/methods.dart';
@@ -36,8 +35,7 @@ class AddCustomer extends StatelessWidget {
     if (isMobile) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     } else {
-      SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     }
 
     return SafeArea(
@@ -46,8 +44,7 @@ class AddCustomer extends StatelessWidget {
         extendBodyBehindAppBar: true,
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
             ? Padding(
-                padding: EdgeInsets.only(
-                    right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
+                padding: EdgeInsets.only(right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
                 child: CustomWidgets.CustomExpandableFAB(
                     horizontalAlignment: isMobile ? -17 : -40,
                     verticalAlignment: -15,
@@ -62,8 +59,7 @@ class AddCustomer extends StatelessWidget {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => AddVehicle()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => AddVehicle()));
                           },
                           child: Column(
                             children: [
@@ -75,9 +71,7 @@ class AddCustomer extends StatelessWidget {
                               ),
                               Text(
                                 'Add Vehicle',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isMobile ? 11 : 14),
+                                style: TextStyle(color: Colors.white, fontSize: isMobile ? 11 : 14),
                               )
                             ],
                           ),
@@ -88,8 +82,7 @@ class AddCustomer extends StatelessWidget {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const ServiceHistory()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ServiceHistory()));
                           },
                           child: Column(
                             children: [
@@ -100,9 +93,7 @@ class AddCustomer extends StatelessWidget {
                               ),
                               Text(
                                 'History',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isMobile ? 11 : 14),
+                                style: TextStyle(color: Colors.white, fontSize: isMobile ? 11 : 14),
                               )
                             ],
                           ),
@@ -196,8 +187,7 @@ class AddCustomer extends StatelessWidget {
                         focusNode: customerAddressFocus,
                         textcontroller: customerAddressController),
                     SizedBox(
-                      height:
-                          isMobile ? size.height * 0.02 : size.height * 0.05,
+                      height: isMobile ? size.height * 0.02 : size.height * 0.05,
                     ),
                     BlocConsumer<CustomerBloc, CustomerState>(
                       listener: (context, state) {
@@ -225,28 +215,19 @@ class AddCustomer extends StatelessWidget {
                               onPressed: () {
                                 if (customerIdController.text.isNotEmpty &&
                                     customerNameController.text.isNotEmpty &&
-                                    customerContactNoController
-                                        .text.isNotEmpty &&
+                                    customerContactNoController.text.isNotEmpty &&
                                     customerAddressController.text.isNotEmpty) {
-                                  context.read<CustomerBloc>().add(
-                                      CustomerDetailsSubmitted(
-                                          customer: Customer(
-                                              customerName: capitalizeEachWord(
-                                                  customerNameController.text),
-                                              customerContactNo: int.parse(
-                                                  customerContactNoController
-                                                      .text),
-                                              customerAddress:
-                                                  customerAddressController
-                                                      .text)));
+                                  context.read<CustomerBloc>().add(CustomerDetailsSubmitted(
+                                      customer: Customer(
+                                          customerName: capitalizeEachWord(customerNameController.text),
+                                          customerContactNo: int.parse(customerContactNoController.text),
+                                          customerAddress: customerAddressController.text)));
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                   minimumSize: const Size(10, 36),
-                                  backgroundColor:
-                                      Color.fromARGB(255, 145, 19, 19),
+                                  backgroundColor: Color.fromARGB(255, 145, 19, 19),
                                   foregroundColor: Colors.white),
                               child: const Text("Submit"),
                             );

@@ -6,35 +6,22 @@ part of 'dynamic_decorationImage.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicDecorationImageImpl _$$DynamicDecorationImageImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DynamicDecorationImageImpl(
+_$DynamicDecorationImageImpl _$$DynamicDecorationImageImplFromJson(Map<String, dynamic> json) => _$DynamicDecorationImageImpl(
       src: json['src'] as String,
       fit: $enumDecodeNullable(_$BoxFitEnumMap, json['fit']),
-      imageType: $enumDecodeNullable(
-              _$DynamicDecorationImageTypeEnumMap, json['imageType']) ??
-          DynamicDecorationImageType.network,
-      alignment:
-          $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['alignment']) ??
-              DynamicAlignment.center,
-      centerSlice: json['centerSlice'] == null
-          ? null
-          : DynamicRect.fromJson(json['centerSlice'] as Map<String, dynamic>),
-      repeat: $enumDecodeNullable(_$ImageRepeatEnumMap, json['repeat']) ??
-          ImageRepeat.noRepeat,
+      imageType: $enumDecodeNullable(_$DynamicDecorationImageTypeEnumMap, json['imageType']) ?? DynamicDecorationImageType.network,
+      alignment: $enumDecodeNullable(_$DynamicAlignmentEnumMap, json['alignment']) ?? DynamicAlignment.center,
+      centerSlice: json['centerSlice'] == null ? null : DynamicRect.fromJson(json['centerSlice'] as Map<String, dynamic>),
+      repeat: $enumDecodeNullable(_$ImageRepeatEnumMap, json['repeat']) ?? ImageRepeat.noRepeat,
       matchTextDirection: json['matchTextDirection'] as bool? ?? false,
       scale: (json['scale'] as num?)?.toDouble() ?? 1.0,
       opacity: (json['opacity'] as num?)?.toDouble() ?? 1.0,
-      filterQuality:
-          $enumDecodeNullable(_$FilterQualityEnumMap, json['filterQuality']) ??
-              FilterQuality.low,
+      filterQuality: $enumDecodeNullable(_$FilterQualityEnumMap, json['filterQuality']) ?? FilterQuality.low,
       invertColors: json['invertColors'] as bool? ?? false,
       isAntiAlias: json['isAntiAlias'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$DynamicDecorationImageImplToJson(
-        _$DynamicDecorationImageImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$DynamicDecorationImageImplToJson(_$DynamicDecorationImageImpl instance) => <String, dynamic>{
       'src': instance.src,
       'fit': _$BoxFitEnumMap[instance.fit],
       'imageType': _$DynamicDecorationImageTypeEnumMap[instance.imageType]!,

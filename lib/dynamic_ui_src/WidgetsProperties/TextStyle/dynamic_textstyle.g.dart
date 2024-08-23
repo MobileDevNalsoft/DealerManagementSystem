@@ -6,31 +6,23 @@ part of 'dynamic_textstyle.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DynamicTextStyleImpl _$$DynamicTextStyleImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DynamicTextStyleImpl(
+_$DynamicTextStyleImpl _$$DynamicTextStyleImplFromJson(Map<String, dynamic> json) => _$DynamicTextStyleImpl(
       inherit: json['inherit'] as bool? ?? true,
       color: json['color'] as String?,
       backgroundColor: json['backgroundColor'] as String?,
       styleFromTheme: json['styleFromTheme'] as String?,
       fontSize: (json['fontSize'] as num?)?.toDouble(),
-      fontWeight:
-          $enumDecodeNullable(_$DynamicFontWeightEnumMap, json['fontWeight']),
+      fontWeight: $enumDecodeNullable(_$DynamicFontWeightEnumMap, json['fontWeight']),
       fontStyle: $enumDecodeNullable(_$FontStyleEnumMap, json['fontStyle']),
       fontFamily: json['fontFamily'] as String?,
-      fontFamilyFallback: (json['fontFamilyFallback'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      fontFamilyFallback: (json['fontFamilyFallback'] as List<dynamic>?)?.map((e) => e as String).toList(),
       letterSpacing: (json['letterSpacing'] as num?)?.toDouble(),
       wordSpacing: (json['wordSpacing'] as num?)?.toDouble(),
-      textBaseline:
-          $enumDecodeNullable(_$TextBaselineEnumMap, json['textBaseline']),
+      textBaseline: $enumDecodeNullable(_$TextBaselineEnumMap, json['textBaseline']),
       height: (json['height'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$$DynamicTextStyleImplToJson(
-        _$DynamicTextStyleImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$DynamicTextStyleImplToJson(_$DynamicTextStyleImpl instance) => <String, dynamic>{
       'inherit': instance.inherit,
       'color': instance.color,
       'backgroundColor': instance.backgroundColor,

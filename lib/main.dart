@@ -8,14 +8,11 @@ import 'package:dms/inits/init.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/repository/repository.dart';
-import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'dynamic_ui_src/Entry/json_to_widget.dart';
-import 'views/login.dart';
 
 void main() async {
   // debugPaintSizeEnabled = true;
@@ -33,32 +30,18 @@ void main() async {
     create: (context) => Repository(api: getIt()),
     child: MultiBlocProvider(
       providers: [
-        BlocProvider(
-            create: (_) => VehicleBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) => CustomerBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) => ServiceBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) => MultiBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) =>
-                AuthenticationBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(
-            create: (_) =>
-                VehiclePartsInteractionBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => VehicleBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => CustomerBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => ServiceBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => MultiBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => AuthenticationBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => VehiclePartsInteractionBloc(repo: getIt(), navigator: getIt())),
       ],
       child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,
-        theme: ThemeData(
-            fontFamily: 'Gilroy',
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.white, primary: Colors.black)),
+        theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: !sharedPreferences.containsKey('isLogged') ||
-                sharedPreferences.getBool('isLogged') == false
-            ? '/login'
-            : '/home',
+        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/home',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
       ),
@@ -88,7 +71,6 @@ class MyNavigationObserver extends NavigatorObserver {
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    print(
-        "newRoute:  ${newRoute!.settings.name} oldRoute: ${oldRoute!.settings.name}");
+    print("newRoute:  ${newRoute!.settings.name} oldRoute: ${oldRoute!.settings.name}");
   }
 }

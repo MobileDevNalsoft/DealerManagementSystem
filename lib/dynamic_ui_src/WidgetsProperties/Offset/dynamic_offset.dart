@@ -11,8 +11,7 @@ class DynamicOffset with _$DynamicOffset {
     required double dy,
   }) = _DynamicOffset;
 
-  factory DynamicOffset.fromJson(Map<String, dynamic> json) =>
-      _$DynamicOffsetFromJson(json);
+  factory DynamicOffset.fromJson(Map<String, dynamic> json) => _$DynamicOffsetFromJson(json);
 }
 
 extension DynamicOffsetParser on DynamicOffset {

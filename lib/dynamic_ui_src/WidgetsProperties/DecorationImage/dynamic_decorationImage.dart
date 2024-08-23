@@ -15,8 +15,7 @@ class DynamicDecorationImage with _$DynamicDecorationImage {
   const factory DynamicDecorationImage({
     required String src,
     BoxFit? fit,
-    @Default(DynamicDecorationImageType.network)
-    DynamicDecorationImageType imageType,
+    @Default(DynamicDecorationImageType.network) DynamicDecorationImageType imageType,
     @Default(DynamicAlignment.center) DynamicAlignment alignment,
     DynamicRect? centerSlice,
     @Default(ImageRepeat.noRepeat) ImageRepeat repeat,
@@ -28,8 +27,7 @@ class DynamicDecorationImage with _$DynamicDecorationImage {
     @Default(false) bool isAntiAlias,
   }) = _DynamicDecorationImage;
 
-  factory DynamicDecorationImage.fromJson(Map<String, dynamic> json) =>
-      _$DynamicDecorationImageFromJson(json);
+  factory DynamicDecorationImage.fromJson(Map<String, dynamic> json) => _$DynamicDecorationImageFromJson(json);
 }
 
 extension DynamicDecorationImageParser on DynamicDecorationImage? {

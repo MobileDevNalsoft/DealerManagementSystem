@@ -15,6 +15,5 @@ class DynamicRow with _$DynamicRow {
     @Default([]) List<Map<String, dynamic>> children,
   }) = _DynamicRow;
 
-  factory DynamicRow.fromJson(Map<String, dynamic> json) =>
-      _$DynamicRowFromJson(json);
+  factory DynamicRow.fromJson(Map<String, dynamic> json) => _$DynamicRowFromJson(json);
 }

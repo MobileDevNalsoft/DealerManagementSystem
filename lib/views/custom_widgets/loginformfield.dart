@@ -11,15 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   bool? obscText;
   bool isMobile;
 
-  CustomTextFormField(
-      {super.key,
-      required hintText,
-      prefixIcon,
-      suffixIcon,
-      controller,
-      obscureText,
-      obscureChar,
-      required this.isMobile}) {
+  CustomTextFormField({super.key, required hintText, prefixIcon, suffixIcon, controller, obscureText, obscureChar, required this.isMobile}) {
     hntTxt = hintText;
     prfxIcon = prefixIcon;
     sffxIcon = suffixIcon;
@@ -38,18 +30,12 @@ class CustomTextFormField extends StatelessWidget {
       margin: EdgeInsets.symmetric(
         horizontal: size.width * 0.08,
       ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(
-                color: Color.fromARGB(255, 175, 175, 175),
-                offset: Offset(0, 1),
-                blurRadius: 5),
-            BoxShadow(
-              color: Colors.white70,
-            ),
-          ]),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.white, boxShadow: const [
+        BoxShadow(color: Color.fromARGB(255, 175, 175, 175), offset: Offset(0, 1), blurRadius: 5),
+        BoxShadow(
+          color: Colors.white70,
+        ),
+      ]),
       child: TextFormField(
         controller: cont,
         style: TextStyle(fontSize: 13),

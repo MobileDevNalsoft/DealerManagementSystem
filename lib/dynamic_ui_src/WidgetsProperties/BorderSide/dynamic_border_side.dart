@@ -14,8 +14,7 @@ class DynamicBorderSide with _$DynamicBorderSide {
     @Default(BorderStyle.solid) BorderStyle borderStyle,
   }) = _DynamicBorderSide;
 
-  factory DynamicBorderSide.fromJson(Map<String, dynamic> json) =>
-      _$DynamicBorderSideFromJson(json);
+  factory DynamicBorderSide.fromJson(Map<String, dynamic> json) => _$DynamicBorderSideFromJson(json);
 }
 
 extension DynamicBorderSideParser on DynamicBorderSide? {

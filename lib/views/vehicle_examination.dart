@@ -21,8 +21,7 @@ class VehicleExamination extends StatefulWidget {
   State<VehicleExamination> createState() => _VehicleExaminationState();
 }
 
-class _VehicleExaminationState extends State<VehicleExamination>
-    with SingleTickerProviderStateMixin {
+class _VehicleExaminationState extends State<VehicleExamination> with SingleTickerProviderStateMixin {
   NavigatorService navigator = getIt<NavigatorService>();
   @override
   void initState() {
@@ -43,29 +42,18 @@ class _VehicleExaminationState extends State<VehicleExamination>
         backgroundColor: Colors.black45,
         leadingWidth: size.width * 0.14,
         leading: Container(
-          margin: EdgeInsets.only(
-              left: size.width * 0.045,
-              top: isMobile ? 0 : size.height * 0.008,
-              bottom: isMobile ? 0 : size.height * 0.008),
+          margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.black,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 10,
-                    blurStyle: BlurStyle.outer,
-                    spreadRadius: 0,
-                    color: Colors.orange.shade200,
-                    offset: const Offset(0, 0))
-              ]),
+              boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
           child: Transform(
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
                   navigator.pop();
                 },
-                icon:
-                    const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           ),
         ),
         title: Container(
@@ -75,22 +63,12 @@ class _VehicleExaminationState extends State<VehicleExamination>
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.black,
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 10,
-                      blurStyle: BlurStyle.outer,
-                      spreadRadius: 0,
-                      color: Colors.orange.shade200,
-                      offset: const Offset(0, 0))
-                ]),
+                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
             child: const Center(
               child: Text(
                 textAlign: TextAlign.center,
                 'Parts Examination',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 16),
+                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
               ),
             )),
         centerTitle: true,
@@ -100,8 +78,7 @@ class _VehicleExaminationState extends State<VehicleExamination>
         children: [
           Stack(
             children: [
-              BlocConsumer<VehiclePartsInteractionBloc,
-                  VehiclePartsInteractionBlocState>(listener: (context, state) {
+              BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(listener: (context, state) {
                 if (state.status == VehiclePartsInteractionStatus.success) {
                   DMSCustomWidgets.DMSFlushbar(size, context,
                       message: "Successfully uploaded",
@@ -110,8 +87,7 @@ class _VehicleExaminationState extends State<VehicleExamination>
                         color: Colors.white,
                       ));
                   // Updating with initial parameters
-                  context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(
-                      selectedBodyPart: "", isTapped: false));
+                  context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
                 }
               }, builder: (context, state) {
                 return Container(
@@ -119,11 +95,7 @@ class _VehicleExaminationState extends State<VehicleExamination>
                   width: MediaQuery.of(context).size.width,
                   decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                          colors: [
-                            Colors.black45,
-                            ui.Color.fromARGB(40, 104, 103, 103),
-                            Colors.black45
-                          ],
+                          colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: [0.1, 0.5, 1])),
@@ -142,17 +114,9 @@ class _VehicleExaminationState extends State<VehicleExamination>
                 right: isMobile ? size.width * 0.05 : null,
                 left: isMobile ? null : size.width * 0.032,
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                            blurRadius: 16,
-                            blurStyle: BlurStyle.outer,
-                            spreadRadius: 0,
-                            color: Colors.orange.shade200,
-                            offset: const Offset(0, 0))
-                      ]),
+                  decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(16), boxShadow: [
+                    BoxShadow(blurRadius: 16, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                  ]),
                   height: size.height * 0.12,
                   width: isMobile ? size.width * 0.1 : size.width * 0.032,
                   child: Column(
@@ -161,31 +125,13 @@ class _VehicleExaminationState extends State<VehicleExamination>
                       IconButton(
                           onPressed: () {
                             // Upper limit for zoom is 1.8
-                            if (context.read<MultiBloc>().state.scaleFactor ==
-                                null) {
+                            if (context.read<MultiBloc>().state.scaleFactor == null) {
                               context.read<MultiBloc>().state.scaleFactor = 1.4;
-                              context.read<MultiBloc>().add(ScaleVehicle(
-                                  factor: context
-                                      .read<MultiBloc>()
-                                      .state
-                                      .scaleFactor!));
+                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                             } else {
-                              if (context
-                                      .read<MultiBloc>()
-                                      .state
-                                      .scaleFactor! <=
-                                  1.8) {
-                                context.read<MultiBloc>().state.scaleFactor =
-                                    context
-                                            .read<MultiBloc>()
-                                            .state
-                                            .scaleFactor! +
-                                        0.1;
-                                context.read<MultiBloc>().add(ScaleVehicle(
-                                    factor: context
-                                        .read<MultiBloc>()
-                                        .state
-                                        .scaleFactor!));
+                              if (context.read<MultiBloc>().state.scaleFactor! <= 1.8) {
+                                context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! + 0.1;
+                                context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                               }
                             }
                           },
@@ -197,25 +143,13 @@ class _VehicleExaminationState extends State<VehicleExamination>
                       IconButton(
                         onPressed: () {
                           // Lower limit for zoom is 1.3
-                          if (context.read<MultiBloc>().state.scaleFactor ==
-                              null) {
+                          if (context.read<MultiBloc>().state.scaleFactor == null) {
                             context.read<MultiBloc>().state.scaleFactor = 1.3;
-                            context.read<MultiBloc>().add(ScaleVehicle(
-                                factor: context
-                                    .read<MultiBloc>()
-                                    .state
-                                    .scaleFactor!));
+                            context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                           } else {
-                            if (context.read<MultiBloc>().state.scaleFactor! >=
-                                1.3) {
-                              context.read<MultiBloc>().state.scaleFactor =
-                                  context.read<MultiBloc>().state.scaleFactor! -
-                                      0.1;
-                              context.read<MultiBloc>().add(ScaleVehicle(
-                                  factor: context
-                                      .read<MultiBloc>()
-                                      .state
-                                      .scaleFactor!));
+                            if (context.read<MultiBloc>().state.scaleFactor! >= 1.3) {
+                              context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! - 0.1;
+                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                             }
                           }
                         },
@@ -235,20 +169,8 @@ class _VehicleExaminationState extends State<VehicleExamination>
                     right: isMobile ? null : size.width * 0.16,
                     top: isMobile ? 150 : size.width * 0.08,
                     child: Comments(
-                      vehiclePartMedia: context
-                                  .read<VehiclePartsInteractionBloc>()
-                                  .state
-                                  .mapMedia[
-                              context
-                                  .read<MultiBloc>()
-                                  .state
-                                  .selectedGeneralBodyPart] ??
-                          VehiclePartMedia(
-                              name: context
-                                  .read<MultiBloc>()
-                                  .state
-                                  .selectedGeneralBodyPart,
-                              isUploaded: false),
+                      vehiclePartMedia: context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] ??
+                          VehiclePartMedia(name: context.read<MultiBloc>().state.selectedGeneralBodyPart, isUploaded: false),
                     )),
               Positioned(
                 bottom: isMobile ? 100 : size.height * 0.040,
@@ -264,17 +186,9 @@ class _VehicleExaminationState extends State<VehicleExamination>
                       alignment: Alignment.center,
                       height: size.height * 0.045,
                       width: isMobile ? size.width * 0.2 : size.width * 0.08,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.black,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                blurStyle: BlurStyle.outer,
-                                spreadRadius: 0,
-                                color: Colors.orange.shade200,
-                                offset: const Offset(0, 0))
-                          ]),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                      ]),
                       child: const Text(
                         textAlign: TextAlign.center,
                         'Save',
@@ -284,13 +198,10 @@ class _VehicleExaminationState extends State<VehicleExamination>
               ),
             ],
           ),
-          if (context.watch<VehiclePartsInteractionBloc>().state.status ==
-              VehiclePartsInteractionStatus.loading)
+          if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
             Container(
               color: Colors.blueGrey.withOpacity(0.25),
-              child: Center(
-                  child: Lottie.asset('assets/lottie/car_loading.json',
-                      height: size.height * 0.4, width: size.width * 0.4)),
+              child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
             )
         ],
       ),

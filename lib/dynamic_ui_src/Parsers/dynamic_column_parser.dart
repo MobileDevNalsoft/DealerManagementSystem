@@ -9,15 +9,13 @@ class DynamicColumnParser extends JsonToWidgetParser<DynamicColumn> {
   const DynamicColumnParser();
 
   @override
-  DynamicColumn getModel(Map<String, dynamic> json) =>
-      DynamicColumn.fromJson(json);
+  DynamicColumn getModel(Map<String, dynamic> json) => DynamicColumn.fromJson(json);
 
   @override
   String get type => WidgetType.column.name;
 
   @override
-  Widget parse(BuildContext context, DynamicColumn model,
-      [Map<String, dynamic>? functions]) {
+  Widget parse(BuildContext context, DynamicColumn model, [Map<String, dynamic>? functions]) {
     return Column(
       mainAxisAlignment: model.mainAxisAlignment,
       crossAxisAlignment: model.crossAxisAlignment,
@@ -26,9 +24,7 @@ class DynamicColumnParser extends JsonToWidgetParser<DynamicColumn> {
       verticalDirection: model.verticalDirection,
       children: model.children
           .map(
-            (value) =>
-                JsonToWidget.fromJson(value, context, functions) ??
-                const SizedBox(),
+            (value) => JsonToWidget.fromJson(value, context, functions) ?? const SizedBox(),
           )
           .toList(),
     );
