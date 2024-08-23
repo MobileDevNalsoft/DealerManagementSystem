@@ -229,10 +229,7 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                                               FocusManager.instance.primaryFocus?.unfocus();
 
                                               // Dispatches an event to the service bloc to add inspection data
-                                              _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.jobCardNo!, inspectionIn: 'true'));
-
-                                              // Resets vehicle state
-                                              context.read<VehicleBloc>().state.status = VehicleStatus.initial;
+                                              _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.service!.jobCardNo!, inspectionIn: 'true'));
                                             },
                                             child: Container(
                                                 alignment: Alignment.center,

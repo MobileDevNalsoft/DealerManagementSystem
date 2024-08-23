@@ -112,12 +112,12 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     _serviceBloc = context.read<ServiceBloc>();
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
-//Fetching sales persons with names statring from 'ab'
+    //Fetching sales persons with names statring from 'ab'
     _multiBloc.add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
-    Future.delayed(Duration(milliseconds: 600), () {
-      vehRegNumFocus.requestFocus();
+    Future.delayed(const Duration(milliseconds: 600), () {
+      locFocus.requestFocus();
     });
     // Fetching locations if not already fetched.
     if (_serviceBloc.state.locations == null) {
@@ -304,7 +304,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
                         BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
                       ]),
-                      child: Text(
+                      child: const Text(
                         textAlign: TextAlign.center,
                         'Service Booking',
                         style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
@@ -705,9 +705,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                       context.read<MultiBloc>().state.date = null;
                                                       _vehicleBloc.state.registrationNo = null;
                                                       _vehicleBloc.state.status = VehicleStatus.initial;
-                                                      navigator.pushAndRemoveUntil('/inspectionIn', '/home');
                                                       FocusManager.instance.primaryFocus?.unfocus();
-                                                      clearFields();
                                                       sliderButtonController.position = SliderButtonPosition.left;
                                                     //Handling failure case from the backend (eg. Found multiple records with same location.)
                                                     case ServiceUploadStatus.failure:

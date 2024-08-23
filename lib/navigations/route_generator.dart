@@ -50,11 +50,11 @@ class RouteGenerator {
         );
       case '/vehicleExamination':
         final args = settings.arguments as GeneralBodyParts;
-        return MaterialPageRoute(
-            settings: settings,
-            builder: (_) => VehicleExamination(
-                  generalParts: args.generalParts,
-                ));
+        return Transitions.slideLeftTransition(
+            VehicleExamination(
+              generalParts: args.generalParts,
+            ),
+            settings);
       case '/gatePass':
         return Transitions.slideLeftTransition(const GatePass(), settings);
       case '/inspectionIn':
@@ -76,7 +76,7 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const MyJobcards(),
-          transitionDuration: const Duration(milliseconds: 600),
+          transitionDuration: const Duration(milliseconds: 20000),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/qualityCheck':

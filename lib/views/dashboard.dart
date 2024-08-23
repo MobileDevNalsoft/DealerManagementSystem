@@ -59,7 +59,7 @@ class _DashBoardState extends State<DashBoard> {
               alignment: Alignment.center,
               height: size.height * 0.05,
               width: isMobile ? size.width * 0.45 : size.width * 0.32,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
                 BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
               ]),
               child: const Text(

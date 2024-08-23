@@ -87,7 +87,7 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
               ),
               child: Padding(
                 padding: EdgeInsets.only(
-                    top: shrinkOffset > 55 ? size.height * 0.02 : 42 - 0.5 * shrinkOffset,
+                    top: shrinkOffset > 55 ? size.height * 0.015 : 42 - 0.5 * shrinkOffset,
                     left: shrinkOffset > 50 ? size.width * (isMobile ? 0.37 : 0.46) : 2.5 * shrinkOffset + 8),
                 child: const Text(
                   'Job Cards',
@@ -99,7 +99,7 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
               height: size.height * 0.04,
               margin: EdgeInsets.only(
                   left: size.width * 0.001, top: isMobile ? size.height * 0.005 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white, boxShadow: [
                 BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
               ]),
               child: Transform(
@@ -108,7 +108,7 @@ class SliverAppBar extends SliverPersistentHeaderDelegate {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.black)),
               ),
             )
           ],
@@ -267,6 +267,7 @@ class JobCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool isMobile = size.shortestSide < 500;
 
     return SizedBox(
       width: size.width,
@@ -324,7 +325,7 @@ class JobCardPage extends StatelessWidget {
                                       children: [
                                         Row(
                                           children: [
-                                            Gap(size.width * 0.055),
+                                            Gap(size.width * (isMobile ? 0.05 : 0.024)),
                                             Expanded(
                                               flex: 2,
                                               child: Image.asset(
@@ -354,18 +355,18 @@ class JobCardPage extends StatelessWidget {
                                             )
                                           ],
                                         ),
-                                        Gap(size.width * 0.01),
+                                        Gap(size.width * (isMobile ? 0.01 : 0)),
                                         Row(
                                           children: [
-                                            Gap(size.width * 0.055),
+                                            Gap(size.width * (isMobile ? 0.055 : 0.024)),
                                             Expanded(
                                               flex: 2,
-                                              child: Image.asset('assets/images/registration_no.png', scale: size.width * 0.055),
+                                              child: Image.asset('assets/images/registration_no.png', scale: size.width * (isMobile ? 0.055 : 0.016)),
                                             ),
                                             Expanded(
                                               flex: 8,
                                               child: SizedBox(
-                                                width: size.width * 0.28,
+                                                width: size.width * (isMobile ? 0.28 : 0.16),
                                                 child: SingleChildScrollView(
                                                   scrollDirection: Axis.horizontal,
                                                   child: Text(
@@ -379,7 +380,7 @@ class JobCardPage extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        Gap(size.width * 0.01),
+                                        Gap(size.width * (isMobile ? 0.01 : 0.0016)),
                                       ],
                                     ),
                                   ),
@@ -396,7 +397,7 @@ class JobCardPage extends StatelessWidget {
                                             Gap(size.width * 0.058),
                                             Expanded(
                                               flex: 2,
-                                              child: Image.asset('assets/images/status.png', scale: size.width * 0.058),
+                                              child: Image.asset('assets/images/status.png', scale: size.width * (isMobile ? 0.058 : 0.016)),
                                             ),
                                             Expanded(
                                               flex: 8,
@@ -415,8 +416,8 @@ class JobCardPage extends StatelessWidget {
                                 ],
                               ),
                               Container(
-                                height: size.height * 0.05,
-                                width: size.width * 0.94,
+                                height: size.height * (isMobile ? 0.05 : 0.045),
+                                width: size.width * (isMobile ? 0.94 : 0.36),
                                 margin: EdgeInsets.only(bottom: size.height * 0.0025),
                                 decoration: BoxDecoration(
                                     color: Colors.orange.shade200,
@@ -434,20 +435,19 @@ class JobCardPage extends StatelessWidget {
                                             child: Image.asset(
                                               'assets/images/customer.png',
                                               alignment: Alignment.center,
-                                              scale: size.width * 0.06,
+                                              scale: size.width * (isMobile ? 0.06 : 0.024),
                                             ),
                                           ),
                                           Expanded(
                                             flex: 8,
                                             child: SizedBox(
-                                              width: size.width * 0.36,
+                                              width: size.width * (isMobile ? 0.36 : 0.16),
                                               child: SingleChildScrollView(
                                                 scrollDirection: Axis.horizontal,
                                                 child: Text(
                                                   state.getJobCardStatus == GetJobCardStatus.success
                                                       ? state.filteredJobCards![index].customerName!
                                                       : 'Customer Name',
-                                                  textAlign: TextAlign.center,
                                                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                 ),
                                               ),
@@ -459,19 +459,18 @@ class JobCardPage extends StatelessWidget {
                                     Expanded(
                                       flex: 1,
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Expanded(
                                             flex: 2,
                                             child: Image.asset(
                                               'assets/images/call.png',
-                                              scale: size.width * 0.06,
+                                              scale: size.width * (isMobile ? 0.06 : 0.02),
                                             ),
                                           ),
                                           Expanded(
                                             flex: 8,
                                             child: SizedBox(
-                                              width: size.width * 0.25,
+                                              width: size.width * (isMobile ? 0.25 : 0.08),
                                               child: SingleChildScrollView(
                                                 scrollDirection: Axis.horizontal,
                                                 child: Text(

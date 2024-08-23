@@ -138,6 +138,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       (value) {
         if (value == 200) {
           emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.success, service: event.service));
+          navigator!.pushAndRemoveUntil('/inspectionIn', '/home');
         } else {
           Log.e(value);
           emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.failure));

@@ -26,6 +26,9 @@ class _MyJobcardsState extends State<MyJobcards> {
   // navigator service
   NavigatorService navigator = getIt<NavigatorService>();
 
+  // for logout button visibility
+  bool isVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +41,12 @@ class _MyJobcardsState extends State<MyJobcards> {
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
     _serviceBloc.add(GetMyJobCards(query: getIt<SharedPreferences>().getInt('service_advisor_id').toString()));
+
+    Future.delayed(
+        Duration.zero,
+        () => setState(() {
+              isVisible = true;
+            }));
   }
 
   @override
@@ -85,67 +94,70 @@ class _MyJobcardsState extends State<MyJobcards> {
           centerTitle: true,
           actions: [
             // this drop down will display the logout button when pressed.
-            DropdownButtonHideUnderline(
-              child: DropdownButton2<String>(
-                isExpanded: true,
-                hint: const SizedBox(),
-                items: const [
-                  DropdownMenuItem<String>(
-                      value: '0',
-                      child: Text(
-                        'Log out',
-                        style: TextStyle(color: Colors.transparent),
-                      ))
-                ],
-                value: '0',
-                onChanged: (String? value) {
-                  sharedPreferences.setBool("isLogged", false);
-                  navigator.pushAndRemoveUntil('/login', '/x');
-                },
-                buttonStyleData: ButtonStyleData(
-                  overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)), color: Colors.transparent),
-                  height: size.height * 0.05,
-                  width: size.width * 0.25,
-                  padding: const EdgeInsets.only(left: 14, right: 14),
-                ),
-                iconStyleData: IconStyleData(
-                  icon: Container(
-                    height: size.height * 0.1,
-                    width: size.width * 0.09,
-                    margin: EdgeInsets.only(
-                      left: size.width * 0.045,
-                    ),
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                    ]),
-                    child: Transform(
-                      transform: Matrix4.translationValues(0, 0, 0),
-                      child: const Icon(Icons.person, color: Colors.white),
-                    ),
-                  ),
-                  iconSize: size.height * 0.025,
-                  iconEnabledColor: Colors.black,
-                  iconDisabledColor: Colors.black,
-                ),
-                dropdownStyleData: DropdownStyleData(
-                    width: size.width * 0.17,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    offset: const Offset(5, 0)),
-                menuItemStyleData: MenuItemStyleData(
-                  selectedMenuItemBuilder: (context, child) {
-                    return Padding(
-                      padding: EdgeInsets.only(left: size.width * 0.02),
-                      child: const Text(
-                        'Log out',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                      ),
-                    );
+            Visibility(
+              visible: isVisible,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2<String>(
+                  isExpanded: true,
+                  hint: const SizedBox(),
+                  items: const [
+                    DropdownMenuItem<String>(
+                        value: '0',
+                        child: Text(
+                          'Log out',
+                          style: TextStyle(color: Colors.transparent),
+                        ))
+                  ],
+                  value: '0',
+                  onChanged: (String? value) {
+                    sharedPreferences.setBool("isLogged", false);
+                    navigator.pushAndRemoveUntil('/login', '/x');
                   },
+                  buttonStyleData: ButtonStyleData(
+                    overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)), color: Colors.transparent),
+                    height: size.height * 0.05,
+                    width: size.width * 0.25,
+                    padding: const EdgeInsets.only(left: 14, right: 14),
+                  ),
+                  iconStyleData: IconStyleData(
+                    icon: Container(
+                      height: size.height * 0.1,
+                      width: size.width * 0.09,
+                      margin: EdgeInsets.only(
+                        left: size.width * 0.045,
+                      ),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                      ]),
+                      child: Transform(
+                        transform: Matrix4.translationValues(0, 0, 0),
+                        child: const Icon(Icons.person, color: Colors.white),
+                      ),
+                    ),
+                    iconSize: size.height * 0.025,
+                    iconEnabledColor: Colors.black,
+                    iconDisabledColor: Colors.black,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                      width: size.width * 0.17,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      offset: const Offset(5, 0)),
+                  menuItemStyleData: MenuItemStyleData(
+                    selectedMenuItemBuilder: (context, child) {
+                      return Padding(
+                        padding: EdgeInsets.only(left: size.width * 0.02),
+                        child: const Text(
+                          'Log out',
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             )
@@ -175,228 +187,217 @@ class _MyJobcardsState extends State<MyJobcards> {
                       ? state.myJobCards!.length > 7
                           ? size.height
                           : size.height * (state.myJobCards!.length * 0.16)
-                      : size.height * 0.14,
+                      : size.height * 0.16,
                 ),
                 itemCount: state.getMyJobCardsStatus == GetMyJobCardsStatus.success ? state.myJobCards!.length : 7,
                 itemBuilder: (context, index) => Skeletonizer(
                     enableSwitchAnimation: true,
                     enabled: state.getMyJobCardsStatus == GetMyJobCardsStatus.loading || state.getMyJobCardsStatus == GetMyJobCardsStatus.initial,
-                    child: Expanded(
-                      child: SizedBox(
-                        // height: size.height * 0.16,
-                        width: size.width * (isMobile ? 0.95 : 0.35),
-                         // ticket clipper clips the child widget in the shape of ticket.
-                        child: ClipShadowPath(
-                          clipper: TicketClipper(),
-                          shadow: const BoxShadow(
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                            blurRadius: 5,
-                            blurStyle: BlurStyle.normal,
-                            spreadRadius: 1,
+                    child: SizedBox(
+                      // height: size.height * 0.16,
+                      width: size.width * (isMobile ? 0.95 : 0.35),
+                      // ticket clipper clips the child widget in the shape of ticket.
+                      child: ClipShadowPath(
+                        clipper: TicketClipper(),
+                        shadow: const BoxShadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 2),
+                          blurRadius: 5,
+                          blurStyle: BlurStyle.normal,
+                          spreadRadius: 1,
+                        ),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: size.height * 0.006,
                           ),
-                          child: Container(
-                            margin: EdgeInsets.symmetric(
-                              vertical: size.height * 0.006,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Gap(size.width * (isMobile ? 0.05 : 0.024)),
-                                              Expanded(
-                                                flex: 2,
-                                                child: Image.asset(
-                                                  'assets/images/job_card.png',
-                                                  scale: size.width * (isMobile ? 0.05 : 0.016),
-                                                  color: Colors.black,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Gap(size.width * (isMobile ? 0.055 : 0.024)),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Image.asset(
+                                                'assets/images/job_card.png',
+                                                scale: size.width * (isMobile ? 0.05 : 0.016),
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 8,
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(20),
+                                                radius: 100,
+                                                splashColor: Colors.transparent,
+                                                customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                                enableFeedback: true,
+                                                onTap: () {
+                                                  state.service = state.myJobCards![index];
+                                                  navigator.push('/jobCardDetails');
+                                                },
+                                                child: Text(
+                                                  state.getMyJobCardsStatus == GetMyJobCardsStatus.success ? state.myJobCards![index].jobCardNo! : 'JC-MAD-633',
+                                                  style: const TextStyle(
+                                                      fontWeight: FontWeight.w500, fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
                                                 ),
                                               ),
-                                              // Gap(size.width * 0.01),
-                                              Expanded(
-                                                flex: 8,
-                                                child: InkWell(
-                                                  borderRadius: BorderRadius.circular(20),
-                                                  radius: 100,
-                                                  splashColor: Colors.transparent,
-                                                  customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                                  enableFeedback: true,
-                                                  onTap: () {
-                                                    state.service = state.myJobCards![index];
-                                                  navigator.push('/jobCardDetails');
-                                                  },
+                                            )
+                                          ],
+                                        ),
+                                        Gap(size.width * (isMobile ? 0.01 : 0)),
+                                        Row(
+                                          children: [
+                                            Gap(size.width * (isMobile ? 0.055 : 0.024)),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Image.asset(
+                                                'assets/images/registration_no.png',
+                                                scale: size.width * (isMobile ? 0.055 : 0.016),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 8,
+                                              child: SizedBox(
+                                                width: size.width * (isMobile ? 0.28 : 0.16),
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
                                                   child: Text(
                                                     textAlign: TextAlign.center,
                                                     state.getMyJobCardsStatus == GetMyJobCardsStatus.success
-                                                        ? state.myJobCards![index].jobCardNo!
-                                                        : 'JC-MAD-633',
-                                                    style: const TextStyle(
-                                                        fontWeight: FontWeight.w500, fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Gap(size.width * (isMobile ? 0.01 : 0)),
-                                          Row(
-                                            children: [
-                                              Gap(size.width * (isMobile ? 0.055 : 0.024)),
-                                              Expanded(
-                                                flex: 2,
-                                                child: Image.asset(
-                                                  'assets/images/registration_no.png',
-                                                  scale: size.width * (isMobile ? 0.055 : 0.016),
-                                                ),
-                                              ),
-                                              Gap(size.width * 0.02),
-                                              Expanded(
-                                                flex: 8,
-                                                child: SizedBox(
-                                                  width: size.width * (isMobile ? 0.28 : 0.16),
-                                                  child: SingleChildScrollView(
-                                                    scrollDirection: Axis.horizontal,
-                                                    child: Text(
-                                                      textAlign: TextAlign.center,
-                                                      state.getMyJobCardsStatus == GetMyJobCardsStatus.success
-                                                          ? state.myJobCards![index].registrationNo!
-                                                          : 'TS09ED7884',
-                                                      style: const TextStyle(fontSize: 13),
-                                                    ),
+                                                        ? state.myJobCards![index].registrationNo!
+                                                        : 'TS09ED7884',
+                                                    style: const TextStyle(fontSize: 13),
                                                   ),
                                                 ),
                                               ),
-                                            ],
+                                            ),
+                                          ],
+                                        ),
+                                        Gap(size.width * (isMobile ? 0.01 : 0.0016)),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Gap(size.height * 0.03),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Gap(size.width * 0.058),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Image.asset(
+                                                'assets/images/status.png',
+                                                scale: size.width * (isMobile ? 0.058 : 0.016),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 8,
+                                              child: Text(
+                                                state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                    ? state.myJobCards![index].status!
+                                                    : 'Work in Progress',
+                                                style: const TextStyle(fontSize: 13),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: size.height * (isMobile ? 0.05 : 0.045),
+                                width: size.width * (isMobile ? 0.94 : 0.36),
+                                margin: EdgeInsets.only(bottom: size.height * 0.0025),
+                                decoration: BoxDecoration(
+                                    color: Colors.orange.shade200,
+                                    borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            flex: 2,
+                                            child: Image.asset(
+                                              'assets/images/customer.png',
+                                              scale: size.width * (isMobile ? 0.06 : 0.024),
+                                            ),
                                           ),
-                                          Gap(size.width * (isMobile ? 0.01 : 0.0016)),
+                                          Expanded(
+                                            flex: 8,
+                                            child: SizedBox(
+                                              width: size.width * (isMobile ? 0.36 : 0.16),
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Text(
+                                                  state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                      ? state.myJobCards![index].customerName!
+                                                      : 'Customer Name',
+                                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    Gap(size.width * (isMobile ? 0.008 : 0)),
                                     Expanded(
                                       flex: 1,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      child: Row(
                                         children: [
-                                          Gap(size.height * 0.03),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Gap(size.width * 0.058),
-                                              Expanded(
-                                                flex: 2,
-                                                child: Image.asset(
-                                                  'assets/images/status.png',
-                                                  scale: size.width * (isMobile ? 0.058 : 0.016),
-                                                ),
-                                              ),
-                                              // Gap(size.width * 0.02),
-                                              Expanded(
-                                                flex: 6,
+                                          Expanded(
+                                            flex: 2,
+                                            child: Image.asset(
+                                              'assets/images/call.png',
+                                              scale: size.width * (isMobile ? 0.06 : 0.02),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 8,
+                                            child: SizedBox(
+                                              width: size.width * (isMobile ? 0.25 : 0.08),
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
                                                 child: Text(
-                                                  textAlign: TextAlign.center,
                                                   state.getMyJobCardsStatus == GetMyJobCardsStatus.success
-                                                      ? state.myJobCards![index].status!
-                                                      : 'Work in Progress',
-                                                  style: const TextStyle(fontSize: 13),
+                                                      ? state.myJobCards![index].customerContact ?? '-'
+                                                      : 'Contact Number',
+                                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                 ),
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ],
                                       ),
                                     )
                                   ],
                                 ),
-                                Container(
-                                  height: size.height * (isMobile ? 0.05 : 0.045),
-                                  width: size.width * (isMobile ? 0.94 : 0.36),
-                                  decoration: BoxDecoration(
-                                      color: Colors.orange.shade200,
-                                      borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: Image.asset(
-                                                'assets/images/customer.png',
-                                                scale: size.width * (isMobile ? 0.06 : 0.024),
-                                              ),
-                                            ),
-                                            Gap(size.width * (isMobile ? 0.02 : 0.008)),
-                                            Expanded(
-                                              flex: 8,
-                                              child: SizedBox(
-                                                width: size.width * (isMobile ? 0.36 : 0.16),
-                                                child: SingleChildScrollView(
-                                                  scrollDirection: Axis.horizontal,
-                                                  child: Text(
-                                                    state.getMyJobCardsStatus == GetMyJobCardsStatus.success
-                                                        ? state.myJobCards![index].customerName!
-                                                        : 'Customer Name',
-                                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Gap(size.width * (isMobile ? 0.1 : 0.064)),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: Image.asset(
-                                                'assets/images/call.png',
-                                                scale: size.width * (isMobile ? 0.06 : 0.02),
-                                              ),
-                                            ),
-                                            Gap(size.width * 0.02),
-                                            Expanded(
-                                              flex: 8,
-                                              child: SizedBox(
-                                                width: size.width * (isMobile ? 0.25 : 0.08),
-                                                child: SingleChildScrollView(
-                                                  scrollDirection: Axis.horizontal,
-                                                  child: Text(
-                                                    state.getMyJobCardsStatus == GetMyJobCardsStatus.success
-                                                        ? state.myJobCards![index].customerContact ?? '-'
-                                                        : 'Contact Number',
-                                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         ),
                       ),

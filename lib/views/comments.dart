@@ -243,9 +243,8 @@ class _CommentsState extends State<Comments> with SingleTickerProviderStateMixin
                               //use service/jobcard number
                               print(context.read<ServiceBloc>().state.jobCardNo);
                               context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(
-                                  bodyPartName: widget.vehiclePartMedia.name, jobCardNo: context.read<ServiceBloc>().state.jobCardNo!
-                                  // 'JC-${context.read<ServiceBloc>().state.service!.location!.substring(0, 3).toUpperCase()}-${context.read<ServiceBloc>().state.service!.kms.toString().substring(0, 2)}'
-                                  ) as VehiclePartsInteractionBlocEvent);
+                                  bodyPartName: widget.vehiclePartMedia.name,
+                                  jobCardNo: context.read<ServiceBloc>().state.service!.jobCardNo!) as VehiclePartsInteractionBlocEvent);
                             }
                           },
                           child: Container(

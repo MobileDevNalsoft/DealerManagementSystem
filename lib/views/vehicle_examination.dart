@@ -8,7 +8,6 @@ import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/comments.dart';
-import 'package:dms/views/list_of_jobcards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -173,8 +172,8 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                           VehiclePartMedia(name: context.read<MultiBloc>().state.selectedGeneralBodyPart, isUploaded: false),
                     )),
               Positioned(
-                bottom: isMobile ? 100 : size.height * 0.040,
-                left: isMobile ? 155 : size.width * 0.455,
+                bottom: isMobile ? size.height * 0.12 : size.height * 0.040,
+                left: isMobile ? size.width * 0.4 : size.width * 0.455,
                 child: GestureDetector(
                   onTap: () {
                     // After vehicle examination navigation user from home page to list of jobcards.
@@ -201,7 +200,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
           if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
             Container(
               color: Colors.blueGrey.withOpacity(0.25),
-              child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
+              child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.6, width: size.width * 0.6)),
             )
         ],
       ),
