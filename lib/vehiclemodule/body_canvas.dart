@@ -3,8 +3,7 @@ import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:flutter/material.dart';
 import 'package:touchable/touchable.dart';
 
-class BodyCanvas extends StatelessWidget{
-
+class BodyCanvas extends StatelessWidget {
   final List<GeneralBodyPart>? generalParts;
   final List<GeneralBodyPart>? acceptedParts;
   final List<GeneralBodyPart>? rejectedParts;
@@ -13,24 +12,21 @@ class BodyCanvas extends StatelessWidget{
 
   //General Parts for vehicle examination view
   //remaining for quality check view.
-  BodyCanvas({this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts,this.displayAcceptedStatus=false});
+  BodyCanvas({this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts, this.displayAcceptedStatus = false});
 
   @override
   Widget build(BuildContext context) {
     return CanvasTouchDetector(
-      gesturesToOverride: 
-      [GestureType.onTapDown],
+      gesturesToOverride: [GestureType.onTapDown],
       builder: (context) => CustomPaint(
         painter: BodyPainter(
             context: context,
-            generalParts: generalParts, 
-            acceptedParts: acceptedParts, 
-            rejectedParts: rejectedParts, 
+            generalParts: generalParts,
+            acceptedParts: acceptedParts,
+            rejectedParts: rejectedParts,
             pendingParts: pendingParts,
-            displayAcceptedStatus: displayAcceptedStatus
-            ),
+            displayAcceptedStatus: displayAcceptedStatus),
       ),
     );
   }
 }
-

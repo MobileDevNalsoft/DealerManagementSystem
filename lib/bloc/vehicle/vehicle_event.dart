@@ -19,14 +19,13 @@ class CustomerCheck extends VehicleEvent {
   CustomerCheck({required this.customerContactNo});
 }
 
-class UpdateState extends VehicleEvent{
+class UpdateState extends VehicleEvent {
   Vehicle? vehicle;
   VehicleStatus? status;
-  UpdateState({this.vehicle,this.status});
+  UpdateState({this.vehicle, this.status});
 }
 
-class FetchVehicleCustomer extends VehicleEvent{
-   final String registrationNo;
+class FetchVehicleCustomer extends VehicleEvent {
+  final String registrationNo;
   FetchVehicleCustomer({required this.registrationNo});
 }
-

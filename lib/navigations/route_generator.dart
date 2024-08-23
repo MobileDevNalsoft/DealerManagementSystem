@@ -1,7 +1,5 @@
-import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/add_vehicle.dart';
-import 'package:dms/views/comments.dart';
 import 'package:dms/views/dashboard.dart';
 import 'package:dms/views/gate_pass.dart';
 import 'package:dms/views/home_view.dart';

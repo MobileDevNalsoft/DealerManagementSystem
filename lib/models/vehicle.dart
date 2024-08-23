@@ -83,8 +83,7 @@ class Vehicle {
     data['customer_contact_no'] = customerContactNo;
     data['customer_name'] = customerName;
     data['customer_address'] = customerAddress;
-    data['employee_id'] =
-        getIt<SharedPreferences>().getInt('service_advisor_id');
+    data['employee_id'] = getIt<SharedPreferences>().getInt('service_advisor_id');
     return data;
   }
 }

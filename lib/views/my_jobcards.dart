@@ -1,7 +1,6 @@
 import 'package:dms/inits/init.dart';
 import 'package:dms/views/login.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -9,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../bloc/service/service_bloc.dart';
-import 'list_of_jobcards.dart';
 import 'jobcard_details.dart';
+import 'list_of_jobcards.dart';
 
 class MyJobcards extends StatefulWidget {
   const MyJobcards({super.key});
@@ -165,19 +164,19 @@ class _MyJobcardsState extends State<MyJobcards> {
               return GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: isMobile
-                      ?1: state.myJobCards == null
+                      ? 1
+                      : state.myJobCards == null
                           ? 1
                           : state.myJobCards!.length <= 1
                               ? 1
-                              : 2
-                      ,
+                              : 2,
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
                   mainAxisExtent: state.myJobCards != null
                       ? state.myJobCards!.length > 7
                           ? size.height
                           : size.height * (state.myJobCards!.length * 0.16)
-                      : size.height*0.14,
+                      : size.height * 0.14,
                 ),
                 itemCount: state.getMyJobCardsStatus == GetMyJobCardsStatus.success ? state.myJobCards!.length : 7,
                 itemBuilder: (context, index) => Skeletonizer(
@@ -230,12 +229,14 @@ class _MyJobcardsState extends State<MyJobcards> {
                                                   enableFeedback: true,
                                                   onTap: () {
                                                     state.service = state.myJobCards![index];
-                      
+
                                                     Navigator.push(context, MaterialPageRoute(builder: (_) => JobCardDetails()));
                                                   },
                                                   child: Text(
                                                     textAlign: TextAlign.center,
-                                                    state.getMyJobCardsStatus == GetMyJobCardsStatus.success ? state.myJobCards![index].jobCardNo! : 'JC-MAD-633',
+                                                    state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                        ? state.myJobCards![index].jobCardNo!
+                                                        : 'JC-MAD-633',
                                                     style: const TextStyle(
                                                         fontWeight: FontWeight.w500, fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
                                                   ),

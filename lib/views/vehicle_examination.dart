@@ -21,8 +21,7 @@ class VehicleExamination extends StatefulWidget {
   State<VehicleExamination> createState() => _VehicleExaminationState();
 }
 
-class _VehicleExaminationState extends State<VehicleExamination>
-    with SingleTickerProviderStateMixin {
+class _VehicleExaminationState extends State<VehicleExamination> with SingleTickerProviderStateMixin {
   NavigatorService navigator = getIt<NavigatorService>();
   @override
   void initState() {
@@ -47,22 +46,14 @@ class _VehicleExaminationState extends State<VehicleExamination>
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.black,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 10,
-                    blurStyle: BlurStyle.outer,
-                    spreadRadius: 0,
-                    color: Colors.orange.shade200,
-                    offset: const Offset(0, 0))
-              ]),
+              boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
           child: Transform(
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
                   navigator.pop();
                 },
-                icon:
-                    const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           ),
         ),
         title: Container(
@@ -77,10 +68,7 @@ class _VehicleExaminationState extends State<VehicleExamination>
               child: Text(
                 textAlign: TextAlign.center,
                 'Parts Examination',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 16),
+                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
               ),
             )),
         centerTitle: true,
@@ -90,8 +78,7 @@ class _VehicleExaminationState extends State<VehicleExamination>
         children: [
           Stack(
             children: [
-              BlocConsumer<VehiclePartsInteractionBloc,
-                  VehiclePartsInteractionBlocState>(listener: (context, state) {
+              BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(listener: (context, state) {
                 if (state.status == VehiclePartsInteractionStatus.success) {
                   DMSCustomWidgets.DMSFlushbar(size, context,
                       message: "Successfully uploaded",
@@ -137,32 +124,14 @@ class _VehicleExaminationState extends State<VehicleExamination>
                     children: [
                       IconButton(
                           onPressed: () {
-    
                             // Upper limit for zoom is 1.8
                             if (context.read<MultiBloc>().state.scaleFactor == null) {
                               context.read<MultiBloc>().state.scaleFactor = 1.4;
-                              context.read<MultiBloc>().add(ScaleVehicle(
-                                  factor: context
-                                      .read<MultiBloc>()
-                                      .state
-                                      .scaleFactor!));
+                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                             } else {
-                              if (context
-                                      .read<MultiBloc>()
-                                      .state
-                                      .scaleFactor! <=
-                                  1.8) {
-                                context.read<MultiBloc>().state.scaleFactor =
-                                    context
-                                            .read<MultiBloc>()
-                                            .state
-                                            .scaleFactor! +
-                                        0.1;
-                                context.read<MultiBloc>().add(ScaleVehicle(
-                                    factor: context
-                                        .read<MultiBloc>()
-                                        .state
-                                        .scaleFactor!));
+                              if (context.read<MultiBloc>().state.scaleFactor! <= 1.8) {
+                                context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! + 0.1;
+                                context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                               }
                             }
                           },
@@ -173,26 +142,14 @@ class _VehicleExaminationState extends State<VehicleExamination>
                           visualDensity: VisualDensity.compact),
                       IconButton(
                         onPressed: () {
-    
                           // Lower limit for zoom is 1.3
                           if (context.read<MultiBloc>().state.scaleFactor == null) {
                             context.read<MultiBloc>().state.scaleFactor = 1.3;
-                            context.read<MultiBloc>().add(ScaleVehicle(
-                                factor: context
-                                    .read<MultiBloc>()
-                                    .state
-                                    .scaleFactor!));
+                            context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                           } else {
-                            if (context.read<MultiBloc>().state.scaleFactor! >=
-                                1.3) {
-                              context.read<MultiBloc>().state.scaleFactor =
-                                  context.read<MultiBloc>().state.scaleFactor! -
-                                      0.1;
-                              context.read<MultiBloc>().add(ScaleVehicle(
-                                  factor: context
-                                      .read<MultiBloc>()
-                                      .state
-                                      .scaleFactor!));
+                            if (context.read<MultiBloc>().state.scaleFactor! >= 1.3) {
+                              context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! - 0.1;
+                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                             }
                           }
                         },
@@ -241,13 +198,10 @@ class _VehicleExaminationState extends State<VehicleExamination>
               ),
             ],
           ),
-          if (context.watch<VehiclePartsInteractionBloc>().state.status ==
-              VehiclePartsInteractionStatus.loading)
+          if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
             Container(
               color: Colors.blueGrey.withOpacity(0.25),
-              child: Center(
-                  child: Lottie.asset('assets/lottie/car_loading.json',
-                      height: size.height * 0.4, width: size.width * 0.4)),
+              child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
             )
         ],
       ),

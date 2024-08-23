@@ -1,15 +1,13 @@
-import 'dart:developer';
-import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+
+import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
-import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../navigations/navigator_service.dart';
 
@@ -310,158 +308,3 @@ class ServiceHistoryDataSource extends DataGridSource {
         }).toList());
   }
 }
-
-// class MobileView extends StatefulWidget {
-//   const MobileView({super.key});
-
-//   @override
-//   State<MobileView> createState() => _MobileViewState();
-// }
-
-// class _MobileViewState extends State<MobileView> {
-//   List<ServiceHistory> serviceHistory = getServiceHistory();
-
-//   late ServiceHistoryDataSource serviceHistoryDataSource;
-//   DataGridController dataGridController = DataGridController();
-//   @override
-//   void initState() {
-//     super.initState();
-//     serviceHistoryDataSource =
-//         ServiceHistoryDataSource(serviceHistoryData: serviceHistory);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
-
-//     List<String> columnButtons = [
-//       "Date",
-//       "Job Card No",
-//       "Location",
-//       "Job Type"
-//     ];
-
-//     List<GridColumn> gridColumns = [
-//       GridColumn(
-//           allowEditing: true,
-//           width: 150,
-//           columnName: 'sno',
-//           label: Container(
-//               padding: const EdgeInsets.all(16.0),
-//               alignment: Alignment.center,
-//               child: const Text(
-//                 'Sno',
-//               )))
-//     ];
-
-//     return Column(
-//       
-//       
-//       children: [
-//         SizedBox(
-//           height: size.height * 0.03,
-//           width: size.width,
-//           child: ListView.separated(
-//               separatorBuilder: (context, index) => Gap(size.height * 0.005),
-//               shrinkWrap: true,
-//               itemCount: columnButtons.length,
-//               scrollDirection: Axis.horizontal,
-//               padding: EdgeInsets.zero,
-//               itemBuilder: (context, index) => Container(
-//                     alignment: Alignment.center,
-//                     decoration: BoxDecoration(
-//                       border: Border.all(
-//                           color: const Color.fromARGB(255, 145, 19, 19)),
-//                       borderRadius: BorderRadius.circular(50),
-//                       color: Colors
-//                           .transparent, //const Color.fromARGB(255, 145, 19, 19),
-//                     ),
-//                     padding: EdgeInsets.only(
-//                         left: size.width * 0.03, right: size.width * 0.03),
-//                     child: InkWell(
-//                       child: Text(
-//                         columnButtons[index],
-//                         style: TextStyle(color: Colors.white),
-//                       ),
-//                     ),
-//                   )),
-//         ),
-//         SizedBox(
-//           height: size.height * 0.7,
-//           child: PageView.builder(
-//             itemBuilder: (context, index) {
-//               return SfDataGrid(
-//                   source: MobileServiceHistoryDataSource(),
-//                   columns: gridColumns +
-//                       <GridColumn>[
-//                         GridColumn(
-//                             columnName: 'date',
-//                             label: Container(
-//                                 padding: const EdgeInsets.all(8.0),
-//                                 alignment: Alignment.center,
-//                                 child: const Text('Date'))),
-//                         GridColumn(
-//                             columnName: 'Job Card no.',
-//                             label: Container(
-//                                 padding: const EdgeInsets.all(8.0),
-//                                 alignment: Alignment.center,
-//                                 child: InkWell(
-//                                   onTap: () {},
-//                                   child: const Text(
-//                                     'Job Card no.',
-//                                     overflow: TextOverflow.ellipsis,
-//                                   ),
-//                                 )))
-//                       ]);
-//             },
-//           ),
-//         )
-//       ],
-//     );
-//   }
-// }
-
-// class MobileServiceHistoryDataSource extends DataGridSource {
-//   /// Creates the serviceHistory data source class with required details.
-//   ServiceHistoryDataSource({required List<ServiceHistory> serviceHistoryData}) {
-//     _serviceHistoryData = serviceHistoryData
-//         .map<DataGridRow>((e) => DataGridRow(cells: [
-//               DataGridCell<String>(columnName: 'date', value: e.date),
-//               DataGridCell<String>(
-//                   columnName: 'Job Card no.', value: e.jobCardNo),
-//               DataGridCell<String>(columnName: 'Location', value: e.location),
-//               DataGridCell<String>(columnName: 'Job Type', value: e.jobType),
-//             ]))
-//         .toList();
-//   }
-
-//   List<DataGridRow> _serviceHistoryData = [];
-
-//   @override
-//   List<DataGridRow> get rows => _serviceHistoryData;
-
-//   @override
-//   DataGridRowAdapter buildRow(DataGridRow row) {
-//     return DataGridRowAdapter(
-//         color: Colors.white,
-//         cells: row.getCells().map<Widget>((e) {
-//           print("e ${e.columnName}");
-//           return e.columnName == "Job Card no."
-//               ? InkWell(
-//                   onTap: () {
-//                     print("${e.value}");
-//                   },
-//                   child: Center(
-//                       child: Text(
-//                     e.value.toString(),
-//                     style: const TextStyle(color: Colors.blue),
-//                   )),
-//                 )
-//               : Container(
-//                   alignment: Alignment.center,
-//                   padding: const EdgeInsets.all(8.0),
-//                   child: Text(e.value.toString()),
-//                 );
-//         }).toList());
-//   }
-// }

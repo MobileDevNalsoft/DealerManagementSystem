@@ -32,10 +32,7 @@ class OnFocusChange extends MultiBlocEvent {
   final FocusNode focusNode;
   final ScrollController scrollController;
   final BuildContext context;
-  OnFocusChange(
-      {required this.focusNode,
-      required this.scrollController,
-      required this.context});
+  OnFocusChange({required this.focusNode, required this.scrollController, required this.context});
 }
 
 class AddClippedWidgets extends MultiBlocEvent {
@@ -51,6 +48,7 @@ class MultiBlocStatusChange extends MultiBlocEvent {
   MultiStateStatus status;
   MultiBlocStatusChange({required this.status});
 }
+
 class ScaleVehicle extends MultiBlocEvent {
   double factor;
   ScaleVehicle({required this.factor});
@@ -59,5 +57,5 @@ class ScaleVehicle extends MultiBlocEvent {
 class ModifyVehicleInteractionStatus extends MultiBlocEvent {
   String selectedBodyPart;
   bool isTapped;
-  ModifyVehicleInteractionStatus({required this.selectedBodyPart,required this.isTapped});
+  ModifyVehicleInteractionStatus({required this.selectedBodyPart, required this.isTapped});
 }

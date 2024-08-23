@@ -72,7 +72,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
             body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) {
                 String? message;
-    
+
                 switch (state.authenticationStatus) {
                   case AuthenticationStatus.success:
                     message = "Login Successful";
@@ -87,14 +87,12 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                   default:
                     message = null;
                 }
-    
+
                 if (message != null) {
                   DMSCustomWidgets.DMSFlushbar(size, context,
                       message: message,
                       icon: Icon(
-                        message == "Login Successful"
-                            ? Icons.check_circle_rounded
-                            : Icons.error,
+                        message == "Login Successful" ? Icons.check_circle_rounded : Icons.error,
                         color: Colors.white,
                       ));
                 }
@@ -107,11 +105,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                       height: size.height,
                       decoration: const BoxDecoration(
                           gradient: LinearGradient(
-                              colors: [
-                                Colors.black45,
-                                Colors.black26,
-                                Colors.black45
-                              ],
+                              colors: [Colors.black45, Colors.black26, Colors.black45],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               stops: [0.1, 0.5, 1])),
@@ -119,22 +113,14 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                         if (isMobile)
                           ClipShadowPath(
                             shadow: BoxShadow(
-                                blurRadius: 20,
-                                blurStyle: BlurStyle.outer,
-                                spreadRadius: 25,
-                                color: Colors.orange.shade200,
-                                offset: const Offset(0, 0)),
+                                blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
                             clipper: ImageClipper(),
                             child: Container(
                               height: size.height * 0.4,
                               width: size.width,
                               decoration: BoxDecoration(
                                 color: Colors.black,
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/login.png'),
-                                    alignment: Alignment.topCenter,
-                                    isAntiAlias: true),
+                                image: DecorationImage(image: AssetImage('assets/images/login.png'), alignment: Alignment.topCenter, isAntiAlias: true),
                               ),
                             ),
                           ),
@@ -144,29 +130,22 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                             width: size.width * 0.4,
                             decoration: BoxDecoration(
                               color: Colors.black,
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/login.png'),
-                                  alignment: Alignment.center,
-                                  isAntiAlias: true),
+                              image: DecorationImage(image: AssetImage('assets/images/login.png'), alignment: Alignment.center, isAntiAlias: true),
                             ),
                           ),
                         Positioned(
-                          top: isMobile?size.height * 0.35:size.height*0.24,
-                          bottom: isMobile?0:null,
-                          left: isMobile?0:size.width*0.45,
-                          right:isMobile? 0:null,
+                          top: isMobile ? size.height * 0.35 : size.height * 0.24,
+                          bottom: isMobile ? 0 : null,
+                          left: isMobile ? 0 : size.width * 0.45,
+                          right: isMobile ? 0 : null,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(
-                                    left: size.width * 0.09,
-                                    bottom: size.width * 0.03),
+                                padding: EdgeInsets.only(left: size.width * 0.09, bottom: size.width * 0.03),
                                 child: const Text(
                                   "Log in",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 25),
+                                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
                                 ),
                               ),
                               CustomTextFormField(
@@ -187,14 +166,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                 obscureChar: '*',
                                 suffixIcon: IconButton(
                                   iconSize: 20,
-                                  onPressed: () => {
-                                    context
-                                        .read<AuthenticationBloc>()
-                                        .add(ObscurePasswordTapped())
-                                  },
-                                  icon: state.obscure!
-                                      ? const Icon(Icons.visibility_off)
-                                      : const Icon(Icons.visibility),
+                                  onPressed: () => {context.read<AuthenticationBloc>().add(ObscurePasswordTapped())},
+                                  icon: state.obscure! ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
                                 ),
                               ),
                               Gap(
@@ -203,12 +176,8 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                               GestureDetector(
                                 onTap: () {
                                   String? message =
-                                      (_emailController.text.isEmpty
-                                              ? "username cannot be empty"
-                                              : null) ??
-                                          _passwordValidator(
-                                              _passwordController.text);
-    
+                                      (_emailController.text.isEmpty ? "username cannot be empty" : null) ?? _passwordValidator(_passwordController.text);
+
                                   if (message != null) {
                                     DMSCustomWidgets.DMSFlushbar(
                                       size,
@@ -220,36 +189,27 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                                       ),
                                     );
                                   } else {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    _authBloc.add(LoginButtonPressed(
-                                        username: _emailController.text,
-                                        password: _passwordController.text));
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    _authBloc.add(LoginButtonPressed(username: _emailController.text, password: _passwordController.text));
                                   }
                                 },
                                 child: Container(
                                     alignment: Alignment.center,
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: size.width * 0.08),
+                                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.08),
                                     height: size.height * 0.05,
-                                    width: isMobile?size.width:size.width*0.3,
-    
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Colors.black,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              blurRadius: 10,
-                                              blurStyle: BlurStyle.outer,
-                                              spreadRadius: 0,
-                                              color: Colors.orange.shade200,
-                                              offset: const Offset(0, 0))
-                                        ]),
+                                    width: isMobile ? size.width : size.width * 0.3,
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.black, boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 10,
+                                          blurStyle: BlurStyle.outer,
+                                          spreadRadius: 0,
+                                          color: Colors.orange.shade200,
+                                          offset: const Offset(0, 0))
+                                    ]),
                                     child: const Text(
                                       textAlign: TextAlign.center,
                                       'log in',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 16),
+                                      style: TextStyle(color: Colors.white, fontSize: 16),
                                     )),
                               )
                             ],
@@ -257,15 +217,12 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                         )
                       ]),
                     ),
-                    if (state.authenticationStatus ==
-                        AuthenticationStatus.loading)
+                    if (state.authenticationStatus == AuthenticationStatus.loading)
                       Container(
                         color: Colors.white54,
                         child: Center(
-                            child: Lottie.asset(
-                                'assets/lottie/login_loading.json',
-                                height:isMobile?size.height * 0.4:size.height * 0.24,
-                                width: isMobile?size.width * 0.4:size.width * 0.24)),
+                            child: Lottie.asset('assets/lottie/login_loading.json',
+                                height: isMobile ? size.height * 0.4 : size.height * 0.24, width: isMobile ? size.width * 0.4 : size.width * 0.24)),
                       )
                   ],
                 );
@@ -284,8 +241,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
         builder: (context) {
           return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               contentPadding: EdgeInsets.only(top: size.height * 0.01),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,10 +259,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                     height: size.height * 0.05,
                     margin: EdgeInsets.all(size.height * 0.001),
                     decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                        color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -315,10 +268,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: const Text(
                               'no',
                             ),
@@ -333,10 +283,7 @@ class _LoginViewState extends State<LoginView> with ConnectivityMixin {
                             onPressed: () {
                               exit(0);
                             },
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: const Text(
                               'yes',
                             ),
@@ -358,10 +305,8 @@ class ImageClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(0, size.height - 100);
-    path.quadraticBezierTo(size.width * 0.25, size.height - 120,
-        size.width * 0.5, size.height - 50);
-    path.quadraticBezierTo(
-        size.width * 0.75, size.height + 15, size.width, size.height - 50);
+    path.quadraticBezierTo(size.width * 0.25, size.height - 120, size.width * 0.5, size.height - 50);
+    path.quadraticBezierTo(size.width * 0.75, size.height + 15, size.width, size.height - 50);
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
     path.close();
@@ -369,8 +314,7 @@ class ImageClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
 }
 
 String? _passwordValidator(String value) {

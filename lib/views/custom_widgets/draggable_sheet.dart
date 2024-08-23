@@ -34,9 +34,7 @@ class _DraggableSheetState extends State<DraggableSheet> {
                         offset: Offset(0, 1),
                       )
                     ],
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(22),
-                        topRight: Radius.circular(22))));
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(22), topRight: Radius.circular(22))));
           },
         );
       },

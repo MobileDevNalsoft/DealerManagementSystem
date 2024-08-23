@@ -1,22 +1,16 @@
 import 'dart:io';
-import 'package:another_flushbar/flushbar.dart';
+
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
-import 'package:dms/models/vehicle.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
-import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class CommentsView extends StatefulWidget {
   VehiclePartMedia vehiclePartMedia;

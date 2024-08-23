@@ -30,8 +30,7 @@ class ClippedButton extends StatefulWidget {
   State<ClippedButton> createState() => _ClippedButtonState();
 }
 
-class _ClippedButtonState extends State<ClippedButton>
-    with TickerProviderStateMixin {
+class _ClippedButtonState extends State<ClippedButton> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -43,12 +42,7 @@ class _ClippedButtonState extends State<ClippedButton>
         flipY: widget.flipButtonY,
         child: ClipShadowPath(
           shadow: widget.shadow ??
-              BoxShadow(
-                  blurRadius: 20,
-                  blurStyle: BlurStyle.outer,
-                  spreadRadius: 25,
-                  color: Colors.orange.shade200,
-                  offset: const Offset(0, 0)),
+              BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
           clipper: widget.clipper,
           child: Container(
             alignment: Alignment.center,
@@ -81,11 +75,7 @@ class VehicleInfoClippedButton extends StatelessWidget {
   Widget child;
   Color? decorationColor;
   Color shadowColor;
-  VehicleInfoClippedButton(
-      {this.flipX = false,
-      this.decorationColor,
-      required this.child,
-      required this.shadowColor});
+  VehicleInfoClippedButton({this.flipX = false, this.decorationColor, required this.child, required this.shadowColor});
 
   @override
   Widget build(BuildContext context) {
@@ -98,12 +88,9 @@ class VehicleInfoClippedButton extends StatelessWidget {
         shadow: Shadow(offset: const Offset(0, 0), color: shadowColor),
         clipper: VehicleInfoClipper(),
         child: Container(
-          height: size.height * (isMobile?0.5:0.58),
-          width: size.width * (isMobile?0.95:0.4),
-          decoration: BoxDecoration(
-              color: !context.watch<MultiBloc>().state.reverseClippedWidgets!
-                  ? decorationColor
-                  : null),
+          height: size.height * (isMobile ? 0.5 : 0.58),
+          width: size.width * (isMobile ? 0.95 : 0.4),
+          decoration: BoxDecoration(color: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? decorationColor : null),
           child: child,
         ),
       ),
@@ -167,23 +154,17 @@ class VehicleInfoClipper extends CustomClipper<Path> {
     Path path = Path();
     path.moveTo(x1, y1);
     path.lineTo(x1, y - 20);
-    path.arcToPoint(Offset(x1 + 20, y),
-        radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x1 + 20, y), radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x - 20, y);
-    path.arcToPoint(Offset(x, y - 20),
-        radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x, y - 20), radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x, y1 + 80);
-    path.arcToPoint(Offset(x - 20, y1 + 60),
-        radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x - 20, y1 + 60), radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x - (size.width * 0.45), y1 + 60);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40),
-        radius: const Radius.circular(20), clockwise: true);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40), radius: const Radius.circular(20), clockwise: true);
     path.lineTo(x - (size.width * 0.45 + 20), y1 + 20);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1),
-        radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1), radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x1 + 20, y1);
-    path.arcToPoint(Offset(x1, y1 + 20),
-        radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x1, y1 + 20), radius: const Radius.circular(20), clockwise: false);
     path.close();
     return path;
   }

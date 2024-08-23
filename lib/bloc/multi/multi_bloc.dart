@@ -40,12 +40,10 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     emit(state.copyWith(year: event.year));
   }
 
-  void _onGetSalesPersons(
-      GetSalesPersons event, Emitter<MultiBlocState> emit) async {
+  void _onGetSalesPersons(GetSalesPersons event, Emitter<MultiBlocState> emit) async {
     emit(state.copyWith(status: MultiStateStatus.loading));
     List salesPersons = await _repo.getSalesPersons(event.searchText);
-    List<SalesPerson> jsonData =
-        salesPersons.map((e) => SalesPerson.fromJson(e)).toList();
+    List<SalesPerson> jsonData = salesPersons.map((e) => SalesPerson.fromJson(e)).toList();
     emit(state.copyWith(
       salesPersons: jsonData,
       status: MultiStateStatus.success,
@@ -61,8 +59,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
 
   void _onFocusChanged(OnFocusChange event, Emitter<MultiBlocState> emit) {
     Future.delayed(const Duration(milliseconds: 500), () async {
-      final RenderBox renderBox =
-          event.focusNode.context!.findRenderObject() as RenderBox;
+      final RenderBox renderBox = event.focusNode.context!.findRenderObject() as RenderBox;
       final offset = renderBox.localToGlobal(Offset.zero);
       final textFieldTopPosition = offset.dy;
       final textFieldBottomPosition = offset.dy + renderBox.size.height;
@@ -83,8 +80,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
         return;
       } else {
         // Calculate the amount to scroll
-        final scrollOffset = textFieldTopPosition -
-            (visibleScreenHeight - renderBox.size.height * 6);
+        final scrollOffset = textFieldTopPosition - (visibleScreenHeight - renderBox.size.height * 6);
         print('render ${renderBox.size.height}');
         print('present offset ${event.scrollController.offset}');
         print('scroll offset $scrollOffset');
@@ -97,18 +93,15 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     });
   }
 
-  void _onRadioOptionChanged(
-      RadioOptionChanged event, Emitter<MultiBlocState> emit) {
+  void _onRadioOptionChanged(RadioOptionChanged event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(selectedRadioOption: event.selectedRadioOption));
   }
 
-  void _onAddClippedWidgets(
-      AddClippedWidgets event, Emitter<MultiBlocState> emit) {
+  void _onAddClippedWidgets(AddClippedWidgets event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(reverseClippedWidgets: event.reverseClippedWidgets));
   }
 
-  void _onMultiBlocStatusChange(
-      MultiBlocStatusChange event, Emitter<MultiBlocState> emit) {
+  void _onMultiBlocStatusChange(MultiBlocStatusChange event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(status: event.status));
   }
 
@@ -116,10 +109,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     emit(state.copyWith(scaleFactor: event.factor));
   }
 
-  void _onModifyVehicleInteractionStatus(
-      ModifyVehicleInteractionStatus event, Emitter<MultiBlocState> emit) {
-    emit(state.copyWith(
-        selectedGeneralBodyPart: event.selectedBodyPart,
-        isTapped: event.isTapped));
+  void _onModifyVehicleInteractionStatus(ModifyVehicleInteractionStatus event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(selectedGeneralBodyPart: event.selectedBodyPart, isTapped: event.isTapped));
   }
 }

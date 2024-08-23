@@ -46,10 +46,7 @@ class DMSCustomWidgets {
               child: TextFormField(
                 onChanged: onChanged,
                 onTap: () {
-                  context.read<MultiBloc>().add(OnFocusChange(
-                      focusNode: focusNode,
-                      scrollController: scrollController,
-                      context: context));
+                  context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode, scrollController: scrollController, context: context));
                 },
                 onTapOutside: (event) => focusNode.unfocus(),
                 cursorColor: Colors.black,
@@ -58,11 +55,8 @@ class DMSCustomWidgets {
                 ],
                 style: TextStyle(fontSize: isMobile ? 13 : 14),
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: 16, right: 16, bottom: size.height * 0.016),
-                  suffixIcon: Transform(
-                      transform: Matrix4.translationValues(0, -2, 0),
-                      child: icon),
+                  contentPadding: EdgeInsets.only(left: 16, right: 16, bottom: size.height * 0.016),
+                  suffixIcon: Transform(transform: Matrix4.translationValues(0, -2, 0), child: icon),
                   hintText: hint,
                   hintStyle: const TextStyle(
                     color: Colors.black38,
@@ -77,10 +71,7 @@ class DMSCustomWidgets {
           },
           suggestionsCallback: (pattern) {
             if (suggestionsController == null) {
-              return items
-                  .where((item) =>
-                      item.toLowerCase().contains(pattern.toLowerCase()))
-                  .toList();
+              return items.where((item) => item.toLowerCase().contains(pattern.toLowerCase())).toList();
             }
             return items;
           },
@@ -138,8 +129,7 @@ class DMSCustomWidgets {
       child: Card(
         elevation: 3,
         color: Colors.white,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Transform(
           transform: Matrix4.translationValues(0, isMobile ? 1.5 : 0, 0),
           child: TextFormField(
@@ -149,10 +139,7 @@ class DMSCustomWidgets {
             inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
             onTap: () {
-              context.read<MultiBloc>().add(OnFocusChange(
-                  focusNode: focusNode!,
-                  scrollController: scrollController,
-                  context: context));
+              context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode!, scrollController: scrollController, context: context));
             },
             key: key,
             validator: validator,
@@ -166,8 +153,7 @@ class DMSCustomWidgets {
             maxLengthEnforcement: MaxLengthEnforcement.enforced,
             decoration: InputDecoration(
                 suffix: suffixIcon,
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16, vertical: size.height * 0.016),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: size.height * 0.016),
                 counterText: "",
                 border: InputBorder.none,
                 hintText: hint,
@@ -203,8 +189,7 @@ class DMSCustomWidgets {
       child: Card(
         elevation: 3,
         color: Colors.white,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
         child: TextFormField(
           cursorColor: Colors.black,
           style: TextStyle(fontSize: isMobile ? 13 : 14),
@@ -212,10 +197,7 @@ class DMSCustomWidgets {
           focusNode: focusNode,
           inputFormatters: inputFormatters,
           onTap: () {
-            context.read<MultiBloc>().add(OnFocusChange(
-                focusNode: focusNode!,
-                scrollController: scrollController,
-                context: context));
+            context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode!, scrollController: scrollController, context: context));
           },
           minLines: 1,
           maxLines: 5,
@@ -225,8 +207,7 @@ class DMSCustomWidgets {
             contentPadding: const EdgeInsets.only(left: 15, top: 0),
             border: InputBorder.none,
             hintText: hint,
-            hintStyle: const TextStyle(
-                color: Colors.black45, fontWeight: FontWeight.normal),
+            hintStyle: const TextStyle(color: Colors.black45, fontWeight: FontWeight.normal),
           ),
         ),
       ),
@@ -234,8 +215,7 @@ class DMSCustomWidgets {
   }
 
   // ignore: non_constant_identifier_names
-  static Widget ScheduleDateCalendar(
-      {context, required Size size, required bool isMobile, DateTime? date}) {
+  static Widget ScheduleDateCalendar({context, required Size size, required bool isMobile, DateTime? date}) {
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
       width: isMobile ? size.width * 0.8 : size.width * 0.3,
@@ -264,15 +244,11 @@ class DMSCustomWidgets {
                         Navigator.pop(context);
                       },
                       onSubmit: (p0) {
-                        context
-                            .read<MultiBloc>()
-                            .add(DateChanged(date: p0 as DateTime));
+                        context.read<MultiBloc>().add(DateChanged(date: p0 as DateTime));
                         Navigator.pop(context);
                       },
                       headerStyle: const DateRangePickerHeaderStyle(
-                          backgroundColor: Colors.black,
-                          textStyle: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center),
+                          backgroundColor: Colors.black, textStyle: TextStyle(color: Colors.white), textAlign: TextAlign.center),
                     )),
               );
             },
@@ -281,22 +257,17 @@ class DMSCustomWidgets {
         child: Card(
             elevation: 3,
             color: Colors.white,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
               child: Row(
                 children: [
                   Text(
-                    date == null
-                        ? 'Schedule Date'
-                        : DateFormat("dd MMM yyyy").format(date),
-                    style: TextStyle(
-                        color: date == null ? Colors.black38 : Colors.black),
+                    date == null ? 'Schedule Date' : DateFormat("dd MMM yyyy").format(date),
+                    style: TextStyle(color: date == null ? Colors.black38 : Colors.black),
                   ),
                   const MaxGap(500),
-                  const Icon(Icons.calendar_month_outlined,
-                      color: Colors.black38),
+                  const Icon(Icons.calendar_month_outlined, color: Colors.black38),
                 ],
               ),
             )),
@@ -359,11 +330,7 @@ class DMSCustomWidgets {
   }
 
   static Widget CustomYearPicker(
-      {required Size size,
-      required bool isMobile,
-      required BuildContext context,
-      required FixedExtentScrollController yearPickerController,
-      int? year}) {
+      {required Size size, required bool isMobile, required BuildContext context, required FixedExtentScrollController yearPickerController, int? year}) {
     int now = DateTime.now().year;
     return SizedBox(
       height: isMobile ? size.height * 0.06 : size.height * 0.063,
@@ -372,8 +339,7 @@ class DMSCustomWidgets {
         borderRadius: BorderRadius.circular(100),
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
-          yearPickerController =
-              FixedExtentScrollController(initialItem: now - (year ?? 0));
+          yearPickerController = FixedExtentScrollController(initialItem: now - (year ?? 0));
           showCupertinoModalPopup(
             context: context,
             builder: (context) => CupertinoActionSheet(
@@ -386,15 +352,12 @@ class DMSCustomWidgets {
                       looping: true,
                       scrollController: yearPickerController,
                       onSelectedItemChanged: (value) {
-                        context
-                            .read<MultiBloc>()
-                            .add(YearChanged(year: now - value));
+                        context.read<MultiBloc>().add(YearChanged(year: now - value));
                       },
                       useMagnifier: true,
                       magnification: 1.2,
                       backgroundColor: Colors.black,
-                      selectionOverlay:
-                          const CupertinoPickerDefaultSelectionOverlay(
+                      selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
                         background: Colors.white30,
                       ),
                       children: List.generate(
@@ -419,14 +382,12 @@ class DMSCustomWidgets {
         },
         child: Card(
             color: Colors.white.withOpacity(1),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
               child: Text(
                 year == null ? 'MFG Year' : year.toString(),
-                style: TextStyle(
-                    color: year == null ? Colors.black38 : Colors.black),
+                style: TextStyle(color: year == null ? Colors.black38 : Colors.black),
               ),
             )),
       ),
@@ -450,8 +411,7 @@ class DMSCustomWidgets {
         builder: (context) {
           return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               contentPadding: EdgeInsets.only(top: size.height * 0.01),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -469,20 +429,14 @@ class DMSCustomWidgets {
                     height: size.height * 0.05,
                     margin: EdgeInsets.all(size.height * 0.001),
                     decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                        color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: TextButton(
                             onPressed: onReject,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: Text(
                               rejectLable,
                             ),
@@ -495,10 +449,7 @@ class DMSCustomWidgets {
                         Expanded(
                           child: TextButton(
                             onPressed: onAccept,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: Text(
                               rejectLable,
                             ),
@@ -514,8 +465,7 @@ class DMSCustomWidgets {
         });
   }
 
-  static Future DMSFlushbar(Size size, BuildContext context,
-      {String message = 'message', Widget? icon}) async {
+  static Future DMSFlushbar(Size size, BuildContext context, {String message = 'message', Widget? icon}) async {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     await Flushbar(
       backgroundColor: Colors.black,
@@ -525,26 +475,16 @@ class DMSCustomWidgets {
       duration: const Duration(seconds: 2),
       borderRadius: BorderRadius.circular(8),
       icon: icon,
-      boxShadows: [
-        BoxShadow(
-            blurRadius: 12,
-            blurStyle: BlurStyle.outer,
-            spreadRadius: 0,
-            color: Colors.orange.shade200,
-            offset: const Offset(0, 0))
-      ],
+      boxShadows: [BoxShadow(blurRadius: 12, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))],
       margin: EdgeInsets.only(
-          top: size.height * 0.01,
-          left: isMobile ? size.width * 0.04 : size.width * 0.8,
-          right: isMobile ? size.width * 0.04 : size.width * 0.03),
+          top: size.height * 0.01, left: isMobile ? size.width * 0.04 : size.width * 0.8, right: isMobile ? size.width * 0.04 : size.width * 0.03),
     ).show(context);
   }
 }
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: newValue.text.toUpperCase(),
       selection: newValue.selection,
@@ -554,8 +494,7 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 
 class InitCapCaseTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: newValue.text[0].toUpperCase() + newValue.text.substring(1),
       selection: newValue.selection,

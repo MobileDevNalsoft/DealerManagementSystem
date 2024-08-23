@@ -74,7 +74,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
             transform: Matrix4.translationValues(-3, 0, 0),
             child: IconButton(
                 onPressed: () {
-                 navigator.pop();
+                  navigator.pop();
                 },
                 icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
           ),
@@ -369,7 +369,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                           Gap(8),
                                                           Text(
                                                             context.watch<MultiBloc>().state.selectedGeneralBodyPart.replaceAll('_', ' ').toUpperCase(),
-                                                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: ParentSize.maxWidth * 0.042),
+                                                            style: TextStyle(
+                                                                fontWeight: FontWeight.w600, color: Colors.white, fontSize: ParentSize.maxWidth * 0.042),
                                                           ),
                                                         ],
                                                       ),
@@ -393,7 +394,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                       .state
                                                                       .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
                                                                       .comments!,
-                                                              style: TextStyle(color: Color.fromARGB(255, 223, 220, 220), fontSize: ParentSize.maxWidth * 0.040)),
+                                                              style:
+                                                                  TextStyle(color: Color.fromARGB(255, 223, 220, 220), fontSize: ParentSize.maxWidth * 0.040)),
                                                         ],
                                                       ),
                                                       const Gap(8.0),
@@ -507,7 +509,6 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                       // Gap(16),
 
                                                       BlocBuilder<MultiBloc, MultiBlocState>(
-                                                      
                                                         builder: (context, state) {
                                                           print("builder");
                                                           return CustomSliderButton1(
@@ -677,8 +678,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                         ),
                       )
                     :
-                    // For tab screen 
-                     Positioned(
+                    // For tab screen
+                    Positioned(
                         right: size.width * 0.16,
                         top: context.watch<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(context.read<MultiBloc>().state.selectedGeneralBodyPart)
                             ? size.height * 0.08
@@ -902,7 +903,6 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                             .length,
                                                   ),
                                                 ),
-
                                                 BlocBuilder<MultiBloc, MultiBlocState>(
                                                   builder: (context, state) {
                                                     // slider button
@@ -971,7 +971,6 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                               onTap: () async {
                                                                 rejectionFocus.requestFocus();
                                                                 await Future.delayed(Duration(milliseconds: 1000));
-                                                              
                                                               },
                                                               cursorColor: Colors.white,
                                                               decoration: InputDecoration(

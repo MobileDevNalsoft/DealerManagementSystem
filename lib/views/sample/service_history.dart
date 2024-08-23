@@ -14,8 +14,7 @@ class ServiceHistoryViewSample extends StatefulWidget {
   const ServiceHistoryViewSample({super.key});
 
   @override
-  State<ServiceHistoryViewSample> createState() =>
-      _ServiceHistoryViewSampleState();
+  State<ServiceHistoryViewSample> createState() => _ServiceHistoryViewSampleState();
 }
 
 class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
@@ -28,8 +27,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
     super.initState();
     serviceState.copyWith(getServiceStatus: GetServiceStatus.initial);
     context.read<ServiceBloc>().add(GetServiceHistory(query: '2022'));
-    context.read<ServiceBloc>().state.getServiceStatus =
-        GetServiceStatus.initial;
+    context.read<ServiceBloc>().state.getServiceStatus = GetServiceStatus.initial;
   }
 
   // @override
@@ -70,8 +68,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
         //   DeviceOrientation.portraitDown,
         // ]);
       },
-      child:
-          SafeArea(child: OrientationBuilder(builder: (context, orientation) {
+      child: SafeArea(child: OrientationBuilder(builder: (context, orientation) {
         // SystemChrome.setPreferredOrientations([
         //   DeviceOrientation.landscapeLeft,
         //   DeviceOrientation.landscapeRight
@@ -86,8 +83,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(Icons.arrow_back_rounded,
-                      color: Colors.white)),
+                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
               title: const Text(
                 "Service History",
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -101,8 +97,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
               padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.darken),
+                    colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
                     image: const AssetImage(
                       'assets/images/dms_bg.png',
                     ),
@@ -125,10 +120,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
                         return Transform(
                           transform: Matrix4.translationValues(0, -40, 0),
                           child: Center(
-                            child: Lottie.asset(
-                                'assets/lottie/car_loading.json',
-                                height: size.height * 0.5,
-                                width: size.width * 0.6),
+                            child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6),
                           ),
                         );
                       case GetServiceStatus.success:
@@ -137,8 +129,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
                           child: SfDataGrid(
                             columnSizer: _customColumnSizer,
                             columnWidthMode: ColumnWidthMode.fitByColumnName,
-                            source: ServiceHistoryDataSource(
-                                serviceHistoryData: state.services!),
+                            source: ServiceHistoryDataSource(serviceHistoryData: state.services!),
                             gridLinesVisibility: GridLinesVisibility.both,
                             headerGridLinesVisibility: GridLinesVisibility.both,
                             showHorizontalScrollbar: false,
@@ -152,8 +143,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
                             allowFiltering: true,
                             editingGestureType: EditingGestureType.doubleTap,
                             onCellDoubleTap: (details) {
-                              dataGridController
-                                  .beginEdit(details.rowColumnIndex);
+                              dataGridController.beginEdit(details.rowColumnIndex);
                             },
                             controller: dataGridController,
                             columns: <GridColumn>[
@@ -169,10 +159,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
                                       ))),
                               GridColumn(
                                   columnName: 'date',
-                                  label: Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      alignment: Alignment.center,
-                                      child: const Text('Date'))),
+                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Date'))),
                               GridColumn(
                                   columnName: 'Job Card no.',
                                   label: Container(
@@ -187,16 +174,10 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
                                       ))),
                               GridColumn(
                                   columnName: 'Location',
-                                  label: Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      alignment: Alignment.center,
-                                      child: const Text('Location'))),
+                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Location'))),
                               GridColumn(
                                   columnName: 'Job Type',
-                                  label: Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      alignment: Alignment.center,
-                                      child: const Text('Job Type'))),
+                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Job Type'))),
                             ],
                           ),
                         );
@@ -214,8 +195,7 @@ class _ServiceHistoryViewSampleState extends State<ServiceHistoryViewSample> {
 
 class CustomColumnSizer extends ColumnSizer {
   @override
-  double computeCellWidth(GridColumn column, DataGridRow row, Object? cellValue,
-      TextStyle textStyle) {
+  double computeCellWidth(GridColumn column, DataGridRow row, Object? cellValue, TextStyle textStyle) {
     if (column.columnName == 'Sno') {
       cellValue = cellValue;
     } else if (column.columnName == 'Date') {
@@ -236,8 +216,7 @@ class ServiceHistoryDataSource extends DataGridSource {
                 value: serviceHistoryData.indexOf(e),
               ),
               DataGridCell<String>(columnName: 'date', value: e.scheduledDate),
-              DataGridCell<String>(
-                  columnName: 'Job Card no.', value: e.jobCardNo),
+              DataGridCell<String>(columnName: 'Job Card no.', value: e.jobCardNo),
               DataGridCell<String>(columnName: 'Location', value: e.location),
               DataGridCell<String>(columnName: 'Job Type', value: e.jobType),
             ]))

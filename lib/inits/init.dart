@@ -17,9 +17,7 @@ Future<void> init() async {
   getIt.allowReassignment = true;
 
   //Api
-  getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(
-      AppConstants.BaseURL, getIt(),
-      connectTimeout: 30, receiveTimeout: 30));
+  getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(AppConstants.BaseURL, getIt(), connectTimeout: 30, receiveTimeout: 30));
 
   //Repo
   getIt.registerLazySingleton<Repository>(
