@@ -394,14 +394,14 @@ class _MyJobcardsState extends State<MyJobcards> {
                                       )
                                     ],
                                   ),
-                                )
-                              ],
+                               ] )
+                              ,
                             ),
                           ),
                         ),
                       ),
-                    )),
-              );
+                    ));
+              
             },
           ),
         ),
