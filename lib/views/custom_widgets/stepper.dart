@@ -139,6 +139,7 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                     MultiBlocStatusChange(
                                         status: MultiStateStatus.failure));
                                   
+                                  Log.e(" caught an error $e");
                                 }
 
                               case 3:
