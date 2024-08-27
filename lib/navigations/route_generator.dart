@@ -38,14 +38,14 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const DashBoard(),
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/addVehicle':
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const AddVehicle(),
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/vehicleExamination':
@@ -76,7 +76,7 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const MyJobcards(),
-          transitionDuration: const Duration(milliseconds: 20000),
+          transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/qualityCheck':
@@ -96,14 +96,14 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const VehicleInfo(),
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/serviceHistory':
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const ServiceHistory(),
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       default:

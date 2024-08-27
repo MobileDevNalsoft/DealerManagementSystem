@@ -386,8 +386,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                       .state
                                                                       .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
                                                                       .comments!,
-                                                              style:
-                                                                  TextStyle(color: const Color.fromARGB(255, 223, 220, 220), fontSize: ParentSize.maxWidth * 0.040)),
+                                                              style: TextStyle(
+                                                                  color: const Color.fromARGB(255, 223, 220, 220), fontSize: ParentSize.maxWidth * 0.040)),
                                                         ],
                                                       ),
                                                       const Gap(8.0),
@@ -1025,7 +1025,9 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
           if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
             Container(
               color: Colors.blueGrey.withOpacity(0.25),
-              child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
+              child: Center(
+                  child: Lottie.asset('assets/lottie/car_loading.json',
+                      height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
             )
         ],
       ),
@@ -1070,6 +1072,7 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
 
     // initial postitions of tthe slider
     _multiBloc = context.read<MultiBloc>();
+    _interactionBloc = context.read<VehiclePartsInteractionBloc>();
     _leftPosition = widget.size.width * 0.168;
     _startPosition = widget.size.width * 0.39;
     _rightPosition = widget.size.width * 0.63;

@@ -200,7 +200,9 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
           if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
             Container(
               color: Colors.blueGrey.withOpacity(0.25),
-              child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.6, width: size.width * 0.6)),
+              child: Center(
+                  child: Lottie.asset('assets/lottie/car_loading.json',
+                      height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
             )
         ],
       ),

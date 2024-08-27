@@ -10,11 +10,37 @@ import '../bloc/service/service_bloc.dart';
 import '../navigations/navigator_service.dart';
 import 'custom_widgets/stepper.dart';
 
-class JobCardDetails extends StatelessWidget {
+class JobCardDetails extends StatefulWidget {
   JobCardDetails({super.key});
 
+  @override
+  State<JobCardDetails> createState() => _JobCardDetailsState();
+}
+
+class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStateMixin {
   // Get the NavigatorService instance using GetIt dependency injection
   final NavigatorService navigator = getIt<NavigatorService>();
+
+  // for animation
+  late AnimationController animationController;
+  late Animation<double> animation;
+  late Tween<double> tween;
+
+  @override
+  void initState() {
+    super.initState();
+    tween = Tween(begin: 0.0, end: 0.76);
+    animationController = AnimationController(duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: animationController, curve: Curves.easeIn).drive(tween);
+    animationController.forward();
+  }
+
+  // dispose controller to avoid data leaks
+  @override
+  void dispose() {
+    super.dispose();
+    animationController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,123 +75,144 @@ class JobCardDetails extends StatelessWidget {
       'Gate Pass Generated'
     ];
 
-    return Scaffold(
-        // Prevent the layout from resizing to avoid bottom inset issues
-        resizeToAvoidBottomInset: false,
-        // Don't extend the content behind the app bar
-        extendBodyBehindAppBar: false,
-        appBar: AppBar(
-          // Remove the shadow when scrolling under the app bar
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          backgroundColor: Colors.black45,
-          leadingWidth: size.width * 0.14,
-          leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-            child: Transform(
-              transform: Matrix4.translationValues(-3, 0, 0),
-              child: IconButton(
-                  onPressed: () {
-                    navigator.pop();
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-            ),
-          ),
-          title: Container(
-              alignment: Alignment.center,
-              height: size.height * 0.05,
-              width: isMobile ? size.width * 0.45 : size.width * 0.32,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+    return PopScope(
+      onPopInvoked: (didPop) => animationController.stop(),
+      child: Scaffold(
+          // Prevent the layout from resizing to avoid bottom inset issues
+          resizeToAvoidBottomInset: false,
+          // Don't extend the content behind the app bar
+          extendBodyBehindAppBar: false,
+          appBar: AppBar(
+            // Remove the shadow when scrolling under the app bar
+            scrolledUnderElevation: 0,
+            elevation: 0,
+            backgroundColor: Colors.black45,
+            leadingWidth: size.width * 0.14,
+            leading: Container(
+              margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
                 BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
               ]),
-              child: const Text(
-                textAlign: TextAlign.center,
-                'JobCard Details',
-                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-              )),
-          centerTitle: true,
-        ),
-        body: Stack(
-          children: [
-            Container(
-              height: size.height,
-              width: size.width,
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1])),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: size.height * 0.04),
-                    height: size.height * 0.32,
-                    width: size.width * (isMobile ? 0.9 : 0.48),
-                    padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.05 : 0.032), vertical: size.height * 0.03),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(25)),
-                    child: ListView(
-                      children: [
-                        buildDetailRow('Job Card Number', _serviceBloc.state.service!.jobCardNo.toString(), size, isMobile),
-                        Gap(size.height * 0.03),
-                        buildDetailRow('Vehicle Registration Number', _serviceBloc.state.service!.registrationNo.toString(), size, isMobile),
-                        Gap(size.height * 0.03),
-                        buildDetailRow('Location', _serviceBloc.state.service!.location.toString(), size, isMobile),
-                        Gap(size.height * 0.03),
-                        buildDetailRow('Job Type', _serviceBloc.state.service!.jobType.toString(), size, isMobile),
-                        Gap(size.height * 0.03),
-                        buildDetailRow('Scheduled Date', _serviceBloc.state.service!.scheduledDate.toString(), size, isMobile)
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                        margin: EdgeInsets.only(top: size.height * 0.032),
-                        padding: EdgeInsets.only(top: size.height * 0.01),
-                        width: size.width * (isMobile ? 0.93 : 0.48),
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-                            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, blurStyle: BlurStyle.normal, offset: Offset(1, 1), spreadRadius: 10)]),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Status',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 16),
-                            ),
-                            Gap(size.height * 0.01),
-                            // creates stepper widget to show the status of the job card
-                            Expanded(
-                                child: Stepper(
-                              steps: dmsFlow
-                                  .map((e) => Step(
-                                        activeStep: dmsFlow.indexWhere((e) => e == _serviceBloc.state.service!.status),
-                                        currentStep: dmsFlow.indexOf(e),
-                                        icons: icons,
-                                        stepperLength: dmsFlow.length,
-                                        title: e,
-                                        statusLines: statusLines,
-                                        pendingStatusLines: pendingStatusLines,
-                                        jobCardNo: _serviceBloc.state.service!.jobCardNo!,
-                                      ))
-                                  .toList(),
-                            )),
-                          ],
-                        )),
-                  )
-                ],
+              child: Transform(
+                transform: Matrix4.translationValues(-3, 0, 0),
+                child: IconButton(
+                    onPressed: () {
+                      navigator.pop();
+                    },
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
               ),
             ),
-            if (context.watch<MultiBloc>().state.status == MultiStateStatus.loading)
-              // shows loader widget based on the multistate bloc status.
+            title: Container(
+                alignment: Alignment.center,
+                height: size.height * 0.05,
+                width: isMobile ? size.width * 0.45 : size.width * 0.32,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                ]),
+                child: const Text(
+                  textAlign: TextAlign.center,
+                  'JobCard Details',
+                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                )),
+            centerTitle: true,
+          ),
+          body: Stack(
+            children: [
               Container(
-                color: Colors.blueGrey.withOpacity(0.25),
-                child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.4, width: size.width * 0.4)),
-              )
-          ],
-        ));
+                height: size.height,
+                width: size.width,
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.black45, Colors.black26, Colors.black45],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.1, 0.5, 1])),
+                child: ListView(
+                  children: [
+                    IntrinsicHeight(
+                      child: Container(
+                        margin: EdgeInsets.only(top: size.height * 0.04, left: size.width * 0.05, right: size.width * 0.05),
+                        width: size.width * (isMobile ? 0.9 : 0.48),
+                        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.05 : 0.032), vertical: size.height * 0.03),
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(25)),
+                        child: Column(
+                          children: [
+                            buildDetailRow('Job Card Number', _serviceBloc.state.service!.jobCardNo.toString(), size, isMobile),
+                            Gap(size.height * 0.03),
+                            buildDetailRow('Vehicle Registration Number', _serviceBloc.state.service!.registrationNo.toString(), size, isMobile),
+                            Gap(size.height * 0.03),
+                            buildDetailRow('Location', _serviceBloc.state.service!.location.toString(), size, isMobile),
+                            Gap(size.height * 0.03),
+                            buildDetailRow('Job Type', _serviceBloc.state.service!.jobType.toString(), size, isMobile),
+                            Gap(size.height * 0.03),
+                            buildDetailRow('Scheduled Date', _serviceBloc.state.service!.scheduledDate.toString(), size, isMobile)
+                          ],
+                        ),
+                      ),
+                    ),
+                    AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, child) {
+                          return Container(
+                              height: size.height * animation.value,
+                              margin: EdgeInsets.only(
+                                top: size.height * 0.03,
+                                left: size.width * 0.02,
+                                right: size.width * 0.02,
+                              ),
+                              padding: EdgeInsets.only(top: size.height * 0.01),
+                              width: size.width * (isMobile ? 0.93 : 0.48),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+                                  boxShadow: const [
+                                    BoxShadow(color: Colors.black12, blurRadius: 10, blurStyle: BlurStyle.normal, offset: Offset(1, 1), spreadRadius: 10)
+                                  ]),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      'Status',
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 16),
+                                    ),
+                                  ),
+                                  Expanded(flex: 1, child: Gap(size.height * 0.01)),
+                                  // creates stepper widget to show the status of the job card
+                                  Expanded(
+                                      flex: 20,
+                                      child: Stepper(
+                                        steps: dmsFlow
+                                            .map((e) => Step(
+                                                  activeStep: dmsFlow.indexWhere((e) => e == _serviceBloc.state.service!.status),
+                                                  currentStep: dmsFlow.indexOf(e),
+                                                  icons: icons,
+                                                  stepperLength: dmsFlow.length,
+                                                  title: e,
+                                                  statusLines: statusLines,
+                                                  pendingStatusLines: pendingStatusLines,
+                                                  jobCardNo: _serviceBloc.state.service!.jobCardNo!,
+                                                ))
+                                            .toList(),
+                                      )),
+                                ],
+                              ));
+                        })
+                  ],
+                ),
+              ),
+              if (context.watch<MultiBloc>().state.status == MultiStateStatus.loading)
+                // shows loader widget based on the multistate bloc status.
+                Container(
+                  color: Colors.blueGrey.withOpacity(0.25),
+                  child: Center(
+                      child: Lottie.asset('assets/lottie/car_loading.json',
+                          height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
+                )
+            ],
+          )),
+    );
   }
 
   // this method is used to create a detail row with key value pairs in the UI

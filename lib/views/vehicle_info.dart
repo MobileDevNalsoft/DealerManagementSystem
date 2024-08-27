@@ -280,7 +280,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       child: LayoutBuilder(builder: (context, constraints) {
                         return Row(
                           children: [
-                            Gap(isMobile ? 24 : size.width * 0.040),
+                            Gap(isMobile ? size.width * 0.03 : size.width * 0.040),
                             Image.asset(
                               'assets/images/registration_no.png',
                               scale: size.width * (isMobile ? 0.055 : 0.016),
@@ -511,9 +511,9 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         if (vehicleRegNoController.text.isEmpty) {
                           return Transform(
                             transform: Matrix4.translationValues(0, size.height * 0.15, 0),
-                            child: Lottie.asset(
-                              "assets/lottie/car_search.json",
-                              width: size.width * (isMobile ? 0.6 : 0.16),
+                            child: Image.asset(
+                              "assets/images/vehicle_search.png",
+                              width: size.width * (isMobile ? 0.3 : 0.16),
                             ),
                           );
                         }

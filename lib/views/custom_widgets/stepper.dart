@@ -28,6 +28,7 @@ class _StepperState extends State<Stepper> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: NeverScrollableScrollPhysics(),
       children: widget.steps,
     );
   }
@@ -135,10 +136,8 @@ class _StepState extends State<Step> with ConnectivityMixin {
                                           pendingParts: pendingParts,
                                           jobCardNo: widget.jobCardNo));
                                 } catch (e) {
-                                  context.read<MultiBloc>().add(
-                                    MultiBlocStatusChange(
-                                        status: MultiStateStatus.failure));
-                                  
+                                  context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.failure));
+
                                   Log.e(" caught an error $e");
                                 }
 

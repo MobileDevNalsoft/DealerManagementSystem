@@ -112,7 +112,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                 return Transform(
                   transform: Matrix4.translationValues(0, -40, 0),
                   child: Center(
-                    child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6),
+                    child: Lottie.asset('assets/lottie/car_loading.json',
+                        height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
                   ),
                 );
               case GetInspectionStatus.success:
@@ -296,7 +297,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                               ),
                               if (state.inspectionJsonUploadStatus == InspectionJsonUploadStatus.loading)
                                 Center(
-                                  child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6),
+                                  child: Lottie.asset('assets/lottie/car_loading.json',
+                                      height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
                                 ),
                             ],
                           ),

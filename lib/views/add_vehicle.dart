@@ -648,7 +648,9 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                   // shows the loading animation according to the vehicle status in vehicle bloc.
                   Container(
                     color: Colors.black54,
-                    child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6)),
+                    child: Center(
+                        child: Lottie.asset('assets/lottie/car_loading.json',
+                            height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
                   )
               ],
             )),
