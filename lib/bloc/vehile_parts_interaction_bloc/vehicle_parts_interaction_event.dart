@@ -46,3 +46,9 @@ class SubmitQualityCheckStatusEvent extends VehiclePartsInteractionBlocEvent {
   String jobCardNo;
   SubmitQualityCheckStatusEvent({required this.jobCardNo});
 }
+
+
+class ModifyVehicleExaminationPageIndex extends VehiclePartsInteractionBlocEvent {
+  int index;
+  ModifyVehicleExaminationPageIndex({required this.index});
+}

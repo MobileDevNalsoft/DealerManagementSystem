@@ -274,14 +274,12 @@ class _CommentsState extends State<Comments> with SingleTickerProviderStateMixin
               right: 4.0,
               child: IconButton(
                 onPressed: () {
-                  print("asdfasdfsdf");
                   if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name] == null ||
                       (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.comments!.isEmpty &&
                           context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isEmpty) ||
                       context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.isUploaded) {
                     context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
 
-                    print("git herer");
                     return;
                   }
                   String message = "";

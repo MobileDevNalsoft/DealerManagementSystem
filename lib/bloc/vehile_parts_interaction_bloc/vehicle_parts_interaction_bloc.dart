@@ -31,6 +31,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     on<FetchVehicleMediaEvent>(_onFetchVehicleMedia as EventHandler<FetchVehicleMediaEvent, VehiclePartsInteractionBlocState>);
     on<ModifyAcceptedEvent>(_onModifyAcceptedStatus as EventHandler<ModifyAcceptedEvent, VehiclePartsInteractionBlocState>);
     on<SubmitQualityCheckStatusEvent>(_onSubmitQualityCheckStatus as EventHandler<SubmitQualityCheckStatusEvent, VehiclePartsInteractionBlocState>);
+    on<ModifyVehicleExaminationPageIndex>(_onModifyVehicleExaminationPageIndex as EventHandler<ModifyVehicleExaminationPageIndex, VehiclePartsInteractionBlocState>);
   }
 
   final Repository _repo;
@@ -162,4 +163,9 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
     });
   }
+
+void _onModifyVehicleExaminationPageIndex(ModifyVehicleExaminationPageIndex event, Emitter<VehiclePartsInteractionBlocState> emit){
+  emit(state.copyWith(state.mapMedia,state.status,vehicleExaminationPageIndex: event.index));
+}
+
 }
