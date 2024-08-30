@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -44,15 +45,20 @@ class _ListOfJobcardsState extends State<ListOfJobcards> with ConnectivityMixin 
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool isMobile = size.shortestSide < 500;
+
     return SafeArea(
         child: Hero(
       tag: 'listOfJobCards',
       transitionOnUserGestures: true,
       child: Scaffold(
         extendBody: false, // restricts the scaffold till above the bottom navigation bar in this case
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'List of JobCards'),
         body: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1]),
+              gradient: LinearGradient(
+                  colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             ),
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
@@ -62,67 +68,6 @@ class _ListOfJobcardsState extends State<ListOfJobcards> with ConnectivityMixin 
       ),
     ));
   }
-}
-
-// sliverwidget used to design complex headers in UI
-class SliverAppBar extends SliverPersistentHeaderDelegate {
-  final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    // The shrinkOffset is a distance from [maxExtent] towards [minExtent] representing the current amount by which the sliver has been shrunk.
-    Size size = MediaQuery.of(context).size;
-    bool isMobile = size.shortestSide < 500;
-    return ClipShadowPath(
-        shadow: shrinkOffset < 40
-            ? BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0))
-            : const BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.transparent, offset: Offset(0, 0)),
-        clipper: BackgroundWaveClipper(), // this clipper is used to clip the appbar to give wave effect
-        child: Stack(
-          children: [
-            Container(
-              width: size.width,
-              height: size.height * 0.15,
-              decoration: const BoxDecoration(
-                color: Colors.black,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: shrinkOffset > 55 ? size.height * 0.015 : 42 - 0.5 * shrinkOffset,
-                    left: shrinkOffset > 50 ? size.width * (isMobile ? 0.37 : 0.46) : 2.5 * shrinkOffset + 8),
-                child: const Text(
-                  'Job Cards',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 18),
-                ),
-              ),
-            ),
-            Container(
-              height: size.height * 0.04,
-              margin: EdgeInsets.only(
-                  left: size.width * 0.001, top: isMobile ? size.height * 0.005 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
-              child: Transform(
-                transform: Matrix4.translationValues(-1, -4, 0),
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.black)),
-              ),
-            )
-          ],
-        ));
-  }
-
-  @override
-  double get maxExtent => 100;
-
-  @override
-  double get minExtent => 50;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => oldDelegate.maxExtent != maxExtent || oldDelegate.minExtent != minExtent;
 }
 
 // this is used to create search bar that sticks to the app bar and allows sliverlist to scroll beneath it
@@ -138,53 +83,53 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
     return InkWell(
       onTap: () => focusNode.requestFocus(),
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            flex: 10,
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: size.width * 0.03),
-              padding: EdgeInsets.only(top: size.height * 0.033),
-              height: size.height * 0.06,
-              width: size.width * (isMobile ? 0.8 : 0.5),
-              decoration:
-                  const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
-              child: TextFormField(
-                controller: controller,
-                focusNode: focusNode,
-                style: const TextStyle(color: Colors.black),
-                onTapOutside: (event) => focusNode.unfocus(),
-                onChanged: (value) {
-                  controller.text = value;
-                  // triggers search job cards events for the value entered in the search field
-                  context.read<ServiceBloc>().add(SearchJobCards(searchText: value));
-                },
-                cursorColor: Colors.black,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-                  hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
-                  hintText: 'Vehicle Registration Number',
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.02 : 0.2)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 10,
+              child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(left: size.width * 0.03),
+                padding: EdgeInsets.only(left: size.height * 0.01),
+                height: size.height * 0.06,
+                width: size.width * (isMobile ? 0.8 : 0.5),
+                decoration:
+                    const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
+                child: TextFormField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  style: const TextStyle(color: Colors.black),
+                  onTapOutside: (event) => focusNode.unfocus(),
+                  onChanged: (value) {
+                    controller.text = value;
+                    // triggers search job cards events for the value entered in the search field
+                    context.read<ServiceBloc>().add(SearchJobCards(searchText: value));
+                  },
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(color: Colors.black38, fontSize: isMobile ? 14 : 17),
+                    hintText: 'Vehicle Registration Number',
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
+            Container(
+              height: size.height * (isMobile ? 0.06 : 0.05),
+              width: size.width * (isMobile ? 0.14 : 0.08),
               margin: EdgeInsets.only(right: size.width * 0.03),
-              height: size.height * 0.06,
               decoration:
                   const BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
               child: const Icon(
                 Icons.search_rounded,
                 color: Colors.white60,
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -277,22 +222,18 @@ class JobCardPage extends StatelessWidget {
           return CustomScrollView(
             slivers: [
               SliverPersistentHeader(
-                delegate: SliverAppBar(),
-                // Set this param so that it won't go off the screen when scrolling
-                pinned: true,
-              ),
-              SliverPersistentHeader(
                 delegate: SliverHeader(),
                 // Set this param so that it won't go off the screen when scrolling
                 pinned: false,
               ),
+              SliverGap(size.height * 0.01),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                 return Skeletonizer(
                     enableSwitchAnimation: true,
                     enabled: state.getJobCardStatus == GetJobCardStatus.loading || state.getJobCardStatus == GetJobCardStatus.initial,
                     child: SizedBox(
-                      width: size.width * 0.95,
+                      width: size.width * (isMobile ? 0.95 : 0.8),
                       child: ClipShadowPath(
                         clipper: TicketClipper(),
                         shadow: const BoxShadow(
@@ -323,17 +264,19 @@ class JobCardPage extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
+                                        Gap(size.height * (isMobile ? 0.01 : 0.015)),
                                         Row(
                                           children: [
-                                            Gap(size.width * (isMobile ? 0.05 : 0.024)),
+                                            Gap(size.width * (isMobile ? 0.055 : 0.08)),
                                             Expanded(
                                               flex: 2,
                                               child: Image.asset(
                                                 'assets/images/job_card.png',
-                                                scale: size.width * 0.05,
+                                                scale: size.width * (isMobile ? 0.05 : 0.015),
                                                 color: Colors.black,
                                               ),
                                             ),
+                                            Gap(size.height * 0.006),
                                             Expanded(
                                               flex: 8,
                                               child: InkWell(
@@ -348,21 +291,25 @@ class JobCardPage extends StatelessWidget {
                                                 },
                                                 child: Text(
                                                   state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards![index].jobCardNo! : 'JC-MAD-633',
-                                                  style: const TextStyle(
-                                                      fontWeight: FontWeight.w500, fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: (isMobile ? 12 : 16),
+                                                      color: Colors.blue,
+                                                      decoration: TextDecoration.underline),
                                                 ),
                                               ),
                                             )
                                           ],
                                         ),
-                                        Gap(size.width * (isMobile ? 0.01 : 0)),
+                                        Gap(size.width * (isMobile ? 0.02 : 0.01)),
                                         Row(
                                           children: [
-                                            Gap(size.width * (isMobile ? 0.055 : 0.024)),
+                                            Gap(size.width * (isMobile ? 0.055 : 0.08)),
                                             Expanded(
                                               flex: 2,
                                               child: Image.asset('assets/images/registration_no.png', scale: size.width * (isMobile ? 0.055 : 0.016)),
                                             ),
+                                            Gap(size.width * 0.006),
                                             Expanded(
                                               flex: 8,
                                               child: SizedBox(
@@ -373,14 +320,14 @@ class JobCardPage extends StatelessWidget {
                                                     state.getJobCardStatus == GetJobCardStatus.success
                                                         ? state.filteredJobCards![index].registrationNo!
                                                         : 'TS09ED7884',
-                                                    style: const TextStyle(fontSize: 13),
+                                                    style: TextStyle(fontSize: isMobile ? 13 : 17),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Gap(size.width * (isMobile ? 0.01 : 0.0016)),
+                                        Gap(size.height * 0.01),
                                       ],
                                     ),
                                   ),
@@ -390,7 +337,7 @@ class JobCardPage extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Gap(size.height * 0.03),
+                                        Gap(size.height * 0.04),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
@@ -399,13 +346,14 @@ class JobCardPage extends StatelessWidget {
                                               flex: 2,
                                               child: Image.asset('assets/images/status.png', scale: size.width * (isMobile ? 0.058 : 0.016)),
                                             ),
+                                            Gap(size.height * 0.006),
                                             Expanded(
                                               flex: 8,
                                               child: Text(
                                                 state.getJobCardStatus == GetJobCardStatus.success
                                                     ? state.filteredJobCards![index].status!
                                                     : 'Work in Progress',
-                                                style: const TextStyle(fontSize: 13),
+                                                style: TextStyle(fontSize: isMobile ? 13 : 17),
                                               ),
                                             ),
                                           ],
@@ -417,7 +365,7 @@ class JobCardPage extends StatelessWidget {
                               ),
                               Container(
                                 height: size.height * (isMobile ? 0.05 : 0.045),
-                                width: size.width * (isMobile ? 0.94 : 0.36),
+                                width: size.width * (isMobile ? 0.94 : 0.79),
                                 margin: EdgeInsets.only(bottom: size.height * 0.0025),
                                 decoration: BoxDecoration(
                                     color: Colors.orange.shade200,
@@ -430,12 +378,13 @@ class JobCardPage extends StatelessWidget {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
+                                          Gap(size.width * 0.01),
                                           Expanded(
                                             flex: 2,
                                             child: Image.asset(
                                               'assets/images/customer.png',
                                               alignment: Alignment.center,
-                                              scale: size.width * (isMobile ? 0.06 : 0.024),
+                                              scale: size.width * (isMobile ? 0.06 : 0.018),
                                             ),
                                           ),
                                           Expanded(
@@ -448,7 +397,7 @@ class JobCardPage extends StatelessWidget {
                                                   state.getJobCardStatus == GetJobCardStatus.success
                                                       ? state.filteredJobCards![index].customerName!
                                                       : 'Customer Name',
-                                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                                                  style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                 ),
                                               ),
                                             ),
@@ -464,7 +413,7 @@ class JobCardPage extends StatelessWidget {
                                             flex: 2,
                                             child: Image.asset(
                                               'assets/images/call.png',
-                                              scale: size.width * (isMobile ? 0.06 : 0.02),
+                                              scale: size.width * (isMobile ? 0.06 : 0.018),
                                             ),
                                           ),
                                           Expanded(
@@ -477,7 +426,7 @@ class JobCardPage extends StatelessWidget {
                                                   state.getJobCardStatus == GetJobCardStatus.success
                                                       ? state.filteredJobCards![index].customerContact ?? '-'
                                                       : 'Contact Number',
-                                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                                                  style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                 ),
                                               ),
                                             ),
@@ -504,7 +453,10 @@ class JobCardPage extends StatelessWidget {
                         'assets/lottie/no_data_found.json',
                       ),
                       Gap(size.height * 0.01),
-                      const Text('No Job Cards are in progress.')
+                      Text(
+                        'No Job Cards are in progress.',
+                        style: TextStyle(fontSize: isMobile ? 14 : 17),
+                      )
                     ],
                   ),
                 )

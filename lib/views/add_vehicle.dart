@@ -227,21 +227,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
 
     // dynamic size according the device dimensions.
     size = MediaQuery.of(context).size;
-    double fieldWidth;
-    double fieldHeight;
-
     bool isMobile = size.width < 650;
-
-    // setting the orientation of UI according to the device dimensions dynamically.
-    if (isMobile) {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-      fieldWidth = size.width * 0.8;
-      fieldHeight = size.height * 0.06;
-    } else {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-      fieldWidth = size.width * 0.6;
-      fieldHeight = size.height * 0.063;
-    }
 
     return GestureDetector(
       onTap: () {
@@ -255,41 +241,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
             resizeToAvoidBottomInset: false,
             // restricts extension of the scaffold body behind the appbar
             extendBodyBehindAppBar: false,
-            appBar: AppBar(
-              // ensures scrollable widgets doesnt scroll underneath the appbar.
-              scrolledUnderElevation: 0,
-              elevation: 0,
-              backgroundColor: Colors.black45,
-              leadingWidth: size.width * 0.14,
-              leading: Container(
-                margin: EdgeInsets.only(left: size.width * 0.045),
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                ]),
-                child: Transform(
-                  transform: Matrix4.translationValues(-3, 0, 0),
-                  child: IconButton(
-                      onPressed: () {
-                        // pops the current page from the stack
-                        navigator.pop();
-                      },
-                      icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-                ),
-              ),
-              title: Container(
-                  alignment: Alignment.center,
-                  height: size.height * 0.05,
-                  width: size.width * 0.45,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                    BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                  ]),
-                  child: const Text(
-                    textAlign: TextAlign.center,
-                    'Add Vehicle',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                  )),
-              centerTitle: true,
-            ),
+            appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Add Vehicle'),
             body: Stack(
               children: [
                 Container(
@@ -311,13 +263,13 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                       Expanded(
                         flex: 9,
                         child: SizedBox(
-                            width: fieldWidth,
+                            width: size.width * (isMobile ? 0.8 : 0.6),
                             child: SingleChildScrollView(
                               controller: scrollController, // Allows scrolling if the form content exceeds the available height.
                               child: StaggeredGrid.count(
                                 // staggered grid allows developer to give different field heights to the children.
                                 // Creates a grid layout for form fields, adapting to different screen sizes.
-                                crossAxisCount: isMobile ? 1 : 2,
+                                crossAxisCount: 1,
                                 mainAxisSpacing: 8,
                                 crossAxisSpacing: 16,
                                 children: [
@@ -357,7 +309,12 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                     typeAheadController: makeTypeAheadController,
                                     isMobile: isMobile,
                                     scrollController: scrollController,
-                                    icon: makeDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                    icon: makeDropDownUp
+                                        ? Icon(
+                                            Icons.arrow_drop_up,
+                                            size: size.height * (0.03),
+                                          )
+                                        : Icon(Icons.arrow_drop_down, size: size.height * (0.03)),
                                   ),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: modelFocus,
@@ -418,7 +375,9 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                     typeAheadController: insuranceCompanyTypeAheadController,
                                     isMobile: isMobile,
                                     scrollController: scrollController,
-                                    icon: insuranceCompanyDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                    icon: insuranceCompanyDropDownUp
+                                        ? Icon(Icons.arrow_drop_up, size: size.height * (0.03))
+                                        : Icon(Icons.arrow_drop_down, size: size.height * (0.03)),
                                   ),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: financialDetailsFocus,
@@ -454,7 +413,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       context: context),
                                   StaggeredGridTile.extent(
                                     crossAxisCellCount: 1,
-                                    mainAxisExtent: fieldHeight * 2,
+                                    mainAxisExtent: size.height * (isMobile ? 0.06 : 0.06) * 2,
                                     child: DMSCustomWidgets.CustomTextFieldCard(
                                         focusNode: customerAddressFocus,
                                         size: size,
@@ -471,7 +430,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   if (MediaQuery.viewInsetsOf(context).bottom != 0)
                                     StaggeredGridTile.extent(
                                       crossAxisCellCount: 1,
-                                      mainAxisExtent: fieldHeight * 3,
+                                      mainAxisExtent: size.height * (isMobile ? 0.06 : 0.06) * 3,
                                       child: const SizedBox(),
                                     )
                                 ],
@@ -624,16 +583,15 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                               child: Container(
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.only(top: size.height * 0.03),
-                                  height: size.height * 0.045,
-                                  width: size.width * 0.2,
+                                  width: size.width * (isMobile ? 0.22 : 0.13),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
                                     BoxShadow(
                                         blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
                                   ]),
-                                  child: const Text(
+                                  child: Text(
                                     textAlign: TextAlign.center,
                                     'submit',
-                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                    style: TextStyle(color: Colors.white, fontSize: (isMobile ? 16 : 18)),
                                   )),
                             )),
                       ),

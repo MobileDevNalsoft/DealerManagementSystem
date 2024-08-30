@@ -40,6 +40,7 @@
                 "label": "Denting Type",
                 "value": 1,
                 "options": [
+                    "No Dents",
                     "Creased Dents",
                     "Round Dents",
                     "Sharp Dents"
@@ -57,6 +58,7 @@
             "properties": {
                 "label": "Ac Vent",
                 "items": [
+                    "-",
                     "Front Left Hand Side",
                     "Rear Left Hand Side",
                     "Front Right Hand Side",

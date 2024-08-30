@@ -1,6 +1,7 @@
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,15 +21,18 @@ class ServiceHistory extends StatefulWidget {
 class _ServiceHistoryState extends State<ServiceHistory> {
   late ServiceHistoryDataSource serviceHistoryDataSource;
   DataGridController dataGridController = DataGridController();
-  final ServiceState serviceState = ServiceState();
   final CustomColumnSizer _customColumnSizer = CustomColumnSizer();
   final NavigatorService navigator = getIt<NavigatorService>();
+
+  late ServiceBloc _serviceBloc;
   @override
   void initState() {
     super.initState();
-    serviceState.copyWith(getServiceStatus: GetServiceStatus.initial);
-    context.read<ServiceBloc>().add(GetServiceHistory(query: '2022'));
-    context.read<ServiceBloc>().state.getServiceStatus = GetServiceStatus.initial;
+
+    _serviceBloc = context.read<ServiceBloc>();
+    _serviceBloc.state.copyWith(getServiceStatus: GetServiceStatus.initial);
+    _serviceBloc.add(GetServiceHistory(query: '2022'));
+    _serviceBloc.state.getServiceStatus = GetServiceStatus.initial;
   }
 
   // @override
@@ -47,17 +51,17 @@ class _ServiceHistoryState extends State<ServiceHistory> {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     // Set preferred orientations based on device type
-    if (!isMobile) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-    }
+    // if (!isMobile) {
+    //   SystemChrome.setPreferredOrientations([
+    //     DeviceOrientation.landscapeLeft,
+    //     DeviceOrientation.landscapeRight,
+    //   ]);
+    // } else {
+    //   SystemChrome.setPreferredOrientations([
+    //     DeviceOrientation.portraitUp,
+    //     DeviceOrientation.portraitDown,
+    //   ]);
+    // }
 
     Size size = MediaQuery.of(context).size;
 
@@ -80,44 +84,12 @@ class _ServiceHistoryState extends State<ServiceHistory> {
           child: Scaffold(
               resizeToAvoidBottomInset: false,
               extendBodyBehindAppBar: false,
-              appBar: AppBar(
-                scrolledUnderElevation: 0,
-                elevation: 0,
-                backgroundColor: Colors.black45,
-                leadingWidth: size.width * 0.14,
-                leading: Container(
-                  margin: EdgeInsets.only(left: size.width * 0.045),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                    BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                  ]),
-                  child: Transform(
-                    transform: Matrix4.translationValues(-3, 0, 0),
-                    child: IconButton(
-                        onPressed: () {
-                          navigator.pop();
-                        },
-                        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-                  ),
-                ),
-                title: Container(
-                    alignment: Alignment.center,
-                    height: size.height * 0.05,
-                    width: size.width * 0.45,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                    ]),
-                    child: const Text(
-                      textAlign: TextAlign.center,
-                      'Service History',
-                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                    )),
-                centerTitle: true,
-              ),
+              appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Service History'),
               body: Container(
                 height: size.height,
                 width: double.infinity,
                 margin: EdgeInsets.zero,
-                padding: EdgeInsets.only(top: size.height * 0.01, left: size.width * 0.01),
+                padding: EdgeInsets.only(top: size.height * 0.01, left: size.width * (isMobile ? 0.01 : 0.03)),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),

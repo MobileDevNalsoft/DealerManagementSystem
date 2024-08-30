@@ -59,45 +59,11 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
       child: Scaffold(
         // restricts widget resizing when keyboard appears
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          // Remove shadow effect when scrolling
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          backgroundColor: Colors.black45,
-          leadingWidth: size.width * 0.14,
-          leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-            child: Transform(
-              // Slightly shift the icon to the left for better alignment
-              transform: Matrix4.translationValues(-3, 0, 0),
-              child: IconButton(
-                  onPressed: () {
-                    navigator.pop();
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-            ),
-          ),
-          title: Container(
-              alignment: Alignment.center,
-              height: size.height * 0.05,
-              width: isMobile ? size.width * 0.45 : size.width * 0.32,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
-              child: const Text(
-                textAlign: TextAlign.center,
-                'Inspection In',
-                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-              )),
-          centerTitle: true,
-        ),
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Inspection In'),
         body: Stack(
           children: [
             Container(
+              padding: EdgeInsets.only(top: size.height * 0.01),
               height: size.height,
               width: size.width,
               decoration: const BoxDecoration(
@@ -130,7 +96,7 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
                           child: SizedBox(
-                            height: size.height * 0.04,
+                            height: size.height * (isMobile ? 0.04 : 0.035),
                             child: ListView(
                               scrollDirection: Axis.horizontal,
                               controller: _autoScrollController,
@@ -143,7 +109,6 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
                                           child: SizedBox(
-                                            height: size.height * 0.035,
                                             child: TextButton(
                                                 style: TextButton.styleFrom(
                                                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -154,7 +119,10 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                                                 onPressed: () {
                                                   _pageController.jumpToPage(buttonsText.indexOf(e));
                                                 },
-                                                child: Text(e)),
+                                                child: Text(
+                                                  e,
+                                                  style: TextStyle(fontSize: isMobile ? 14 : 18),
+                                                )),
                                           ),
                                         ),
                                       ))
@@ -186,7 +154,7 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                                   // Renders a column for each item in the list
                                   return Column(
                                     children: [
-                                      Gap(size.height * 0.01),
+                                      Gap(size.height * (isMobile ? 0.01 : 0.03)),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +163,12 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                                           SizedBox(
                                             width: size.width * 0.2,
                                             child: Wrap(
-                                              children: [Text(state.json![buttonsText[pageIndex]][index]['properties']['label'])],
+                                              children: [
+                                                Text(
+                                                  state.json![buttonsText[pageIndex]][index]['properties']['label'],
+                                                  style: TextStyle(fontSize: isMobile ? 14 : 18),
+                                                )
+                                              ],
                                             ),
                                           ),
                                           Gap(size.width * 0.05),
@@ -234,7 +207,7 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                                             child: Container(
                                                 alignment: Alignment.center,
                                                 height: size.height * 0.045,
-                                                width: isMobile ? size.width * 0.2 : size.width * 0.08,
+                                                width: size.width * (isMobile ? 0.2 : 0.15),
                                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
                                                   BoxShadow(
                                                       blurRadius: 10,
@@ -243,10 +216,10 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
                                                       color: Colors.orange.shade200,
                                                       offset: const Offset(0, 0))
                                                 ]),
-                                                child: const Text(
+                                                child: Text(
                                                   textAlign: TextAlign.center,
                                                   'submit',
-                                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                                  style: TextStyle(color: Colors.white, fontSize: isMobile ? 16 : 18),
                                                 )),
                                           );
                                         })

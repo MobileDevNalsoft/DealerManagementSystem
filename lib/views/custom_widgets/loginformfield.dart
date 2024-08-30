@@ -26,31 +26,38 @@ class CustomTextFormField extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       height: size.height * 0.05,
-      width: isMobile ? null : size.width * 0.3,
       margin: EdgeInsets.symmetric(
-        horizontal: size.width * 0.08,
+        horizontal: size.width * (isMobile ? 0.08 : 0.15),
       ),
+      padding: EdgeInsets.only(left: size.width * (isMobile ? 0 : 0.01), right: size.width * (isMobile ? 0 : 0.01)),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.white, boxShadow: const [
         BoxShadow(color: Color.fromARGB(255, 175, 175, 175), offset: Offset(0, 1), blurRadius: 5),
         BoxShadow(
           color: Colors.white70,
         ),
       ]),
-      child: TextFormField(
-        controller: cont,
-        style: TextStyle(fontSize: 13),
-        cursorColor: Colors.black,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.only(top: 6, left: 16, right: 16),
-          hintStyle: const TextStyle(color: Colors.black26),
-          hintText: hntTxt,
-          prefixIcon: prfxIcon,
-          suffixIcon: sffxIcon,
-        ),
-        obscuringCharacter: obscChar ?? '*',
-        obscureText: obscText ?? false,
-      ),
+      child: LayoutBuilder(builder: (context, constraints) {
+        return Transform.translate(
+          offset: Offset(0, -constraints.maxHeight * (isMobile ? 0.1 : -0.1)),
+          child: TextFormField(
+            textAlign: TextAlign.start,
+            textAlignVertical: TextAlignVertical.center,
+            controller: cont,
+            style: TextStyle(fontSize: (isMobile ? 14 : 20)),
+            cursorColor: Colors.black,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(left: constraints.maxWidth * 0.01, right: constraints.maxWidth * 0.01),
+              hintStyle: TextStyle(color: Colors.black26, fontSize: (isMobile ? 14 : 20)),
+              hintText: hntTxt,
+              prefixIcon: Transform.translate(offset: Offset(0, constraints.maxHeight * (isMobile ? 0.08 : 0.02)), child: prfxIcon),
+              suffixIcon: Transform.translate(offset: Offset(0, constraints.maxHeight * (isMobile ? 0.08 : 0.02)), child: sffxIcon),
+            ),
+            obscuringCharacter: obscChar ?? '*',
+            obscureText: obscText ?? false,
+          ),
+        );
+      }),
     );
   }
 }

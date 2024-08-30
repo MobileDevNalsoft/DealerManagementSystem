@@ -16,6 +16,8 @@ import 'package:dms/views/vehicle_examination.dart';
 import 'package:dms/views/vehicle_info.dart';
 import 'package:flutter/material.dart';
 
+import '../views/service_history_1.dart';
+
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -103,6 +105,13 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const ServiceHistory(),
+          transitionDuration: const Duration(milliseconds: 600),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+        );
+      case '/serviceHistory1':
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => const ServiceHistory1(),
           transitionDuration: const Duration(milliseconds: 600),
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );

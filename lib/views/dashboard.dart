@@ -1,7 +1,7 @@
 import 'package:dms/inits/init.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:fl_chart/fl_chart.dart';
 import '../navigations/navigator_service.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -65,41 +65,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
           resizeToAvoidBottomInset: false,
           // Disable app bar extending behind content
           extendBodyBehindAppBar: false,
-          appBar: AppBar(
-            // Remove shadow effect when scrolling
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            backgroundColor: Colors.black45,
-            leadingWidth: size.width * 0.14,
-            leading: Container(
-              margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
-              child: Transform(
-                // Slightly shift the icon to the left for better alignment
-                transform: Matrix4.translationValues(-3, 0, 0),
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-              ),
-            ),
-            title: Container(
-                alignment: Alignment.center,
-                height: size.height * 0.05,
-                width: isMobile ? size.width * 0.45 : size.width * 0.32,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                ]),
-                child: const Text(
-                  textAlign: TextAlign.center,
-                  'Dashboard',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                )),
-            centerTitle: true,
-          ),
+          appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'DashBoard'),
           // Create the body of the dashboard
           body: Container(
             height: size.height,
@@ -117,10 +83,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                   child: Row(
                     children: [
                       Gap(size.width * 0.04),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Job Cards This Week',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                          style: TextStyle(fontSize: (isMobile ? 16 : 18), fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                         ),
                       )
                     ],
@@ -133,6 +99,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Gap(size.width * 0.01),
                       Expanded(
                         flex: 1,
                         child: SizedBox(
@@ -160,39 +127,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       ]),
                                 ),
                               ),
-                              // Another black background with inner shadow on top of the first one
+
                               Positioned(
                                 top: 4,
-                                right: size.width * 0.018,
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  margin: EdgeInsets.all(size.width * 0.02),
-                                  padding: EdgeInsets.all(size.width * 0.02),
-                                  height: size.height * 0.11,
-                                  width: size.width * 0.45,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.white),
-                                      color: Colors.black54,
-                                      boxShadow: const [
-                                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
-                                      ]),
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: EdgeInsets.all(size.width * 0.02),
-                                padding: EdgeInsets.all(size.width * 0.02),
-                                height: size.height * 0.11,
-                                width: size.width * 0.45,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Positioned(
-                                top: 4,
-                                right: size.width * 0.018,
+                                right: size.width * 0.016,
                                 child: Container(
                                   alignment: Alignment.centerLeft,
                                   margin: EdgeInsets.all(size.width * 0.02),
@@ -215,6 +153,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                   height: size.height * 0.11,
                                   width: size.width * 0.45,
                                   decoration: BoxDecoration(
+                                    border: const Border(left: BorderSide(color: Colors.white), bottom: BorderSide(color: Colors.white)),
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.black,
                                   ),
@@ -298,39 +237,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       ]),
                                 ),
                               ),
-                              // Another black background with inner shadow on top of the first one
+
                               Positioned(
                                 top: 4,
-                                right: size.width * 0.018,
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  margin: EdgeInsets.all(size.width * 0.02),
-                                  padding: EdgeInsets.all(size.width * 0.02),
-                                  height: size.height * 0.11,
-                                  width: size.width * 0.45,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.white),
-                                      color: Colors.black54,
-                                      boxShadow: const [
-                                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
-                                      ]),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.all(size.width * 0.02),
-                                padding: EdgeInsets.all(size.width * 0.02),
-                                alignment: Alignment.centerLeft,
-                                height: size.height * 0.11,
-                                width: size.width * 0.45,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Positioned(
-                                top: 4,
-                                right: size.width * 0.018,
+                                right: size.width * 0.016,
                                 child: Container(
                                   alignment: Alignment.centerLeft,
                                   margin: EdgeInsets.all(size.width * 0.02),
@@ -353,6 +263,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                   height: size.height * 0.11,
                                   width: size.width * 0.45,
                                   decoration: BoxDecoration(
+                                    border: const Border(left: BorderSide(color: Colors.white), bottom: BorderSide(color: Colors.white)),
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.black,
                                   ),
@@ -419,10 +330,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                   child: Row(
                     children: [
                       Gap(size.width * 0.06),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           "Today's Job Cards Stats",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                          style: TextStyle(fontSize: (isMobile ? 16 : 18), fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                         ),
                       )
                     ],
@@ -440,13 +351,13 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                         width: size.width * 0.9,
                         child: LayoutBuilder(builder: (context, constraints) {
                           return SfCartesianChart(
-                              primaryXAxis: const CategoryAxis(
-                                labelStyle: TextStyle(color: Colors.white),
-                                majorGridLines: MajorGridLines(
+                              primaryXAxis: CategoryAxis(
+                                labelStyle: TextStyle(color: Colors.white, fontSize: isMobile ? 14 : 16),
+                                majorGridLines: const MajorGridLines(
                                   width: 0,
                                 ),
-                                majorTickLines: MajorTickLines(width: 0),
-                                axisLine: AxisLine(width: 0),
+                                majorTickLines: const MajorTickLines(width: 0),
+                                axisLine: const AxisLine(width: 0),
                               ),
                               primaryYAxis: const NumericAxis(
                                 isVisible: false,
@@ -482,7 +393,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                     useSeriesColor: true,
                                     builder: (data, point, series, pointIndex, seriesIndex) => Text(
                                       (data as BarData).yValue.toString(),
-                                      style: const TextStyle(color: Colors.white, fontSize: 10),
+                                      style: TextStyle(color: Colors.white, fontSize: isMobile ? 10 : 14),
                                     ),
                                   ),
                                   width: 0.6,

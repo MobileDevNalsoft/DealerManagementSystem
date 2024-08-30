@@ -74,17 +74,17 @@ class _StepState extends State<Step> with ConnectivityMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-              width: constraints.maxWidth * 0.4,
+              width: constraints.maxWidth * 0.39,
               child: Text(
                 widget.title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: (isMobile ? 12 : 14)),
+                style: TextStyle(fontSize: (isMobile ? 12 : 17), color: widget.currentStep > widget.activeStep ? Colors.black45 : Colors.black),
               )),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: constraints.minWidth * 0.095, top: constraints.minWidth * (widget.currentStep == widget.activeStep ? 0 : 0.0)),
+                padding: EdgeInsets.only(left: constraints.minWidth * 0.095, top: constraints.minWidth * (widget.currentStep == widget.activeStep ? 0 : 0.01)),
                 child: SizedBox(
                   height: constraints.maxWidth * (widget.currentStep == widget.activeStep ? 0.2 : 0.15),
                   width: constraints.maxWidth * 0.2,
@@ -93,10 +93,10 @@ class _StepState extends State<Step> with ConnectivityMixin {
                     children: [
                       if (widget.currentStep == widget.activeStep)
                         Positioned(
-                          top: -constraints.maxWidth * 0.15,
-                          bottom: -constraints.maxWidth * 0.16,
-                          left: -constraints.maxWidth * 0.137,
-                          right: -constraints.maxWidth * 0.15,
+                          top: -constraints.maxWidth * (isMobile ? 0.15 : 0.185),
+                          bottom: -constraints.maxWidth * (isMobile ? 0.16 : 0.19),
+                          left: -constraints.maxWidth * (isMobile ? 0.137 : 0.165),
+                          right: -constraints.maxWidth * (isMobile ? 0.15 : 0.18),
                           child: Lottie.asset(
                             'assets/lottie/ripple.json',
                           ),
@@ -155,12 +155,12 @@ class _StepState extends State<Step> with ConnectivityMixin {
                               : widget.currentStep == widget.activeStep
                                   ? Colors.green.shade100
                                   : Colors.grey.shade300,
-                          maxRadius: (isMobile ? 25 : 40),
+                          maxRadius: (isMobile ? 25 : 55),
                           child: Image.asset(
                             'assets/images/${widget.icons[widget.currentStep]}.png',
                             fit: BoxFit.cover,
-                            height: (isMobile ? 30 : 40),
-                            width: (isMobile ? 30 : 40),
+                            height: (isMobile ? 30 : 55),
+                            width: (isMobile ? 30 : 55),
                           ),
                         ),
                       )
@@ -168,20 +168,24 @@ class _StepState extends State<Step> with ConnectivityMixin {
                   ),
                 ),
               ),
-              if (widget.currentStep <= widget.activeStep - 1 || (widget.activeStep == 0 && widget.currentStep < 1))
+              if (widget.currentStep < widget.activeStep)
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(
                     widget.statusLines[widget.currentStep],
-                    style: TextStyle(fontSize: isMobile ? 12 : 14),
+                    style: TextStyle(fontSize: isMobile ? 12 : 17),
                   ),
                 ),
-              if (widget.currentStep == widget.activeStep && widget.currentStep < widget.stepperLength && widget.activeStep != 0)
+              if (widget.currentStep >= widget.activeStep)
                 SizedBox(
                   width: constraints.maxWidth * 0.7,
                   child: Text(
                     widget.pendingStatusLines[widget.currentStep],
-                    style: const TextStyle(fontSize: 12),
+                    style: TextStyle(
+                        fontSize: isMobile ? 12 : 17,
+                        color: (widget.activeStep != widget.stepperLength - 1 && widget.currentStep != 0 && widget.currentStep > widget.activeStep)
+                            ? Colors.black45
+                            : Colors.black),
                   ),
                 )
             ],

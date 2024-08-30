@@ -56,43 +56,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
       child: Scaffold(
         // restricts widget resizing when keyboard appears
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          // Remove shadow effect when scrolling
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          backgroundColor: Colors.black45,
-          leadingWidth: size.width * 0.14,
-          leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-            child: Transform(
-              // Slightly shift the icon to the left for better alignment
-              transform: Matrix4.translationValues(-3, 0, 0),
-              child: IconButton(
-                  onPressed: () {
-                    navigator.pop();
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-            ),
-          ),
-          title: Container(
-              height: size.height * 0.05,
-              width: size.width * 0.45,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
-              child: const Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'Inspection Out',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                ),
-              )),
-          centerTitle: true,
-        ),
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Inspection Out'),
         body: Container(
           padding: EdgeInsets.only(top: size.height * 0.01),
           height: size.height,
@@ -132,7 +96,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
                       child: SizedBox(
-                        height: size.height * 0.04,
+                        height: size.height * (isMobile ? 0.04 : 0.035),
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           controller: _autoScrollController,
@@ -155,7 +119,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                             onPressed: () {
                                               _pageController.jumpToPage(buttonsText.indexOf(e));
                                             },
-                                            child: Text(e)),
+                                            child: Text(e, style: TextStyle(fontSize: isMobile ? 14 : 18))),
                                       ),
                                     ),
                                   ))
@@ -205,7 +169,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                 SizedBox(
                                                   width: size.width * 0.2,
                                                   child: Wrap(
-                                                    children: [Text(state.json![buttonsText[pageIndex]][index]['properties']['label'])],
+                                                    children: [
+                                                      Text(state.json![buttonsText[pageIndex]][index]['properties']['label'],
+                                                          style: TextStyle(fontSize: isMobile ? 14 : 18)),
+                                                    ],
                                                   ),
                                                 ),
                                                 Gap(size.width * 0.05),
@@ -227,11 +194,12 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                   // slider button to accept or reject each part inspection
                                   CustomSliderButton(
                                     height: size.height * 0.06,
-                                    width: size.width * 0.6,
+                                    width: size.width * (isMobile ? 0.6 : 0.5),
                                     controller: _sliderButtonController,
+                                    isMobile: isMobile,
                                     decoration: BoxDecoration(
                                       color: const Color.fromRGBO(233, 227, 227, 1),
-                                      borderRadius: BorderRadius.circular(22),
+                                      borderRadius: BorderRadius.circular(isMobile ? 22 : 40),
                                     ),
                                     onLeftLabelReached: () {
                                       state.json![buttonsText[pageIndex]].last['status'] = 'Rejected';
@@ -255,13 +223,13 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                       state.json![buttonsText[pageIndex]].last['status'] = '';
                                       _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
                                     },
-                                    leftLabel: const Text(
+                                    leftLabel: Text(
                                       'Reject',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
                                     ),
-                                    rightLabel: const Text(
+                                    rightLabel: Text(
                                       'Accept',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
                                     ),
                                     icon: Stack(
                                       children: [
@@ -276,16 +244,17 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                   color: Colors.orange.shade200,
                                                   offset: const Offset(0, 0))
                                             ])),
-                                        const Positioned(
-                                            top: 8,
-                                            child: Icon(
+                                        Positioned(
+                                            top: isMobile ? 8 : size.height * 0.016,
+                                            left: isMobile ? 0 : size.width * 0.018,
+                                            child: const Icon(
                                               Icons.chevron_left_rounded,
                                               color: Colors.white,
                                             )),
-                                        const Positioned(
-                                            top: 8,
-                                            right: 1,
-                                            child: Icon(
+                                        Positioned(
+                                            top: isMobile ? 8 : size.height * 0.016,
+                                            right: isMobile ? 0 : size.width * 0.018,
+                                            child: const Icon(
                                               Icons.chevron_right_rounded,
                                               color: Colors.white,
                                             ))
@@ -322,6 +291,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
         context: context,
         barrierDismissible: false,
         builder: (context) {
+          bool isMobile = size.shortestSide < 500;
           return PopScope(
             canPop: false,
             child: AlertDialog(
@@ -333,10 +303,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: size.width * 0.03),
-                      child: const Text(
+                      padding: EdgeInsets.only(left: size.width * (isMobile ? 0.03 : 0.02)),
+                      child: Text(
                         'Hey Advisor...\nAre you done with inspection ?',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
                       ),
                     ),
                     Gap(size.height * 0.01),
@@ -356,8 +326,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                 navigator.pop();
                               },
                               style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: const Text(
+                              child: Text(
                                 'No',
+                                style: TextStyle(fontSize: isMobile ? 14 : 18),
                               ),
                             ),
                           ),
@@ -384,9 +355,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                 _serviceBloc.add(GetJobCards(query: 'Location27'));
                               },
                               style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: const Text(
-                                'Yes',
-                              ),
+                              child: Text('Yes', style: TextStyle(fontSize: isMobile ? 14 : 18)),
                             ),
                           ),
                         ],
@@ -409,6 +378,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
       required String page,
       required TextEditingController controller}) {
     controller.text = state.json![page].last['reason'] ?? '';
+    bool isMobile = size.shortestSide < 500;
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -424,7 +394,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
                         child: Theme(
                           data: Theme.of(context).copyWith(),
                           child: TextFormField(
@@ -432,9 +402,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                             controller: controller,
                             autofocus: true,
                             cursorColor: Colors.black,
+                            style: TextStyle(fontSize: isMobile ? 14 : 18),
                             maxLines: 4,
                             decoration: InputDecoration(
-                                hintStyle: const TextStyle(color: Colors.black26),
+                                hintStyle: TextStyle(color: Colors.black26, fontSize: isMobile ? 14 : 18),
                                 fillColor: Colors.white,
                                 filled: true,
                                 focusedBorder: const OutlineInputBorder(),
@@ -468,8 +439,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                 navigator.pop();
                               },
                               style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: const Text(
+                              child: Text(
                                 'Cancel',
+                                style: TextStyle(fontSize: isMobile ? 14 : 18),
                               ),
                             ),
                           ),
@@ -497,8 +469,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                 }
                               },
                               style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: const Text(
+                              child: Text(
                                 'Done',
+                                style: TextStyle(fontSize: isMobile ? 14 : 18),
                               ),
                             ),
                           ),

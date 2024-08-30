@@ -1,10 +1,12 @@
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/inits/init.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow, Stepper, Step;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/service/service_bloc.dart';
 import '../navigations/navigator_service.dart';
@@ -21,6 +23,9 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
   // Get the NavigatorService instance using GetIt dependency injection
   final NavigatorService navigator = getIt<NavigatorService>();
 
+  // shared preferences
+  final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
+
   // for animation
   late AnimationController animationController;
   late Animation<double> animation;
@@ -29,8 +34,8 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
   @override
   void initState() {
     super.initState();
-    tween = Tween(begin: 0.0, end: 0.76);
-    animationController = AnimationController(duration: const Duration(seconds: 1), vsync: this);
+    tween = Tween(begin: 0.0, end: (sharedPreferences.getBool('isMobile') ?? true ? 0.8 : 1));
+    animationController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
     animation = CurvedAnimation(parent: animationController, curve: Curves.easeIn).drive(tween);
     animationController.forward();
   }
@@ -63,16 +68,16 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
       'Vehicle Service is done',
       'Quality Check is done',
       'Inpection out is done',
-      'Service Completed'
+      'Gate Pass'
     ];
 
     // Define status lines for stages that are still pending
     List<String> pendingStatusLines = [
-      '',
+      'JC created on ${_serviceBloc.state.service!.creationDate}',
       'Vehicle Service is in progress',
       'Quality Check needs to be done',
       'Inpection out needs to be done',
-      'Gate Pass Generated'
+      'Gate Pass'
     ];
 
     return PopScope(
@@ -82,40 +87,7 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
           resizeToAvoidBottomInset: false,
           // Don't extend the content behind the app bar
           extendBodyBehindAppBar: false,
-          appBar: AppBar(
-            // Remove the shadow when scrolling under the app bar
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            backgroundColor: Colors.black45,
-            leadingWidth: size.width * 0.14,
-            leading: Container(
-              margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
-              child: Transform(
-                transform: Matrix4.translationValues(-3, 0, 0),
-                child: IconButton(
-                    onPressed: () {
-                      navigator.pop();
-                    },
-                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-              ),
-            ),
-            title: Container(
-                alignment: Alignment.center,
-                height: size.height * 0.05,
-                width: isMobile ? size.width * 0.45 : size.width * 0.32,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                ]),
-                child: const Text(
-                  textAlign: TextAlign.center,
-                  'JobCard Details',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                )),
-            centerTitle: true,
-          ),
+          appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Job Card Details'),
           body: Stack(
             children: [
               Container(
@@ -131,10 +103,10 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
                   children: [
                     IntrinsicHeight(
                       child: Container(
-                        margin: EdgeInsets.only(top: size.height * 0.04, left: size.width * 0.05, right: size.width * 0.05),
-                        width: size.width * (isMobile ? 0.9 : 0.48),
+                        margin:
+                            EdgeInsets.only(top: size.height * 0.04, left: size.width * (isMobile ? 0.05 : 0.08), right: size.width * (isMobile ? 0.05 : 0.08)),
                         padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.05 : 0.032), vertical: size.height * 0.03),
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(25)),
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(isMobile ? 25 : 35)),
                         child: Column(
                           children: [
                             buildDetailRow('Job Card Number', _serviceBloc.state.service!.jobCardNo.toString(), size, isMobile),
@@ -157,15 +129,15 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
                               height: size.height * animation.value,
                               margin: EdgeInsets.only(
                                 top: size.height * 0.03,
-                                left: size.width * 0.02,
-                                right: size.width * 0.02,
+                                left: size.width * (isMobile ? 0.02 : 0.04),
+                                right: size.width * (isMobile ? 0.02 : 0.04),
                               ),
                               padding: EdgeInsets.only(top: size.height * 0.01),
                               width: size.width * (isMobile ? 0.93 : 0.48),
                               decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-                                  boxShadow: const [
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(isMobile ? 25 : 35), topRight: Radius.circular(isMobile ? 25 : 35)),
+                                  boxShadow: [
                                     BoxShadow(color: Colors.black12, blurRadius: 10, blurStyle: BlurStyle.normal, offset: Offset(1, 1), spreadRadius: 10)
                                   ]),
                               child: Column(
@@ -175,7 +147,7 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
                                     flex: 1,
                                     child: Text(
                                       'Status',
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 16),
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
                                     ),
                                   ),
                                   Expanded(flex: 1, child: Gap(size.height * 0.01)),
@@ -219,20 +191,20 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
   Widget buildDetailRow(String key, String value, Size size, bool isMobile) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(
-        width: size.width * (isMobile ? 0.4 : 0.16),
+        width: size.width * (isMobile ? 0.4 : 0.3),
         child: Text(
           key,
           softWrap: true,
-          style: const TextStyle(fontSize: 13),
+          style: TextStyle(fontSize: isMobile ? 13 : 17),
         ),
       ),
       SizedBox(
-        width: size.width * (isMobile ? 0.4 : 0.16),
+        width: size.width * (isMobile ? 0.4 : 0.35),
         child: Text(
           textAlign: TextAlign.right,
           value,
           softWrap: true,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, overflow: TextOverflow.visible),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 13 : 17, overflow: TextOverflow.visible),
         ),
       )
     ]);

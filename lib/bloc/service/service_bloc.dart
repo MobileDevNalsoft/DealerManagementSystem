@@ -160,13 +160,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         if (json['response_code'] == 200) {
           List<Service> services = [];
           for (Map<String, dynamic> service in json['data']) {
-            services.add(Service(
-                sNo: service['s_no'],
-                registrationNo: service['vehicle_registration_number'],
-                location: service['location'],
-                scheduledDate: service['schedule_date'],
-                jobCardNo: service['job_card_no'],
-                jobType: service['job_type']));
+            services.add(Service.fromJson(service));
           }
           emit(state.copyWith(getServiceStatus: GetServiceStatus.success, services: services));
         } else {

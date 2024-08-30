@@ -35,43 +35,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        backgroundColor: Colors.black45,
-        leadingWidth: size.width * 0.14,
-        leading: Container(
-          margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black,
-              boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-          child: Transform(
-            transform: Matrix4.translationValues(-3, 0, 0),
-            child: IconButton(
-                onPressed: () {
-                  navigator.pop();
-                },
-                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-          ),
-        ),
-        title: Container(
-            alignment: Alignment.center,
-            height: size.height * 0.05,
-            width: isMobile ? size.width * 0.45 : size.width * 0.32,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.black,
-                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-            child: const Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                'Parts Examination',
-                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-              ),
-            )),
-        centerTitle: true,
-      ),
+      appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Parts Examination'),
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [

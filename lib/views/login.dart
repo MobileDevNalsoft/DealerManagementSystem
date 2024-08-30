@@ -59,199 +59,207 @@ class _LoginState extends State<Login> with ConnectivityMixin {
     Size size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
+    sharedPreferences.setBool('isMobile', isMobile);
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
         // shows confirmation dialog to the user to exit the app or stay.
         showConfirmationDialog(size: size);
       },
-      child: AspectRatio(
-        aspectRatio: size.height / size.width,
-        child: GestureDetector(
-          // on tap removes focus of every focused widget in the current page.
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Scaffold(
-            // restricts resizing of widgets when keyboard is visible
-            resizeToAvoidBottomInset: false,
-            // This widget listens to the AuthenticationBloc and builds the login UI
-            body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-              listener: (context, state) {
-                String? message;
+      child: GestureDetector(
+        // on tap removes focus of every focused widget in the current page.
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          // restricts resizing of widgets when keyboard is visible
+          resizeToAvoidBottomInset: false,
+          // This widget listens to the AuthenticationBloc and builds the login UI
+          body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) {
+              String? message;
 
-                // Handle different Authentication states
-                switch (state.authenticationStatus) {
-                  case AuthenticationStatus.success:
-                    message = "Login Successful";
-                    sharedPreferences.setBool("isLogged", true);
-                    // Unfocus any currently focused text field
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    break;
-                  case AuthenticationStatus.invalidCredentials:
-                    message = "Invalid Credentials";
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    break;
-                  case AuthenticationStatus.failure:
-                    message = "Something went wrong. Please try again later";
-                    FocusManager.instance.primaryFocus?.unfocus();
-                  default:
-                    message = null;
-                }
+              // Handle different Authentication states
+              switch (state.authenticationStatus) {
+                case AuthenticationStatus.success:
+                  message = "Login Successful";
+                  sharedPreferences.setBool("isLogged", true);
+                  // Unfocus any currently focused text field
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  break;
+                case AuthenticationStatus.invalidCredentials:
+                  message = "Invalid Credentials";
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  break;
+                case AuthenticationStatus.failure:
+                  message = "Something went wrong. Please try again later";
+                  FocusManager.instance.primaryFocus?.unfocus();
+                default:
+                  message = null;
+              }
 
-                // Show a snackbar with relevant message if needed
-                if (message != null) {
-                  DMSCustomWidgets.DMSFlushbar(size, context,
-                      message: message,
-                      icon: Icon(
-                        message == "Login Successful" ? Icons.check_circle_rounded : Icons.error,
-                        color: Colors.white,
-                      ));
-                }
-              },
-              builder: (context, state) {
-                return Stack(
-                  children: [
-                    Container(
-                      width: size.width,
-                      height: size.height,
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [Colors.black45, Colors.black26, Colors.black45],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: [0.1, 0.5, 1])),
-                      child: Stack(children: [
-                        // Login image for mobile layout
-                        if (isMobile)
-                          // clipped container with image on top of login fields
-                          ClipShadowPath(
-                            shadow: BoxShadow(
-                                blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
-                            clipper: ImageClipper(),
-                            child: Container(
-                              height: size.height * 0.4,
-                              width: size.width,
-                              decoration: const BoxDecoration(
-                                color: Colors.black,
-                                image: DecorationImage(image: AssetImage('assets/images/login.png'), alignment: Alignment.topCenter, isAntiAlias: true),
+              // Show a snackbar with relevant message if needed
+              if (message != null) {
+                DMSCustomWidgets.DMSFlushbar(size, context,
+                    message: message,
+                    icon: Icon(
+                      message == "Login Successful" ? Icons.check_circle_rounded : Icons.error,
+                      color: Colors.white,
+                    ));
+              }
+            },
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  Container(
+                    width: size.width,
+                    height: size.height,
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [Colors.black45, Colors.black26, Colors.black45],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: [0.1, 0.5, 1])),
+                    child: Stack(children: [
+                      // Login image for mobile layout
+                      // if (isMobile)
+                      // clipped container with image on top of login fields
+                      ClipShadowPath(
+                        shadow:
+                            BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
+                        clipper: ImageClipper(),
+                        child: Container(
+                          height: size.height * 0.4,
+                          width: size.width,
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            image: DecorationImage(image: AssetImage('assets/images/login.png'), alignment: Alignment.topCenter, isAntiAlias: true),
+                          ),
+                        ),
+                      ),
+                      // Login image for tab layout
+                      // if (!isMobile)
+                      //   Container(
+                      //     height: size.height,
+                      //     width: size.width * 0.4,
+                      //     decoration: const BoxDecoration(
+                      //       color: Colors.black,
+                      //       image: DecorationImage(image: AssetImage('assets/images/login.png'), alignment: Alignment.center, isAntiAlias: true),
+                      //     ),
+                      //   ),
+                      // Login form positioned below the image
+                      Positioned(
+                        top: isMobile ? size.height * 0.35 : size.height * 0.40,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: size.width * (isMobile ? 0.09 : 0.15), bottom: size.width * (isMobile ? 0.03 : 0.05)),
+                              child: Text(
+                                "Log in",
+                                style: TextStyle(fontWeight: FontWeight.w900, fontSize: (isMobile ? 25 : 40)),
                               ),
                             ),
-                          ),
-                        // Login image for tab layout
-                        if (!isMobile)
-                          Container(
-                            height: size.height,
-                            width: size.width * 0.4,
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              image: DecorationImage(image: AssetImage('assets/images/login.png'), alignment: Alignment.center, isAntiAlias: true),
+                            // Custom text field for employee ID
+                            CustomTextFormField(
+                              isMobile: isMobile,
+                              hintText: 'employee id',
+                              controller: _emailController,
+                              prefixIcon: Icon(
+                                Icons.person,
+                                size: size.height * 0.03,
+                              ),
                             ),
-                          ),
-                        // Login form positioned below the image
-                        Positioned(
-                          top: isMobile ? size.height * 0.35 : size.height * 0.24,
-                          bottom: isMobile ? 0 : null,
-                          left: isMobile ? 0 : size.width * 0.45,
-                          right: isMobile ? 0 : null,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: size.width * 0.09, bottom: size.width * 0.03),
-                                child: const Text(
-                                  "Log in",
-                                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
-                                ),
+                            Gap(
+                              size.height * 0.02,
+                            ),
+                            // Custom text field for password
+                            CustomTextFormField(
+                              isMobile: isMobile,
+                              hintText: 'password',
+                              controller: _passwordController,
+                              prefixIcon: Icon(
+                                Icons.key,
+                                size: size.height * 0.03,
                               ),
-                              // Custom text field for employee ID
-                              CustomTextFormField(
-                                isMobile: isMobile,
-                                hintText: 'employee id',
-                                controller: _emailController,
-                                prefixIcon: const Icon(Icons.person),
-                              ),
-                              Gap(
-                                size.height * 0.02,
-                              ),
-                              // Custom text field for password
-                              CustomTextFormField(
-                                isMobile: isMobile,
-                                hintText: 'password',
-                                controller: _passwordController,
-                                prefixIcon: const Icon(Icons.key),
-                                obscureText: state.obscure,
-                                obscureChar: '*',
-                                suffixIcon: IconButton(
-                                  iconSize: 20,
-                                  onPressed: () => {
-                                    //triggers obscurepassword event to upadate the UI of obscure icon button to show or hide the password.
-                                    context.read<AuthenticationBloc>().add(ObscurePasswordTapped())
-                                  },
-                                  icon: state.obscure! ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
-                                ),
-                              ),
-                              Gap(
-                                size.height * 0.02,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  String? message = (_emailController.text.isEmpty ? "username cannot be empty" : null) ??
-                                      // this method validates the password according to regex and gives instructions.
-                                      _passwordValidator(_passwordController.text);
-
-                                  // Show a snackbar with relevant message if needed
-                                  if (message != null) {
-                                    DMSCustomWidgets.DMSFlushbar(
-                                      size,
-                                      context,
-                                      message: message,
-                                      icon: const Icon(
-                                        Icons.error,
-                                        color: Colors.white,
-                                      ),
-                                    );
-                                  } else {
-                                    // unfocuses all the focused fields
-                                    FocusManager.instance.primaryFocus?.unfocus();
-                                    // triggeres login event and authenticates user info with the info in DB and gets corresponding response
-                                    _authBloc.add(LoginButtonPressed(username: _emailController.text, password: _passwordController.text));
-                                  }
+                              obscureText: state.obscure,
+                              obscureChar: '*',
+                              suffixIcon: IconButton(
+                                iconSize: 20,
+                                onPressed: () => {
+                                  //triggers obscurepassword event to upadate the UI of obscure icon button to show or hide the password.
+                                  context.read<AuthenticationBloc>().add(ObscurePasswordTapped())
                                 },
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.08),
-                                    height: size.height * 0.05,
-                                    width: isMobile ? size.width : size.width * 0.3,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.black, boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 10,
-                                          blurStyle: BlurStyle.outer,
-                                          spreadRadius: 0,
-                                          color: Colors.orange.shade200,
-                                          offset: const Offset(0, 0))
-                                    ]),
-                                    child: const Text(
-                                      textAlign: TextAlign.center,
-                                      'log in',
-                                      style: TextStyle(color: Colors.white, fontSize: 16),
-                                    )),
-                              )
-                            ],
-                          ),
-                        )
-                      ]),
-                    ),
-                    if (state.authenticationStatus == AuthenticationStatus.loading)
-                      // shows the loading widget based on the status.
-                      Container(
-                        color: Colors.white54,
-                        child: Center(
-                            child: Lottie.asset('assets/lottie/login_loading.json',
-                                height: isMobile ? size.height * 0.4 : size.height * 0.24, width: isMobile ? size.width * 0.4 : size.width * 0.24)),
+                                icon: state.obscure!
+                                    ? Icon(
+                                        Icons.visibility_off,
+                                        size: size.height * 0.025,
+                                      )
+                                    : Icon(
+                                        Icons.visibility,
+                                        size: size.height * 0.025,
+                                      ),
+                              ),
+                            ),
+                            Gap(
+                              size.height * 0.02,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                String? message = (_emailController.text.isEmpty ? "username cannot be empty" : null) ??
+                                    // this method validates the password according to regex and gives instructions.
+                                    _passwordValidator(_passwordController.text);
+
+                                // Show a snackbar with relevant message if needed
+                                if (message != null) {
+                                  DMSCustomWidgets.DMSFlushbar(
+                                    size,
+                                    context,
+                                    message: message,
+                                    icon: const Icon(
+                                      Icons.error,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                } else {
+                                  // unfocuses all the focused fields
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  // triggeres login event and authenticates user info with the info in DB and gets corresponding response
+                                  _authBloc.add(LoginButtonPressed(username: _emailController.text, password: _passwordController.text));
+                                }
+                              },
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.08 : 0.15)),
+                                  height: size.height * 0.05,
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.black, boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                                  ]),
+                                  child: const Text(
+                                    textAlign: TextAlign.center,
+                                    'log in',
+                                    style: TextStyle(color: Colors.white, fontSize: 16),
+                                  )),
+                            )
+                          ],
+                        ),
                       )
-                  ],
-                );
-              },
-            ),
+                    ]),
+                  ),
+                  if (state.authenticationStatus == AuthenticationStatus.loading)
+                    // shows the loading widget based on the status.
+                    Container(
+                      color: Colors.white54,
+                      child: Center(
+                          child: Lottie.asset('assets/lottie/login_loading.json',
+                              height: isMobile ? size.height * 0.4 : size.height * 0.24, width: isMobile ? size.width * 0.4 : size.width * 0.24)),
+                    )
+                ],
+              );
+            },
           ),
         ),
       ),

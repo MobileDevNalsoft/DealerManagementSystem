@@ -376,43 +376,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: false,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          backgroundColor: Colors.black45,
-          leadingWidth: size.width * 0.14,
-          leading: Container(
-            margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-                boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-            child: Transform(
-              transform: Matrix4.translationValues(-3, 0, 0),
-              child: IconButton(
-                  onPressed: () {
-                    focusNode.unfocus();
-                    navigator.pop();
-                  },
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-            ),
-          ),
-          title: Container(
-              alignment: Alignment.center,
-              height: size.height * 0.05,
-              width: isMobile ? size.width * 0.45 : size.width * 0.32,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-              ]),
-              child: const Center(
-                child: Text(
-                  textAlign: TextAlign.center,
-                  'Vehicle Info',
-                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                ),
-              )),
-          centerTitle: true,
-        ),
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Vehicle Info'),
         body: Container(
           width: size.width,
           height: size.height,
@@ -431,16 +395,15 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 onTap: () => focusNode.requestFocus(),
                 overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.02),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.02 : 0.2)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
-                          padding: EdgeInsets.only(top: size.height * 0.033),
-                          height: size.height * 0.06,
-                          width: size.width * (isMobile ? 0.8 : 0.32),
+                          padding: EdgeInsets.only(top: size.height * (isMobile ? 0.033 : 0.005)),
+                          height: size.height * (isMobile ? 0.06 : 0.05),
                           decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
                           child: TextFormField(
@@ -468,18 +431,18 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               });
                             },
                             cursorColor: Colors.black,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-                              hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                              hintStyle: TextStyle(color: Colors.black38, fontSize: isMobile ? 14 : 16),
                               hintText: 'Vehicle Registration Number',
                             ),
                           ),
                         ),
                       ),
                       Container(
-                        width: size.width * (isMobile ? 0.14 : 0.04),
-                        height: size.height * 0.06,
+                        width: size.width * (isMobile ? 0.14 : 0.08),
+                        height: size.height * (isMobile ? 0.06 : 0.05),
                         decoration: const BoxDecoration(
                             color: Colors.black38, borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
                         child: const Icon(
@@ -501,10 +464,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         return Stack(children: context.read<MultiBloc>().state.reverseClippedWidgets! ? clipperWidgets.reversed.toList() : clipperWidgets);
                       case VehicleStatus.loading:
                         return Transform(
-                          transform: Matrix4.translationValues(0, isMobile ? size.height * 0.15 : size.height * 0.1, 0),
+                          transform: Matrix4.translationValues(0, size.height * 0.15, 0),
                           child: Lottie.asset(
                             "assets/lottie/steering.json",
-                            width: size.width * (isMobile ? 0.6 : 0.16),
+                            width: size.width * 0.6,
                           ),
                         );
                       default:
@@ -531,14 +494,19 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 flex: 8,
                                 child: Icon(
                                   Icons.car_crash_rounded,
-                                  size: size.width * (isMobile ? 0.11 : 0.032),
+                                  size: size.width * (isMobile ? 0.11 : 0.11),
                                 ),
                               ),
-                              const Expanded(
+                              if (!isMobile)
+                                Expanded(
+                                  flex: 5,
+                                  child: Gap(size.height * 0.01),
+                                ),
+                              Expanded(
                                 flex: 5,
                                 child: Text(
                                   "Vehicle not found",
-                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: (isMobile ? 20 : 25)),
                                 ),
                               ),
                             ],

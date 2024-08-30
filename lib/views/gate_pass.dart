@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/inits/init.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,41 +49,7 @@ class _GatePassState extends State<GatePass> {
     return SafeArea(
         child: Scaffold(
             extendBody: false,
-            appBar: AppBar(
-              scrolledUnderElevation: 0,
-              elevation: 0,
-              backgroundColor: Colors.black45,
-              leadingWidth: size.width * 0.14,
-              leading: Container(
-                margin: EdgeInsets.only(left: size.width * 0.045),
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                ]),
-                child: Transform(
-                  transform: Matrix4.translationValues(-3, 0, 0),
-                  child: IconButton(
-                      onPressed: () {
-                        navigator.pop();
-                      },
-                      icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-                ),
-              ),
-              title: Container(
-                  alignment: Alignment.center,
-                  height: size.height * 0.05,
-                  width: size.width * 0.45,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                    BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                  ]),
-                  child: const Center(
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      'Gate Pass',
-                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                    ),
-                  )),
-              centerTitle: true,
-            ),
+            appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Gate Pass'),
             body: Stack(
               children: [
                 Container(
@@ -113,12 +80,12 @@ class _GatePassState extends State<GatePass> {
                             shadow: const Shadow(color: Colors.black, blurRadius: 2.5),
                             child: Container(
                               alignment: Alignment.center,
-                              height: size.height * 0.42,
+                              height: size.height * (isMobile ? 0.42 : 0.5),
                               width: size.width * 0.8,
                               decoration: const BoxDecoration(color: Colors.white),
                               child: Column(
                                 children: [
-                                  const Gap(16.0),
+                                  Gap(size.height * (isMobile ? 0.02 : 0.03)),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -129,7 +96,7 @@ class _GatePassState extends State<GatePass> {
                                       ),
                                       const Spacer(),
                                       Align(
-                                          alignment: Alignment.centerRight,
+                                          alignment: Alignment.topRight,
                                           child: IconButton(
                                             onPressed: () async {
                                               await Future.delayed(const Duration(milliseconds: 20));
@@ -147,15 +114,17 @@ class _GatePassState extends State<GatePass> {
                                               );
                                               context.read<ServiceBloc>().add(ModifyGatePassStatus(status: GatePassStatus.initial));
                                             },
-                                            icon: const Icon(
+                                            icon: Icon(
                                               Icons.ios_share_rounded,
                                               color: Colors.black,
+                                              size: size.height * 0.03,
                                             ),
                                             visualDensity: VisualDensity.compact,
                                           )),
-                                      const Gap(8),
+                                      Gap(size.height * (isMobile ? 0.008 : 0.02)),
                                     ],
                                   ),
+                                  Gap(size.height * (isMobile ? 0.01 : 0.01)),
                                   Container(
                                       decoration: BoxDecoration(
                                         color: const Color.fromRGBO(217, 217, 217, 1),
@@ -163,7 +132,7 @@ class _GatePassState extends State<GatePass> {
                                       ),
                                       padding: EdgeInsets.symmetric(vertical: size.height * 0.005, horizontal: size.width * 0.02),
                                       child: Text(context.read<ServiceBloc>().state.gatePassno ?? "",
-                                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 18))),
+                                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: (isMobile ? 14 : 18)))),
                                   Gap(size.height * 0.02),
                                   const DottedLine(),
                                   Gap(size.height * 0.02),

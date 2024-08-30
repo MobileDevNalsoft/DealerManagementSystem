@@ -48,8 +48,8 @@ class _ClippedButtonState extends State<ClippedButton> with TickerProviderStateM
           child: Container(
             alignment: Alignment.center,
             color: Colors.black,
-            height: size.height * 0.2,
-            width: isMobile ? size.width * 0.2 : size.width * 0.08,
+            height: size.height * (isMobile ? 0.2 : 0.2),
+            width: size.width * (isMobile ? 0.2 : 0.16),
             child: Transform.flip(
               flipY: widget.flipImageY,
               child: Image.asset(
@@ -91,7 +91,7 @@ class VehicleInfoClippedButton extends StatelessWidget {
         clipper: VehicleInfoClipper(),
         child: Container(
           height: size.height * (isMobile ? 0.5 : 0.58),
-          width: size.width * (isMobile ? 0.95 : 0.4),
+          width: size.width * (isMobile ? 0.95 : 0.9),
           decoration: BoxDecoration(color: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? decorationColor : null),
           child: child,
         ),
@@ -148,13 +148,17 @@ class _ClipShadowShadowPainter extends CustomPainter {
 
 // this class is used to clip buttons in the home page
 class ButtonClipper extends CustomClipper<Path> {
+  bool isMobile;
+
+  ButtonClipper({required this.isMobile});
+
   @override
   Path getClip(Size size) {
     Path path = Path();
-    path.lineTo(size.width - 33.5, 20);
-    path.quadraticBezierTo(size.width - 18, 28, size.width - 13.4, 40.2);
-    path.lineTo(size.width - 5, size.height - 70);
-    path.quadraticBezierTo(size.width + 3.35, size.height - 30.15, size.width - 20.1, size.height - 20.1);
+    path.lineTo(size.width - (isMobile ? 33.5 : 43.5), (isMobile ? 20 : 35));
+    path.quadraticBezierTo(size.width - (isMobile ? 18 : 15), (isMobile ? 28 : 48), size.width - (isMobile ? 13.4 : 10), (isMobile ? 40.2 : 75.2));
+    path.lineTo(size.width - (isMobile ? 5 : 0), size.height - (isMobile ? 70 : 60));
+    path.quadraticBezierTo(size.width + (isMobile ? 3.35 : 0), size.height - (isMobile ? 30.15 : 25), size.width - (isMobile ? 20.1 : 30), size.height - 20.1);
     path.lineTo(0, size.height);
     path.lineTo(0, 0);
     path.close();
@@ -167,15 +171,20 @@ class ButtonClipper extends CustomClipper<Path> {
 
 // this class is used to clip buttons in the home page
 class ButtonClipperMid extends CustomClipper<Path> {
+  bool isMobile;
+
+  ButtonClipperMid({required this.isMobile});
+
   @override
   Path getClip(Size size) {
     Path path = Path();
-    path.lineTo(0, 25);
-    path.lineTo(size.width - 40, 5);
-    path.quadraticBezierTo(size.width - 10, -5, size.width - 5, 20);
-    path.cubicTo(size.width, size.height * 0.4, size.width, size.height * 0.6, size.width - 5, size.height - 20);
-    path.quadraticBezierTo(size.width - 10, size.height + 5, size.width - 40, size.height - 5);
-    path.lineTo(0, size.height - 25);
+    path.lineTo(0, (isMobile ? 20 : 35));
+    path.lineTo(size.width - (isMobile ? 40 : 50), (isMobile ? 5 : 10));
+    path.quadraticBezierTo(size.width - 10, (isMobile ? -10 : 0), size.width - 5, (isMobile ? 20 : 30));
+    path.cubicTo(size.width + (isMobile ? 0 : 5), size.height * 0.4, size.width + (isMobile ? 0 : 5), size.height * 0.6, size.width - 5,
+        size.height - (isMobile ? 20 : 30));
+    path.quadraticBezierTo(size.width - 10, size.height + (isMobile ? 10 : 0), size.width - 40, size.height - 5);
+    path.lineTo(0, size.height - (isMobile ? 20 : 35));
     path.lineTo(0, 0);
     path.close();
     return path;

@@ -240,19 +240,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
-    // Set preferred orientations based on device type
-    if (!isMobile) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-    }
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SizedBox(
@@ -274,43 +261,17 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 extendBodyBehindAppBar: false,
-                appBar: AppBar(
-                  scrolledUnderElevation: 0,
-                  elevation: 0,
-                  backgroundColor: Colors.black45,
-                  leadingWidth: size.width * 0.14,
-                  leading: Container(
-                    margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                    ]),
-                    child: Transform(
-                      transform: Matrix4.translationValues(-3, 0, 0),
-                      child: IconButton(
-                          onPressed: () {
-                            if (index == 0) {
-                              navigator.pop();
-                            } else {
-                              pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
-                            }
-                          },
-                          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-                    ),
-                  ),
-                  title: Container(
-                      alignment: Alignment.center,
-                      height: size.height * 0.05,
-                      width: isMobile ? size.width * 0.45 : size.width * 0.32,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                      ]),
-                      child: const Text(
-                        textAlign: TextAlign.center,
-                        'Service Booking',
-                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
-                      )),
-                  centerTitle: true,
-                ),
+                appBar: DMSCustomWidgets.appBar(
+                    size: size,
+                    isMobile: isMobile,
+                    title: 'Service Booking',
+                    leadingOnPressed: () {
+                      if (index == 0) {
+                        navigator.pop();
+                      } else {
+                        pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                      }
+                    }),
                 body: Stack(
                   children: [
                     Container(
@@ -353,9 +314,14 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   children: [
                                                     DMSCustomWidgets.SearchableDropDown(
                                                         size: size,
-                                                        hint: 'Location',
+                                                        hint: '*Location',
                                                         items: state.locations!,
-                                                        icon: dropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                                        icon: dropDownUp
+                                                            ? Icon(
+                                                                Icons.arrow_drop_up,
+                                                                size: size.height * 0.03,
+                                                              )
+                                                            : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
                                                         focus: locFocus,
                                                         typeAheadController: locTypeAheadController,
                                                         scrollController: page1ScrollController,
@@ -386,10 +352,16 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                         return DMSCustomWidgets.CustomDataCard(
                                                             context: context,
                                                             size: size,
-                                                            hint: 'Vehicle Registration Number',
+                                                            hint: '*Vehicle Registration Number',
                                                             inputFormatters: [UpperCaseTextFormatter()],
                                                             icon: state.status == VehicleStatus.vehicleAlreadyAdded
-                                                                ? const Icon(Icons.check_circle_rounded)
+                                                                ? Padding(
+                                                                    padding: EdgeInsets.only(bottom: size.height * (isMobile ? 0 : 0.005)),
+                                                                    child: Icon(
+                                                                      Icons.check_circle_rounded,
+                                                                      size: size.height * 0.03,
+                                                                    ),
+                                                                  )
                                                                 : null,
                                                             isMobile: isMobile,
                                                             textcontroller: vehRegNumController,
@@ -444,7 +416,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                 // view more dialog box
                                                 Row(
                                                   children: [
-                                                    Gap(isMobile ? (size.width * 0.7) : (size.width * 0.595)),
+                                                    Gap(size.width * (isMobile ? 0.7 : 0.7)),
                                                     BlocBuilder<VehicleBloc, VehicleState>(
                                                       builder: (context, state) {
                                                         if (state.status == VehicleStatus.vehicleAlreadyAdded) {
@@ -473,7 +445,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                               child: Container(
                                                                   alignment: Alignment.center,
                                                                   height: size.height * 0.025,
-                                                                  width: isMobile ? size.width * 0.18 : size.width * 0.08,
+                                                                  width: size.width * (isMobile ? 0.18 : 0.1),
                                                                   decoration: BoxDecoration(
                                                                       borderRadius: BorderRadius.circular(10),
                                                                       color: Colors.black,
@@ -531,7 +503,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   child: Container(
                                                       alignment: Alignment.center,
                                                       height: size.height * 0.045,
-                                                      width: isMobile ? size.width * 0.2 : size.width * 0.08,
+                                                      width: size.width * (isMobile ? 0.2 : 0.15),
                                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
                                                         BoxShadow(
                                                             blurRadius: 10,
@@ -540,10 +512,10 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                             color: Colors.orange.shade200,
                                                             offset: const Offset(0, 0))
                                                       ]),
-                                                      child: const Text(
+                                                      child: Text(
                                                         textAlign: TextAlign.center,
                                                         'next',
-                                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                                        style: TextStyle(color: Colors.white, fontSize: (isMobile ? 16 : 18)),
                                                       )),
                                                 ),
                                                 if (MediaQuery.of(context).viewInsets.bottom != 0) Gap(size.height * (isMobile ? 0.4 : 0.5)),
@@ -579,7 +551,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                       isMobile: isMobile,
                                                       focus: bookingFocus,
                                                       typeAheadController: bookingTypeAheadController,
-                                                      icon: bookingSourceDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                                      icon: bookingSourceDropDownUp
+                                                          ? Icon(Icons.arrow_drop_up, size: size.height * 0.03)
+                                                          : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
                                                       scrollController: page2ScrollController),
                                                   SizedBox(
                                                     height: size.height * (isMobile ? 0.005 : 0.015),
@@ -626,9 +600,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                             }
                                                             spTypeAheadController.text = p0;
                                                             if (p0.length >= 3) {
-                                                              context.read<MultiBloc>().add(GetSalesPersons(searchText: p0));
+                                                              _multiBloc.add(GetSalesPersons(searchText: p0));
                                                             } else {
-                                                              context.read<MultiBloc>().state.salesPersons = null;
+                                                              _multiBloc.state.salesPersons = null;
                                                             }
                                                           },
                                                           size: size,
@@ -636,7 +610,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                               ? []
                                                               : state.salesPersons!.map((e) => "${e.empName}-${e.empId}").toList(),
                                                           hint: '*Sales Person',
-                                                          icon: salesPersonDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                                          icon: salesPersonDropDownUp
+                                                              ? Icon(Icons.arrow_drop_up, size: size.height * 0.03)
+                                                              : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
                                                           isMobile: isMobile,
                                                           isLoading: state.status == MultiStateStatus.loading ? true : false,
                                                           focus: spFocus,
@@ -653,7 +629,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                       size: size,
                                                       hint: '*Bay',
                                                       isMobile: isMobile,
-                                                      icon: bayDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                                      icon: bayDropDownUp
+                                                          ? Icon(Icons.arrow_drop_up, size: size.height * 0.03)
+                                                          : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
                                                       focus: bayFocus,
                                                       typeAheadController: bayTypeAheadController,
                                                       scrollController: page2ScrollController),
@@ -664,7 +642,9 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                       size: size,
                                                       hint: '*Job Type',
                                                       items: jobTypeList,
-                                                      icon: jobTypeDropDownUp ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                                      icon: jobTypeDropDownUp
+                                                          ? Icon(Icons.arrow_drop_up, size: size.height * 0.03)
+                                                          : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
                                                       focus: jobTypeFocus,
                                                       typeAheadController: jobTypeTypeAheadController,
                                                       isMobile: isMobile,
@@ -692,7 +672,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                       focusNode: remarksFocus,
                                                       textcontroller: remarksController),
                                                   SizedBox(
-                                                    height: size.height * (isMobile ? 0.05 : 0.015),
+                                                    height: size.height * 0.05,
                                                   ),
                                                 ],
                                               ),
@@ -701,7 +681,12 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   switch (state.serviceUploadStatus) {
                                                     //Navigating to Inspection in after successful upload of service booking
                                                     case ServiceUploadStatus.success:
-                                                      DMSCustomWidgets.DMSFlushbar(size, context, message: 'Service Added Successfully');
+                                                      DMSCustomWidgets.DMSFlushbar(size, context,
+                                                          message: 'Service Added Successfully',
+                                                          icon: const Icon(
+                                                            Icons.check_circle_rounded,
+                                                            color: Colors.white,
+                                                          ));
                                                       context.read<MultiBloc>().state.date = null;
                                                       _vehicleBloc.state.registrationNo = null;
                                                       _vehicleBloc.state.status = VehicleStatus.initial;
@@ -724,7 +709,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   return BlocBuilder<MultiBloc, MultiBlocState>(
                                                     builder: (context, state) {
                                                       return SizedBox(
-                                                        width: isMobile ? size.width * 0.56 : size.width * 0.2,
+                                                        width: size.width * (isMobile ? 0.56 : 0.3),
                                                         child: LayoutBuilder(
                                                           builder: (context, contraints) {
                                                             return CustomSliderButton(
@@ -988,7 +973,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
 
     _position = widget.size.maxWidth * 0.01;
     _startPosition = widget.size.maxWidth * 0.01;
-    _endPosition = widget.isMobile ? widget.size.maxWidth * 0.8 : widget.size.maxWidth * 0.825;
+    _endPosition = widget.size.maxWidth * (widget.isMobile ? 0.78 : 0.77);
     _sliderController.currentPosition = widget.size.maxWidth * 0.01;
 
     //Updating the initial position of the slider
@@ -1066,7 +1051,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 color: Colors.white60,
               ),
               width: widget.size.maxWidth,
-              height: 45,
+              height: (widget.isMobile ? 45 : 55),
               child: Align(
                 alignment: Alignment.center,
                 child: Padding(
@@ -1080,8 +1065,8 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             left: _sliderController.currentPosition,
             top: 1.5,
             child: Container(
-              width: 42,
-              height: 42,
+              width: (widget.isMobile ? 42 : 52),
+              height: (widget.isMobile ? 42 : 52),
               decoration: BoxDecoration(
                 color: Colors.black,
                 boxShadow: [BoxShadow(color: Colors.orange.shade200, blurRadius: 20, spreadRadius: 0)],

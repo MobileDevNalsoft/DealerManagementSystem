@@ -5,7 +5,9 @@ import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/clipped_buttons.dart';
 import 'package:dms/views/sample/service_main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
 
@@ -20,12 +22,19 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
   // Service to handle navigation within the app
   final NavigatorService navigator = getIt<NavigatorService>();
 
+  // shared preferences
+  final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     // Check if the screen is considered mobile based on shortest side
     bool isMobile = size.shortestSide < 500;
+
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    sharedPreferences.setBool('isMobile', isMobile);
 
     return PopScope(
       // Disable default back button behavior
@@ -58,13 +67,13 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
             children: [
               Column(
                 children: [
-                  Gap(size.height * 0.18),
+                  Gap(size.height * (isMobile ? 0.1 : 0)),
                   Image.asset(
                     'assets/images/dashboard_car.png',
-                    height: 200,
-                    width: 200,
+                    height: size.height * (isMobile ? 0.25 : 0.5),
+                    width: size.width * (isMobile ? 0.6 : 0.5),
                   ),
-                  Gap(size.height * 0.3),
+                  Gap(size.height * (isMobile ? 0.45 : 0.3)),
                   InkWell(
                     onTap: () {
                       // Check internet connection
@@ -105,9 +114,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                           ),
                         ],
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
                         color: Colors.white,
+                        size: size.height * 0.03,
                       ),
                     ),
                   )
@@ -143,7 +153,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                         transitionOnUserGestures: true,
                         child: ClippedButton(
                           // creates a custom button shape according to the path in the clipper
-                          clipper: ButtonClipper(),
+                          clipper: ButtonClipper(isMobile: isMobile),
                           image: 'add_vehicle_icon.png',
                           imageHeight: size.height * 0.1,
                           imageWidth: size.width * 0.1,
@@ -172,7 +182,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                         transitionOnUserGestures: true,
                         child: ClippedButton(
                           flipButtonX: true,
-                          clipper: ButtonClipper(),
+                          clipper: ButtonClipper(isMobile: isMobile),
                           image: 'person_icon.png',
                           imageHeight: size.height * 0.07,
                           imageWidth: size.width * 0.07,
@@ -208,7 +218,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                         tag: 'vehicleInfo',
                         transitionOnUserGestures: true,
                         child: ClippedButton(
-                            clipper: ButtonClipperMid(), image: 'vehicle_search_icon.png', imageHeight: size.height * 0.095, imageWidth: size.width * 0.095),
+                            clipper: ButtonClipperMid(isMobile: isMobile),
+                            image: 'vehicle_search_icon.png',
+                            imageHeight: size.height * 0.095,
+                            imageWidth: size.width * 0.095),
                       ),
                     ),
                     GestureDetector(
@@ -220,7 +233,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                         transitionOnUserGestures: true,
                         child: ClippedButton(
                           flipButtonX: true,
-                          clipper: ButtonClipperMid(),
+                          clipper: ButtonClipperMid(isMobile: isMobile),
                           image: 'home_icon.png',
                           imageHeight: size.height * 0.08,
                           imageWidth: size.width * 0.08,
@@ -258,7 +271,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                         child: ClippedButton(
                           flipButtonY: true,
                           flipImageY: true,
-                          clipper: ButtonClipper(),
+                          clipper: ButtonClipper(isMobile: isMobile),
                           image: 'job_cards_icon.png',
                           imageHeight: size.height * 0.085,
                           imageWidth: size.width * 0.085,
@@ -266,9 +279,22 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onDoubleTap: () {
                         if (isConnected()) {
                           navigator.push('/serviceHistory');
+                        } else {
+                          DMSCustomWidgets.DMSFlushbar(size, context,
+                              message: 'Looks like you'
+                                  're offline. Please check your connection and try again.',
+                              icon: const Icon(
+                                Icons.error,
+                                color: Colors.white,
+                              ));
+                        }
+                      },
+                      onTap: () {
+                        if (isConnected()) {
+                          navigator.push('/serviceHistory1');
                         } else {
                           DMSCustomWidgets.DMSFlushbar(size, context,
                               message: 'Looks like you'
@@ -286,7 +312,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                           flipButtonYY: true,
                           flipButtonX: true,
                           flipImageY: true,
-                          clipper: ButtonClipper(),
+                          clipper: ButtonClipper(isMobile: isMobile),
                           image: 'history_icon.png',
                           imageHeight: size.height * 0.08,
                           imageWidth: size.width * 0.08,

@@ -10,6 +10,7 @@ class CustomSliderButton extends StatefulWidget {
   /// (position and callbacks).
   final SliderButtonController? controller;
   final Decoration decoration;
+  bool isMobile;
   final Widget leftLabel;
   final void Function() onLeftLabelReached;
   final void Function() onRightLabelReached;
@@ -20,6 +21,7 @@ class CustomSliderButton extends StatefulWidget {
       {Key? key,
       this.height = 45,
       this.width = 100,
+      this.isMobile = true,
       this.controller,
       this.decoration = const BoxDecoration(),
       required this.onLeftLabelReached,
@@ -48,9 +50,10 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     _initController();
 
     /// Calculate initial positions based on widget properties.
-    _leftPosition = widget.width * 0.35;
-    _startPosition = widget.width * 0.735;
-    _rightPosition = widget.width * 1.12;
+    _leftPosition = widget.width * (widget.isMobile ? 0.35 : 0.515);
+    _startPosition = widget.width * (widget.isMobile ? 0.735 : 0.92);
+    _rightPosition = widget.width * (widget.isMobile ? 1.12 : 1.325);
+    ;
 
     if (_sliderButtonController.position == Position.middle) {
       _sliderButtonController.setCurrentPosition = _startPosition;
@@ -166,7 +169,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
             left: _sliderButtonController.currentPosition,
             top: widget.height * 0.055,
             child: Container(
-              width: widget.width * 0.2,
+              width: widget.width * (widget.isMobile ? 0.2 : 0.16),
               height: widget.height * 0.88,
               decoration: BoxDecoration(
                 color: Colors.white,
