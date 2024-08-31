@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
-import 'package:dms/models/vehicle_parts_media.dart';
+import 'package:dms/models/vehicle_parts_media2.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:dms/views/quality_check.dart';
@@ -15,53 +15,53 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 
-part 'vehicle_parts_interaction_event.dart';
-part 'vehicle_parts_interaction_state.dart';
+part 'vehicle_parts_interaction_event2.dart';
+part 'vehicle_parts_interaction_state2.dart';
 
-class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent, VehiclePartsInteractionBlocState> {
+class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent2, VehiclePartsInteractionBlocState2> {
   NavigatorService? navigator;
-  VehiclePartsInteractionBloc({Repository? repo, this.navigator})
+  VehiclePartsInteractionBloc2({Repository? repo, this.navigator})
       : _repo = repo!,
-        super(VehiclePartsInteractionBlocState(mapMedia: {}, status: VehiclePartsInteractionStatus.initial)) {
-    on<VehiclePartsInteractionBlocEvent>((event, emit) {});
-    on<AddCommentsEvent>(_onAddComments as EventHandler<AddCommentsEvent, VehiclePartsInteractionBlocState>);
-    on<AddImageEvent>(_onAddImage as EventHandler<AddImageEvent, VehiclePartsInteractionBlocState>);
-    on<RemoveImageEvent>(_onRemoveImage as EventHandler<RemoveImageEvent, VehiclePartsInteractionBlocState>);
-    on<SubmitBodyPartVehicleMediaEvent>(_onSubmitBodyPartVehicleMedia as EventHandler<SubmitBodyPartVehicleMediaEvent, VehiclePartsInteractionBlocState>);
-    on<FetchVehicleMediaEvent>(_onFetchVehicleMedia as EventHandler<FetchVehicleMediaEvent, VehiclePartsInteractionBlocState>);
-    on<ModifyAcceptedEvent>(_onModifyAcceptedStatus as EventHandler<ModifyAcceptedEvent, VehiclePartsInteractionBlocState>);
-    on<SubmitQualityCheckStatusEvent>(_onSubmitQualityCheckStatus as EventHandler<SubmitQualityCheckStatusEvent, VehiclePartsInteractionBlocState>);
-    on<ModifyVehicleExaminationPageIndex>(_onModifyVehicleExaminationPageIndex as EventHandler<ModifyVehicleExaminationPageIndex, VehiclePartsInteractionBlocState>);
-     on<AddHotspotEvent>(_onAddHotspot as EventHandler<AddHotspotEvent, VehiclePartsInteractionBlocState>);
+        super(VehiclePartsInteractionBlocState2(mapMedia: {}, status: VehiclePartsInteractionStatus.initial)) {
+    on<VehiclePartsInteractionBlocEvent2>((event, emit) {});
+    on<AddCommentsEvent>(_onAddComments as EventHandler<AddCommentsEvent, VehiclePartsInteractionBlocState2>);
+    on<AddImageEvent>(_onAddImage as EventHandler<AddImageEvent, VehiclePartsInteractionBlocState2>);
+    on<RemoveImageEvent>(_onRemoveImage as EventHandler<RemoveImageEvent, VehiclePartsInteractionBlocState2>);
+    on<SubmitBodyPartVehicleMediaEvent>(_onSubmitBodyPartVehicleMedia as EventHandler<SubmitBodyPartVehicleMediaEvent, VehiclePartsInteractionBlocState2>);
+    on<FetchVehicleMediaEvent>(_onFetchVehicleMedia as EventHandler<FetchVehicleMediaEvent, VehiclePartsInteractionBlocState2>);
+    on<ModifyAcceptedEvent>(_onModifyAcceptedStatus as EventHandler<ModifyAcceptedEvent, VehiclePartsInteractionBlocState2>);
+    on<SubmitQualityCheckStatusEvent>(_onSubmitQualityCheckStatus as EventHandler<SubmitQualityCheckStatusEvent, VehiclePartsInteractionBlocState2>);
+    on<ModifyVehicleExaminationPageIndex>(_onModifyVehicleExaminationPageIndex as EventHandler<ModifyVehicleExaminationPageIndex, VehiclePartsInteractionBlocState2>);
+     on<AddHotspotEvent>(_onAddHotspot as EventHandler<AddHotspotEvent, VehiclePartsInteractionBlocState2>);
   }
 
   final Repository _repo;
   
-  void _onAddHotspot(AddHotspotEvent event, Emitter<VehiclePartsInteractionBlocState> emit){
+  void _onAddHotspot(AddHotspotEvent event, Emitter<VehiclePartsInteractionBlocState2> emit){
       state.mapMedia.putIfAbsent(
         event.name,
         () {
-          return VehiclePartMedia(name: event.name, isUploaded: false, images: [],comments: "");
+          return VehiclePartMedia2(name: event.name,normalPosition: event.normal,dataPosition: event.position, isUploaded: false, images: [],comments: "");
         },
       );
       emit(state.copyWith(state.mapMedia, state.status));
   }
 
-  void _onAddComments(AddCommentsEvent event, Emitter<VehiclePartsInteractionBlocState> emit) {
+  void _onAddComments(AddCommentsEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
     if (state.mapMedia.containsKey(event.name)) {
       state.mapMedia[event.name]!.comments = event.comments;
     } else {
       state.mapMedia.putIfAbsent(
         event.name,
         () {
-          return VehiclePartMedia(name: event.name, isUploaded: false, images: []);
+          return VehiclePartMedia2(name: event.name, isUploaded: false, images: []);
         },
       );
     }
     state.mapMedia[event.name]!.isUploaded = false;
   }
 
-  void _onAddImage(AddImageEvent event, Emitter<VehiclePartsInteractionBlocState> emit) {
+  void _onAddImage(AddImageEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
     if (state.mapMedia.containsKey(event.name)) {
       state.mapMedia[event.name]?.images ??= [];
       state.mapMedia[event.name]!.images!.add(event.image);
@@ -69,7 +69,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
       state.mapMedia.putIfAbsent(
         event.name,
         () {
-          return VehiclePartMedia(name: event.name, isUploaded: false, comments: "", images: [event.image]);
+          return VehiclePartMedia2(name: event.name, isUploaded: false, comments: "", images: [event.image]);
         },
       );
     }
@@ -77,12 +77,12 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     emit(state.copyWith(state.mapMedia, state.status));
   }
 
-  void _onRemoveImage(RemoveImageEvent event, Emitter<VehiclePartsInteractionBlocState> emit) {
+  void _onRemoveImage(RemoveImageEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
     state.mapMedia[event.name]!.images!.removeAt(event.index);
     emit(state.copyWith(state.mapMedia, state.status));
   }
 
-  void _onSubmitBodyPartVehicleMedia(SubmitBodyPartVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState> emit) async {
+  void _onSubmitBodyPartVehicleMedia(SubmitBodyPartVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
     emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.loading));
     Map<String, dynamic> partJson = {};
     List<String> compressedImagesBase64List = [];
@@ -112,7 +112,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     );
   }
 
-  void _onFetchVehicleMedia(FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState> emit) async {
+  void _onFetchVehicleMedia(FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
     emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.loading));
     late Map<String, dynamic> imageMedia;
     try {
@@ -138,7 +138,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
       }
       state.mapMedia.putIfAbsent(
           entry.key,
-          () => VehiclePartMedia(
+          () => VehiclePartMedia2(
               name: entry.key,
               images: images,
               comments: entry.value["comments"],
@@ -153,12 +153,12 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
   }
 
-  void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState> emit) {
+  void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
     state.mapMedia[event.bodyPartName]!.isAccepted = event.isAccepted;
     emit(state.copyWith(state.mapMedia, state.status));
   }
 
-  void _onSubmitQualityCheckStatus(SubmitQualityCheckStatusEvent event, Emitter<VehiclePartsInteractionBlocState> emit) async {
+  void _onSubmitQualityCheckStatus(SubmitQualityCheckStatusEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
     emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.loading));
     Map<String, dynamic> qualityCheckJson = {};
     for (var entry in state.mapMedia.entries) {
@@ -176,7 +176,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     });
   }
 
-void _onModifyVehicleExaminationPageIndex(ModifyVehicleExaminationPageIndex event, Emitter<VehiclePartsInteractionBlocState> emit){
+void _onModifyVehicleExaminationPageIndex(ModifyVehicleExaminationPageIndex event, Emitter<VehiclePartsInteractionBlocState2> emit){
   emit(state.copyWith(state.mapMedia,state.status,vehicleExaminationPageIndex: event.index));
 }
 

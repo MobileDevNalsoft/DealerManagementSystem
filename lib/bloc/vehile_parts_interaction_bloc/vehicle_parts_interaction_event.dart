@@ -52,3 +52,9 @@ class ModifyVehicleExaminationPageIndex extends VehiclePartsInteractionBlocEvent
   int index;
   ModifyVehicleExaminationPageIndex({required this.index});
 }
+
+class AddHotspotEvent extends VehiclePartsInteractionBlocEvent {
+  String name;
+  AddHotspotEvent({required this.name});
+}
+
