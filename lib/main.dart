@@ -4,10 +4,12 @@ import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
+import 'package:dms/bloc/vehile_parts_interaction_bloc_2/vehicle_parts_interaction_bloc2.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/repository/repository.dart';
+import 'package:dms/views/Vehicle_examination_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +29,8 @@ void main() async {
         BlocProvider(create: (_) => ServiceBloc(repo: getIt(), navigator: getIt())),
         BlocProvider(create: (_) => MultiBloc(repo: getIt(), navigator: getIt())),
         BlocProvider(create: (_) => AuthenticationBloc(repo: getIt(), navigator: getIt())),
-        BlocProvider(create: (_) => VehiclePartsInteractionBloc(repo: getIt(), navigator: getIt())),  
+        BlocProvider(create: (_) => VehiclePartsInteractionBloc(repo: getIt(), navigator: getIt())),
+        BlocProvider(create: (_) => VehiclePartsInteractionBloc2(repo: getIt(), navigator: getIt())),
       ],
       child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,

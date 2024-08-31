@@ -26,6 +26,7 @@ modelViewer.addEventListener("touchstart", (event) => {
           "data-position",
           positionAndNormal.position.toString()
         );
+        hotspot.id=s;
         hotspot.setAttribute(
           "data-normal",
           positionAndNormal.normal.toString()
@@ -53,7 +54,7 @@ modelViewer.addEventListener("touchstart", (event) => {
         hotspot.setAttribute("id", s);
        
         modelViewer.appendChild(hotspot);
-        window.flutterChannel.postMessage(JSON.stringify({"type":"hotspot-create","position":positionAndNormal.position.toString(),"normal:":positionAndNormal.normal.toString(),"name":s}));
+        window.flutterChannel.postMessage(JSON.stringify({"type":"hotspot-create","position":positionAndNormal.position.toString(),"normal":positionAndNormal.normal.toString(),"name":s}));
       }
     }
   }, 800);
@@ -72,4 +73,8 @@ modelViewer.ontouchmove = (event) => {
   clearTimeout(longPressTimer);
 };
 
-// window.flutterChannel.onMessageReceived(())
+window.addEventListener('message', function(event) {
+  console.log( "data from dart"+event.data);
+
+  document.getElementById(event.data).style.backgroundColor="orange";
+});
