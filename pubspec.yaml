@@ -117,9 +117,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/3d_models/
     - assets/images/
     - assets/lottie/
     - assets/jsons/
+    - assets/
 
   #   - images/a_dot_ham.jpeg
 
