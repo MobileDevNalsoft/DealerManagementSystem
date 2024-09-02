@@ -60,3 +60,8 @@ class AddHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
   AddHotspotEvent({required this.name,required this.normal,required this.position});
 }
 
+class RemoveHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
+  String name;
+  RemoveHotspotEvent({required this.name});
+}
+

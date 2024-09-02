@@ -1,7 +1,21 @@
 
+import 'dart:convert';
+import 'dart:io';
+import 'package:dms/bloc/multi/multi_bloc.dart';
+import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/bloc/vehile_parts_interaction_bloc_2/vehicle_parts_interaction_bloc2.dart';
+import 'package:dms/models/hotspots.dart';
+import 'package:dms/network_handler_mixin/network_handler.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class Madhan3D extends StatefulWidget {
   const Madhan3D({super.key});
@@ -10,41 +24,420 @@ class Madhan3D extends StatefulWidget {
   State<Madhan3D> createState() => _Madhan3DState();
 }
 
-class _Madhan3DState extends State<Madhan3D> {
+class _Madhan3DState extends State<Madhan3D> with ConnectivityMixin{
+  
+  // related to UI when tapped on 3D model hotspot
+  final PageController _pageController = PageController(initialPage: 0);
+  final AutoScrollController _autoScrollController = AutoScrollController();
 
-  Future<String> loadMadhanJS() async {
+  FocusNode commentsFocus = FocusNode();
+  TextEditingController commentsController = TextEditingController();
+
+  late WebViewController webViewController ;
+  
+  // bloc variables
+  late VehiclePartsInteractionBloc2 _interactionBloc;
+  late MultiBloc _multiBloc;
+  late ServiceBloc _serviceBloc;
+
+  DoublyLinkedHotspots linkedHotspots = DoublyLinkedHotspots();
+
+  List hotSpots=[];
+  
+  // method to load java script file
+  Future<String> loadJS() async {
     return await rootBundle.loadString('assets/madhan.js');
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Model Viewer')),
-        body: FutureBuilder(
-          future: loadMadhanJS(),
-          builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done){
-            return ModelViewer(
-              backgroundColor: Color.fromARGB(0xFF, 0xEE, 0xEE, 0xEE),
-              src: 'assets/3d_models/sedan.glb',
-              iosSrc: 'assets/3d_models/sedan.glb',
-              relatedJs: snapshot.data,
-              disableTap: true,
-              disableZoom: true,
-              id: 'model',
-              onWebViewCreated: (value) {
-                print('value $value');
-              },
-              javascriptChannels: {JavascriptChannel('madhanChannel', onMessageReceived: (message) {
-                print('Message ${message.message}');
-              })},
-            );}
-            return CircularProgressIndicator();
-          }
-        ),
-      ),
+  void initState() {
+    super.initState();
+    _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
+    _multiBloc = context.read<MultiBloc>();
+    _serviceBloc = context.read<ServiceBloc>();
+    _interactionBloc.state.mapMedia = {};
+  }
+
+  void _changeButtonColors(String name) async {
+    await webViewController.runJavaScript(
+      'changeHotSpotColors("$name")'
     );
+  }
+
+  void _removeButton(String name) async {
+    await webViewController.runJavaScript('removeButton("$name")');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+     // for responsive UI
+    Size size = MediaQuery.sizeOf(context);
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+    
+    final javascriptChannel = JavascriptChannel(
+      'flutterChannel',
+      onMessageReceived: (message) {
+        Map<String, dynamic> data = jsonDecode(message.message);
+        
+        if(data["type"]=="hotspot-create"){
+          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+          _interactionBloc.add(AddHotspotEvent(name: data["name"]!,position: data["position"],normal: data["normal"]));
+          if(_pageController.hasClients){
+            int index = _interactionBloc.state.mapMedia.length+1;
+            _pageController.jumpToPage(index);
+            _autoScrollController.scrollToIndex(index);
+          }
+        }
+        else if(data["type"]=="hotspot-click"){
+          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+          int index= _interactionBloc.state.mapMedia.entries.toList().indexWhere((element)=>element.key==data["name"]);
+          _pageController.jumpToPage(index);
+          _autoScrollController.scrollToIndex(index);
+        }
+      },
+    );
+
+    return Scaffold(
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Madhan 3D Practice'),
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.black45, Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.1, 0.5, 1])),
+          child: Stack(
+            children: [
+              FutureBuilder(
+                        future: loadJS(),
+                        builder: (context, snapshot) {
+                          return snapshot.hasData ? SizedBox(
+                            height: size.height*0.4,
+                            width: size.width*0.98,
+                            child: ModelViewer(
+                                          src: 'assets/3d_models/sedan.glb',
+                                          iosSrc: 'assets/3d_models/sedan.glb',
+                                          relatedJs: snapshot.data,
+                                          disableTap: true,
+                                          disableZoom: true,
+                                          id: 'model',
+                                          onWebViewCreated: (value) {
+                                            webViewController = value;
+                                          },
+                                          javascriptChannels: {javascriptChannel},
+                            ),
+                          ): const CircularProgressIndicator();
+                        }
+                      ),
+              if (context.watch<VehiclePartsInteractionBloc2>().state.mapMedia.isNotEmpty)
+                Positioned(
+                  bottom: 0,
+                    child: Container(
+                      height: size.height*0.44,
+                      width: size.width,
+                  color: const Color.fromRGBO(26, 26, 27, 1),
+                  child: BlocBuilder<VehiclePartsInteractionBloc2, VehiclePartsInteractionBlocState2>(
+                    
+                    builder: (context, state) {
+                         hotSpots = state.mapMedia.entries.toList();
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: size.height * 0.064,
+                            width: size.width,
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                controller: _autoScrollController,
+                                itemBuilder: (context, index) {
+                                  return AutoScrollTag(
+                                    key: ValueKey(index),
+                                    controller: _autoScrollController,
+                                    index: index,
+                                    child: InkWell(
+                                      onTap: () {
+                                        _multiBloc.add(ModifyVehicleInteractionStatus(
+                                            selectedBodyPart: hotSpots.elementAt(index).key, isTapped: _multiBloc.state.isTapped));
+                                        _pageController.jumpToPage(index);
+                                        _changeButtonColors(hotSpots.elementAt(index).key);
+                                        state.vehicleExaminationPageIndex = index;
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(16),
+                                            color: state.vehicleExaminationPageIndex == index ? Colors.orange.shade200 : Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: state.vehicleExaminationPageIndex == index ? 0 : 5,
+                                                  blurStyle: BlurStyle.outer,
+                                                  spreadRadius: 0,
+                                                  color: Colors.orange.shade200,
+                                                  offset: const Offset(0, 0))
+                                            ]),
+                                        margin: EdgeInsets.all(size.width * 0.02),
+                                        child: Center(
+                                            child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Gap(size.width * 0.024),
+                                            Text(
+                                              hotSpots.elementAt(index).key,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                _removeButton(hotSpots.elementAt(index).key);
+                                                
+                                                _interactionBloc.add(RemoveHotspotEvent(name: hotSpots.elementAt(index).key));
+                                                if(state.mapMedia.length > 1){
+                                                  _pageController.jumpToPage(index-1);
+                                                  _autoScrollController.jumpTo(index-1);
+                                                  _changeButtonColors(hotSpots.elementAt(index-1).key);
+                                                  _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(index-1).key, isTapped: true));
+                                                }
+                                              },
+                                              icon: const Icon(
+                                                Icons.cancel,
+                                              ),
+                                              padding: EdgeInsets.zero,
+                                              visualDensity: VisualDensity.compact,
+                                            )
+                                          ],
+                                        )),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: state.mapMedia.length),
+                          ),
+                          Expanded(
+                            child: PageView.builder(
+                              controller: _pageController,
+                              physics: const ScrollPhysics(),
+                              onPageChanged: (value) {
+                                _multiBloc.add(ModifyVehicleInteractionStatus(
+                                    selectedBodyPart: hotSpots.elementAt(value).key, isTapped: _multiBloc.state.isTapped));
+                                _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: value));
+                                _autoScrollController.scrollToIndex(value,
+                                    duration: const Duration(milliseconds: 500), preferPosition: AutoScrollPosition.begin);
+                              },
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.mapMedia.length,
+                              itemBuilder: (context, pageIndex) {
+                                // GlobalKey _formKey = GlobalKey();
+                                return Container(
+                                  padding: EdgeInsets.zero,
+                                  margin: EdgeInsets.zero,
+                                  width: isMobile ? size.width * 0.9 : size.width * 0.32,
+                                  // decoration: BoxDecoration(color: const Color.fromRGBO(26, 26, 27, 1), borderRadius: BorderRadius.circular(24), boxShadow: [
+                                  //   BoxShadow(
+                                  //     blurRadius: 6,
+                                  //     blurStyle: BlurStyle.normal,
+                                  //     spreadRadius: 4,
+                                  //     color: Colors.orange.shade200,
+                                  //   )
+                                  // ]),
+
+                                  // elevation: 10,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Gap(8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        height: size.height * 0.15,
+                                        //  width: size.width * 0.65,
+                                        child: Stack(
+                                          children: [
+                                            TextFormField(
+                                              // key: _formKey,
+                                              // focusNode: commentsFocus,
+                                              controller: TextEditingController(text: state.mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!.comments),
+                                              // initialValue: state.mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!.comments,
+                                              maxLines: 10,
+                                              cursorColor: Colors.white,
+                                              style: const TextStyle(color: Colors.white),
+                                              decoration: InputDecoration(
+                                                
+                                                  hintStyle: const TextStyle(fontSize: 16, color: Colors.white60),
+                                                  fillColor: const Color.fromRGBO(38, 38, 40, 1),
+                                                  filled: true,
+                                                  contentPadding: const EdgeInsets.only(left: 16, top: 16),
+                                                  hintText: "Comments",
+                                                  focusedBorder: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(16.0),
+                                                    borderSide: const BorderSide(
+                                                      color: Color.fromARGB(255, 145, 95, 22),
+                                                    ),
+                                                  ),
+                                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
+                                              onChanged: (value) {
+                                                _interactionBloc.add(
+                                                    AddCommentsEvent(name: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name, comments: value));
+                                              },
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  onPressed: () async {
+                                                    // commentsFocus.unfocus();
+                                                    if (state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images!.length < 3) {
+                                                      ImagePicker imagePicker = ImagePicker();
+                                                      XFile? image =
+                                                          await imagePicker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
+                                                      if (image != null) {
+                                                        _interactionBloc.add(
+                                                            AddImageEvent(name: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name, image: image));
+                                                      }
+                                                    }
+                                                  },
+                                                  icon: Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.add_photo_alternate_rounded,
+                                                        color: Colors.white60,
+                                                      ),
+                                                      ColorFiltered(
+                                                        colorFilter: ColorFilter.mode(Colors.orange.shade200, BlendMode.srcATop),
+                                                        child: Lottie.asset(
+                                                          "assets/lottie/highlight.json",
+                                                          width: 50,
+                                                          // controller: animationController,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Gap(8),
+                                      Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                          height: hotSpots.elementAt(pageIndex).value.images == null ||
+                                                  hotSpots.elementAt(pageIndex).value.images!.isEmpty
+                                              ? 0
+                                              : isMobile
+                                                  ? size.height * 0.14
+                                                  : size.height * 0.18,
+                                          child: GridView.builder(
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 16, mainAxisSpacing: 16),
+                                            itemBuilder: (context, index) {
+                                              return Stack(fit: StackFit.expand, children: [
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  child: Image.file(
+                                                    File(hotSpots.elementAt(pageIndex).value.images![index].path),
+                                                    fit: BoxFit.fitWidth,
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                    top: -14,
+                                                    right: -14.0,
+                                                    child: IconButton(
+                                                        onPressed: () {
+                                                          if (context
+                                                                  .read<VehiclePartsInteractionBloc2>()
+                                                                  .state
+                                                                  .mapMedia[state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name]!
+                                                                  .images !=
+                                                              null) {
+                                                            _interactionBloc.add(RemoveImageEvent(
+                                                                name: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name, index: index));
+                                                          }
+                                                        },
+                                                        icon: const CircleAvatar(
+                                                          radius: 8,
+                                                          backgroundColor: Colors.white,
+                                                          child: Icon(
+                                                            Icons.remove_circle_rounded,
+                                                            color: Color.fromARGB(255, 167, 38, 38),
+                                                            size: 16,
+                                                          ),
+                                                        )))
+                                              ]);
+                                            },
+                                            itemCount: hotSpots.elementAt(pageIndex).value.images == null
+                                                ? 0
+                                                : hotSpots.elementAt(pageIndex).value.images!.length,
+                                          )),
+                                      if (state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images != null && state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images!.isNotEmpty)
+                                        InkWell(
+                                          radius: isMobile ? size.width * 0.06 : size.width * 0.024,
+                                          borderRadius: BorderRadius.circular(20),
+                                          onTap: () {
+                                            if (!isConnected()) {
+                                              DMSCustomWidgets.DMSFlushbar(size, context,
+                                                  message: 'Looks like you'
+                                                      're offline. Please check your connection and try again',
+                                                  icon: const Icon(
+                                                    Icons.error,
+                                                    color: Colors.white,
+                                                  ));
+                                              return;
+                                            }
+                                            // commentsFocus.unfocus();
+                                            if (state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.comments!.trim().isEmpty) {
+                                              commentsFocus.requestFocus();
+                                              DMSCustomWidgets.DMSFlushbar(
+                                                size,
+                                                context,
+                                                message: "Please add comments",
+                                                icon: const Icon(
+                                                  Icons.error,
+                                                  color: Colors.white,
+                                                ),
+                                              );
+                                            } else {
+                                              //use service/jobcard number
+                                              print(_serviceBloc.state.jobCardNo);
+                                              _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
+                                                  bodyPartName: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name, jobCardNo: _serviceBloc.state.jobCardNo!
+                                                  // 'JC-${_serviceBloc.state.service!.location!.substring(0, 3).toUpperCase()}-${_serviceBloc.state.service!.kms.toString().substring(0, 2)}'
+                                                  ) as VehiclePartsInteractionBlocEvent2);
+                                            }
+                                          },
+                                          child: IntrinsicWidth(
+                                            child: Container(
+                                                alignment: Alignment.center,
+                                                height: size.height * 0.04,
+                                                padding: const EdgeInsets.all(8.0),
+                                                // width: isMobile ? size.width * 0.2 : size.width * 0.08,
+                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: const [
+                                                  BoxShadow(
+                                                      blurRadius: 8, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Color.fromRGBO(255, 204, 128, 1), offset: Offset(0, 0))
+                                                ]),
+                                                child:  Text(
+                                                 (hotSpots.last.key!=state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name)? 'Upload':" Upload & Save",
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                                                )),
+                                          ),
+                                        ),
+                                      // const Gap(16)
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ))
+            ],
+          ),
+        )
+      );
   }
 }
 

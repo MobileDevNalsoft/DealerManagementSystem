@@ -1,18 +1,13 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
-import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/vehicle_parts_media2.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/repository/repository.dart';
-import 'package:dms/views/quality_check.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'vehicle_parts_interaction_event2.dart';
@@ -33,6 +28,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     on<SubmitQualityCheckStatusEvent>(_onSubmitQualityCheckStatus as EventHandler<SubmitQualityCheckStatusEvent, VehiclePartsInteractionBlocState2>);
     on<ModifyVehicleExaminationPageIndex>(_onModifyVehicleExaminationPageIndex as EventHandler<ModifyVehicleExaminationPageIndex, VehiclePartsInteractionBlocState2>);
      on<AddHotspotEvent>(_onAddHotspot as EventHandler<AddHotspotEvent, VehiclePartsInteractionBlocState2>);
+     on<RemoveHotspotEvent>(_onRemoveHotspot as EventHandler<RemoveHotspotEvent, VehiclePartsInteractionBlocState2>);
   }
 
   final Repository _repo;
@@ -44,6 +40,11 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
           return VehiclePartMedia2(name: event.name,normalPosition: event.normal,dataPosition: event.position, isUploaded: false, images: [],comments: "");
         },
       );
+      emit(state.copyWith(state.mapMedia, state.status));
+  }
+
+  void _onRemoveHotspot(RemoveHotspotEvent event, Emitter<VehiclePartsInteractionBlocState2> emit){
+      state.mapMedia.removeWhere((e, v) => e == event.name);
       emit(state.copyWith(state.mapMedia, state.status));
   }
 

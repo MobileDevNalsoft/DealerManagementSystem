@@ -1,22 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc_2/vehicle_parts_interaction_bloc2.dart';
-import 'package:dms/models/vehicle_parts_media2.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -27,26 +22,30 @@ class VehicleExamination2 extends StatefulWidget {
 }
 
 class _VehicleExamination2State extends State<VehicleExamination2> with SingleTickerProviderStateMixin,ConnectivityMixin {
-  DraggableScrollableController draggableScrollableController = DraggableScrollableController();
-  late VehiclePartsInteractionBloc2 _interactionBloc;
-  late AnimationController bottomSheetController;
+  
+  // related to UI when tapped on 3D model hotspot
   final PageController _pageController = PageController(initialPage: 0);
   final AutoScrollController _autoScrollController = AutoScrollController();
+
   FocusNode commentsFocus = FocusNode();
   TextEditingController commentsController = TextEditingController();
+
   late WebViewController webViewController ;
   
+  // bloc variables
+  late VehiclePartsInteractionBloc2 _interactionBloc;
   late MultiBloc _multiBloc;
+
   List hotSpots=[];
-  Future loadJs() async {
+  
+  // method to load java script file
+  Future<String> loadJs() async {
     return await rootBundle.loadString('assets/index.js');
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    bottomSheetController = AnimationController(vsync: this);
     _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
     _multiBloc = context.read<MultiBloc>();
     _interactionBloc.state.mapMedia = {};
@@ -54,19 +53,21 @@ class _VehicleExamination2State extends State<VehicleExamination2> with SingleTi
 
   @override
   Widget build(BuildContext context) {
+
+    // for responsive UI
     Size size = MediaQuery.sizeOf(context);
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     
-    final _javascriptChannel = JavascriptChannel(
+    final javascriptChannel = JavascriptChannel(
       'flutterChannel',
       onMessageReceived: (message) {
-        print('Received message from JavaScript: ${message.message.runtimeType}');
+        print('Received message from JavaScript: ${message.message}');
 
         Map<String, dynamic> data = jsonDecode(message.message);
-         if(data["type"]=="hotspot-create"){
-        _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
-        context.read<VehiclePartsInteractionBloc2>().add(AddHotspotEvent(name: data["name"]!,position: data["position"],normal: data["normal"]));
         
+        if(data["type"]=="hotspot-create"){
+          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+          _interactionBloc.add(AddHotspotEvent(name: data["name"]!,position: data["position"],normal: data["normal"]));
         }
         else if(data["type"]=="hotspot-click"){
         
@@ -142,10 +143,10 @@ class _VehicleExamination2State extends State<VehicleExamination2> with SingleTi
                             relatedJs: snapshot.data,
                             disableZoom: true,
                             disableTap: true,
-                            javascriptChannels: {_javascriptChannel},
+                            javascriptChannels: {javascriptChannel},
                                           
                             onWebViewCreated: (value) {
-                              webViewController =value;
+                              webViewController = value;
                               print("value $value");
                             },
                           ),
