@@ -26,26 +26,28 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     on<FetchVehicleMediaEvent>(_onFetchVehicleMedia as EventHandler<FetchVehicleMediaEvent, VehiclePartsInteractionBlocState2>);
     on<ModifyAcceptedEvent>(_onModifyAcceptedStatus as EventHandler<ModifyAcceptedEvent, VehiclePartsInteractionBlocState2>);
     on<SubmitQualityCheckStatusEvent>(_onSubmitQualityCheckStatus as EventHandler<SubmitQualityCheckStatusEvent, VehiclePartsInteractionBlocState2>);
-    on<ModifyVehicleExaminationPageIndex>(_onModifyVehicleExaminationPageIndex as EventHandler<ModifyVehicleExaminationPageIndex, VehiclePartsInteractionBlocState2>);
-     on<AddHotspotEvent>(_onAddHotspot as EventHandler<AddHotspotEvent, VehiclePartsInteractionBlocState2>);
-     on<RemoveHotspotEvent>(_onRemoveHotspot as EventHandler<RemoveHotspotEvent, VehiclePartsInteractionBlocState2>);
+    on<ModifyVehicleExaminationPageIndex>(
+        _onModifyVehicleExaminationPageIndex as EventHandler<ModifyVehicleExaminationPageIndex, VehiclePartsInteractionBlocState2>);
+    on<AddHotspotEvent>(_onAddHotspot as EventHandler<AddHotspotEvent, VehiclePartsInteractionBlocState2>);
+    on<RemoveHotspotEvent>(_onRemoveHotspot as EventHandler<RemoveHotspotEvent, VehiclePartsInteractionBlocState2>);
+    on<BodyPartSelected>(_onModifyVehicleInteractionStatus);
   }
 
   final Repository _repo;
-  
-  void _onAddHotspot(AddHotspotEvent event, Emitter<VehiclePartsInteractionBlocState2> emit){
-      state.mapMedia.putIfAbsent(
-        event.name,
-        () {
-          return VehiclePartMedia2(name: event.name,normalPosition: event.normal,dataPosition: event.position, isUploaded: false, images: [],comments: "");
-        },
-      );
-      emit(state.copyWith(state.mapMedia, state.status));
+
+  void _onAddHotspot(AddHotspotEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+    state.mapMedia.putIfAbsent(
+      event.name,
+      () {
+        return VehiclePartMedia2(name: event.name, normalPosition: event.normal, dataPosition: event.position, isUploaded: false, images: [], comments: "");
+      },
+    );
+    emit(state.copyWith(state.mapMedia, state.status));
   }
 
-  void _onRemoveHotspot(RemoveHotspotEvent event, Emitter<VehiclePartsInteractionBlocState2> emit){
-      state.mapMedia.removeWhere((e, v) => e == event.name);
-      emit(state.copyWith(state.mapMedia, state.status));
+  void _onRemoveHotspot(RemoveHotspotEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+    state.mapMedia.removeWhere((e, v) => e == event.name);
+    emit(state.copyWith(state.mapMedia, state.status));
   }
 
   void _onAddComments(AddCommentsEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
@@ -113,8 +115,12 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     );
   }
 
+  void _onModifyVehicleInteractionStatus(BodyPartSelected event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
+  }
+
   void _onFetchVehicleMedia(FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
-    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.loading));
+    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.loading, mediaJsonStatus: MediaJsonStatus.loading));
     late Map<String, dynamic> imageMedia;
     try {
       imageMedia = jsonDecode(await _repo.getImage(event.jobCardNo));
@@ -143,6 +149,8 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
               name: entry.key,
               images: images,
               comments: entry.value["comments"],
+              dataPosition: entry.value["position"],
+              normalPosition: entry.value["normal"],
               isUploaded: false,
               isAccepted: entry.value["isAccepted"] != null
                   ? entry.value["isAccepted"] == "true"
@@ -151,7 +159,8 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
                   : null,
               reasonForRejection: entry.value["rejectedReason"]));
     }
-    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
+    emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial,
+        mediaJsonStatus: MediaJsonStatus.success, selectedGeneralBodyPart: state.mapMedia.entries.first.key));
   }
 
   void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
@@ -177,8 +186,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     });
   }
 
-void _onModifyVehicleExaminationPageIndex(ModifyVehicleExaminationPageIndex event, Emitter<VehiclePartsInteractionBlocState2> emit){
-  emit(state.copyWith(state.mapMedia,state.status,vehicleExaminationPageIndex: event.index));
-}
-
+  void _onModifyVehicleExaminationPageIndex(ModifyVehicleExaminationPageIndex event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+    emit(state.copyWith(state.mapMedia, state.status, vehicleExaminationPageIndex: event.index));
+  }
 }

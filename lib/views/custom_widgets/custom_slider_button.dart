@@ -9,27 +9,25 @@ class CustomSliderButton extends StatefulWidget {
   /// controller for managing the slider button's state
   /// (position and callbacks).
   final SliderButtonController? controller;
-  final Decoration decoration;
+  final Decoration? decoration;
   bool isMobile;
   final Widget leftLabel;
   final void Function() onLeftLabelReached;
   final void Function() onRightLabelReached;
   final void Function() onNoStatus;
   final Widget rightLabel;
-  final Widget icon;
   CustomSliderButton(
       {Key? key,
       this.height = 45,
-      this.width = 100,
+      this.width = 190,
       this.isMobile = true,
       this.controller,
-      this.decoration = const BoxDecoration(),
+      this.decoration,
       required this.onLeftLabelReached,
       required this.onRightLabelReached,
       required this.onNoStatus,
       required this.leftLabel,
-      required this.rightLabel,
-      required this.icon})
+      required this.rightLabel})
       : super(key: key);
 
   @override
@@ -48,20 +46,6 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void initState() {
     super.initState();
     _initController();
-
-    /// Calculate initial positions based on widget properties.
-    _leftPosition = widget.width * (widget.isMobile ? 0.35 : 0.515);
-    _startPosition = widget.width * (widget.isMobile ? 0.735 : 0.92);
-    _rightPosition = widget.width * (widget.isMobile ? 1.12 : 1.325);
-    ;
-
-    if (_sliderButtonController.position == Position.middle) {
-      _sliderButtonController.setCurrentPosition = _startPosition;
-    } else if (_sliderButtonController.position == Position.right) {
-      _sliderButtonController.setCurrentPosition = _rightPosition;
-    } else if (_sliderButtonController.position == Position.left) {
-      _sliderButtonController.setCurrentPosition = _leftPosition;
-    }
   }
 
   /// Initializes the `_sliderButtonController` based on the provided
@@ -74,10 +58,10 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       _sliderButtonController.setCurrentPosition = details.localPosition.dx;
-      if (_sliderButtonController.currentPosition >= _rightPosition * 0.9) {
+      if (_sliderButtonController.currentPosition >= _rightPosition * 0.85) {
         _sliderButtonController.setPosition = Position.right;
         _sliderButtonController.setCurrentPosition = _rightPosition;
-      } else if (_sliderButtonController.currentPosition <= _leftPosition * 1.3) {
+      } else if (_sliderButtonController.currentPosition <= _leftPosition * 7) {
         _sliderButtonController.setPosition = Position.left;
         _sliderButtonController.setCurrentPosition = _leftPosition;
       } else {
@@ -103,6 +87,26 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
 
   @override
   Widget build(BuildContext context) {
+    /// This widget creates a draggable slider with visual feedback using a
+    /// [GestureDetector] and a [Stack] of UI elements.
+    ///
+    /// The widget listens for horizontal drag events and updates the position of
+    /// a slider button based on the user's finger movement.  It also displays
+    /// visual feedback based on the slider button's position.
+
+    /// Calculate initial positions based on widget properties.
+    _leftPosition = widget.width * 0.02;
+    _startPosition = widget.width * 0.39;
+    _rightPosition = widget.width * 0.78;
+
+    if (_sliderButtonController.position == Position.middle) {
+      _sliderButtonController.setCurrentPosition = _startPosition;
+    } else if (_sliderButtonController.position == Position.right) {
+      _sliderButtonController.setCurrentPosition = _rightPosition;
+    } else if (_sliderButtonController.position == Position.left) {
+      _sliderButtonController.setCurrentPosition = _leftPosition;
+    }
+
     if (_sliderButtonController.position != Position.moving) {
       if (_sliderButtonController.position == Position.middle) {
         _sliderButtonController.setCurrentPosition = _startPosition;
@@ -113,77 +117,80 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
       }
     }
 
-    /// This widget creates a draggable slider with visual feedback using a
-    /// [GestureDetector] and a [Stack] of UI elements.
-    ///
-    /// The widget listens for horizontal drag events and updates the position of
-    /// a slider button based on the user's finger movement.  It also displays
-    /// visual feedback based on the slider button's position.
     return GestureDetector(
       onHorizontalDragUpdate: _onPanUpdate,
       onHorizontalDragEnd: _onPanEnd,
       onHorizontalDragStart: (details) {
         _sliderButtonController.position = Position.moving;
       },
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              decoration: widget.decoration,
-              width: widget.width,
-              height: widget.height,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: Shimmer.fromColors(
-                          // This defines the shimmer animation for the left label.
-                          direction: ShimmerDirection.rtl,
-                          baseColor: Colors.red,
-                          highlightColor: Colors.grey.shade100,
-                          enabled: true,
-                          child: _sliderButtonController.currentPosition != _leftPosition ? widget.leftLabel : SizedBox()),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: widget.width, maxHeight: widget.height),
+        child: Stack(
+          children: [
+            Align(
+              child: Container(
+                decoration: widget.decoration ??
+                    BoxDecoration(
+                        borderRadius: BorderRadius.circular(widget.height),
+                        color: const Color.fromRGBO(36, 38, 40, 1),
+                        boxShadow: [BoxShadow(color: Colors.orange.shade200, blurRadius: 3, spreadRadius: 0.3)]),
+                width: widget.width,
+                height: widget.height * 0.95,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: widget.width * 0.06),
+                        child: Shimmer.fromColors(
+                            // This defines the shimmer animation for the left label.
+                            direction: ShimmerDirection.rtl,
+                            baseColor: Colors.red,
+                            highlightColor: Colors.grey.shade100,
+                            enabled: true,
+                            child: _sliderButtonController.currentPosition != _leftPosition ? widget.leftLabel : const SizedBox()),
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      // This defines the shimmer animation for the right label.
-                      child: Shimmer.fromColors(
-                          baseColor: Colors.green,
-                          highlightColor: Colors.grey.shade100,
-                          enabled: true,
-                          child: _sliderButtonController.currentPosition != _rightPosition ? widget.rightLabel : SizedBox()),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: widget.width * 0.06),
+                        // This defines the shimmer animation for the right label.
+                        child: Shimmer.fromColors(
+                            baseColor: Colors.green,
+                            highlightColor: Colors.grey.shade100,
+                            enabled: true,
+                            child: _sliderButtonController.currentPosition != _rightPosition ? widget.rightLabel : const SizedBox()),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            left: _sliderButtonController.currentPosition,
-            top: widget.height * 0.055,
-            child: Container(
-              width: widget.width * (widget.isMobile ? 0.2 : 0.16),
-              height: widget.height * 0.88,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(40),
+            Positioned(
+              left: _sliderButtonController.currentPosition,
+              top: widget.height * 0.1,
+              child: Container(
+                width: widget.width * 0.2,
+                height: widget.height * 0.8,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color.fromRGBO(36, 38, 40, 1),
+                    boxShadow: [BoxShadow(color: Colors.orange.shade200, blurRadius: 3, spreadRadius: 0.5)]),
+                child: Center(
+                    child: (_sliderButtonController.currentPosition == _rightPosition)
+                        ? Lottie.asset("assets/lottie/success.json", repeat: false)
+                        : (_sliderButtonController.currentPosition == _leftPosition)
+                            ? Lottie.asset("assets/lottie/error2.json", repeat: false)
+                            : const Icon(
+                                Icons.switch_left_rounded,
+                                color: Colors.white,
+                              )),
               ),
-              child: Center(
-                  child: (_sliderButtonController.currentPosition == _rightPosition)
-                      ? Lottie.asset("assets/lottie/success.json", repeat: false)
-                      : (_sliderButtonController.currentPosition == _leftPosition)
-                          ? Lottie.asset("assets/lottie/error2.json", repeat: false)
-                          : widget.icon),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

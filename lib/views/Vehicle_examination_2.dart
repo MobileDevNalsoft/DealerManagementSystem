@@ -41,7 +41,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
 
   // method to load java script file
   Future<String> loadJS() async {
-    return await rootBundle.loadString('assets/madhan.js');
+    return await rootBundle.loadString('assets/index.js');
   }
 
   @override
@@ -91,7 +91,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
     );
 
     return Scaffold(
-        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Madhan 3D Practice'),
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Vehicle Examination'),
         body: Container(
           height: double.infinity,
           width: double.infinity,
