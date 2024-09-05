@@ -197,10 +197,6 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                       width: size.width * (isMobile ? 0.55 : 0.5),
                                       controller: _sliderButtonController,
                                       isMobile: isMobile,
-                                      // decoration: BoxDecoration(
-                                      //   color: const Color.fromRGBO(233, 227, 227, 1),
-                                      //   borderRadius: BorderRadius.circular(isMobile ? 22 : 40),
-                                      // ),
                                       onLeftLabelReached: () {
                                         state.json![buttonsText[pageIndex]].last['status'] = 'Rejected';
                                         _serviceBloc.add(InspectionJsonUpdated(json: state.json!));

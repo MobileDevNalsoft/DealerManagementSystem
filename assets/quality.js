@@ -6,9 +6,6 @@ function receiveHotspots(name, position, normal){
         let hotspot = document.createElement("button");
         hotspot.classList.add(["hotspot"]);
 
-        console.log(position);
-        console.log(normal);
-
         hotspot.setAttribute(
             "data-position",
             position
@@ -36,11 +33,8 @@ function receiveHotspots(name, position, normal){
 }
 
 function changeHotSpotColors(selectedHotspotName, rotate) {
-    console.log('hotspot name ', selectedHotspotName);
 
     const allHotspots = document.getElementsByClassName("hotspot");
-
-    console.log('hotspots ', allHotspots);
 
     for(var hotspot of allHotspots){
         if(hotspot.getAttribute("hotspot-name") == selectedHotspotName){

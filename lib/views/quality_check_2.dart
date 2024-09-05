@@ -34,10 +34,10 @@ class QualityCheck2 extends StatefulWidget {
 
 class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, TickerProviderStateMixin {
   // related to UI when tapped on 3D model hotspot
-  final ScrollController _listController = ScrollController();
-  final AutoScrollController _autoScrollController = AutoScrollController();
+  final ScrollController _listController = ScrollController(initialScrollOffset: 0);
+  final AutoScrollController _autoScrollController = AutoScrollController(initialScrollOffset: 0);
 
-  final SliderButtonController _sliderButtonController = SliderButtonController();
+  List<SliderButtonController> sliderButtonControllers = [];
 
   List<TextEditingController>? textControllers;
 
@@ -82,6 +82,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
     _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
     _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+    _interactionBloc.state.vehicleExaminationPageIndex = 0;
     tween = Tween(begin: 0.0, end: (sharedPreferences.getBool('isMobile') ?? true ? 0.8 : 1));
     animationController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
     animation = CurvedAnimation(parent: animationController, curve: Curves.easeIn).drive(tween);
@@ -168,7 +169,10 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                               listener: (context, state) {
                                 if (state.mediaJsonStatus == MediaJsonStatus.success) {
                                   state.mapMedia
-                                      .forEach((e, v) => webViewController.runJavaScript('receiveHotspots("$e","${v.dataPosition}", "${v.normalPosition}")'));
+                                      .forEach((e, v) {
+                                        webViewController.runJavaScript('receiveHotspots("$e","${v.dataPosition}", "${v.normalPosition}")');
+                                        sliderButtonControllers.add(SliderButtonController());
+                                      });
                                   _changeButtonColors(state.mapMedia.entries.first.key, false);
                                 }
                               },
@@ -203,15 +207,10 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
                         return DraggableScrollableSheet(
                           controller: draggableScrollableController,
-
-                          // snap: true,
-                          // snapAnimationDuration: const Duration(milliseconds: 500),
-                          // shouldCloseOnMinExtent: true,
-                          minChildSize: 0.48,
+                          minChildSize: 0.5,
                           // Bottom sheet sizes
                           maxChildSize: 1,
-                          initialChildSize: 0.48,
-                          // snapSizes: [],
+                          initialChildSize: 0.5,
                           builder: (context, scrollController) {
                             return Container(
                               height: size.height * 0.2,
@@ -313,12 +312,14 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                         physics: const NeverScrollableScrollPhysics(),
                                         scrollDirection: Axis.horizontal,
                                         children: state.mapMedia.entries.map((e) {
+                                          int index = state.mapMedia.keys.toList().indexOf(e.key);
+                                          print('insets ${MediaQuery.of(context).viewInsets.bottom}');
                                           if (e.value.isAccepted == null) {
-                                            _sliderButtonController.position = Position.middle;
+                                            sliderButtonControllers[index].position = Position.middle;
                                           } else if (e.value.isAccepted != null && e.value.isAccepted! == true) {
-                                            _sliderButtonController.position = Position.right;
-                                          } else {
-                                            _sliderButtonController.position = Position.left;
+                                            sliderButtonControllers[index].position = Position.right;
+                                          } else if (e.value.isAccepted != null && e.value.isAccepted! == false){
+                                            sliderButtonControllers[index].position = Position.left;
                                           }
                                           return !state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart)
                                               ? const Padding(
@@ -474,7 +475,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                         ),
                                                                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
                                                                     onChanged: (value) {
-                                                                      state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                      state.mapMedia[context.read<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart]!
                                                                           .reasonForRejection = value;
                                                                     },
                                                                   ),
@@ -513,21 +514,25 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                             bottom: 0,
                                                             left: size.width * 0.2,
                                                             child: CustomSliderButton(
-                                                                controller: _sliderButtonController,
+                                                                controller: sliderButtonControllers[index],
                                                                 height: size.height * 0.065,
                                                                 width: size.width * 0.5,
                                                                 onLeftLabelReached: () {
                                                                   print('selected part ${state.selectedGeneralBodyPart}');
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
                                                                       bodyPartName: _interactionBloc.state.selectedGeneralBodyPart, isAccepted: false));
+                                                                  print('${state.selectedGeneralBodyPart} is accepted ${state.mapMedia[state.selectedGeneralBodyPart]!.isAccepted}');
+                                                                  
                                                                 },
                                                                 onRightLabelReached: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
                                                                       bodyPartName: _interactionBloc.state.selectedGeneralBodyPart, isAccepted: true));
+                                                                      print('${_interactionBloc.state.selectedGeneralBodyPart} is accepted ${state.mapMedia[_interactionBloc.state.selectedGeneralBodyPart]!.isAccepted}');
                                                                 },
                                                                 onNoStatus: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
                                                                       bodyPartName: _interactionBloc.state.selectedGeneralBodyPart, isAccepted: null));
+                                                                      print('${_interactionBloc.state.selectedGeneralBodyPart} is accepted ${state.mapMedia[_interactionBloc.state.selectedGeneralBodyPart]!.isAccepted}');
                                                                 },
                                                                 leftLabel: Text(
                                                                   'Rejected',
