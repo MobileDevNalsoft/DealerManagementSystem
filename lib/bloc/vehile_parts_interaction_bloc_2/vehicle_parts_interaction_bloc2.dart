@@ -101,7 +101,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
         String base64String = base64Encode(bytes);
         compressedImagesBase64List.add(base64String);
       }
-      partJson = {"images": compressedImagesBase64List, "comments": state.mapMedia[event.bodyPartName]!.comments ?? ""};
+      partJson = {"images": compressedImagesBase64List, "comments": state.mapMedia[event.bodyPartName]!.comments ?? "","position": state.mapMedia[event.bodyPartName]!.dataPosition,"normal": state.mapMedia[event.bodyPartName]!.normalPosition};
     }
     await _repo.addVehiclePartMedia(bodyPartData: partJson, id: event.jobCardNo, name: event.bodyPartName).then((onValue) {
       state.mapMedia[event.bodyPartName]!.isUploaded = true;
@@ -177,7 +177,6 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
       });
     }
     await _repo.addQualityStatus(qualityCheckJson: {"id": event.jobCardNo, "data": qualityCheckJson}).then((onValue) {
-      print("after api call");
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
       // emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
     }).onError((e, s) {

@@ -70,3 +70,9 @@ class ModifyVehicleInteractionStatus extends MultiBlocEvent {
   bool isTapped;
   ModifyVehicleInteractionStatus({required this.selectedBodyPart, required this.isTapped});
 }
+
+class ModifyRenamingStatus extends MultiBlocEvent{
+  HotspotRenamingStatus renameStatus;
+  String? renamedValue;
+  ModifyRenamingStatus({required this.renameStatus,this.renamedValue});
+}

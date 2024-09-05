@@ -1,7 +1,7 @@
 part of 'multi_bloc.dart';
 
 enum MultiStateStatus { initial, loading, success, failure }
-
+enum HotspotRenamingStatus {initial, openTextField, hotspotRenamed}
 class MultiBlocState {
   MultiBlocState(
       {this.date,
@@ -13,7 +13,10 @@ class MultiBlocState {
       this.reverseClippedWidgets = false,
       this.scaleFactor,
       this.isTapped = false,
-      this.selectedGeneralBodyPart = ''});
+      this.selectedGeneralBodyPart = '',
+      this.renamingStatus=HotspotRenamingStatus.initial,
+      this.renamedValue
+      });
 
   DateTime? date;
   int? selectedRadioOption;
@@ -25,7 +28,8 @@ class MultiBlocState {
   double? scaleFactor;
   String selectedGeneralBodyPart;
   bool isTapped;
-
+  HotspotRenamingStatus renamingStatus;
+  String? renamedValue;
   factory MultiBlocState.initial() {
     return MultiBlocState(
       date: null,
@@ -65,6 +69,8 @@ class MultiBlocState {
     double? scaleFactor,
     String? selectedGeneralBodyPart,
     bool? isTapped,
+    HotspotRenamingStatus? renamingStatus,
+    String? renamedValue
   }) {
     return MultiBlocState(
         date: date ?? this.date,
@@ -76,6 +82,9 @@ class MultiBlocState {
         reverseClippedWidgets: reverseClippedWidgets ?? this.reverseClippedWidgets,
         scaleFactor: scaleFactor ?? this.scaleFactor,
         isTapped: isTapped ?? this.isTapped,
-        selectedGeneralBodyPart: selectedGeneralBodyPart ?? this.selectedGeneralBodyPart);
+        selectedGeneralBodyPart: selectedGeneralBodyPart ?? this.selectedGeneralBodyPart,
+        renamingStatus: renamingStatus??this.renamingStatus,
+        renamedValue: renamedValue??this.renamedValue
+        );
   }
 }

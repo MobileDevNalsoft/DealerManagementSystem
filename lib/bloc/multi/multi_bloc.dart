@@ -26,6 +26,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<MultiBlocStatusChange>(_onMultiBlocStatusChange);
     on<ScaleVehicle>(_onScaleVehicle);
     on<ModifyVehicleInteractionStatus>(_onModifyVehicleInteractionStatus);
+    on<ModifyRenamingStatus>(_onModifyRenamingStatus);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -107,5 +108,8 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
 
   void _onModifyVehicleInteractionStatus(ModifyVehicleInteractionStatus event, Emitter<MultiBlocState> emit) {
     emit(state.copyWith(selectedGeneralBodyPart: event.selectedBodyPart, isTapped: event.isTapped));
+  }
+  void _onModifyRenamingStatus(ModifyRenamingStatus event, Emitter<MultiBlocState> emit) {
+    emit(state.copyWith(renamingStatus: event.renameStatus,renamedValue: event.renamedValue));
   }
 }
