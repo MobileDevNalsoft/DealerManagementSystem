@@ -24,6 +24,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
   final AutoScrollController _autoScrollController = AutoScrollController();
   final SliderButtonController _sliderButtonController = SliderButtonController();
 
+  TextEditingController rejectionController = TextEditingController();
+
   // bloc variables
   late ServiceBloc _serviceBloc;
 
@@ -200,19 +202,87 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                       onLeftLabelReached: () {
                                         state.json![buttonsText[pageIndex]].last['status'] = 'Rejected';
                                         _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                        showReasonDialog(
+                                        rejectionController.text = state.json![buttonsText[pageIndex]].last['reason'] ?? '';
+                                        DMSCustomWidgets.showReasonDialog(
                                             size: size,
-                                            state: state,
-                                            pageIndex: pageIndex,
-                                            buttonsTextLength: buttonsText.length,
-                                            page: buttonsText[pageIndex],
-                                            controller: TextEditingController());
+                                            context: context,
+                                            controller: rejectionController,
+                                            onCancel: () {
+                                              state.json![buttonsText[pageIndex]].last['status'] = '';
+                                              _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                              navigator.pop();
+                                            },
+                                            onDone: () {
+                                              state.json![buttonsText[pageIndex]].last['reason'] = rejectionController.text;
+                                              _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                              if (rejectionController.text.isEmpty) {
+                                                DMSCustomWidgets.DMSFlushbar(size, context,
+                                                    message: "Reason cannot be empty",
+                                                    icon: const Icon(
+                                                      Icons.error,
+                                                      color: Colors.white,
+                                                    ));
+                                              } else {
+                                                state.json![buttonsText[pageIndex]].last['reason'] = rejectionController.text;
+                                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                navigator.pop();
+                                                if (pageIndex == buttonsText.length - 1) {
+                                                  DMSCustomWidgets.showSubmitDialog(
+                                                      size: size,
+                                                      context: context,
+                                                      onNo: () {
+                                                        state.json![buttonsText[pageIndex]].last['status'] = '';
+                                                        _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                        navigator.pop();
+                                                      },
+                                                      onYes: () {
+                                                        if (!isConnected()) {
+                                                          DMSCustomWidgets.DMSFlushbar(size, context,
+                                                              message: 'Looks like you'
+                                                                  're offline. Please check your connection and try again.',
+                                                              icon: const Icon(
+                                                                Icons.error,
+                                                                color: Colors.white,
+                                                              ));
+                                                          return;
+                                                        }
+                                                        state.json = state.json!;
+                                                        _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                        _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.service!.jobCardNo!, inspectionIn: 'false'));
+                                                        _serviceBloc.add(GetJobCards(query: 'Location27'));
+                                                      });
+                                                }
+                                              }
+                                            });
                                       },
                                       onRightLabelReached: () {
                                         state.json![buttonsText[pageIndex]].last['status'] = 'Accepted';
                                         _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
                                         if (pageIndex == buttonsText.length - 1) {
-                                          showSubmitDialog(size: size, state: state, page: buttonsText[pageIndex]);
+                                          DMSCustomWidgets.showSubmitDialog(
+                                              size: size,
+                                              context: context,
+                                              onNo: () {
+                                                state.json![buttonsText[pageIndex]].last['status'] = '';
+                                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                navigator.pop();
+                                              },
+                                              onYes: () {
+                                                if (!isConnected()) {
+                                                  DMSCustomWidgets.DMSFlushbar(size, context,
+                                                      message: 'Looks like you'
+                                                          're offline. Please check your connection and try again.',
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.white,
+                                                      ));
+                                                  return;
+                                                }
+                                                state.json = state.json!;
+                                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.service!.jobCardNo!, inspectionIn: 'false'));
+                                                _serviceBloc.add(GetJobCards(query: 'Location27'));
+                                              });
                                         }
                                       },
                                       onNoStatus: () {
@@ -249,206 +319,5 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
         ),
       ),
     );
-  }
-
-  // dialog to show when inspection out to be submitted
-  void showSubmitDialog({required Size size, required ServiceState state, required String page}) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          bool isMobile = size.shortestSide < 500;
-          return PopScope(
-            canPop: false,
-            child: AlertDialog(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                contentPadding: EdgeInsets.only(top: size.height * 0.01),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: size.width * (isMobile ? 0.03 : 0.02)),
-                      child: Text(
-                        'Hey Advisor...\nAre you done with inspection ?',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
-                      ),
-                    ),
-                    Gap(size.height * 0.01),
-                    Container(
-                      height: size.height * 0.05,
-                      margin: EdgeInsets.all(size.height * 0.001),
-                      decoration: const BoxDecoration(
-                          color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                state.json![page].last['status'] = '';
-                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                navigator.pop();
-                              },
-                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: Text(
-                                'No',
-                                style: TextStyle(fontSize: isMobile ? 14 : 18),
-                              ),
-                            ),
-                          ),
-                          const VerticalDivider(
-                            color: Colors.white,
-                            thickness: 0.5,
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                if (!isConnected()) {
-                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message: 'Looks like you'
-                                          're offline. Please check your connection and try again.',
-                                      icon: const Icon(
-                                        Icons.error,
-                                        color: Colors.white,
-                                      ));
-                                  return;
-                                }
-                                state.json = state.json!;
-                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.service!.jobCardNo!, inspectionIn: 'false'));
-                                _serviceBloc.add(GetJobCards(query: 'Location27'));
-                              },
-                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: Text('Yes', style: TextStyle(fontSize: isMobile ? 14 : 18)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                actionsPadding: EdgeInsets.zero,
-                buttonPadding: EdgeInsets.zero),
-          );
-        });
-  }
-
-  // dialog to show when part inspection is rejected
-  void showReasonDialog(
-      {required Size size,
-      required ServiceState state,
-      required int pageIndex,
-      required int buttonsTextLength,
-      required String page,
-      required TextEditingController controller}) {
-    controller.text = state.json![page].last['reason'] ?? '';
-    bool isMobile = size.shortestSide < 500;
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return PopScope(
-            canPop: false,
-            child: AlertDialog(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                contentPadding: EdgeInsets.only(top: size.height * 0.01),
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
-                        child: Theme(
-                          data: Theme.of(context).copyWith(),
-                          child: TextFormField(
-                            selectionControls: MaterialTextSelectionControls(),
-                            controller: controller,
-                            autofocus: true,
-                            cursorColor: Colors.black,
-                            style: TextStyle(fontSize: isMobile ? 14 : 18),
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                                hintStyle: TextStyle(color: Colors.black26, fontSize: isMobile ? 14 : 18),
-                                fillColor: Colors.white,
-                                filled: true,
-                                focusedBorder: const OutlineInputBorder(),
-                                enabledBorder: const OutlineInputBorder(),
-                                focusColor: Colors.black,
-                                contentPadding: const EdgeInsets.only(left: 14, top: 14),
-                                hintText: "Reason for rejection",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                )),
-                            onChanged: (value) {
-                              state.json![page].last['reason'] = value;
-                              _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                            },
-                          ),
-                        )),
-                    Gap(size.height * 0.01),
-                    Container(
-                      height: size.height * 0.05,
-                      margin: EdgeInsets.all(size.height * 0.001),
-                      decoration: const BoxDecoration(
-                          color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                state.json![page].last['status'] = '';
-                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                navigator.pop();
-                              },
-                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(fontSize: isMobile ? 14 : 18),
-                              ),
-                            ),
-                          ),
-                          const VerticalDivider(
-                            color: Colors.white,
-                            thickness: 0.5,
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                state.json![page].last['reason'] = controller.text;
-                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                if (controller.text.isEmpty) {
-                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message: "Reason cannot be empty",
-                                      icon: const Icon(
-                                        Icons.error,
-                                        color: Colors.white,
-                                      ));
-                                } else {
-                                  navigator.pop();
-                                  if (pageIndex == buttonsTextLength - 1) {
-                                    showSubmitDialog(size: size, state: state, page: page);
-                                  }
-                                }
-                              },
-                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
-                              child: Text(
-                                'Done',
-                                style: TextStyle(fontSize: isMobile ? 14 : 18),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                actionsPadding: EdgeInsets.zero,
-                buttonPadding: EdgeInsets.zero),
-          );
-        });
   }
 }
