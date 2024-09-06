@@ -193,74 +193,40 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                   ),
                                   // slider button to accept or reject each part inspection
                                   CustomSliderButton(
-                                    height: size.height * 0.06,
-                                    width: size.width * (isMobile ? 0.6 : 0.5),
-                                    controller: _sliderButtonController,
-                                    isMobile: isMobile,
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(233, 227, 227, 1),
-                                      borderRadius: BorderRadius.circular(isMobile ? 22 : 40),
-                                    ),
-                                    onLeftLabelReached: () {
-                                      state.json![buttonsText[pageIndex]].last['status'] = 'Rejected';
-                                      _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                      showReasonDialog(
-                                          size: size,
-                                          state: state,
-                                          pageIndex: pageIndex,
-                                          buttonsTextLength: buttonsText.length,
-                                          page: buttonsText[pageIndex],
-                                          controller: TextEditingController());
-                                    },
-                                    onRightLabelReached: () {
-                                      state.json![buttonsText[pageIndex]].last['status'] = 'Accepted';
-                                      _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                      if (pageIndex == buttonsText.length - 1) {
-                                        showSubmitDialog(size: size, state: state, page: buttonsText[pageIndex]);
-                                      }
-                                    },
-                                    onNoStatus: () {
-                                      state.json![buttonsText[pageIndex]].last['status'] = '';
-                                      _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                    },
-                                    leftLabel: Text(
-                                      'Reject',
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
-                                    ),
-                                    rightLabel: Text(
-                                      'Accept',
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
-                                    ),
-                                    icon: Stack(
-                                      children: [
-                                        Container(
-                                            height: size.height * 0.1,
-                                            width: size.width * 0.1,
-                                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 15,
-                                                  blurStyle: BlurStyle.outer,
-                                                  spreadRadius: 0,
-                                                  color: Colors.orange.shade200,
-                                                  offset: const Offset(0, 0))
-                                            ])),
-                                        Positioned(
-                                            top: isMobile ? 8 : size.height * 0.016,
-                                            left: isMobile ? 0 : size.width * 0.018,
-                                            child: const Icon(
-                                              Icons.chevron_left_rounded,
-                                              color: Colors.white,
-                                            )),
-                                        Positioned(
-                                            top: isMobile ? 8 : size.height * 0.016,
-                                            right: isMobile ? 0 : size.width * 0.018,
-                                            child: const Icon(
-                                              Icons.chevron_right_rounded,
-                                              color: Colors.white,
-                                            ))
-                                      ],
-                                    ),
-                                  ),
+                                      height: size.height * 0.07,
+                                      width: size.width * (isMobile ? 0.55 : 0.5),
+                                      controller: _sliderButtonController,
+                                      isMobile: isMobile,
+                                      onLeftLabelReached: () {
+                                        state.json![buttonsText[pageIndex]].last['status'] = 'Rejected';
+                                        _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                        showReasonDialog(
+                                            size: size,
+                                            state: state,
+                                            pageIndex: pageIndex,
+                                            buttonsTextLength: buttonsText.length,
+                                            page: buttonsText[pageIndex],
+                                            controller: TextEditingController());
+                                      },
+                                      onRightLabelReached: () {
+                                        state.json![buttonsText[pageIndex]].last['status'] = 'Accepted';
+                                        _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                        if (pageIndex == buttonsText.length - 1) {
+                                          showSubmitDialog(size: size, state: state, page: buttonsText[pageIndex]);
+                                        }
+                                      },
+                                      onNoStatus: () {
+                                        state.json![buttonsText[pageIndex]].last['status'] = '';
+                                        _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                      },
+                                      leftLabel: Text(
+                                        'Reject',
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
+                                      ),
+                                      rightLabel: Text(
+                                        'Accept',
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
+                                      )),
                                   Gap(size.height * 0.02)
                                 ],
                               ),

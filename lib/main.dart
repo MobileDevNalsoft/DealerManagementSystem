@@ -36,7 +36,7 @@ void main() async {
         navigatorKey: getIt<NavigatorService>().navigatorkey,
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/vehicleExamination2',
+        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/home',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
       ),

@@ -501,6 +501,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                       BlocBuilder<MultiBloc, MultiBlocState>(
                                                         builder: (context, state) {
                                                           return CustomSliderButton1(
+                                                              interactionBloc: _interactionBloc,
                                                               size: Size(ParentSize.maxWidth, ParentSize.maxHeight),
                                                               context: context,
                                                               rightLabel: const Text(
@@ -871,6 +872,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                   builder: (context, state) {
                                                     // slider button
                                                     return CustomSliderButton1(
+                                                        interactionBloc: _interactionBloc,
                                                         size: Size(size.maxWidth, size.maxHeight),
                                                         context: context,
                                                         rightLabel: const Text(
@@ -1041,17 +1043,19 @@ class CustomSliderButton1 extends StatefulWidget {
   final Widget leftLabel;
   final Widget rightLabel;
   final Widget icon;
+  final interactionBloc;
   // ignore: prefer_typing_uninitialized_variables
   final onDismissed;
-  const CustomSliderButton1({
-    Key? key,
-    required this.size,
-    required this.context,
-    required this.leftLabel,
-    required this.rightLabel,
-    required this.icon,
-    required this.onDismissed,
-  }) : super(key: key);
+  const CustomSliderButton1(
+      {Key? key,
+      required this.size,
+      required this.context,
+      required this.leftLabel,
+      required this.rightLabel,
+      required this.icon,
+      required this.onDismissed,
+      required this.interactionBloc})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -1065,14 +1069,13 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
   late double _leftPosition;
   late double _initialPosition;
   late MultiBloc _multiBloc;
-  late VehiclePartsInteractionBloc _interactionBloc;
+  dynamic _interactionBloc;
   @override
   void initState() {
     super.initState();
-
+    _interactionBloc = widget.interactionBloc;
     // initial postitions of tthe slider
     _multiBloc = context.read<MultiBloc>();
-    _interactionBloc = context.read<VehiclePartsInteractionBloc>();
     _leftPosition = widget.size.width * 0.168;
     _startPosition = widget.size.width * 0.39;
     _rightPosition = widget.size.width * 0.63;
@@ -1166,7 +1169,7 @@ class _CustomSliderButton1State extends State<CustomSliderButton1> {
             ),
             Positioned(
               left: _position,
-              top: 1.5,
+              top: widget.size.height * 0.415,
               child: Container(
                 width: 42,
                 height: 42,

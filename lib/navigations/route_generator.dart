@@ -11,6 +11,7 @@ import 'package:dms/views/list_of_jobcards.dart';
 import 'package:dms/views/login.dart';
 import 'package:dms/views/my_jobcards.dart';
 import 'package:dms/views/quality_check.dart';
+import 'package:dms/views/quality_check_2.dart';
 import 'package:dms/views/service_booking.dart';
 import 'package:dms/views/service_history.dart';
 import 'package:dms/views/vehicle_examination.dart';
@@ -41,6 +42,21 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const VehicleExamination2(),
+          transitionDuration: const Duration(seconds: 1),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
+            final fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      case '/qualityCheck2':
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => const QualityCheck2(),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

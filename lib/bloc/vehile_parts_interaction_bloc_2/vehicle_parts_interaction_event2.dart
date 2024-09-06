@@ -47,7 +47,6 @@ class SubmitQualityCheckStatusEvent extends VehiclePartsInteractionBlocEvent2 {
   SubmitQualityCheckStatusEvent({required this.jobCardNo});
 }
 
-
 class ModifyVehicleExaminationPageIndex extends VehiclePartsInteractionBlocEvent2 {
   int index;
   ModifyVehicleExaminationPageIndex({required this.index});
@@ -57,7 +56,7 @@ class AddHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
   String name;
   String normal;
   String position;
-  AddHotspotEvent({required this.name,required this.normal,required this.position});
+  AddHotspotEvent({required this.name, required this.normal, required this.position});
 }
 
 class RemoveHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
@@ -65,3 +64,8 @@ class RemoveHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
   RemoveHotspotEvent({required this.name});
 }
 
+// triggers when any part of vehicle svg image is tapped.
+class BodyPartSelected extends VehiclePartsInteractionBlocEvent2 {
+  String selectedBodyPart;
+  BodyPartSelected({required this.selectedBodyPart});
+}

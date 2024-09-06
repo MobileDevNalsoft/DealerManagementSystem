@@ -96,6 +96,9 @@ dependencies:
   fl_chart: ^0.68.0
   vibration: ^1.8.4
   webview_flutter: 4.8.0
+  preload_page_view: ^0.2.0
+  flutter_cache_manager: ^3.4.1
+  sliver_tools: ^0.2.12
   haptic_feedback: ^0.5.1+1
 dev_dependencies:
   flutter_test:
