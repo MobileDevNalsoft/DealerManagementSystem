@@ -114,14 +114,10 @@ class RouteGenerator {
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/qualityCheck':
-        final args = settings.arguments as GeneralBodyParts;
+        final jobCardNo = settings.arguments as String;
         return Transitions.slideLeftTransition(
             QualityCheck(
-              generalParts: args.generalParts,
-              acceptedParts: args.acceptedParts,
-              rejectedParts: args.rejectedParts,
-              pendingParts: args.pendingParts,
-              jobCardNo: args.jobCardNo!,
+              jobCardNo: jobCardNo,
             ),
             settings);
       case '/serviceBooking':
@@ -159,14 +155,6 @@ class RouteGenerator {
   }
 }
 
-class GeneralBodyParts {
-  List<GeneralBodyPart>? generalParts;
-  List<GeneralBodyPart>? acceptedParts;
-  List<GeneralBodyPart>? rejectedParts;
-  List<GeneralBodyPart>? pendingParts;
-  String? jobCardNo;
-  GeneralBodyParts({this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts, this.jobCardNo});
-}
 
 class Transitions {
   static PageRouteBuilder<dynamic> slideUpTransition(Widget page, RouteSettings settings) {

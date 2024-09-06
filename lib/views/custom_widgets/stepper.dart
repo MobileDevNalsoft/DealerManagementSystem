@@ -117,30 +117,19 @@ class _StepState extends State<Step> with ConnectivityMixin {
                             switch (widget.activeStep) {
                               case 2:
                                 context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
-                                List<GeneralBodyPart> generalParts;
-                                List<GeneralBodyPart> rejectedParts;
-                                List<GeneralBodyPart> acceptedParts;
-                                List<GeneralBodyPart> pendingParts;
                                 try {
-                                  generalParts = await loadSvgImage(svgImage: 'assets/images/image.svg');
-                                  rejectedParts = await loadSvgImage(svgImage: 'assets/images/image_reject.svg');
-                                  acceptedParts = await loadSvgImage(svgImage: 'assets/images/image_accept.svg');
-                                  pendingParts = await loadSvgImage(svgImage: 'assets/images/image_pending.svg');
-                                  // ignore: use_build_context_synchronously
+                                 
+                                 
                                   context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.initial));
+                                  print("jobcardno ${widget.jobCardNo}");
                                   navigator.push('/qualityCheck',
-                                      arguments: GeneralBodyParts(
-                                          generalParts: generalParts,
-                                          rejectedParts: rejectedParts,
-                                          acceptedParts: acceptedParts,
-                                          pendingParts: pendingParts,
-                                          jobCardNo: widget.jobCardNo));
+                                      arguments: widget.jobCardNo);
                                 } catch (e) {
                                   context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.failure));
 
                                   Log.e(" caught an error $e");
                                 }
-                                navigator.push('/qualityCheck');
+                              
                               case 3:
                                 context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
                                 navigator.push('/inspectionOut');

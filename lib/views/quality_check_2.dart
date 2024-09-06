@@ -155,7 +155,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
               child: Switch(
                 value: true,
                 onChanged: (value) {
-                  navigator.pushReplacement('/qualityCheck');
+                  navigator.pushReplacement('/qualityCheck',arguments:_serviceBloc.state.service!.jobCardNo );
                 },
                 inactiveThumbColor: Colors.white,
                 inactiveTrackColor: Colors.black,
