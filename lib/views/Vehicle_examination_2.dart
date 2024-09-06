@@ -47,7 +47,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
   Future<List<String>> loadJS() async {
     List<String> resources = [];
     resources.add(await rootBundle.loadString('assets/index.js'));
-    resources.add(await rootBundle.loadString('assets/styles2.css'));
+    resources.add(await rootBundle.loadString('assets/styles.css'));
     return resources;
   }
 
