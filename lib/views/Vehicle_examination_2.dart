@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc_2/vehicle_parts_interaction_bloc2.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
+import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
   Vibration vibration = Vibration();
   FocusNode commentsFocus = FocusNode();
   TextEditingController commentsController = TextEditingController();
+  final NavigatorService navigator = getIt<NavigatorService>();
 
   late WebViewController webViewController;
 
@@ -70,26 +73,8 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
     await webViewController.runJavaScript('removeButton("$name")');
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // for responsive UI
-    Size size = MediaQuery.sizeOf(context);
-    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-
-    final javascriptChannel = JavascriptChannel(
-      'flutterChannel',
-      onMessageReceived: (message) async {
-        Map<String, dynamic> data = jsonDecode(message.message);
-
-        if (data["type"] == "hotspot-create") {
-          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
-          _interactionBloc.add(AddHotspotEvent(name: data["name"]!, position: data["position"], normal: data["normal"]));
-        } else if (data["type"] == "hotspot-click") {
-           Haptics.vibrate(HapticsType.light);
-          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
-        }
-        // bottom sheet for diaplying hotspots, comments and images
-        showModalBottomSheet(
+  void getBottomSheet(BuildContext context,Size size,bool isMobile){
+       showModalBottomSheet(
             context: context,
             elevation: 0,
             barrierColor: Colors.black.withOpacity(0.2),
@@ -548,6 +533,9 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                   jobCardNo: _serviceBloc.state.service!.jobCardNo!
                                                   // 'JC-${_serviceBloc.state.service!.location!.substring(0, 3).toUpperCase()}-${_serviceBloc.state.service!.kms.toString().substring(0, 2)}'
                                                   ) as VehiclePartsInteractionBlocEvent2);
+                                                  if(hotSpots.last.key == state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name){
+                                                    Navigator.pop(context);
+                                                  }
                                             }
                                           },
                                           child: IntrinsicWidth(
@@ -594,17 +582,47 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
             //  _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
           },
         );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // for responsive UI
+    Size size = MediaQuery.sizeOf(context);
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    final javascriptChannel = JavascriptChannel(
+      'flutterChannel',
+      onMessageReceived: (message) async {
+        Map<String, dynamic> data = jsonDecode(message.message);
+
+        if (data["type"] == "hotspot-create") {
+          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+          _interactionBloc.add(AddHotspotEvent(name: data["name"]!, position: data["position"], normal: data["normal"]));
+        } else if (data["type"] == "hotspot-click") {
+           Haptics.vibrate(HapticsType.light);
+          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+        }
+        // bottom sheet for diaplying hotspots, comments and images
+        getBottomSheet(context,size,isMobile);
         await Future.delayed(Duration(milliseconds: 300));
         index = _interactionBloc.state.mapMedia.entries.toList().indexWhere((element) => element.key == data["name"]);
         _pageController.jumpToPage(index);
         _autoScrollController.scrollToIndex(index);
         _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: index));
+       
       },
     );
 
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Vehicle Examination'),
+      appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Vehicle Examination',actions:[Container(
+            margin: EdgeInsets.only(right: size.width*0.024),
+            padding: EdgeInsets.zero,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24),boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]), 
+            child: Switch(value: true, onChanged: (value){
+              navigator.pushReplacement('/vehicleExamination');
+            },inactiveThumbColor: Colors.white,inactiveTrackColor: Colors.black,trackOutlineColor: const WidgetStatePropertyAll(Colors.black),),
+          )]),
         body: Container(
           height: double.infinity,
           width: double.infinity,
@@ -620,28 +638,73 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                   future: loadJS(),
                   builder: (context, snapshot) {
                     return snapshot.hasData
-                        ? SizedBox(
-                            height: size.height * (0.4),
-                            width: size.width * 0.98,
-                            child: ModelViewer(
-                              src: 'assets/3d_models/sedan.glb',
-                              iosSrc: 'assets/3d_models/sedan.glb',
-                              relatedJs: snapshot.data![0],
-                              relatedCss: snapshot.data![1],
-                              disableZoom: false,
-                              autoRotate: false,
-                              minCameraOrbit: '3m 3m auto', // Set minimum zoom (close)
-                              maxCameraOrbit: 'auto 5m auto', // Set maximum zoom (far)
-
-                              // scale: "1",
-                              disableTap: true,
-                              id: 'model',
-                              onWebViewCreated: (value) {
-                                webViewController = value;
-                              },
-                              javascriptChannels: {javascriptChannel},
-                            ),
-                          )
+                        ? Column(
+                          children: [
+                            SizedBox(
+                                height: size.height * (0.4),
+                                width: size.width * 0.98,
+                                child: ModelViewer(
+                                  src: 'assets/3d_models/sedan.glb',
+                                  iosSrc: 'assets/3d_models/sedan.glb',
+                                  relatedJs: snapshot.data![0],
+                                  relatedCss: snapshot.data![1],
+                                  disableZoom: false,
+                                  autoRotate: false,
+                                  minCameraOrbit: '3m 3m auto', // Set minimum zoom (close)
+                                  maxCameraOrbit: 'auto 5m auto', // Set maximum zoom (far)
+                            
+                                  // scale: "1",
+                                  disableTap: true,
+                                  id: 'model',
+                                  onWebViewCreated: (value) {
+                                    webViewController = value;
+                                  },
+                                  javascriptChannels: {javascriptChannel},
+                                ),
+                              ),
+                              Spacer(),
+                               IntrinsicWidth(
+                                 child: InkWell(onTap: () async{
+                                  
+                                  int elementIndex=0;
+                                  for (var e in _interactionBloc.state.mapMedia.entries.toList()) {if(e.value.isUploaded==false){
+                                    DMSCustomWidgets.DMSFlushbar(size, context,message: "Please upload ${e.key} data",icon: Icon(Icons.error_rounded,color: Colors.white,));
+                                    getBottomSheet(context, size, isMobile);
+                                    _changeButtonColors(e.key);
+                                    print("eleindex $elementIndex");
+                                    await Future.delayed(Duration(milliseconds: 300));
+                                    _pageController.jumpToPage(elementIndex);
+                                      _autoScrollController.scrollToIndex(elementIndex);
+                                      _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: elementIndex));
+                                       _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: e.key, isTapped: true));
+                                    return;
+                                  }
+                                  elementIndex++;
+                                  }
+                                  navigator.pushAndRemoveUntil('/listOfJobCards','/home');
+                                 },
+                                 
+                                   child: Container(
+                                                    alignment: Alignment.center,
+                                                    height: size.height * 0.04,
+                                                    margin: EdgeInsets.only(bottom: size.height*0.08),
+                                                    padding:  EdgeInsets.symmetric(horizontal: size.width*0.036),
+                                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: const [
+                                                      BoxShadow(
+                                                          blurRadius: 8,
+                                                          blurStyle: BlurStyle.outer,
+                                                          spreadRadius: 0,
+                                                          color: Color.fromRGBO(255, 204, 128, 1),
+                                                          offset: Offset(0, 0))
+                                                    ]),
+                                                    child: Text('Save',
+                                                      textAlign: TextAlign.center,
+                                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                                    )),
+                                 ),
+                               ),
+                          ],
+                        )
                         : const CircularProgressIndicator();
                   }),
               if (context.watch<VehiclePartsInteractionBloc2>().state.status == VehiclePartsInteractionStatus.loading)

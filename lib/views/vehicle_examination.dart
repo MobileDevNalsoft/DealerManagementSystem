@@ -6,6 +6,7 @@ import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
 import 'package:dms/vehiclemodule/xml_model.dart';
+import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/comments.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 class VehicleExamination extends StatefulWidget {
-  final List<GeneralBodyPart>? generalParts;
-  VehicleExamination({super.key, this.generalParts});
+  //  List<GeneralBodyPart>? generalParts;
+  VehicleExamination({
+    super.key,
+  });
 
   @override
   State<VehicleExamination> createState() => _VehicleExaminationState();
@@ -30,146 +33,168 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
     context.read<VehiclePartsInteractionBloc>().state.mapMedia = {};
   }
 
+  Future loadSvg() async {
+    return await loadSvgImage(svgImage: 'assets/images/image.svg');
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Parts Examination'),
+      appBar: DMSCustomWidgets.appBar(
+          size: size, isMobile: isMobile, title: 'Parts Examination', actions: [Container(
+            margin: EdgeInsets.only(right: size.width*0.024),
+            padding: EdgeInsets.zero,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24),boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]), 
+            child: Switch(value: false, onChanged: (value){
+              navigator.pushReplacement('/vehicleExamination2');
+            },inactiveThumbColor: Colors.white,inactiveTrackColor: Colors.black,trackOutlineColor: const WidgetStatePropertyAll(Colors.black),),
+          )]),
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Stack(
-            children: [
-              BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(listener: (context, state) {
-                if (state.status == VehiclePartsInteractionStatus.success) {
-                  DMSCustomWidgets.DMSFlushbar(size, context,
-                      message: "Successfully uploaded",
-                      icon: const Icon(
-                        Icons.cloud_upload_rounded,
-                        color: Colors.white,
-                      ));
-                  // Updating with initial parameters
-                  context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
-                }
-              }, builder: (context, state) {
-                return Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: [0.1, 0.5, 1])),
-                  child: Transform.scale(
-                    scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
-                    child: BodyCanvas(
-                      generalParts: widget.generalParts,
-                    ),
-                  ),
-                );
-              }),
-
-              //zoom in zoom out buttons
-              Positioned(
-                top: size.height * 0.35,
-                right: isMobile ? size.width * 0.05 : null,
-                left: isMobile ? null : size.width * 0.032,
-                child: Container(
-                  decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(16), boxShadow: [
-                    BoxShadow(blurRadius: 16, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                  ]),
-                  height: size.height * 0.12,
-                  width: isMobile ? size.width * 0.1 : size.width * 0.032,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: FutureBuilder(
+          future: loadSvg(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Stack(
+                children: [
+                  Stack(
                     children: [
-                      IconButton(
-                          onPressed: () {
-                            // Upper limit for zoom is 1.8
-                            if (context.read<MultiBloc>().state.scaleFactor == null) {
-                              context.read<MultiBloc>().state.scaleFactor = 1.4;
-                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
-                            } else {
-                              if (context.read<MultiBloc>().state.scaleFactor! <= 1.8) {
-                                context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! + 0.1;
-                                context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
-                              }
+                      BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(listener: (context, state) {
+                        if (state.status == VehiclePartsInteractionStatus.success) {
+                          DMSCustomWidgets.DMSFlushbar(size, context,
+                              message: "Successfully uploaded",
+                              icon: const Icon(
+                                Icons.cloud_upload_rounded,
+                                color: Colors.white,
+                              ));
+                          // Updating with initial parameters
+                          context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                        }
+                      }, builder: (context, state) {
+                        return Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                  colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: [0.1, 0.5, 1])),
+                          child: Transform.scale(
+                            scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
+                            child: BodyCanvas(
+                              generalParts: snapshot.data,
+                            ),
+                          ),
+                        );
+                      }),
+
+                      //zoom in zoom out buttons
+                      Positioned(
+                        top: size.height * 0.35,
+                        right: isMobile ? size.width * 0.05 : null,
+                        left: isMobile ? null : size.width * 0.032,
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(16), boxShadow: [
+                            BoxShadow(blurRadius: 16, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                          ]),
+                          height: size.height * 0.12,
+                          width: isMobile ? size.width * 0.1 : size.width * 0.032,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    // Upper limit for zoom is 1.8
+                                    if (context.read<MultiBloc>().state.scaleFactor == null) {
+                                      context.read<MultiBloc>().state.scaleFactor = 1.4;
+                                      context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                                    } else {
+                                      if (context.read<MultiBloc>().state.scaleFactor! <= 1.8) {
+                                        context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! + 0.1;
+                                        context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                                      }
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    Icons.zoom_in_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  visualDensity: VisualDensity.compact),
+                              IconButton(
+                                onPressed: () {
+                                  // Lower limit for zoom is 1.3
+                                  if (context.read<MultiBloc>().state.scaleFactor == null) {
+                                    context.read<MultiBloc>().state.scaleFactor = 1.3;
+                                    context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                                  } else {
+                                    if (context.read<MultiBloc>().state.scaleFactor! >= 1.3) {
+                                      context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! - 0.1;
+                                      context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
+                                    }
+                                  }
+                                },
+                                icon: const Icon(
+                                  Icons.zoom_out_rounded,
+                                  color: Colors.white,
+                                ),
+                                visualDensity: VisualDensity.compact,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (context.watch<MultiBloc>().state.isTapped)
+                        Positioned(
+                            left: isMobile ? size.width * 0.04 : null,
+                            right: isMobile ? null : size.width * 0.16,
+                            top: isMobile ? 150 : size.width * 0.08,
+                            child: Comments(
+                              vehiclePartMedia:
+                                  context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] ??
+                                      VehiclePartMedia(name: context.read<MultiBloc>().state.selectedGeneralBodyPart, isUploaded: false),
+                            )),
+                      Positioned(
+                        bottom: isMobile ? size.height * 0.12 : size.height * 0.040,
+                        left: isMobile ? size.width * 0.4 : size.width * 0.455,
+                        child: GestureDetector(
+                          onTap: () {
+                            // After vehicle examination navigation user from home page to list of jobcards.
+                            if (!context.read<MultiBloc>().state.isTapped) {
+                              navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                             }
                           },
-                          icon: const Icon(
-                            Icons.zoom_in_rounded,
-                            color: Colors.white,
-                          ),
-                          visualDensity: VisualDensity.compact),
-                      IconButton(
-                        onPressed: () {
-                          // Lower limit for zoom is 1.3
-                          if (context.read<MultiBloc>().state.scaleFactor == null) {
-                            context.read<MultiBloc>().state.scaleFactor = 1.3;
-                            context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
-                          } else {
-                            if (context.read<MultiBloc>().state.scaleFactor! >= 1.3) {
-                              context.read<MultiBloc>().state.scaleFactor = context.read<MultiBloc>().state.scaleFactor! - 0.1;
-                              context.read<MultiBloc>().add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
-                            }
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.zoom_out_rounded,
-                          color: Colors.white,
+                          child: Container(
+                              alignment: Alignment.center,
+                              height: size.height * 0.045,
+                              width: isMobile ? size.width * 0.2 : size.width * 0.08,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                              ]),
+                              child: const Text(
+                                textAlign: TextAlign.center,
+                                'Save',
+                                style: TextStyle(color: Colors.white, fontSize: 16),
+                              )),
                         ),
-                        visualDensity: VisualDensity.compact,
-                      )
+                      ),
                     ],
                   ),
-                ),
-              ),
-              if (context.watch<MultiBloc>().state.isTapped)
-                Positioned(
-                    left: isMobile ? size.width * 0.04 : null,
-                    right: isMobile ? null : size.width * 0.16,
-                    top: isMobile ? 150 : size.width * 0.08,
-                    child: Comments(
-                      vehiclePartMedia: context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] ??
-                          VehiclePartMedia(name: context.read<MultiBloc>().state.selectedGeneralBodyPart, isUploaded: false),
-                    )),
-              Positioned(
-                bottom: isMobile ? size.height * 0.12 : size.height * 0.040,
-                left: isMobile ? size.width * 0.4 : size.width * 0.455,
-                child: GestureDetector(
-                  onTap: () {
-                    // After vehicle examination navigation user from home page to list of jobcards.
-                    if (!context.read<MultiBloc>().state.isTapped) {
-                      navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
-                    }
-                  },
-                  child: Container(
-                      alignment: Alignment.center,
-                      height: size.height * 0.045,
-                      width: isMobile ? size.width * 0.2 : size.width * 0.08,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                      ]),
-                      child: const Text(
-                        textAlign: TextAlign.center,
-                        'Save',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      )),
-                ),
-              ),
-            ],
-          ),
-          if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
-            Container(
-              color: Colors.blueGrey.withOpacity(0.25),
-              child: Center(
-                  child: Lottie.asset('assets/lottie/car_loading.json',
-                      height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
-            )
-        ],
-      ),
+                  if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
+                    Container(
+                      color: Colors.blueGrey.withOpacity(0.25),
+                      child: Center(
+                          child: Lottie.asset('assets/lottie/car_loading.json',
+                              height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
+                    )
+                ],
+              );
+            } else {
+              return SizedBox();
+            }
+          }),
     );
   }
 }

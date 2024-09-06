@@ -83,10 +83,10 @@ class RouteGenerator {
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/vehicleExamination':
-        final args = settings.arguments as GeneralBodyParts;
+        // final args = settings.arguments as GeneralBodyParts;
         return Transitions.slideLeftTransition(
             VehicleExamination(
-              generalParts: args.generalParts,
+              // generalParts: args.generalParts,
             ),
             settings);
       case '/gatePass':
