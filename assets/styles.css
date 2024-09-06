@@ -3,8 +3,8 @@
     position: absolute; /* Position it absolutely within the container */
     top: 50%; /* Center vertically */
     left: 50%; /* Center horizontally */
-    width: 30px; /* Width of the pulsating circle */
-    height: 30px; /* Height of the pulsating circle */
+    width: 15px; /* Width of the pulsating circle */
+    height: 15px; /* Height of the pulsating circle */
     border-radius: 50%; /* Make it circular */
     background-color:orange; /* Semi-transparent background */
     transform: translate(-50%, -50%); /* Center the circle */

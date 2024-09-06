@@ -101,7 +101,12 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
         String base64String = base64Encode(bytes);
         compressedImagesBase64List.add(base64String);
       }
-      partJson = {"images": compressedImagesBase64List, "comments": state.mapMedia[event.bodyPartName]!.comments ?? "","position": state.mapMedia[event.bodyPartName]!.dataPosition,"normal": state.mapMedia[event.bodyPartName]!.normalPosition};
+      partJson = {
+        "images": compressedImagesBase64List,
+        "comments": state.mapMedia[event.bodyPartName]!.comments ?? "",
+        "position": state.mapMedia[event.bodyPartName]!.dataPosition,
+        "normal": state.mapMedia[event.bodyPartName]!.normalPosition
+      };
     }
     await _repo.addVehiclePartMedia(bodyPartData: partJson, id: event.jobCardNo, name: event.bodyPartName).then((onValue) {
       state.mapMedia[event.bodyPartName]!.isUploaded = true;
@@ -164,9 +169,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
   }
 
   void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
-    print('in bloc ${event.isAccepted}');
     state.mapMedia[event.bodyPartName]!.isAccepted = event.isAccepted;
-    print('in bloc ${state.mapMedia[event.bodyPartName]!.isAccepted}');
     emit(state.copyWith(state.mapMedia, state.status));
   }
 

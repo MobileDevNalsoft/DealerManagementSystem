@@ -66,42 +66,58 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        backgroundColor: Colors.black45,
-        leadingWidth: size.width * 0.14,
-        leading: Container(
-          margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black,
-              boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-          child: Transform(
-            transform: Matrix4.translationValues(-3, 0, 0),
-            child: IconButton(
-                onPressed: () {
-                  navigator.pop();
-                },
-                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
-          ),
-        ),
-        title: Container(
-            alignment: Alignment.center,
-            height: size.height * 0.05,
-            width: isMobile ? size.width * 0.45 : size.width * 0.32,
+          scrolledUnderElevation: 0,
+          elevation: 0,
+          backgroundColor: Colors.black45,
+          leadingWidth: size.width * 0.14,
+          leading: Container(
+            margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                shape: BoxShape.circle,
                 color: Colors.black,
                 boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-            child: const Center(
-              child: Text(
-                textAlign: TextAlign.center,
-                'Quality Check',
-                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+            child: Transform(
+              transform: Matrix4.translationValues(-3, 0, 0),
+              child: IconButton(
+                  onPressed: () {
+                    navigator.pop();
+                  },
+                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+            ),
+          ),
+          title: Container(
+              alignment: Alignment.center,
+              height: size.height * 0.05,
+              width: isMobile ? size.width * 0.45 : size.width * 0.32,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+              ]),
+              child: const Center(
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'Quality Check',
+                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                ),
+              )),
+          centerTitle: true,
+          actions: [
+            Container(
+              margin: EdgeInsets.only(right: size.width * 0.024),
+              padding: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
+              child: Switch(
+                value: false,
+                onChanged: (value) {
+                  navigator.pushReplacement('/qualityCheck2');
+                },
+                inactiveThumbColor: Colors.white,
+                inactiveTrackColor: Colors.black,
+                trackOutlineColor: const WidgetStatePropertyAll(Colors.black),
               ),
-            )),
-        centerTitle: true,
-      ),
+            )
+          ]),
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [

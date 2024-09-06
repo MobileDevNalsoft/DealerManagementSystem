@@ -96,7 +96,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
 
     /// Calculate initial positions based on widget properties.
     _leftPosition = widget.width * 0.02;
-    _startPosition = widget.width * 0.39;
+    _startPosition = widget.width * 0.395;
     _rightPosition = widget.width * 0.78;
 
     if (_sliderButtonController.position == Position.middle) {

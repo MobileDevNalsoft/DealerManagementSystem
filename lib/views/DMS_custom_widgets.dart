@@ -531,6 +531,164 @@ class DMSCustomWidgets {
         });
   }
 
+  // dialog to show when inspection out to be submitted
+  static void showSubmitDialog({required Size size, required BuildContext context, required void Function()? onYes, required void Function()? onNo}) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          bool isMobile = size.shortestSide < 500;
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: size.width * (isMobile ? 0.03 : 0.02)),
+                      child: Text(
+                        'Hey Advisor...\nAre you done with inspection ?',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
+                      ),
+                    ),
+                    Gap(size.height * 0.01),
+                    Container(
+                      height: size.height * 0.05,
+                      margin: EdgeInsets.all(size.height * 0.001),
+                      decoration: const BoxDecoration(
+                          color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onNo,
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
+                              child: Text(
+                                'No',
+                                style: TextStyle(fontSize: isMobile ? 14 : 18),
+                              ),
+                            ),
+                          ),
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 0.5,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onYes,
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
+                              child: Text('Yes', style: TextStyle(fontSize: isMobile ? 14 : 18)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero),
+          );
+        });
+  }
+
+  // dialog to show when part inspection is rejected
+  static void showReasonDialog(
+      {required Size size,
+      required void Function()? onDone,
+      required void Function()? onCancel,
+      required TextEditingController controller,
+      required BuildContext context}) {
+    bool isMobile = size.shortestSide < 500;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(),
+                          child: TextFormField(
+                              selectionControls: MaterialTextSelectionControls(),
+                              controller: controller,
+                              autofocus: true,
+                              cursorColor: Colors.black,
+                              style: TextStyle(fontSize: isMobile ? 14 : 18),
+                              maxLength: 120,
+                              maxLines: 5,
+                              maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                              decoration: InputDecoration(
+                                  hintStyle: TextStyle(color: Colors.black26, fontSize: isMobile ? 14 : 18),
+                                  fillColor: Colors.white,
+                                  counterText: '',
+                                  filled: true,
+                                  focusedBorder: const OutlineInputBorder(),
+                                  enabledBorder: const OutlineInputBorder(),
+                                  focusColor: Colors.black,
+                                  contentPadding: const EdgeInsets.only(left: 14, top: 14),
+                                  hintText: "Reason for rejection",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ))),
+                        )),
+                    Gap(size.height * 0.01),
+                    Container(
+                      height: size.height * 0.05,
+                      margin: EdgeInsets.all(size.height * 0.001),
+                      decoration: const BoxDecoration(
+                          color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onCancel,
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(fontSize: isMobile ? 14 : 18),
+                              ),
+                            ),
+                          ),
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 0.5,
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: onDone,
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
+                              child: Text(
+                                'Done',
+                                style: TextStyle(fontSize: isMobile ? 14 : 18),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                actionsPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero),
+          );
+        });
+  }
+
   static PreferredSizeWidget appBar(
       {required Size size, required bool isMobile, required String title, void Function()? leadingOnPressed, List<Widget>? actions}) {
     return AppBar(
