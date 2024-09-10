@@ -115,231 +115,235 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                           // hotspots in horizontal list view
                           SizedBox(
                             height: size.height * 0.064,
-                            width: size.width,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                controller: _autoScrollController,
-                                itemBuilder: (context, hotspotIndex) {
-                                  return AutoScrollTag(
-                                    key: ValueKey(hotspotIndex),
-                                    controller: _autoScrollController,
-                                    index: hotspotIndex,
-                                    child: InkWell(
-                                      onTap: () {
-                                        _multiBloc.add(ModifyVehicleInteractionStatus(
-                                            selectedBodyPart: hotSpots.elementAt(hotspotIndex).key, isTapped: _multiBloc.state.isTapped));
-                                        _pageController.jumpToPage(hotspotIndex);
-                                        _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
-                                        state.vehicleExaminationPageIndex = hotspotIndex;
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(16),
-                                            color: state.vehicleExaminationPageIndex == hotspotIndex ? Colors.orange.shade200 : Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: state.vehicleExaminationPageIndex == hotspotIndex ? 0 : 5,
-                                                  blurStyle: BlurStyle.outer,
-                                                  spreadRadius: 0,
-                                                  color: Colors.orange.shade200,
-                                                  offset: const Offset(0, 0))
-                                            ]),
-                                        margin: EdgeInsets.all(size.width * 0.02),
-                                        child: Center(
-                                            child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Gap(size.width * 0.024),
-                                            Text(
-                                              hotSpots.elementAt(hotspotIndex).key.toString().replaceAll('-', ' '),
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w800,
+                            width: size.width*0.98,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(size.width*0.14),
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  controller: _autoScrollController,
+                                  itemBuilder: (context, hotspotIndex) {
+
+                                    return AutoScrollTag(
+                                      key: ValueKey(hotspotIndex),
+                                      controller: _autoScrollController,
+                                      index: hotspotIndex,
+                                      child: InkWell(
+                                        onTap: () {
+                                          _multiBloc.add(ModifyVehicleInteractionStatus(
+                                              selectedBodyPart: hotSpots.elementAt(hotspotIndex).key, isTapped: _multiBloc.state.isTapped));
+                                          _pageController.jumpToPage(hotspotIndex);
+                                          _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
+                                          state.vehicleExaminationPageIndex = hotspotIndex;
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(size.width*16),
+                                              color: state.vehicleExaminationPageIndex == hotspotIndex ? Colors.orange.shade200 : Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    blurRadius: state.vehicleExaminationPageIndex == hotspotIndex ? 0 : 5,
+                                                    blurStyle: BlurStyle.outer,
+                                                    spreadRadius: 0,
+                                                    color: Colors.orange.shade200,
+                                                    offset: const Offset(0, 0))
+                                              ]),
+                                          margin: EdgeInsets.only(top:size.width * 0.02,bottom: size.width * 0.02,right: size.width * 0.016,left:hotspotIndex==0?size.width*0.032:0),
+                                          child: Center(
+                                              child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Gap(size.width * 0.024),
+                                              Text(
+                                                hotSpots.elementAt(hotspotIndex).key.toString().replaceAll('-', ' '),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                ),
                                               ),
-                                            ),
-
-                                            //For renaming the hotspot
-                                            IconButton(
-                                              onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return PopScope(
-                                                        canPop: true,
-                                                        onPopInvoked: (didPop) {
-                                                          _multiBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
-                                                        },
-                                                        child: AlertDialog(
-                                                            backgroundColor: Colors.white,
-                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                                            contentPadding: EdgeInsets.only(top: size.height * 0.01),
-                                                            content: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              mainAxisSize: MainAxisSize.min,
-                                                              children: [
-                                                                Padding(
-                                                                    padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
-                                                                    child: Theme(
-                                                                      data: Theme.of(context).copyWith(),
-                                                                      child: SizedBox(
-                                                                        height: size.height * 0.05,
-                                                                        child: Row(
-                                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                                          children: [
-                                                                            context.watch<MultiBloc>().state.renamingStatus == HotspotRenamingStatus.initial
-                                                                                ? Text(
-                                                                                    hotSpots.elementAt(hotspotIndex).key,
-                                                                                    style: TextStyle(fontSize: isMobile ? 16 : 18),
-                                                                                  )
-                                                                                : Expanded(
-                                                                                    child: TextFormField(
-                                                                                      selectionControls: MaterialTextSelectionControls(),
-                                                                                      controller:
-                                                                                          TextEditingController(text: hotSpots.elementAt(hotspotIndex).key),
-                                                                                      showCursor: true,
-                                                                                      autofocus: true,
-                                                                                      cursorColor: Colors.black,
+                              
+                                              //For renaming the hotspot
+                                              IconButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return PopScope(
+                                                          canPop: true,
+                                                          onPopInvoked: (didPop) {
+                                                            _multiBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
+                                                          },
+                                                          child: AlertDialog(
+                                                              backgroundColor: Colors.white,
+                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                              contentPadding: EdgeInsets.only(top: size.height * 0.01),
+                                                              content: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: [
+                                                                  Padding(
+                                                                      padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
+                                                                      child: Theme(
+                                                                        data: Theme.of(context).copyWith(),
+                                                                        child: SizedBox(
+                                                                          height: size.height * 0.05,
+                                                                          child: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            children: [
+                                                                              context.watch<MultiBloc>().state.renamingStatus == HotspotRenamingStatus.initial
+                                                                                  ? Text(
+                                                                                      hotSpots.elementAt(hotspotIndex).key,
                                                                                       style: TextStyle(fontSize: isMobile ? 16 : 18),
-                                                                                      maxLines: 1,
-                                                                                      decoration: InputDecoration(border: InputBorder.none),
-                                                                                      onChanged: (value) async {
-                                                                                        _multiBloc.state.renamedValue = value;
-                                                                                        _multiBloc.state.renamingStatus = HotspotRenamingStatus.hotspotRenamed;
-                                                                                      },
+                                                                                    )
+                                                                                  : Expanded(
+                                                                                      child: TextFormField(
+                                                                                        selectionControls: MaterialTextSelectionControls(),
+                                                                                        controller:
+                                                                                            TextEditingController(text: hotSpots.elementAt(hotspotIndex).key),
+                                                                                        showCursor: true,
+                                                                                        autofocus: true,
+                                                                                        cursorColor: Colors.black,
+                                                                                        style: TextStyle(fontSize: isMobile ? 16 : 18),
+                                                                                        maxLines: 1,
+                                                                                        decoration: InputDecoration(border: InputBorder.none),
+                                                                                        onChanged: (value) async {
+                                                                                          _multiBloc.state.renamedValue = value;
+                                                                                          _multiBloc.state.renamingStatus = HotspotRenamingStatus.hotspotRenamed;
+                                                                                        },
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                            Spacer(),
-                                                                            if (context.watch<MultiBloc>().state.renamingStatus ==
-                                                                                HotspotRenamingStatus.initial)
-                                                                              Align(
-                                                                                alignment: Alignment.centerRight,
-                                                                                child: IconButton(
-                                                                                    onPressed: () {
-                                                                                      _multiBloc.add(ModifyRenamingStatus(
-                                                                                          renameStatus: HotspotRenamingStatus.openTextField));
-                                                                                    },
-                                                                                    icon: Icon(Icons.edit_rounded)),
-                                                                              )
-                                                                          ],
+                                                                              Spacer(),
+                                                                              if (context.watch<MultiBloc>().state.renamingStatus ==
+                                                                                  HotspotRenamingStatus.initial)
+                                                                                Align(
+                                                                                  alignment: Alignment.centerRight,
+                                                                                  child: IconButton(
+                                                                                      onPressed: () {
+                                                                                        _multiBloc.add(ModifyRenamingStatus(
+                                                                                            renameStatus: HotspotRenamingStatus.openTextField));
+                                                                                      },
+                                                                                      icon: Icon(Icons.edit_rounded)),
+                                                                                )
+                                                                            ],
+                                                                          ),
                                                                         ),
-                                                                      ),
-                                                                    )),
-                                                                Gap(size.height * 0.01),
-                                                                Container(
-                                                                  height: size.height * 0.05,
-                                                                  margin: EdgeInsets.all(size.height * 0.001),
-                                                                  decoration: const BoxDecoration(
-                                                                      color: Colors.black,
-                                                                      borderRadius:
-                                                                          BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: TextButton(
-                                                                          onPressed: () {
-                                                                            _removeButton(hotSpots.elementAt(hotspotIndex).key);
-                                                                            int nextIndex=0;
-                                                                            _interactionBloc
-                                                                                .add(RemoveHotspotEvent(name: hotSpots.elementAt(hotspotIndex).key));
-                                                                              if(hotspotIndex==0 && state.mapMedia.length > 1){
-                                                                                  nextIndex = 1;
-                                                                            }
-                                                                            if (state.mapMedia.length >= 1) {
-                                                                              _pageController.jumpToPage(nextIndex);
-                                                                              _autoScrollController.scrollToIndex(nextIndex);
-                                                                              state.vehicleExaminationPageIndex = hotspotIndex;
-                                                                              _changeButtonColors(hotSpots.elementAt(nextIndex).key);
-                                                                              _multiBloc.add(ModifyVehicleInteractionStatus(
-                                                                                  selectedBodyPart: hotSpots.elementAt(nextIndex).key, isTapped: true));
-                                                                              _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: nextIndex));
+                                                                      )),
+                                                                  Gap(size.height * 0.01),
+                                                                  Container(
+                                                                    height: size.height * 0.05,
+                                                                    margin: EdgeInsets.all(size.height * 0.001),
+                                                                    decoration: const BoxDecoration(
+                                                                        color: Colors.black,
+                                                                        borderRadius:
+                                                                            BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        Expanded(
+                                                                          child: TextButton(
+                                                                            onPressed: () {
+                                                                              _removeButton(hotSpots.elementAt(hotspotIndex).key);
+                                                                              int nextIndex=0;
+                                                                              _interactionBloc
+                                                                                  .add(RemoveHotspotEvent(name: hotSpots.elementAt(hotspotIndex).key));
+                                                                                if(hotspotIndex==0 && state.mapMedia.length > 1){
+                                                                                    nextIndex = 1;
+                                                                              }
+                                                                              if (state.mapMedia.length >= 1) {
+                                                                                _pageController.jumpToPage(nextIndex);
+                                                                                _autoScrollController.scrollToIndex(nextIndex);
+                                                                                state.vehicleExaminationPageIndex = hotspotIndex;
+                                                                                _changeButtonColors(hotSpots.elementAt(nextIndex).key);
+                                                                                _multiBloc.add(ModifyVehicleInteractionStatus(
+                                                                                    selectedBodyPart: hotSpots.elementAt(nextIndex).key, isTapped: true));
+                                                                                _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: nextIndex));
+                                                                                Navigator.pop(context);
+                                                                                if(hotspotIndex==0){
+                                                                                    Navigator.pop(context); 
+                                                                              }
+                                                                              }
+                                                                            },
+                                                                            style: TextButton.styleFrom(
+                                                                                fixedSize: Size(size.width * 0.3, size.height * 0.1),
+                                                                                foregroundColor: Colors.white),
+                                                                            child: Text(
+                                                                              'Delete',
+                                                                              style: TextStyle(fontSize: isMobile ? 14 : 18),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        const VerticalDivider(
+                                                                          color: Colors.white,
+                                                                          thickness: 0.5,
+                                                                        ),
+                                                                        Expanded(
+                                                                          child: TextButton(
+                                                                            onPressed: () async {
+                                                                              if (state.vehicleExaminationPageIndex != hotspotIndex) {
+                                                                                _autoScrollController.scrollToIndex(hotspotIndex);
+                                                                                _pageController.jumpToPage(hotspotIndex);
+                                                                                state.vehicleExaminationPageIndex = hotspotIndex;
+                                                                                _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
+                                                                              }
+                                                                              if (_multiBloc.state.renamingStatus == HotspotRenamingStatus.hotspotRenamed) {
+                                                                                var value = hotSpots.elementAt(hotspotIndex).value;
+                                                                                _multiBloc.state.renamedValue =
+                                                                                    _multiBloc.state.renamedValue!.trim().replaceAll(' ', '-');
+                                                                                await webViewController
+                                                                                    .runJavaScript(
+                                                                                        'renameHotspot("${hotSpots.elementAt(hotspotIndex).key}","${_multiBloc.state.renamedValue}")')
+                                                                                    .catchError((e) {
+                                                                                  print(e);
+                                                                                });
+                                                                                _interactionBloc.state.mapMedia.putIfAbsent(_multiBloc.state.renamedValue ?? "",
+                                                                                    () {
+                                                                                  return value;
+                                                                                });
+                              
+                                                                                _interactionBloc.state.mapMedia[_multiBloc.state.renamedValue]!.name =
+                                                                                    _multiBloc.state.renamedValue!;
+                                                                                _interactionBloc.state.mapMedia.remove(hotSpots.elementAt(hotspotIndex).key);
+                                                                                _multiBloc.state.selectedGeneralBodyPart = _multiBloc.state.renamedValue!;
+                                                                                _pageController.jumpToPage(hotspotIndex);
+                                                                                _autoScrollController.scrollToIndex(hotspotIndex);
+                                                                                _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
+                                                                                _changeButtonColors(
+                                                                                    _interactionBloc.state.mapMedia.entries.elementAt(hotspotIndex).key);
+                                                                                _multiBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
+                                                                                _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
+                                                                              }
                                                                               Navigator.pop(context);
-                                                                              if(hotspotIndex==0){
-                                                                                  Navigator.pop(context); 
-                                                                            }
-                                                                            }
-                                                                          },
-                                                                          style: TextButton.styleFrom(
-                                                                              fixedSize: Size(size.width * 0.3, size.height * 0.1),
-                                                                              foregroundColor: Colors.white),
-                                                                          child: Text(
-                                                                            'Delete',
-                                                                            style: TextStyle(fontSize: isMobile ? 14 : 18),
+                                                                            },
+                                                                            style: TextButton.styleFrom(
+                                                                                fixedSize: Size(size.width * 0.3, size.height * 0.1),
+                                                                                foregroundColor: Colors.white),
+                                                                            child: Text(
+                                                                              'Done',
+                                                                              style: TextStyle(fontSize: isMobile ? 14 : 18),
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                      const VerticalDivider(
-                                                                        color: Colors.white,
-                                                                        thickness: 0.5,
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: TextButton(
-                                                                          onPressed: () async {
-                                                                            if (state.vehicleExaminationPageIndex != hotspotIndex) {
-                                                                              _autoScrollController.scrollToIndex(hotspotIndex);
-                                                                              _pageController.jumpToPage(hotspotIndex);
-                                                                              state.vehicleExaminationPageIndex = hotspotIndex;
-                                                                              _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
-                                                                            }
-                                                                            if (_multiBloc.state.renamingStatus == HotspotRenamingStatus.hotspotRenamed) {
-                                                                              var value = hotSpots.elementAt(hotspotIndex).value;
-                                                                              _multiBloc.state.renamedValue =
-                                                                                  _multiBloc.state.renamedValue!.trim().replaceAll(' ', '-');
-                                                                              await webViewController
-                                                                                  .runJavaScript(
-                                                                                      'renameHotspot("${hotSpots.elementAt(hotspotIndex).key}","${_multiBloc.state.renamedValue}")')
-                                                                                  .catchError((e) {
-                                                                                print(e);
-                                                                              });
-                                                                              _interactionBloc.state.mapMedia.putIfAbsent(_multiBloc.state.renamedValue ?? "",
-                                                                                  () {
-                                                                                return value;
-                                                                              });
-
-                                                                              _interactionBloc.state.mapMedia[_multiBloc.state.renamedValue]!.name =
-                                                                                  _multiBloc.state.renamedValue!;
-                                                                              _interactionBloc.state.mapMedia.remove(hotSpots.elementAt(hotspotIndex).key);
-                                                                              _multiBloc.state.selectedGeneralBodyPart = _multiBloc.state.renamedValue!;
-                                                                              _pageController.jumpToPage(hotspotIndex);
-                                                                              _autoScrollController.scrollToIndex(hotspotIndex);
-                                                                              _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
-                                                                              _changeButtonColors(
-                                                                                  _interactionBloc.state.mapMedia.entries.elementAt(hotspotIndex).key);
-                                                                              _multiBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
-                                                                              _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
-                                                                            }
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          style: TextButton.styleFrom(
-                                                                              fixedSize: Size(size.width * 0.3, size.height * 0.1),
-                                                                              foregroundColor: Colors.white),
-                                                                          child: Text(
-                                                                            'Done',
-                                                                            style: TextStyle(fontSize: isMobile ? 14 : 18),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            actionsPadding: EdgeInsets.zero,
-                                                            buttonPadding: EdgeInsets.zero),
-                                                      );
-                                                    });
-                                              },
-                                              icon: Icon(
-                                                  hotSpots.elementAt(hotspotIndex).value.isUploaded == false ? Icons.settings_rounded : Icons.done_rounded),
-                                              padding: EdgeInsets.zero,
-                                              visualDensity: VisualDensity.compact,
-                                            )
-                                          ],
-                                        )),
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              actionsPadding: EdgeInsets.zero,
+                                                              buttonPadding: EdgeInsets.zero),
+                                                        );
+                                                      });
+                                                },
+                                                icon: Icon(
+                                                    hotSpots.elementAt(hotspotIndex).value.isUploaded == false ? Icons.settings_rounded : Icons.done_rounded),
+                                                padding: EdgeInsets.zero,
+                                                visualDensity: VisualDensity.compact,
+                                              )
+                                            ],
+                                          )),
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                itemCount: state.mapMedia.length),
+                                    );
+                                  },
+                                  itemCount: state.mapMedia.length),
+                            ),
                           ),
                           Expanded(
                             child: PageView.builder(
@@ -498,6 +502,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                             itemCount:
                                                 hotSpots.elementAt(pageIndex).value.images == null ? 0 : hotSpots.elementAt(pageIndex).value.images!.length,
                                           )),
+                                          Gap(size.height*0.02),
                                       if (state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images != null &&
                                           state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images!.isNotEmpty)
                                         InkWell(
@@ -531,7 +536,6 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                               _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
                                                   bodyPartName: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name,
                                                   jobCardNo: _serviceBloc.state.service!.jobCardNo!
-                                                  // 'JC-${_serviceBloc.state.service!.location!.substring(0, 3).toUpperCase()}-${_serviceBloc.state.service!.kms.toString().substring(0, 2)}'
                                                   ) as VehiclePartsInteractionBlocEvent2);
                                                   if(hotSpots.last.key == state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name){
                                                     Navigator.pop(context);
@@ -648,12 +652,8 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                   iosSrc: 'assets/3d_models/sedan.glb',
                                   relatedJs: snapshot.data![0],
                                   relatedCss: snapshot.data![1],
-                                  disableZoom: false,
+                                  disableZoom: true,
                                   autoRotate: false,
-                                  minCameraOrbit: '3m 3m auto', // Set minimum zoom (close)
-                                  maxCameraOrbit: 'auto 5m auto', // Set maximum zoom (far)
-                            
-                                  // scale: "1",
                                   disableTap: true,
                                   id: 'model',
                                   onWebViewCreated: (value) {

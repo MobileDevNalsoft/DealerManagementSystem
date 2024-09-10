@@ -346,6 +346,8 @@ class DMSCustomWidgets {
       TextStyle? propertyFontStyle,
       TextStyle? valueFontStyle,
       String? propertyFontFamily,
+      double? propertyWidth,
+      double? valueWidth,
       String? valueFontFamily,
       bool showColonsBetween = true,
       required List<String> propertyList,
@@ -355,9 +357,13 @@ class DMSCustomWidgets {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: propertyList
             .expand((element) => [
-                  Text(
-                    element,
-                    style: propertyFontStyle,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                     clipBehavior: Clip.hardEdge,
+                    child: Text(
+                      element,
+                      style: propertyFontStyle,
+                    ),
                   ),
                   Gap(spaceBetweenFields ?? 0)
                 ])
@@ -380,9 +386,16 @@ class DMSCustomWidgets {
       Column(
         children: valueList
             .expand((element) => [
-                  Text(
-                    element,
-                    style: valueFontStyle,
+                  SizedBox(
+                    width: valueWidth,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      clipBehavior: Clip.hardEdge,
+                      child: Text(
+                        element,
+                        style: valueFontStyle,
+                      ),
+                    ),
                   ),
                   Gap(spaceBetweenFields ?? 0)
                 ])
