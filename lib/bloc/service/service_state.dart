@@ -10,7 +10,7 @@ enum GetMyJobCardsStatus { initial, loading, success, failure }
 
 enum JobCardStatusUpdate { initial, loading, success, failure }
 
-enum GetServiceLocationsStatus { initial, loading, success, failure }
+enum GetSBRequirementsStatus { initial, loading, success, failure }
 
 enum GetInspectionStatus { initial, loading, success, failure }
 
@@ -29,6 +29,7 @@ final class ServiceState {
       this.services,
       this.jobCards,
       this.locations,
+      this.jobTypes,
       this.getJobCardStatus,
       this.getMyJobCardsStatus,
       this.serviceUploadStatus,
@@ -45,7 +46,7 @@ final class ServiceState {
       this.jobCardNo,
       this.myJobCards,
       this.bottomNavigationBarActiveIndex,
-      this.serviceLocationsStatus,
+      this.getSBRequirementsStatus,
       this.filteredJobCards,
       this.gatePassStatus,
       this.gatePassno,
@@ -54,7 +55,7 @@ final class ServiceState {
   GetServiceStatus? getServiceStatus;
   GetJobCardStatus? getJobCardStatus;
   GetMyJobCardsStatus? getMyJobCardsStatus;
-  GetServiceLocationsStatus? serviceLocationsStatus;
+  GetSBRequirementsStatus? getSBRequirementsStatus;
   JobCardStatusUpdate? jobCardStatusUpdate;
   InspectionJsonUploadStatus? inspectionJsonUploadStatus;
   JsonStatus? jsonStatus;
@@ -65,6 +66,7 @@ final class ServiceState {
   final List<Service>? jobCards;
   final List<Service>? myJobCards;
   final List<dynamic>? locations;
+  final List<dynamic>? jobTypes;
   final bool? dropDownOpen;
   int? index;
   Position? sliderPosition;
@@ -82,7 +84,7 @@ final class ServiceState {
     return ServiceState(
         getServiceStatus: GetServiceStatus.initial,
         getJobCardStatus: GetJobCardStatus.initial,
-        serviceLocationsStatus: GetServiceLocationsStatus.initial,
+        getSBRequirementsStatus: GetSBRequirementsStatus.initial,
         inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial,
         serviceUploadStatus: ServiceUploadStatus.initial,
         jobCardStatusUpdate: JobCardStatusUpdate.initial,
@@ -102,7 +104,7 @@ final class ServiceState {
   ServiceState copyWith({
     GetServiceStatus? getServiceStatus,
     GetJobCardStatus? getJobCardStatus,
-    GetServiceLocationsStatus? serviceLocationsStatus,
+    GetSBRequirementsStatus? serviceLocationsStatus,
     GetInspectionStatus? getInspectionStatus,
     List<Service>? myJobCards,
     Service? service,
@@ -123,6 +125,7 @@ final class ServiceState {
     double? value,
     int? index,
     List<dynamic>? locations,
+    List<dynamic>? jobTypes,
     GatePassStatus? gatePassStatus,
     String? gatePassno,
   }) {
@@ -141,7 +144,7 @@ final class ServiceState {
       index: index ?? this.index,
       sliderPosition: sliderPosition ?? this.sliderPosition,
       value: value ?? this.value,
-      serviceLocationsStatus: serviceLocationsStatus ?? this.serviceLocationsStatus,
+      getSBRequirementsStatus: serviceLocationsStatus ?? this.getSBRequirementsStatus,
       getInspectionStatus: getInspectionStatus ?? this.getInspectionStatus,
       serviceUploadStatus: serviceUploadStatus ?? this.serviceUploadStatus,
       bottomNavigationBarActiveIndex: bottomNavigationBarActiveIndex ?? this.bottomNavigationBarActiveIndex,
@@ -150,6 +153,7 @@ final class ServiceState {
       dropDownOpen: dropDownOpen ?? this.dropDownOpen,
       jobCards: jobCards ?? this.jobCards,
       locations: locations ?? this.locations,
+      jobTypes: jobTypes ?? this.jobTypes,
       gatePassStatus: gatePassStatus ?? this.gatePassStatus,
       gatePassno: gatePassno ?? this.gatePassno,
     );

@@ -84,24 +84,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
   bool bayDropDownUp = false;
   bool jobTypeDropDownUp = false;
 
-  List<String> jobTypeList = [
-    'Oil change and oil filter replacement',
-    'Fuel filter change (diesel vehicles)',
-    'Spark plug replacement (petrol vehicles)',
-    'Air filter change',
-    'Brake inspection and maintenance',
-    'Wheel bearing and shock absorber inspection',
-    'Electrical component testing (battery, alternator, starter motor)',
-    'Air conditioning system inspection',
-    'Radiator and coolant hose inspection',
-    'Cabin air filter replacement',
-    'Brake fluid exchange',
-    'Timing belt replacement (if applicable)',
-    'Tire rotation',
-    'Wheel alignment',
-    'Wiper blade replacement'
-  ];
-
   List<String> bayList = ["Service Bay", "Express Maintenance Bay", "Body Repair Bay", "Tire Service Bays", "Diagnostic Bay", "Wash Bay"];
 
   @override
@@ -121,7 +103,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     });
     // Fetching locations if not already fetched.
     if (_serviceBloc.state.locations == null) {
-      _serviceBloc.add(GetServiceLocations());
+      _serviceBloc.add(GetSBRequirements());
     }
 
     if (_vehicleBloc.state.registrationNo != null) {
@@ -288,8 +270,8 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                             //Service booking first page
                             index == 0
                                 ? BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
-                                    switch (state.serviceLocationsStatus) {
-                                      case GetServiceLocationsStatus.loading:
+                                    switch (state.getSBRequirementsStatus) {
+                                      case GetSBRequirementsStatus.loading:
                                         return Transform(
                                           transform: Matrix4.translationValues(0, -40, 0),
                                           child: Center(
@@ -300,7 +282,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                         );
 
                                       //After fetching the locations
-                                      case GetServiceLocationsStatus.success:
+                                      case GetSBRequirementsStatus.success:
                                         return ListView(
                                           controller: page1ScrollController,
                                           children: [
@@ -378,9 +360,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                             hint: 'Customer Name',
                                                             isMobile: isMobile,
                                                             textcontroller: customerController,
-                                                            onChange: (p0) {
-                                                              customerController.text = state.vehicle!.cusotmerName!;
-                                                            },
+                                                            readOnly: true,
                                                             focusNode: customerFocus,
                                                             scrollController: page1ScrollController);
                                                       },
@@ -638,17 +618,21 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                   SizedBox(
                                                     height: size.height * (isMobile ? 0.005 : 0.015),
                                                   ),
-                                                  DMSCustomWidgets.SearchableDropDown(
-                                                      size: size,
-                                                      hint: '*Job Type',
-                                                      items: jobTypeList,
-                                                      icon: jobTypeDropDownUp
-                                                          ? Icon(Icons.arrow_drop_up, size: size.height * 0.03)
-                                                          : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
-                                                      focus: jobTypeFocus,
-                                                      typeAheadController: jobTypeTypeAheadController,
-                                                      isMobile: isMobile,
-                                                      scrollController: page2ScrollController),
+                                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                                    builder: (context, state) {
+                                                      return DMSCustomWidgets.SearchableDropDown(
+                                                          size: size,
+                                                          hint: '*Job Type',
+                                                          items: state.jobTypes!,
+                                                          icon: jobTypeDropDownUp
+                                                              ? Icon(Icons.arrow_drop_up, size: size.height * 0.03)
+                                                              : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
+                                                          focus: jobTypeFocus,
+                                                          typeAheadController: jobTypeTypeAheadController,
+                                                          isMobile: isMobile,
+                                                          scrollController: page2ScrollController);
+                                                    },
+                                                  ),
                                                   SizedBox(
                                                     height: size.height * (isMobile ? 0.005 : 0.015),
                                                   ),
@@ -742,7 +726,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                     _salesPersonValidator(spTypeAheadController.text,
                                                                         (state.salesPersons ?? []).map((e) => e.empName).toList()) ??
                                                                     _bayValidator(bayTypeAheadController.text, bayList) ??
-                                                                    _jobTypeValidator(jobTypeTypeAheadController.text, jobTypeList);
+                                                                    _jobTypeValidator(jobTypeTypeAheadController.text, _serviceBloc.state.jobTypes!);
 
                                                                 if (message != null) {
                                                                   DMSCustomWidgets.DMSFlushbar(size, context,
@@ -763,7 +747,8 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                       alternatePersonContactNo: altContPhoneNoController.text.isNotEmpty
                                                                           ? int.parse(altContPhoneNoController.text)
                                                                           : null,
-                                                                      salesPerson: spTypeAheadController.text.split('-')[0],
+                                                                      // salesPerson: spTypeAheadController.text.split('-')[0],
+                                                                      salesPerson: sharedPreferences.getString('user_name'),
                                                                       bay: bayTypeAheadController.text,
                                                                       jobType: jobTypeTypeAheadController.text,
                                                                       jobCardNo:
@@ -855,7 +840,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     return null;
   }
 
-  String? _jobTypeValidator(String value, List<String> jobTypeList) {
+  String? _jobTypeValidator(String value, List<dynamic> jobTypeList) {
     if (value.isEmpty) {
       return "Job Type cannot be empty";
     } else if (!jobTypeList.contains(value)) {

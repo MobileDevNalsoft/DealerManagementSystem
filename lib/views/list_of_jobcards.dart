@@ -48,8 +48,7 @@ class _ListOfJobcardsState extends State<ListOfJobcards> with ConnectivityMixin 
     Size size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
-    return SafeArea(
-        child: Hero(
+    return Hero(
       tag: 'listOfJobCards',
       transitionOnUserGestures: true,
       child: Scaffold(
@@ -60,13 +59,9 @@ class _ListOfJobcardsState extends State<ListOfJobcards> with ConnectivityMixin 
               gradient: LinearGradient(
                   colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             ),
-            child: BlocBuilder<ServiceBloc, ServiceState>(
-              builder: (context, state) {
-                return const JobCardPage();
-              },
-            )),
+            child: const JobCardPage()),
       ),
-    ));
+    );
   }
 }
 
@@ -106,7 +101,7 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
                   onChanged: (value) {
                     controller.text = value;
                     // triggers search job cards events for the value entered in the search field
-                    context.read<ServiceBloc>().add(SearchJobCards(searchText: value));
+                    context.mounted ? context.read<ServiceBloc>().add(SearchJobCards(searchText: value)) : null;
                   },
                   cursorColor: Colors.black,
                   decoration: InputDecoration(
@@ -214,256 +209,251 @@ class JobCardPage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     bool isMobile = size.shortestSide < 500;
 
-    return SizedBox(
-      width: size.width,
-      height: size.height,
-      child: BlocBuilder<ServiceBloc, ServiceState>(
-        builder: (context, state) {
-          return CustomScrollView(
-            slivers: [
-              SliverPersistentHeader(
-                delegate: SliverHeader(),
-                // Set this param so that it won't go off the screen when scrolling
-                pinned: false,
-              ),
-              SliverGap(size.height * 0.01),
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                return Skeletonizer(
-                    enableSwitchAnimation: true,
-                    enabled: state.getJobCardStatus == GetJobCardStatus.loading || state.getJobCardStatus == GetJobCardStatus.initial,
-                    child: SizedBox(
-                      width: size.width * (isMobile ? 0.95 : 0.8),
-                      child: ClipShadowPath(
-                        clipper: TicketClipper(),
-                        shadow: const BoxShadow(
-                          color: Colors.black26,
-                          offset: Offset(0, 2),
-                          blurRadius: 5,
-                          blurStyle: BlurStyle.normal,
-                          spreadRadius: 1,
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      builder: (context, state) {
+        return CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              delegate: SliverHeader(),
+              // Set this param so that it won't go off the screen when scrolling
+              pinned: false,
+            ),
+            SliverGap(size.height * 0.01),
+            SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+              return Skeletonizer(
+                  key: UniqueKey(),
+                  enableSwitchAnimation: true,
+                  enabled: state.getJobCardStatus == GetJobCardStatus.loading,
+                  child: SizedBox(
+                    width: size.width * (isMobile ? 0.95 : 0.8),
+                    child: ClipShadowPath(
+                      clipper: TicketClipper(),
+                      shadow: const BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                        blurRadius: 5,
+                        blurStyle: BlurStyle.normal,
+                        spreadRadius: 1,
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: size.height * 0.006,
                         ),
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical: size.height * 0.006,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Gap(size.height * (isMobile ? 0.01 : 0.015)),
+                                      Row(
+                                        children: [
+                                          Gap(size.width * (isMobile ? 0.055 : 0.08)),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Image.asset(
+                                              'assets/images/job_card.png',
+                                              scale: size.width * (isMobile ? 0.05 : 0.015),
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          Gap(size.height * 0.006),
+                                          Expanded(
+                                            flex: 8,
+                                            child: InkWell(
+                                              borderRadius: BorderRadius.circular(20),
+                                              radius: 100,
+                                              splashColor: Colors.transparent,
+                                              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                              enableFeedback: true,
+                                              onTap: () {
+                                                state.service = state.filteredJobCards![index];
+                                                getIt<NavigatorService>().push('/jobCardDetails');
+                                              },
+                                              child: Text(
+                                                state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards![index].jobCardNo! : 'JC-MAD-633',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: (isMobile ? 12 : 16),
+                                                    color: Colors.blue,
+                                                    decoration: TextDecoration.underline),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Gap(size.width * (isMobile ? 0.02 : 0.01)),
+                                      Row(
+                                        children: [
+                                          Gap(size.width * (isMobile ? 0.055 : 0.08)),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Image.asset('assets/images/registration_no.png', scale: size.width * (isMobile ? 0.055 : 0.016)),
+                                          ),
+                                          Gap(size.width * 0.006),
+                                          Expanded(
+                                            flex: 8,
+                                            child: SizedBox(
+                                              width: size.width * (isMobile ? 0.28 : 0.16),
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Text(
+                                                  state.getJobCardStatus == GetJobCardStatus.success
+                                                      ? state.filteredJobCards![index].registrationNo!
+                                                      : 'TS09ED7884',
+                                                  style: TextStyle(fontSize: isMobile ? 13 : 17),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Gap(size.height * 0.01),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Gap(size.height * 0.04),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Gap(size.width * 0.058),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Image.asset('assets/images/status.png', scale: size.width * (isMobile ? 0.058 : 0.016)),
+                                          ),
+                                          Gap(size.height * 0.006),
+                                          Expanded(
+                                            flex: 8,
+                                            child: Text(
+                                              state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards![index].status! : 'Work in Progress',
+                                              style: TextStyle(fontSize: isMobile ? 13 : 17),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            Container(
+                              height: size.height * (isMobile ? 0.05 : 0.045),
+                              width: size.width * (isMobile ? 0.94 : 0.79),
+                              margin: EdgeInsets.only(bottom: size.height * 0.0025),
+                              decoration: BoxDecoration(
+                                  color: Colors.orange.shade200,
+                                  borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     flex: 1,
-                                    child: Column(
+                                    child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Gap(size.height * (isMobile ? 0.01 : 0.015)),
-                                        Row(
-                                          children: [
-                                            Gap(size.width * (isMobile ? 0.055 : 0.08)),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Image.asset(
-                                                'assets/images/job_card.png',
-                                                scale: size.width * (isMobile ? 0.05 : 0.015),
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            Gap(size.height * 0.006),
-                                            Expanded(
-                                              flex: 8,
-                                              child: InkWell(
-                                                borderRadius: BorderRadius.circular(20),
-                                                radius: 100,
-                                                splashColor: Colors.transparent,
-                                                customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                                enableFeedback: true,
-                                                onTap: () {
-                                                  state.service = state.filteredJobCards![index];
-                                                  getIt<NavigatorService>().push('/jobCardDetails');
-                                                },
-                                                child: Text(
-                                                  state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards![index].jobCardNo! : 'JC-MAD-633',
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.w500,
-                                                      fontSize: (isMobile ? 12 : 16),
-                                                      color: Colors.blue,
-                                                      decoration: TextDecoration.underline),
-                                                ),
-                                              ),
-                                            )
-                                          ],
+                                        Gap(size.width * 0.01),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Image.asset(
+                                            'assets/images/customer.png',
+                                            alignment: Alignment.center,
+                                            scale: size.width * (isMobile ? 0.06 : 0.018),
+                                          ),
                                         ),
-                                        Gap(size.width * (isMobile ? 0.02 : 0.01)),
-                                        Row(
-                                          children: [
-                                            Gap(size.width * (isMobile ? 0.055 : 0.08)),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Image.asset('assets/images/registration_no.png', scale: size.width * (isMobile ? 0.055 : 0.016)),
-                                            ),
-                                            Gap(size.width * 0.006),
-                                            Expanded(
-                                              flex: 8,
-                                              child: SizedBox(
-                                                width: size.width * (isMobile ? 0.28 : 0.16),
-                                                child: SingleChildScrollView(
-                                                  scrollDirection: Axis.horizontal,
-                                                  child: Text(
-                                                    state.getJobCardStatus == GetJobCardStatus.success
-                                                        ? state.filteredJobCards![index].registrationNo!
-                                                        : 'TS09ED7884',
-                                                    style: TextStyle(fontSize: isMobile ? 13 : 17),
-                                                  ),
-                                                ),
+                                        Expanded(
+                                          flex: 8,
+                                          child: SizedBox(
+                                            width: size.width * (isMobile ? 0.36 : 0.16),
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Text(
+                                                state.getJobCardStatus == GetJobCardStatus.success
+                                                    ? state.filteredJobCards![index].customerName!
+                                                    : 'Customer Name',
+                                                style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                               ),
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                        Gap(size.height * 0.01),
                                       ],
                                     ),
                                   ),
                                   Expanded(
                                     flex: 1,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    child: Row(
                                       children: [
-                                        Gap(size.height * 0.04),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Gap(size.width * 0.058),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Image.asset('assets/images/status.png', scale: size.width * (isMobile ? 0.058 : 0.016)),
-                                            ),
-                                            Gap(size.height * 0.006),
-                                            Expanded(
-                                              flex: 8,
+                                        Expanded(
+                                          flex: 2,
+                                          child: Image.asset(
+                                            'assets/images/call.png',
+                                            scale: size.width * (isMobile ? 0.06 : 0.018),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 8,
+                                          child: SizedBox(
+                                            width: size.width * (isMobile ? 0.25 : 0.08),
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
                                               child: Text(
                                                 state.getJobCardStatus == GetJobCardStatus.success
-                                                    ? state.filteredJobCards![index].status!
-                                                    : 'Work in Progress',
-                                                style: TextStyle(fontSize: isMobile ? 13 : 17),
+                                                    ? state.filteredJobCards![index].customerContact ?? '-'
+                                                    : 'Contact Number',
+                                                style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                               ),
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ],
                                     ),
                                   )
                                 ],
                               ),
-                              Container(
-                                height: size.height * (isMobile ? 0.05 : 0.045),
-                                width: size.width * (isMobile ? 0.94 : 0.79),
-                                margin: EdgeInsets.only(bottom: size.height * 0.0025),
-                                decoration: BoxDecoration(
-                                    color: Colors.orange.shade200,
-                                    borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Gap(size.width * 0.01),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Image.asset(
-                                              'assets/images/customer.png',
-                                              alignment: Alignment.center,
-                                              scale: size.width * (isMobile ? 0.06 : 0.018),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 8,
-                                            child: SizedBox(
-                                              width: size.width * (isMobile ? 0.36 : 0.16),
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
-                                                child: Text(
-                                                  state.getJobCardStatus == GetJobCardStatus.success
-                                                      ? state.filteredJobCards![index].customerName!
-                                                      : 'Customer Name',
-                                                  style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Image.asset(
-                                              'assets/images/call.png',
-                                              scale: size.width * (isMobile ? 0.06 : 0.018),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 8,
-                                            child: SizedBox(
-                                              width: size.width * (isMobile ? 0.25 : 0.08),
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
-                                                child: Text(
-                                                  state.getJobCardStatus == GetJobCardStatus.success
-                                                      ? state.filteredJobCards![index].customerContact ?? '-'
-                                                      : 'Contact Number',
-                                                  style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
                       ),
-                    ));
-              }, childCount: state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards!.length : 7)),
-              if (state.getJobCardStatus == GetJobCardStatus.success && state.filteredJobCards!.isEmpty)
-                // used to create scroll effect even when the job cards are empty
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      Gap(size.height * 0.25),
-                      Lottie.asset(
-                        'assets/lottie/no_data_found.json',
-                      ),
-                      Gap(size.height * 0.01),
-                      Text(
-                        'No Job Cards are in progress.',
-                        style: TextStyle(fontSize: isMobile ? 14 : 17),
-                      )
-                    ],
-                  ),
-                )
-            ],
-          );
-        },
-      ),
+                    ),
+                  ));
+            }, childCount: state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards!.length : 7)),
+            if (state.getJobCardStatus == GetJobCardStatus.success && state.filteredJobCards!.isEmpty)
+              // used to create scroll effect even when the job cards are empty
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    Gap(size.height * 0.25),
+                    Lottie.asset(
+                      'assets/lottie/no_data_found.json',
+                    ),
+                    Gap(size.height * 0.01),
+                    Text(
+                      'No Job Cards are in progress.',
+                      style: TextStyle(fontSize: isMobile ? 14 : 17),
+                    )
+                  ],
+                ),
+              )
+          ],
+        );
+      },
     );
   }
 }

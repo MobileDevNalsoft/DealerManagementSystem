@@ -118,18 +118,14 @@ class _StepState extends State<Step> with ConnectivityMixin {
                               case 2:
                                 context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.loading));
                                 try {
-                                 
-                                 
                                   context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.initial));
-                                  print("jobcardno ${widget.jobCardNo}");
-                                  navigator.push('/qualityCheck',
-                                      arguments: widget.jobCardNo);
+                                  navigator.push('/qualityCheck', arguments: widget.jobCardNo);
                                 } catch (e) {
                                   context.read<MultiBloc>().add(MultiBlocStatusChange(status: MultiStateStatus.failure));
 
                                   Log.e(" caught an error $e");
                                 }
-                              
+
                               case 3:
                                 context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
                                 navigator.push('/inspectionOut');

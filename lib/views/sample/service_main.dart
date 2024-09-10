@@ -56,7 +56,7 @@ class _ServiceMainSample extends State<ServiceMainSample> {
     _vehicleBloc = context.read<VehicleBloc>();
     _multiBloc = context.read<MultiBloc>();
 
-    _serviceBloc.add(GetServiceLocations());
+    _serviceBloc.add(GetSBRequirements());
     _vehicleBloc.state.status = VehicleStatus.initial;
     _multiBloc.state.date = null;
   }
@@ -129,15 +129,15 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                       stops: [0.01, 0.35, 1]),
                 ),
                 child: BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
-                  switch (state.serviceLocationsStatus) {
-                    case GetServiceLocationsStatus.loading:
+                  switch (state.getSBRequirementsStatus) {
+                    case GetSBRequirementsStatus.loading:
                       return Transform(
                         transform: Matrix4.translationValues(0, -40, 0),
                         child: Center(
                           child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6),
                         ),
                       );
-                    case GetServiceLocationsStatus.success:
+                    case GetSBRequirementsStatus.success:
                       return ListView(
                         padding: const EdgeInsets.only(top: 20),
                         controller: scrollController,

@@ -23,6 +23,8 @@ class AddVehicle extends StatefulWidget {
 class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
   // TextEditing Controllers
 
+  TextEditingController locTypeAheadController = TextEditingController();
+
   TextEditingController vehicleRegNumberController = TextEditingController();
 
   TextEditingController customerContactNumberController = TextEditingController();
@@ -59,6 +61,8 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
 
   // FocusNodes
 
+  FocusNode locFocus = FocusNode();
+
   FocusNode vehicleRegNumberFocus = FocusNode();
 
   FocusNode vehicleTypeFocus = FocusNode();
@@ -89,14 +93,11 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
 
   FocusNode financialDetailsFocus = FocusNode();
 
-  // year picker controller
-
-  late FixedExtentScrollController yearPickerController;
-
   // misc variables
   int index = 0;
 
   // drop down dynamic icon variables
+  bool dropDownUp = false;
   bool makeDropDownUp = false;
   bool insuranceCompanyDropDownUp = false;
   late Size size;
@@ -117,15 +118,25 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
     _vehicleBloc = context.read<VehicleBloc>();
     _serviceBloc = context.read<ServiceBloc>();
 
+    // Fetching locations if not already fetched.
+    if (_serviceBloc.state.locations == null) {
+      _serviceBloc.add(GetSBRequirements());
+    }
+
     _multiBloc.state.year = DateTime.now().year;
+    mfgYearController.text = DateTime.now().year.toString();
 
     // If vehicle registration number exists in VehicleBloc state, set it in the text field controller
-    yearPickerController = FixedExtentScrollController(initialItem: index);
     if (_vehicleBloc.state.registrationNo != null) {
       vehicleRegNumberController.text = _vehicleBloc.state.registrationNo!;
     }
     vehicleRegNumberFocus.addListener(_onRegNoFocusChange);
     _vehicleBloc.state.status = VehicleStatus.initial;
+
+    locFocus.addListener(() {
+      dropDownUp = !dropDownUp;
+      _serviceBloc.add(DropDownOpen());
+    });
 
     makeFocus.addListener(() {
       makeDropDownUp = !makeDropDownUp;
@@ -210,7 +221,6 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
     mfgYearFocus.dispose();
     insuranceCompanyFocus.dispose();
     financialDetailsFocus.dispose();
-    yearPickerController.dispose();
   }
 
   @override
@@ -274,10 +284,28 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                 crossAxisSpacing: 16,
                                 children: [
                                   // List of form fields using custom widgets.
+                                  BlocBuilder<ServiceBloc, ServiceState>(
+                                    builder: (context, state) {
+                                      return DMSCustomWidgets.SearchableDropDown(
+                                          size: size,
+                                          hint: '*Location',
+                                          items: state.getSBRequirementsStatus == GetSBRequirementsStatus.success ? state.locations! : [],
+                                          icon: dropDownUp
+                                              ? Icon(
+                                                  Icons.arrow_drop_up,
+                                                  size: size.height * 0.03,
+                                                )
+                                              : Icon(Icons.arrow_drop_down, size: size.height * 0.03),
+                                          focus: locFocus,
+                                          typeAheadController: locTypeAheadController,
+                                          scrollController: scrollController,
+                                          isMobile: isMobile);
+                                    },
+                                  ),
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: vehicleRegNumberFocus,
                                       size: size,
-                                      hint: "Vehicle Reg. No.",
+                                      hint: "*Vehicle Reg. No.",
                                       isMobile: isMobile,
                                       inputFormatters: [UpperCaseTextFormatter()],
                                       scrollController: scrollController,
@@ -286,7 +314,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: chassisNumberFocus,
                                       size: size,
-                                      hint: "Chassis No.",
+                                      hint: "*Chassis No.",
                                       isMobile: isMobile,
                                       inputFormatters: [UpperCaseTextFormatter()],
                                       scrollController: scrollController,
@@ -295,7 +323,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: engineNumberFocus,
                                       size: size,
-                                      hint: "Engine No.",
+                                      hint: "*Engine No.",
                                       inputFormatters: [UpperCaseTextFormatter()],
                                       isMobile: isMobile,
                                       textcontroller: engineNumberController,
@@ -303,7 +331,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       context: context),
                                   DMSCustomWidgets.SearchableDropDown(
                                     size: size,
-                                    hint: "Make",
+                                    hint: "*Make",
                                     items: ["Maruthi Suzuki", "Tata", "Mercedes", "Hyundai", "Kia", "Ford", "Toyota"],
                                     focus: makeFocus,
                                     typeAheadController: makeTypeAheadController,
@@ -322,7 +350,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       inputFormatters: [
                                         InitCapCaseTextFormatter() // forces the text entered in the text field to be init cap case
                                       ],
-                                      hint: "Model",
+                                      hint: "*Model",
                                       isMobile: isMobile,
                                       textcontroller: modelController,
                                       scrollController: scrollController,
@@ -343,7 +371,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       size: size,
                                       hint: "Color",
                                       inputFormatters: [
-                                        UpperCaseTextFormatter() // forces the text entered in the text field to be upper case
+                                        UpperCaseTextFormatter() // forces the text entered in the text field to be upper case,
                                       ],
                                       isMobile: isMobile,
                                       textcontroller: colorController,
@@ -352,7 +380,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: kmsFocus,
                                       size: size,
-                                      hint: "KMS",
+                                      hint: "*KMS",
                                       isMobile: isMobile,
                                       keyboardType: TextInputType.number, // opens only num keypad
                                       inputFormatters: [
@@ -364,7 +392,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   BlocBuilder<MultiBloc, MultiBlocState>(
                                     builder: (context, state) {
                                       return DMSCustomWidgets.CustomYearPicker(
-                                          size: size, isMobile: isMobile, context: context, yearPickerController: yearPickerController, year: state.year);
+                                          size: size, isMobile: isMobile, context: context, mfgYearController: mfgYearController, year: state.year);
                                     },
                                   ),
                                   DMSCustomWidgets.SearchableDropDown(
@@ -390,7 +418,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                   DMSCustomWidgets.CustomDataCard(
                                       focusNode: customerNameFocus,
                                       size: size,
-                                      hint: "Customer Name",
+                                      hint: "*Customer Name",
                                       inputFormatters: [
                                         InitCapCaseTextFormatter() // forces the text entered in the text field to be init cap case
                                       ],
@@ -402,7 +430,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                       focusNode: customerContactNumberFocus,
                                       keyboardType: const TextInputType.numberWithOptions(signed: true),
                                       size: size,
-                                      hint: "Customer Contact No.",
+                                      hint: "*Customer Contact No.",
                                       isMobile: isMobile,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly, // allows only numbers entry in to the text field
@@ -417,7 +445,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                     child: DMSCustomWidgets.CustomTextFieldCard(
                                         focusNode: customerAddressFocus,
                                         size: size,
-                                        hint: "Customer Address",
+                                        hint: "*Customer Address",
                                         inputFormatters: [
                                           InitCapCaseTextFormatter() // forces the text entered in the text field to be init cap case
                                         ],
@@ -542,13 +570,17 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                 FocusManager.instance.primaryFocus?.unfocus();
 
                                 // message is assigned with a String according to the validations.
-                                String? message = _vehicleRegistrationNoValidator(vehicleRegNumberController.text) ??
+                                String? message = _locationValidator(locTypeAheadController.text) ??
+                                    _vehicleRegistrationNoValidator(vehicleRegNumberController.text) ??
                                     _chassisNoValidation(chassisNumberController.text) ??
                                     _engineNoValidation(engineNumberController.text) ??
                                     (makeTypeAheadController.text.isEmpty ? 'Make cannot be empty' : null) ??
                                     (kmsController.text.isEmpty ? 'KMS cannot be empty' : null) ??
                                     _nameValidation(customerNameController.text) ??
-                                    (customerContactNumberController.text.isEmpty ? _customerContactNoValidation(customerContactNumberController.text) : null);
+                                    (customerContactNumberController.text.isEmpty
+                                        ? _customerContactNoValidation(customerContactNumberController.text)
+                                        : null) ??
+                                    (customerAddressController.text.isEmpty ? 'Please fill the address details' : null);
 
                                 // shows a snackbar with the message if message variable is not null.
                                 if (message != null) {
@@ -561,19 +593,20 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                                 } else {
                                   // populate the vehicle object with all the required details to be pushed to db
                                   Vehicle vehicle = Vehicle(
+                                      location: locTypeAheadController.text,
                                       vehicleRegNumber: vehicleRegNumberController.text,
                                       chassisNumber: chassisNumberController.text,
                                       engineNumber: engineNumberController.text,
                                       make: makeTypeAheadController.text,
                                       varient: variantController.text,
                                       color: colorController.text,
-                                      mfgYear: mfgYearController.text.isNotEmpty ? int.parse(mfgYearController.text) : 0,
+                                      mfgYear: int.parse(mfgYearController.text),
                                       kms: kmsController.text.isNotEmpty ? int.parse(kmsController.text) : 0,
                                       financialDetails: financialDetailsController.text,
                                       model: modelController.text,
                                       insuranceCompany: insuranceCompanyTypeAheadController.text,
-                                      customerContactNo: customerContactNumberController.text,
                                       customerName: customerNameController.text,
+                                      customerContactNo: customerContactNumberController.text,
                                       customerAddress: customerAddressController.text);
 
                                   // trigger event with the vehicle object as parameter which triggers the repo method to push data to the db
@@ -602,7 +635,8 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
                     ],
                   ),
                 ),
-                if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading)
+                if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading ||
+                    context.watch<ServiceBloc>().state.getSBRequirementsStatus == GetSBRequirementsStatus.loading)
                   // shows the loading animation according to the vehicle status in vehicle bloc.
                   Container(
                     color: Colors.black54,
@@ -625,6 +659,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
       Widget? statusWidget,
       required void Function()? onAccept,
       required void Function()? onReject}) {
+    FocusManager.instance.primaryFocus?.unfocus();
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -694,62 +729,71 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
           );
         });
   }
-}
+
+  String? _locationValidator(String value) {
+    if (value.isEmpty) {
+      return "location cannot be empty";
+    } else if (!_serviceBloc.state.locations!.contains(locTypeAheadController.text)) {
+      return "please select a valid location";
+    }
+    return null;
+  }
 
 // validates vehicle registration number according to the conditions and regex used.
-String? _vehicleRegistrationNoValidator(String value) {
-  if (value.isEmpty) {
-    return "Vehicle Registration No. can't be empty";
-  } else if (value.length < 10) {
-    return "Vehicle Registration No. should contain 10 characters";
+  String? _vehicleRegistrationNoValidator(String value) {
+    if (value.isEmpty) {
+      return "Vehicle Registration No. can't be empty";
+    } else if (value.length < 10) {
+      return "Vehicle Registration No. should contain 10 characters";
+    }
+    return null;
   }
-  return null;
-}
 
 // validates customer contact number according to the conditions and regex used.
-String? _customerContactNoValidation(String value) {
-  RegExp contactNoRegex = RegExp(r'^\d{10}$');
-  if (value.isEmpty) {
-    return "Contact Number can't be empty";
-  } else if (!contactNoRegex.hasMatch(value)) {
-    return "Invalid Contact Number";
+  String? _customerContactNoValidation(String value) {
+    RegExp contactNoRegex = RegExp(r'^\d{10}$');
+    if (value.isEmpty) {
+      return "Contact Number can't be empty";
+    } else if (!contactNoRegex.hasMatch(value)) {
+      return "Invalid Contact Number";
+    }
+    return null;
   }
-  return null;
-}
 
 // validates chassis number according to the conditions and regex used.
-String? _chassisNoValidation(String value) {
-  // RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
-  if (value.isEmpty) {
-    return "Chassis No. can't be empty";
-  } else if (value.length > 17) {
-    return "Invalid Chassis No.";
+  String? _chassisNoValidation(String value) {
+    // RegExp chassisNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
+    if (value.isEmpty) {
+      return "Chassis No. can't be empty";
+    } else if (value.length > 17) {
+      return "Invalid Chassis No.";
+    }
+    //  else if (!chassisNoRegex.hasMatch(value)) {
+    //   return "Invalid Chassis No.";
+    // }
+    return null;
   }
-  //  else if (!chassisNoRegex.hasMatch(value)) {
-  //   return "Invalid Chassis No.";
-  // }
-  return null;
-}
 
 // validates engine number according to the conditions and regex used.
-String? _engineNoValidation(String value) {
-  RegExp engineNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
-  if (value.isEmpty) {
-    return "Engine No. can't be empty";
+  String? _engineNoValidation(String value) {
+    RegExp engineNoRegex = RegExp(r'^[A-Z]{2}\d{4}$');
+    if (value.isEmpty) {
+      return "Engine No. can't be empty";
+    }
+    // else if (!engineNoRegex.hasMatch(value)) {
+    //   return "Invalid Engine No.";
+    // }
+    return null;
   }
-  // else if (!engineNoRegex.hasMatch(value)) {
-  //   return "Invalid Engine No.";
-  // }
-  return null;
-}
 
 // validates name according to the conditions and regex used.
-String? _nameValidation(String value) {
-  RegExp customerNameRegex = RegExp(r'^[A-Za-z ]*$');
-  if (value.isEmpty) {
-    return "Customer Name can't be empty!";
-  } else if (!customerNameRegex.hasMatch(value)) {
-    return "Invalid Customer Name";
+  String? _nameValidation(String value) {
+    RegExp customerNameRegex = RegExp(r'^[A-Za-z ]*$');
+    if (value.isEmpty) {
+      return "Customer Name can't be empty!";
+    } else if (!customerNameRegex.hasMatch(value)) {
+      return "Invalid Customer Name";
+    }
+    return null;
   }
-  return null;
 }

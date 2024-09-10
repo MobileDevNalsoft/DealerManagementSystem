@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:bloc/bloc.dart';
+import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../logger/logger.dart';
 import '../../navigations/navigator_service.dart';
@@ -26,7 +28,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         super(ServiceState.initial()) {
     on<ServiceAdded>(_onServiceAdded);
     on<GetServiceHistory>(_onGetServiceHistory);
-    on<GetServiceLocations>(_onGetServiceLocations);
+    on<GetSBRequirements>(_onGetSBRequirements);
     on<PageChange>(_onPageChange);
     on<GetJobCards>(_onGetJobCards);
     on<InspectionJsonUpdated>(_onInspectionJsonUpdated);
@@ -53,7 +55,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   void _onSearchJobCards(SearchJobCards event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getJobCardStatus: GetJobCardStatus.loading));
-    await Future.delayed(Duration(milliseconds: 500), () {
+    await Future.delayed(const Duration(milliseconds: 500), () {
       emit(state.copyWith(filteredJobCards: state.jobCards!.where((e) => e.registrationNo!.toLowerCase().contains(event.searchText.toLowerCase())).toList()));
     });
     emit(state.copyWith(getJobCardStatus: GetJobCardStatus.success));
@@ -82,7 +84,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           if (event.inspectionIn == 'false') {
             navigator!.pushAndRemoveUntil('/gatePass', '/listOfJobCards');
           } else {
-              navigator!.pushAndRemoveUntil('/vehicleExamination', '/home');
+            navigator!.pushAndRemoveUntil('/vehicleExamination', '/home');
           }
           emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         } else {
@@ -149,7 +151,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future<void> _onGetServiceHistory(GetServiceHistory event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getServiceStatus: GetServiceStatus.loading));
-    await _repo.getHistory(event.query!, 0, vehicleRegNo: event.vehicleRegNo).then(
+    await _repo.getHistory(event.query!, 0, param: event.vehicleRegNo).then(
       (json) {
         print('json $json');
         if (json['response_code'] == 200) {
@@ -194,8 +196,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future<void> _onGetMyJobCards(GetMyJobCards event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.loading));
-    print(event.query);
-    await _repo.getHistory(event.query!, 0).then(
+    await _repo.getHistory('myJobCards', 0, param: getIt<SharedPreferences>().getString('user_name')).then(
       (json) {
         print('json $json');
         if (json['response_code'] == 200) {
@@ -233,22 +234,24 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onGetServiceLocations(GetServiceLocations event, Emitter<ServiceState> emit) async {
-    if (state.serviceLocationsStatus != GetServiceLocationsStatus.success) {
-      emit(state.copyWith(serviceLocationsStatus: GetServiceLocationsStatus.loading));
+  Future<void> _onGetSBRequirements(GetSBRequirements event, Emitter<ServiceState> emit) async {
+    if (state.getSBRequirementsStatus != GetSBRequirementsStatus.success) {
+      emit(state.copyWith(serviceLocationsStatus: GetSBRequirementsStatus.loading));
     }
-    await _repo.getLocations().then(
+    await _repo.getSBRequirements().then(
       (json) {
-        print('json $json');
         if (json['response_code'] == 200) {
-          emit(state.copyWith(serviceLocationsStatus: GetServiceLocationsStatus.success, locations: json['data'].map((e) => e.values.first).toList()));
+          emit(state.copyWith(
+              serviceLocationsStatus: GetSBRequirementsStatus.success,
+              locations: json['locations'].map((e) => e.values.first).toList(),
+              jobTypes: json['job_types'].map((e) => e.values.first).toList()));
         } else {
-          emit(state.copyWith(serviceLocationsStatus: GetServiceLocationsStatus.failure));
+          emit(state.copyWith(serviceLocationsStatus: GetSBRequirementsStatus.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
-        emit(state.copyWith(serviceLocationsStatus: GetServiceLocationsStatus.failure));
+        emit(state.copyWith(serviceLocationsStatus: GetSBRequirementsStatus.failure));
       },
     );
   }

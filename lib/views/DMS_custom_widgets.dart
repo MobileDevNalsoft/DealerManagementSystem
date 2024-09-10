@@ -142,17 +142,24 @@ class DMSCustomWidgets {
       required String hint,
       required bool isMobile,
       required ScrollController scrollController,
-      Function(String?)? onChange,
-      String? Function(String?)? validator,
       GlobalKey? key,
-      TextEditingController? textcontroller,
+      required TextEditingController textcontroller,
       Widget? icon,
       required BuildContext context,
       List<TextInputFormatter>? inputFormatters,
+      bool readOnly = false,
       TextInputType? keyboardType,
       String? initialValue,
       Widget? suffixIcon,
-      FocusNode? focusNode}) {
+      required FocusNode focusNode}) {
+    focusNode.addListener(
+      () {
+        if (!focusNode.hasFocus) {
+          textcontroller.text = textcontroller.text.trimRight();
+        }
+      },
+    );
+
     return SizedBox(
       // Set the card height and width based on mobile status
       height: size.height * (isMobile ? 0.06 : 0.05),
@@ -165,18 +172,20 @@ class DMSCustomWidgets {
           // Adjust vertical position slightly for mobile layout
           transform: Matrix4.translationValues(0, size.width * (isMobile ? 0.0 : 0.007), 0),
           child: TextFormField(
-            onChanged: onChange,
             initialValue: initialValue,
             keyboardType: keyboardType,
             inputFormatters: inputFormatters,
             textInputAction: TextInputAction.next,
+            readOnly: readOnly,
+            onTapOutside: (event) {
+              focusNode.unfocus();
+            },
             onTap: () {
               // Trigger event on focus change in MultiBloc
               // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
-              context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode!, scrollController: scrollController, context: context));
+              context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode, scrollController: scrollController, context: context));
             },
             key: key,
-            validator: validator,
             focusNode: focusNode,
             cursorColor: Colors.black,
             controller: textcontroller,
@@ -210,13 +219,21 @@ class DMSCustomWidgets {
   static Widget CustomTextFieldCard(
       {required Size size,
       required String hint,
-      TextEditingController? textcontroller,
+      required TextEditingController textcontroller,
       List<TextInputFormatter>? inputFormatters,
-      FocusNode? focusNode,
+      required FocusNode focusNode,
       required BuildContext context,
       required ScrollController scrollController,
       Widget? icon,
       required bool isMobile}) {
+    focusNode.addListener(
+      () {
+        if (!focusNode.hasFocus) {
+          textcontroller.text = textcontroller.text.trimRight();
+        }
+      },
+    );
+
     return SizedBox(
       // Set the height and width of the card based on mobile/non-mobile
       height: size.height * (isMobile ? 0.1 : 0.13),
@@ -231,6 +248,9 @@ class DMSCustomWidgets {
           controller: textcontroller,
           focusNode: focusNode,
           inputFormatters: inputFormatters,
+          onTapOutside: (event) {
+            focusNode.unfocus();
+          },
           onTap: () {
             // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
             context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode!, scrollController: scrollController, context: context));
@@ -373,7 +393,7 @@ class DMSCustomWidgets {
 
   /// This widget builds a custom year picker for selecting a vehicle's manufacturing year.
   static Widget CustomYearPicker(
-      {required Size size, required bool isMobile, required BuildContext context, required FixedExtentScrollController yearPickerController, int? year}) {
+      {required Size size, required bool isMobile, required BuildContext context, required TextEditingController mfgYearController, int? year}) {
     // Get the current year
     int now = DateTime.now().year;
     return SizedBox(
@@ -424,6 +444,7 @@ class DMSCustomWidgets {
                                 .map((e) => InkWell(
                                       onTap: () {
                                         context.read<MultiBloc>().add(YearChanged(year: e));
+                                        mfgYearController.text = e.toString();
                                         Navigator.pop(context);
                                       },
                                       child: SizedBox(

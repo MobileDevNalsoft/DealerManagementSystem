@@ -29,6 +29,7 @@ class Repository {
   Future<int> addService(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addService', data: payload);
 
+    Log.d(payload);
     if (apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
@@ -68,8 +69,8 @@ class Repository {
     }
   }
 
-  Future<Map<String, dynamic>> getHistory(String query, int pageNo, {String? vehicleRegNo}) async {
-    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {"param": query, "pageNo": pageNo, "vehicleRegNo": vehicleRegNo ?? ""});
+  Future<Map<String, dynamic>> getHistory(String query, int pageNo, {String? param}) async {
+    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {"query_type": query, "pageNo": pageNo, "param": param ?? ""});
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
@@ -81,8 +82,8 @@ class Repository {
     }
   }
 
-  Future<Map<String, dynamic>> getLocations() async {
-    ApiResponse apiResponse = await _api.get("getLocations");
+  Future<Map<String, dynamic>> getSBRequirements() async {
+    ApiResponse apiResponse = await _api.get("getSBRequirements");
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);

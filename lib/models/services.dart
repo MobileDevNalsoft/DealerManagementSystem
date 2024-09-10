@@ -1,3 +1,6 @@
+import 'package:dms/inits/init.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 final class Service {
   int? sNo;
   String? registrationNo;
@@ -17,6 +20,8 @@ final class Service {
   String? status;
   String? customerContact;
   String? creationDate;
+
+  SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   Service(
       {this.sNo,
@@ -70,7 +75,7 @@ final class Service {
     bookingSource = json['booking_source'];
     alternateContactPerson = json['alternate_contact_person'];
     alternatePersonContactNo = json['alternate_contact_person_contact_no'];
-    salesPerson = json['sales_person'];
+    salesPerson = json['user_name'];
     bay = json['bay'];
     jobType = json['job_type'];
     jobCardNo = json['job_card_no'];
@@ -85,12 +90,12 @@ final class Service {
     data['vehicle_registration_no'] = registrationNo;
     data['location'] = location;
     data['customer_name'] = customerName;
-    data['schedule_date'] = scheduledDate;
+    data['scheduled_date'] = scheduledDate;
     data['kms'] = kms;
     data['booking_source'] = bookingSource;
     data['alternate_contact_person'] = alternateContactPerson;
     data['alternate_person_contact_no'] = alternatePersonContactNo;
-    data['sales_person'] = salesPerson;
+    data['user_name'] = sharedPreferences.getString('user_name');
     data['bay'] = bay;
     data['job_type'] = jobType;
     data['job_card_no'] = jobCardNo;

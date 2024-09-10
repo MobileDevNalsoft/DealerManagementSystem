@@ -21,6 +21,7 @@ class Vehicle {
   String? customerName;
   String? customerAddress;
   String? inspectionIN;
+  String? location;
 
   Vehicle(
       {this.vehicleType,
@@ -40,6 +41,7 @@ class Vehicle {
       this.engineNumber,
       this.customerContactNo,
       this.inspectionIN,
+      this.location,
       this.customerName,
       this.customerAddress});
 
@@ -62,6 +64,7 @@ class Vehicle {
     customerName = json['customer_name'];
     customerAddress = json['customer_address'];
     inspectionIN = json['inspection_in'];
+    location = json['location'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,7 +86,8 @@ class Vehicle {
     data['customer_contact_no'] = customerContactNo;
     data['customer_name'] = customerName;
     data['customer_address'] = customerAddress;
-    data['employee_id'] = getIt<SharedPreferences>().getInt('service_advisor_id');
+    data['location'] = location;
+    data['user_name'] = getIt<SharedPreferences>().getString('user_name');
     return data;
   }
 }

@@ -26,7 +26,6 @@ class VehicleBloc extends Bloc<VehicleEvent, VehicleState> {
 
   Future<void> _onAddVehicle(AddVehicleEvent event, Emitter<VehicleState> emit) async {
     emit(state.copyWith(status: VehicleStatus.loading));
-    print(event.vehicle.toJson());
     await _repo.addVehicle(event.vehicle.toJson()).then((value) {
       if (value == 200) {
         emit(state.copyWith(status: VehicleStatus.success));

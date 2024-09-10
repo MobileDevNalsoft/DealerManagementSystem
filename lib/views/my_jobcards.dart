@@ -38,7 +38,7 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
     _serviceBloc.state.getMyJobCardsStatus = GetMyJobCardsStatus.initial;
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
-    _serviceBloc.add(GetMyJobCards(query: getIt<SharedPreferences>().getInt('service_advisor_id').toString()));
+    _serviceBloc.add(GetMyJobCards());
   }
 
   @override

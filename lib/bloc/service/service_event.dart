@@ -48,10 +48,7 @@ class GetJobCards extends ServiceEvent {
 }
 
 // triggered to get job cards based on query in my job cards page
-class GetMyJobCards extends ServiceEvent {
-  final String? query;
-  GetMyJobCards({this.query});
-}
+class GetMyJobCards extends ServiceEvent {}
 
 // to update job card status
 class JobCardStatusUpdated extends ServiceEvent {
@@ -60,7 +57,7 @@ class JobCardStatusUpdated extends ServiceEvent {
   JobCardStatusUpdated({this.jobCardStatus, this.jobCardNo});
 }
 
-class GetServiceLocations extends ServiceEvent {}
+class GetSBRequirements extends ServiceEvent {}
 
 // triggers when navigated to inspection out page.
 class GetInspectionDetails extends ServiceEvent {
