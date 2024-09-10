@@ -308,7 +308,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       ),
                     ),
                   Padding(
-                    padding: EdgeInsets.only(top: size.height * (isMobile ? 0.056 : 0.04), left: size.width * (isMobile ? 0.1 : 0.056)),
+                    padding: EdgeInsets.only(top: size.height * (isMobile ? 0.056 : 0.04), left: size.width * (isMobile ? 0.08 : 0.056)),
                     child: BlocBuilder<VehicleBloc, VehicleState>(
                       builder: (context, state) {
                         return Skeletonizer(
@@ -319,6 +319,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                               spaceBetweenFields: size.width * (isMobile ? 0.03 : 0.014),
                               propertyFontStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                               valueFontStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+                              valueWidth: isMobile?size.width*0.4:null,
                               showColonsBetween: false,
                               propertyList: [
                                 "Vehicle Reg. no.",
