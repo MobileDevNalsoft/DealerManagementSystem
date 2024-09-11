@@ -248,7 +248,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                         }
                                                         state.json = state.json!;
                                                         _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                                        _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.service!.jobCardNo!, inspectionIn: 'false'));
+                                                        _serviceBloc
+                                                            .add(InspectionJsonAdded(serviceBookingNo: state.service!.jobCardNo!, inspectionIn: 'false'));
                                                         _serviceBloc.add(GetJobCards(query: 'Location27'));
                                                       });
                                                 }
@@ -280,7 +281,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                 }
                                                 state.json = state.json!;
                                                 _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                                _serviceBloc.add(InspectionJsonAdded(jobCardNo: state.service!.jobCardNo!, inspectionIn: 'false'));
+                                                _serviceBloc.add(InspectionJsonAdded(serviceBookingNo: state.service!.jobCardNo!, inspectionIn: 'false'));
                                                 _serviceBloc.add(GetJobCards(query: 'Location27'));
                                               });
                                         }

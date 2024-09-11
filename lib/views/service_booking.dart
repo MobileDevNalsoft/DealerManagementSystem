@@ -98,9 +98,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
     _multiBloc.add(GetSalesPersons(searchText: "ab"));
     _vehicleBloc.state.status = VehicleStatus.initial;
 
-    Future.delayed(const Duration(milliseconds: 600), () {
-      locFocus.requestFocus();
-    });
     // Fetching locations if not already fetched.
     if (_serviceBloc.state.locations == null) {
       _serviceBloc.add(GetSBRequirements());
@@ -108,8 +105,16 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
 
     if (_vehicleBloc.state.registrationNo != null) {
       vehRegNumController.text = _vehicleBloc.state.registrationNo!;
+      _vehicleBloc.state.status = VehicleStatus.initial;
+      _vehicleBloc.add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
+    } else {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        vehRegNumFocus.requestFocus();
+      });
     }
+
     _multiBloc.state.date = null;
+    locTypeAheadController.text = sharedPreferences.getStringList('locations')!.first;
 
     locFocus.addListener(() {
       dropDownUp = !dropDownUp;
@@ -316,6 +321,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                             customerController.text = state.vehicle!.cusotmerName!;
                                                           case VehicleStatus.newVehicle:
                                                             FocusManager.instance.primaryFocus?.unfocus();
+                                                            customerController.text = '';
                                                             if (navigator.navigatorkey.currentState!.mounted) {
                                                               showRegistrationDialog(size: size, state: state);
                                                             }
@@ -666,7 +672,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                     //Navigating to Inspection in after successful upload of service booking
                                                     case ServiceUploadStatus.success:
                                                       DMSCustomWidgets.DMSFlushbar(size, context,
-                                                          message: 'Service Added Successfully',
+                                                          message: 'Service Booking Successful',
                                                           icon: const Icon(
                                                             Icons.check_circle_rounded,
                                                             color: Colors.white,
@@ -751,8 +757,6 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                                                                       salesPerson: sharedPreferences.getString('user_name'),
                                                                       bay: bayTypeAheadController.text,
                                                                       jobType: jobTypeTypeAheadController.text,
-                                                                      jobCardNo:
-                                                                          'JC-${locTypeAheadController.text.substring(0, 3).toUpperCase()}-${DateTime.now().millisecondsSinceEpoch.toString().substring(DateTime.now().millisecondsSinceEpoch.toString().length - 3, DateTime.now().millisecondsSinceEpoch.toString().length - 1)}',
                                                                       customerConcerns: custConcernsController.text,
                                                                       remarks: remarksController.text);
                                                                   _serviceBloc.state.service = service;
@@ -867,7 +871,7 @@ class _ServiceBooking extends State<ServiceBooking> with ConnectivityMixin {
                     Padding(
                       padding: EdgeInsets.only(left: size.width * 0.03),
                       child: const Text(
-                        'Oops! This Vehicle not registered with us.',
+                        'Oops!\nThis Vehicle not registered with us.',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
