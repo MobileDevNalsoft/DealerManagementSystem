@@ -10,6 +10,7 @@ import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/repository/repository.dart';
 import 'package:dms/views/Vehicle_examination_2.dart';
+import 'package:dms/views/quality_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +37,8 @@ void main() async {
         navigatorKey: getIt<NavigatorService>().navigatorkey,
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/home',
+        // home: QualityCheck(jobCardNo: 'JC-LOC-11',),
+        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/vehicleExamination',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
       ),

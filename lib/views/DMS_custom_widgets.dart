@@ -733,7 +733,8 @@ class DMSCustomWidgets {
       backgroundColor: Colors.black45,
       leadingWidth: size.width * 0.14,
       leading: Container(
-        margin: EdgeInsets.only(left: size.width * (isMobile ? 0.045 : 0.065)),
+        
+        margin: EdgeInsets.only(left: size.width * (isMobile ? 0.032 : 0.065)),
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.black,

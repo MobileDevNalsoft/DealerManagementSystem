@@ -31,6 +31,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
 
     //initaializing empty object
     context.read<VehiclePartsInteractionBloc>().state.mapMedia = {};
+    context.read<MultiBloc>().state.selectedGeneralBodyPart="";
   }
 
   Future loadSvg() async {

@@ -91,7 +91,7 @@ class VehicleInfoClippedButton extends StatelessWidget {
         clipper: VehicleInfoClipper(),
         child: Container(
           height: size.height * (isMobile ? 0.5 : 0.58),
-          width: size.width * (isMobile ? 0.95 : 0.9),
+          width: size.width * (isMobile ? 0.94 : 0.9),
           decoration: BoxDecoration(color: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? decorationColor : null),
           child: child,
         ),

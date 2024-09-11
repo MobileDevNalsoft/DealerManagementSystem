@@ -130,8 +130,8 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     try {
       imageMedia = jsonDecode(await _repo.getImage(event.jobCardNo));
     } catch (e) {
-      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure));
-      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
+      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure,mediaJsonStatus: MediaJsonStatus.failure));
+      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial,mediaJsonStatus: MediaJsonStatus.initial));
       return;
     }
     for (var entry in imageMedia.entries) {
