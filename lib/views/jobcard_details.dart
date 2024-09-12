@@ -104,19 +104,19 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
                     IntrinsicHeight(
                       child: Container(
                         margin:
-                            EdgeInsets.only(top: size.height * 0.04, left: size.width * (isMobile ? 0.05 : 0.08), right: size.width * (isMobile ? 0.05 : 0.08)),
+                            EdgeInsets.only(top: size.height * 0.04, left: size.width * (isMobile ? 0.02 : 0.08), right: size.width * (isMobile ? 0.02 : 0.08)),
                         padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.05 : 0.032), vertical: size.height * 0.03),
                         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(isMobile ? 25 : 35)),
                         child: Column(
                           children: [
                             buildDetailRow('Job Card Number', _serviceBloc.state.service!.jobCardNo.toString(), size, isMobile),
-                            Gap(size.height * 0.03),
+                            Gap(size.height * 0.02),
                             buildDetailRow('Vehicle Registration Number', _serviceBloc.state.service!.registrationNo.toString(), size, isMobile),
-                            Gap(size.height * 0.03),
+                            Gap(size.height * 0.02),
                             buildDetailRow('Location', _serviceBloc.state.service!.location.toString(), size, isMobile),
-                            Gap(size.height * 0.03),
+                            Gap(size.height * 0.02),
                             buildDetailRow('Job Type', _serviceBloc.state.service!.jobType.toString(), size, isMobile),
-                            Gap(size.height * 0.03),
+                            Gap(size.height * 0.02),
                             buildDetailRow('Scheduled Date', _serviceBloc.state.service!.scheduledDate.toString(), size, isMobile)
                           ],
                         ),
@@ -147,13 +147,13 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
                                     flex: 1,
                                     child: Text(
                                       'Status',
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 16 : 18),
                                     ),
                                   ),
                                   Expanded(flex: 1, child: Gap(size.height * 0.01)),
                                   // creates stepper widget to show the status of the job card
                                   Expanded(
-                                      flex: 20,
+                                      flex: 25,
                                       child: Stepper(
                                         steps: dmsFlow
                                             .map((e) => Step(

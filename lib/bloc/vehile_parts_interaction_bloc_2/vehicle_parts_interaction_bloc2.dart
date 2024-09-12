@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../logger/logger.dart';
+
 part 'vehicle_parts_interaction_event2.dart';
 part 'vehicle_parts_interaction_state2.dart';
 
@@ -108,7 +110,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
         "normal": state.mapMedia[event.bodyPartName]!.normalPosition
       };
     }
-    await _repo.addVehiclePartMedia(bodyPartData: partJson, id: event.jobCardNo, name: event.bodyPartName).then((onValue) {
+    await _repo.addVehiclePartMedia(bodyPartData: partJson, id: event.serviceBookingNo, name: event.bodyPartName).then((onValue) {
       state.mapMedia[event.bodyPartName]!.isUploaded = true;
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));

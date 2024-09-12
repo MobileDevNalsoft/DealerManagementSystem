@@ -77,7 +77,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future<void> _onInspectionJsonAdded(InspectionJsonAdded event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
-    await _repo.addinspection({'job_card_no': event.jobCardNo, 'inspection_details': jsonEncode(state.json).toString(), 'in': event.inspectionIn}).then(
+    await _repo.addinspection({'sb_no': event.serviceBookingNo, 'inspection_details': jsonEncode(state.json).toString(), 'in': event.inspectionIn}).then(
       (value) async {
         if (value == 200) {
           emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
@@ -133,8 +133,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.loading));
     await _repo.addService(event.service.toJson()).then(
       (value) {
-        if (value == 200) {
-          emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.success, service: event.service));
+        if (value['response_code'] == 200) {
+          emit(state.copyWith(
+              serviceUploadStatus: ServiceUploadStatus.success, service: state.service!.copyWith(serviceBookingNo: value['service_booking_no'])));
           navigator!.pushAndRemoveUntil('/inspectionIn', '/home');
         } else {
           Log.e(value);

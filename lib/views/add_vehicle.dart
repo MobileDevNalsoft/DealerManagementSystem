@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({super.key});
@@ -110,6 +111,9 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
   // navigator service
   NavigatorService navigator = getIt<NavigatorService>();
 
+  //shared preferences
+  SharedPreferences sharedPreferences = getIt<SharedPreferences>();
+
   @override
   void initState() {
     super.initState();
@@ -125,6 +129,7 @@ class _AddVehicleState extends State<AddVehicle> with ConnectivityMixin {
 
     _multiBloc.state.year = DateTime.now().year;
     mfgYearController.text = DateTime.now().year.toString();
+    locTypeAheadController.text = sharedPreferences.getStringList('locations')!.first;
 
     // If vehicle registration number exists in VehicleBloc state, set it in the text field controller
     if (_vehicleBloc.state.registrationNo != null) {

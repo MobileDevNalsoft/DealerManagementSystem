@@ -43,15 +43,24 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: DMSCustomWidgets.appBar(
-          size: size, isMobile: isMobile, title: 'Parts Examination', actions: [Container(
-            margin: EdgeInsets.only(right: size.width*0.024),
-            padding: EdgeInsets.zero,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24),boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]), 
-            child: Switch(value: false, onChanged: (value){
+      appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Parts Examination', actions: [
+        Container(
+          margin: EdgeInsets.only(right: size.width * 0.024),
+          padding: EdgeInsets.zero,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
+          child: Switch(
+            value: false,
+            onChanged: (value) {
               navigator.pushReplacement('/vehicleExamination2');
-            },inactiveThumbColor: Colors.white,inactiveTrackColor: Colors.black,trackOutlineColor: const WidgetStatePropertyAll(Colors.black),),
-          )]),
+            },
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: Colors.black,
+            trackOutlineColor: const WidgetStatePropertyAll(Colors.black),
+          ),
+        )
+      ]),
       resizeToAvoidBottomInset: false,
       body: FutureBuilder(
           future: loadSvg(),

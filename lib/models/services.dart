@@ -5,6 +5,7 @@ final class Service {
   int? sNo;
   String? registrationNo;
   String? jobCardNo;
+  String? serviceBookingNo;
   String? location;
   String? customerName;
   String? scheduledDate;
@@ -27,6 +28,7 @@ final class Service {
       {this.sNo,
       this.registrationNo,
       this.jobCardNo,
+      this.serviceBookingNo,
       this.location,
       this.customerName,
       this.customerContact,
@@ -117,6 +119,7 @@ final class Service {
       String? bay,
       String? jobType,
       String? jobCardNo,
+      String? serviceBookingNo,
       String? customerConcerns,
       String? remarks}) {
     return Service(
@@ -132,6 +135,7 @@ final class Service {
         bay: bay ?? this.bay,
         jobType: jobType ?? this.jobType,
         jobCardNo: jobCardNo ?? this.jobCardNo,
+        serviceBookingNo: serviceBookingNo ?? this.serviceBookingNo,
         customerConcerns: customerConcerns ?? this.customerConcerns,
         remarks: remarks ?? this.remarks);
   }

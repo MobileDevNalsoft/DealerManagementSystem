@@ -27,9 +27,9 @@ class PageChange extends ServiceEvent {
 
 // triggers when submit buttom is pressed in inspection in page.
 class InspectionJsonAdded extends ServiceEvent {
-  final String jobCardNo;
+  final String serviceBookingNo;
   final String inspectionIn;
-  InspectionJsonAdded({required this.jobCardNo, required this.inspectionIn});
+  InspectionJsonAdded({required this.serviceBookingNo, required this.inspectionIn});
 }
 
 // used for dynamic updation of inspection json.

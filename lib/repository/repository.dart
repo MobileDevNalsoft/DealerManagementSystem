@@ -26,7 +26,7 @@ class Repository {
     }
   }
 
-  Future<int> addService(Map<String, dynamic> payload) async {
+  Future<Map<String, dynamic>> addService(Map<String, dynamic> payload) async {
     ApiResponse apiResponse = await _api.post('addService', data: payload);
 
     Log.d(payload);
@@ -34,10 +34,10 @@ class Repository {
       final response = jsonDecode(apiResponse.response!.data);
       if (response["response_code"] == 200) {
         Log.d(apiResponse.response);
-        return response["response_code"];
+        return {'response_code': response["response_code"], 'service_booking_no': response["service_booking_no"]};
       } else {
         Log.e(apiResponse.response);
-        return response["response_code"];
+        return {'response_code': response["response_code"]};
       }
     } else {
       Log.e(apiResponse.error);
@@ -74,7 +74,6 @@ class Repository {
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
-      print(response);
       return response;
     } else {
       Log.e(apiResponse.error);
@@ -229,7 +228,7 @@ class Repository {
   }
 
   Future<int> addVehiclePartMedia({Map<String, dynamic>? bodyPartData, required String id, required String name}) async {
-    print(bodyPartData);
+    print('body part data $bodyPartData');
     ApiResponse apiResponse = await _api.post('addVehiclePartMedia', data: {
       "id": id,
       "name": name,

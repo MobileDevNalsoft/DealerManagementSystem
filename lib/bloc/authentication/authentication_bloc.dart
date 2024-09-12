@@ -28,7 +28,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         if (json['response_code'] == 200) {
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
           getIt<SharedPreferences>().setString('user_name', event.username);
-          print(json);
+          getIt<SharedPreferences>().setStringList('locations', List<String>.from((json['locations']).map((e) => e['location_name']).toList()));
           navigator!.pushReplacement('/home');
         } else if (json['response_code'] == 404) {
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.invalidCredentials));

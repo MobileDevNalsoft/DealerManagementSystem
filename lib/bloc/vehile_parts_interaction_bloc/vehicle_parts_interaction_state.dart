@@ -8,14 +8,14 @@ class VehiclePartsInteractionBlocState {
   VehiclePartsInteractionStatus status;
   int vehicleExaminationPageIndex;
   String? hotspot;
-  VehiclePartsInteractionBlocState({required this.mapMedia, this.status = VehiclePartsInteractionStatus.initial, this.vehicleExaminationPageIndex = 0,this.hotspot});
+  VehiclePartsInteractionBlocState(
+      {required this.mapMedia, this.status = VehiclePartsInteractionStatus.initial, this.vehicleExaminationPageIndex = 0, this.hotspot});
 
-  VehiclePartsInteractionBlocState copyWith(Map<String, VehiclePartMedia>? mapMedia, status, { vehicleExaminationPageIndex,String? hotspot}) {
+  VehiclePartsInteractionBlocState copyWith(Map<String, VehiclePartMedia>? mapMedia, status, {vehicleExaminationPageIndex, String? hotspot}) {
     return VehiclePartsInteractionBlocState(
         mapMedia: mapMedia ?? this.mapMedia,
         status: status ?? this.status,
         vehicleExaminationPageIndex: vehicleExaminationPageIndex ?? this.vehicleExaminationPageIndex,
-        hotspot: hotspot??this.hotspot
-        );
+        hotspot: hotspot ?? this.hotspot);
   }
 }
