@@ -74,7 +74,6 @@ class Repository {
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       final response = jsonDecode(apiResponse.response!.data);
-      print(response);
       return response;
     } else {
       Log.e(apiResponse.error);
@@ -229,7 +228,7 @@ class Repository {
   }
 
   Future<int> addVehiclePartMedia({Map<String, dynamic>? bodyPartData, required String id, required String name}) async {
-    print(bodyPartData);
+    print('body part data $bodyPartData');
     ApiResponse apiResponse = await _api.post('addVehiclePartMedia', data: {
       "id": id,
       "name": name,

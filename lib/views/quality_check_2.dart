@@ -155,7 +155,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
               child: Switch(
                 value: true,
                 onChanged: (value) {
-                  navigator.pushReplacement('/qualityCheck',arguments:_serviceBloc.state.service!.jobCardNo );
+                  navigator.pushReplacement('/qualityCheck', arguments: _serviceBloc.state.service!.jobCardNo);
                 },
                 inactiveThumbColor: Colors.white,
                 inactiveTrackColor: Colors.black,
@@ -191,7 +191,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
                                 if (state.status == VehiclePartsInteractionStatus.success) {
                                   context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
-                                  context.read<ServiceBloc>().add(GetJobCards(query: 'Location27'));
+                                  context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
                                   navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                                   navigator.push('/inspectionOut');
                                 }

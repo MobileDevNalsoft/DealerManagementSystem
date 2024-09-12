@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/service/service_bloc.dart';
 import '../inits/init.dart';
@@ -69,7 +70,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
           ),
           child: BlocConsumer<ServiceBloc, ServiceState>(listener: (context, state) {
             if (state.inspectionJsonUploadStatus == InspectionJsonUploadStatus.success) {
-              context.read<ServiceBloc>().add(GetJobCards(query: 'Location27'));
+              context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
             }
           }, builder: (context, state) {
             switch (state.getInspectionStatus) {
@@ -250,7 +251,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                         _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
                                                         _serviceBloc
                                                             .add(InspectionJsonAdded(serviceBookingNo: state.service!.jobCardNo!, inspectionIn: 'false'));
-                                                        _serviceBloc.add(GetJobCards(query: 'Location27'));
+                                                        _serviceBloc.add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
                                                       });
                                                 }
                                               }
@@ -282,7 +283,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                 state.json = state.json!;
                                                 _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
                                                 _serviceBloc.add(InspectionJsonAdded(serviceBookingNo: state.service!.jobCardNo!, inspectionIn: 'false'));
-                                                _serviceBloc.add(GetJobCards(query: 'Location27'));
+                                                _serviceBloc.add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
                                               });
                                         }
                                       },

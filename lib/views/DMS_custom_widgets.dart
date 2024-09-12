@@ -359,7 +359,7 @@ class DMSCustomWidgets {
             .expand((element) => [
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                     clipBehavior: Clip.hardEdge,
+                    clipBehavior: Clip.hardEdge,
                     child: Text(
                       element,
                       style: propertyFontStyle,
@@ -733,7 +733,7 @@ class DMSCustomWidgets {
       backgroundColor: Colors.black45,
       leadingWidth: size.width * 0.14,
       leading: Container(
-        margin: EdgeInsets.only(left: size.width * (isMobile ? 0.045 : 0.065)),
+        margin: EdgeInsets.only(left: size.width * (isMobile ? 0.022 : 0.065), right: size.width * (isMobile ? 0.022 : 0.065)),
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.black,

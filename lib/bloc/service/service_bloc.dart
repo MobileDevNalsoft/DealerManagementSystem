@@ -134,8 +134,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     await _repo.addService(event.service.toJson()).then(
       (value) {
         if (value['response_code'] == 200) {
-          emit(
-              state.copyWith(serviceUploadStatus: ServiceUploadStatus.success, service: event.service.copyWith(serviceBookingNo: value['service_booking_no'])));
+          emit(state.copyWith(
+              serviceUploadStatus: ServiceUploadStatus.success, service: state.service!.copyWith(serviceBookingNo: value['service_booking_no'])));
           navigator!.pushAndRemoveUntil('/inspectionIn', '/home');
         } else {
           Log.e(value);

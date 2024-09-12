@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../logger/logger.dart';
+
 part 'vehicle_parts_interaction_event2.dart';
 part 'vehicle_parts_interaction_state2.dart';
 
@@ -130,8 +132,8 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     try {
       imageMedia = jsonDecode(await _repo.getImage(event.jobCardNo));
     } catch (e) {
-      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure));
-      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
+      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure, mediaJsonStatus: MediaJsonStatus.failure));
+      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial, mediaJsonStatus: MediaJsonStatus.initial));
       return;
     }
     for (var entry in imageMedia.entries) {

@@ -18,6 +18,7 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../bloc/service/service_bloc.dart';
@@ -50,8 +51,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
     _interactionBloc.state.mapMedia = {};
     // fetching images and comments for the jobCard Number
     // remove widget.jobCardNo for release version.
-    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: context.read<ServiceBloc>().state.service!.jobCardNo ?? widget.jobCardNo
-        ));
+    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: context.read<ServiceBloc>().state.service!.jobCardNo ?? widget.jobCardNo));
     draggableScrollableController = DraggableScrollableController();
     draggableScrollableController.addListener(removeSheetOnBelowMin);
   }
@@ -1053,7 +1053,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                     switch (state.status) {
                       case VehiclePartsInteractionStatus.success:
                         context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
-                        context.read<ServiceBloc>().add(GetJobCards(query: 'Location27'));
+                        context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
                         navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                         navigator.push('/inspectionOut');
                       case VehiclePartsInteractionStatus.failure:

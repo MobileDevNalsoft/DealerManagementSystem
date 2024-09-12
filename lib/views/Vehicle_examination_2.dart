@@ -60,7 +60,6 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
     _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
     _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
-    _serviceBloc.state.service = Service(jobCardNo: "JC-LOC-99");
     _interactionBloc.state.mapMedia = {};
   }
 
@@ -541,9 +540,10 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                               );
                                             } else {
                                               //use service.jobcard number
+                                              print('sb no ${_serviceBloc.state.service!.serviceBookingNo}');
                                               _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
                                                   bodyPartName: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name,
-                                                  serviceBookingNo: _serviceBloc.state.service!.jobCardNo!) as VehiclePartsInteractionBlocEvent2);
+                                                  serviceBookingNo: _serviceBloc.state.service!.serviceBookingNo!) as VehiclePartsInteractionBlocEvent2);
                                               if (hotSpots.last.key == state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name) {
                                                 Navigator.pop(context);
                                               }
@@ -728,7 +728,6 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                       }
                                       elementIndex++;
                                     }
-                                    navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                                   },
                                   child: Container(
                                       alignment: Alignment.center,

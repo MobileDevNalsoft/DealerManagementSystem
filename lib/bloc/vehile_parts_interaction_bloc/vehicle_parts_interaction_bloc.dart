@@ -15,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../logger/logger.dart';
+
 part 'vehicle_parts_interaction_event.dart';
 part 'vehicle_parts_interaction_state.dart';
 

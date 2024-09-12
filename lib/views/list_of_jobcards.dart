@@ -37,7 +37,7 @@ class _ListOfJobcardsState extends State<ListOfJobcards> with ConnectivityMixin 
     _serviceBloc.state.getJobCardStatus = GetJobCardStatus.initial;
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
-    _serviceBloc.add(GetJobCards(query: 'Location27'));
+    _serviceBloc.add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
 
     // set default orientation to portrait up
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
