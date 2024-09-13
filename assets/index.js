@@ -154,13 +154,13 @@ function changeHotSpotColors(selectedHotspotName, changeCamera) {
   }
 }
 
-function renameHotspot(previousName,newName){
+// function renameHotspot(previousName,newName){
   
-  document.getElementById(previousName).setAttribute("id",newName);
-  console.log(previousName+ ' ' +newName);
-  console.log("prev node"+""+document.getElementById(previousName));
-  console.log("new node"+""+document.getElementById(newName));
-}
+//   document.getElementById(previousName).setAttribute("id",newName);
+//   console.log(previousName+ ' ' +newName);
+//   console.log("prev node"+""+document.getElementById(previousName));
+//   console.log("new node"+""+document.getElementById(newName));
+// }
 
 function removeButton(selectedHotspotName) {
   const buttonElement = document.getElementById(selectedHotspotName);

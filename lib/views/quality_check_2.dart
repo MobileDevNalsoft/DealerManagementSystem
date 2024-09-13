@@ -67,7 +67,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   // method to load java script file
   Future<List<String>> loadJS() async {
-    List<String> resources = [];
+    const List<String> resources = [];
     resources.add(await rootBundle.loadString('assets/quality.js'));
     resources.add(await rootBundle.loadString('assets/styles.css'));
     return resources;
@@ -231,8 +231,8 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
                         return DraggableScrollableSheet(
                           controller: draggableScrollableController,
-                          minChildSize: 0.5,
                           // Bottom sheet sizes
+                          minChildSize: 0.5,
                           maxChildSize: 0.9,
                           initialChildSize: 0.5,
                           builder: (context, scrollController) {

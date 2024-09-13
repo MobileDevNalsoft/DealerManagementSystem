@@ -158,7 +158,7 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                                   spreadRadius: 1,
                                 ),
                                 child: Container(
-                                  width: size.width * (isMobile ? 0.95 : 0.8),
+                                  width: size.width * (isMobile ? 0.94 : 0.8),
                                   margin: EdgeInsets.symmetric(
                                     vertical: size.height * 0.006,
                                   ),
@@ -265,8 +265,8 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                                       Gap(size.height * (isMobile ? 0 : 0.01)),
                                       Container(
                                         height: size.height * 0.05,
-                                        width: size.width * (isMobile ? 0.94 : 0.79),
-                                        margin: EdgeInsets.only(bottom: size.height * 0.003),
+                                        width: size.width * (isMobile ? 0.93 : 0.79),
+                                        margin: EdgeInsets.only(bottom: size.height * 0.002),
                                         decoration: BoxDecoration(
                                             color: Colors.orange.shade200,
                                             borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),

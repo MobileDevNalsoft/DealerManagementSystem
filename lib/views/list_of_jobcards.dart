@@ -87,10 +87,10 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
               flex: 10,
               child: Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.only(left: size.width * 0.03),
+                margin: EdgeInsets.only(left: size.width * 0.01),
                 padding: EdgeInsets.only(left: size.height * 0.01),
                 height: size.height * 0.06,
-                width: size.width * (isMobile ? 0.8 : 0.5),
+                width: size.width * (isMobile ? 0.94 : 0.5),
                 decoration:
                     const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
                 child: TextFormField(
@@ -115,7 +115,7 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
             Container(
               height: size.height * (isMobile ? 0.06 : 0.05),
               width: size.width * (isMobile ? 0.14 : 0.08),
-              margin: EdgeInsets.only(right: size.width * 0.03),
+              margin: EdgeInsets.only(right: size.width * 0.01),
               decoration:
                   const BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
               child: const Icon(
@@ -213,6 +213,7 @@ class JobCardPage extends StatelessWidget {
       builder: (context, state) {
         return CustomScrollView(
           slivers: [
+            SliverGap(size.height * 0.02),
             SliverPersistentHeader(
               delegate: SliverHeader(),
               // Set this param so that it won't go off the screen when scrolling
@@ -226,7 +227,7 @@ class JobCardPage extends StatelessWidget {
                   enableSwitchAnimation: true,
                   enabled: state.getJobCardStatus == GetJobCardStatus.loading,
                   child: SizedBox(
-                    width: size.width * (isMobile ? 0.95 : 0.8),
+                    width: size.width * (isMobile ? 0.94 : 0.8),
                     child: ClipShadowPath(
                       clipper: TicketClipper(),
                       shadow: const BoxShadow(
@@ -356,7 +357,7 @@ class JobCardPage extends StatelessWidget {
                             ),
                             Container(
                               height: size.height * (isMobile ? 0.05 : 0.045),
-                              width: size.width * (isMobile ? 0.94 : 0.79),
+                              width: size.width * (isMobile ? 0.93 : 0.79),
                               margin: EdgeInsets.only(bottom: size.height * 0.0025),
                               decoration: BoxDecoration(
                                   color: Colors.orange.shade200,

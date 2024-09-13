@@ -20,8 +20,8 @@ class VehiclePartsInteractionBlocState2 {
       this.mediaJsonStatus = MediaJsonStatus.initial,
       this.selectedGeneralBodyPart = ''});
 
-  VehiclePartsInteractionBlocState2 copyWith(Map<String, VehiclePartMedia2>? mapMedia, status,
-      {vehicleExaminationPageIndex, String? hotspot, MediaJsonStatus? mediaJsonStatus, String? selectedGeneralBodyPart}) {
+  VehiclePartsInteractionBlocState2 copyWith({Map<String, VehiclePartMedia2>? mapMedia, status,
+      vehicleExaminationPageIndex, String? hotspot, MediaJsonStatus? mediaJsonStatus, String? selectedGeneralBodyPart}) {
     return VehiclePartsInteractionBlocState2(
         mapMedia: mapMedia ?? this.mapMedia,
         status: status ?? this.status,

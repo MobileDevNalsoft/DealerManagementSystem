@@ -66,8 +66,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(top: size.height * 0.05, right: size.width * (isMobile ? 0.07 : 0.04), bottom: isMobile ? 0 : 8),
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      return Row(
+                    child:  Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Spacer(),
@@ -81,8 +80,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 color: context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.white : Colors.black),
                           ),
                         ],
-                      );
-                    }),
+                      )
                   ),
                   if (context.watch<MultiBloc>().state.reverseClippedWidgets!)
                     Padding(
@@ -125,7 +123,6 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                           height: size.height * 0.14,
                                           child: ClipPath(
                                             clipper: TicketClipper(),
-                                            clipBehavior: Clip.antiAlias,
                                             child: Card(
                                               elevation: 5,
                                               surfaceTintColor: Colors.orange.shade200,
@@ -156,7 +153,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                               Gap(size.width * (isMobile ? 0.02 : 0.012)),
                                                               Text(
                                                                 textAlign: TextAlign.center,
-                                                                state.getServiceStatus == GetServiceStatus.success ? state.services![index].jobCardNo! : 'null',
+                                                                state.getServiceStatus == GetServiceStatus.success ? state.services![index].jobCardNo! : 'NA',
                                                                 style: TextStyle(
                                                                   fontWeight: FontWeight.w600,
                                                                   fontSize: isMobile ? 13 : 15,
@@ -207,8 +204,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                               Text(
                                                                 textAlign: TextAlign.center,
                                                                 state.getServiceStatus == GetServiceStatus.success
-                                                                    ? state.services![index].jobType ?? 'null'
-                                                                    : 'null',
+                                                                    ? state.services![index].jobType ?? 'NA'
+                                                                    : 'NA',
                                                                 style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
                                                               ),
                                                             ],
@@ -223,8 +220,8 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                                               Text(
                                                                 textAlign: TextAlign.center,
                                                                 state.getServiceStatus == GetServiceStatus.success
-                                                                    ? state.services![index].location ?? 'null'
-                                                                    : 'null',
+                                                                    ? state.services![index].location ?? 'NA'
+                                                                    : 'NA',
                                                                 style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
                                                               ),
                                                             ],
@@ -274,28 +271,24 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               shadowColor: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? Colors.black : Colors.transparent,
               child: Column(
                 children: [
-                  Align(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: size.height * 0.05, right: size.width * (isMobile ? 0.45 : 0), bottom: isMobile ? 0 : 8),
-                      child: LayoutBuilder(builder: (context, constraints) {
-                        return Row(
-                          children: [
-                            Gap(isMobile ? size.width * 0.03 : size.width * 0.040),
-                            Image.asset(
-                              'assets/images/registration_no.png',
-                              scale: size.width * (isMobile ? 0.055 : 0.016),
-                              color: Colors.black,
-                            ),
-                            const Gap(6),
-                            Text(
-                              "Vehicle Details",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 16 : 18),
-                            ),
-                          ],
-                        );
-                      }),
-                      // ),
+                  Padding(
+                    padding: EdgeInsets.only(top: size.height * 0.05, right: size.width * (isMobile ? 0.40 : 0), bottom: isMobile ? 0 : 8),
+                    child: Row(
+                      children: [
+                        Gap(isMobile ? size.width * 0.03 : size.width * 0.040),
+                        Image.asset(
+                          'assets/images/registration_no.png',
+                          scale: size.width * (isMobile ? 0.055 : 0.016),
+                          color: Colors.black,
+                        ),
+                        const Gap(6),
+                        Text(
+                          "Vehicle Details",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 16 : 18),
+                        ),
+                      ],
                     ),
+                    // ),
                   ),
                   if (!context.watch<MultiBloc>().state.reverseClippedWidgets!)
                     Padding(
@@ -331,13 +324,13 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 "Color"
                               ],
                               valueList: [
-                                state.vehicle!.vehicleRegNumber ?? "-",
-                                state.vehicle!.chassisNumber ?? "-",
-                                state.vehicle!.engineNumber ?? "-",
-                                state.vehicle!.cusotmerName ?? "-",
-                                state.vehicle!.make ?? "-",
-                                state.vehicle!.model ?? "-",
-                                state.vehicle!.color ?? "-"
+                                state.vehicle!.vehicleRegNumber ?? "NA",
+                                state.vehicle!.chassisNumber ?? "NA",
+                                state.vehicle!.engineNumber ?? "NA",
+                                state.vehicle!.cusotmerName ?? "NA",
+                                state.vehicle!.make ?? "NA",
+                                state.vehicle!.model ?? "NA",
+                                state.vehicle!.color ?? "NA"
                               ]),
                         );
                       },
@@ -352,8 +345,6 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
             child: InkWell(
               splashColor: Colors.transparent,
               onTap: () {
-                print("inside details");
-
                 context.read<MultiBloc>().add(AddClippedWidgets(reverseClippedWidgets: true));
               },
               child: Container(
@@ -396,14 +387,14 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 onTap: () => focusNode.requestFocus(),
                 overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.02 : 0.2)),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.032 : 0.2)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
-                          padding: EdgeInsets.only(top: size.height * (isMobile ? 0.033 : 0.005)),
+                          // padding: EdgeInsets.only(top: size.height * (isMobile ? 0.03 : 0.005)),
                           height: size.height * (isMobile ? 0.06 : 0.05),
                           decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
@@ -431,8 +422,10 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                                 context.read<ServiceBloc>().add(GetServiceHistory(query: 'vehicle_history', vehicleRegNo: vehicleRegNoController.text));
                               });
                             },
+                            
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
+                              
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
                               hintStyle: TextStyle(color: Colors.black38, fontSize: isMobile ? 14 : 16),
