@@ -127,12 +127,12 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
   }
 
   void _onFetchVehicleMedia(FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
-    emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.loading, mediaJsonStatus: MediaJsonStatus.loading));
+    emit(state.copyWith(mediaJsonStatus: MediaJsonStatus.loading));
     late Map<String, dynamic> imageMedia;
     try {
       imageMedia = jsonDecode(await _repo.getImage(event.jobCardNo));
     } catch (e) {
-      emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.failure, mediaJsonStatus: MediaJsonStatus.failure));
+      emit(state.copyWith(mediaJsonStatus: MediaJsonStatus.failure));
       return;
     }
     for (var entry in imageMedia.entries) {
@@ -165,11 +165,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
                   : null,
               reasonForRejection: entry.value["rejectedReason"]));
     }
-    emit(state.copyWith(
-        mapMedia: state.mapMedia,
-        status: VehiclePartsInteractionStatus.initial,
-        mediaJsonStatus: MediaJsonStatus.success,
-        selectedGeneralBodyPart: state.mapMedia.entries.first.key));
+    emit(state.copyWith(mediaJsonStatus: MediaJsonStatus.success, selectedGeneralBodyPart: state.mapMedia.entries.first.key));
   }
 
   void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
@@ -178,7 +174,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
   }
 
   void _onSubmitQualityCheckStatus(SubmitQualityCheckStatusEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
-    emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.loading));
+    emit(state.copyWith(status: VehiclePartsInteractionStatus.loading));
     Map<String, dynamic> qualityCheckJson = {};
     for (var entry in state.mapMedia.entries) {
       qualityCheckJson.putIfAbsent(entry.key, () {
@@ -186,9 +182,10 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
       });
     }
     await _repo.addQualityStatus(qualityCheckJson: {"id": event.jobCardNo, "data": qualityCheckJson}).then((onValue) {
-      emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.success));
+      emit(state.copyWith(status: VehiclePartsInteractionStatus.success, mediaJsonStatus: MediaJsonStatus.initial));
+      navigator!.popAndPush('/inspectionOut');
     }).onError((e, s) {
-      emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.failure));
+      emit(state.copyWith(status: VehiclePartsInteractionStatus.failure));
     });
   }
 

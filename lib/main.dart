@@ -38,7 +38,7 @@ void main() async {
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
         // home: QualityCheck(jobCardNo: 'JC-LOC-11',),
-        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/vehicleExamination',
+        initialRoute: !sharedPreferences.containsKey('isLogged') || sharedPreferences.getBool('isLogged') == false ? '/login' : '/home',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
       ),

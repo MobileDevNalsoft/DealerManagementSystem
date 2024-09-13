@@ -96,7 +96,7 @@ class RouteGenerator {
       case '/inspectionOut':
         return Transitions.slideLeftTransition(const InspectionOut(), settings);
       case '/jobCardDetails':
-        return Transitions.slideLeftTransition(JobCardDetails(), settings);
+        return Transitions.slideLeftTransition(const JobCardDetails(), settings);
       case '/login':
         return MaterialPageRoute(builder: (_) => const Login(), settings: settings);
       case '/listOfJobCards':

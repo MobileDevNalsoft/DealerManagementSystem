@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dms/bloc/multi/multi_bloc.dart';
+
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc_2/vehicle_parts_interaction_bloc2.dart';
 import 'package:dms/inits/init.dart';
@@ -8,21 +8,16 @@ import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
-import 'package:dms/views/quality_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../models/vehicle_parts_media2.dart';
@@ -39,14 +34,14 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
   final ScrollController _listController = ScrollController(initialScrollOffset: 0);
   final AutoScrollController _autoScrollController = AutoScrollController(initialScrollOffset: 0);
 
+  TextEditingController commentsController = TextEditingController();
   TextEditingController rejectionController = TextEditingController();
+
+  FocusNode commentsFocus = FocusNode();
 
   List<SliderButtonController> sliderButtonControllers = [];
 
   DraggableScrollableController draggableScrollableController = DraggableScrollableController();
-
-  FocusNode commentsFocus = FocusNode();
-  TextEditingController commentsController = TextEditingController();
 
   late WebViewController webViewController;
 
@@ -54,7 +49,6 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   // bloc variables
   late VehiclePartsInteractionBloc2 _interactionBloc;
-  late MultiBloc _multiBloc;
   late ServiceBloc _serviceBloc;
 
   Size size = const Size(0, 0);
@@ -67,7 +61,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   // method to load java script file
   Future<List<String>> loadJS() async {
-    const List<String> resources = [];
+    List<String> resources = [];
     resources.add(await rootBundle.loadString('assets/quality.js'));
     resources.add(await rootBundle.loadString('assets/styles.css'));
     return resources;
@@ -84,12 +78,12 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
   void initState() {
     super.initState();
     _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
-    _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
     _interactionBloc.state.status = VehiclePartsInteractionStatus.initial;
+    _interactionBloc.state.mediaJsonStatus = MediaJsonStatus.initial;
     _interactionBloc.state.mapMedia = {};
-
     _interactionBloc.state.vehicleExaminationPageIndex = 0;
+
     tween = Tween(begin: 0.0, end: (sharedPreferences.getBool('isMobile') ?? true ? 0.8 : 1));
     animationController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
     animation = CurvedAnimation(parent: animationController, curve: Curves.easeIn).drive(tween);
@@ -120,7 +114,6 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
   Widget build(BuildContext context) {
     // for responsive UI
     size = MediaQuery.sizeOf(context);
-    print('width ${size.width}');
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
     final JavascriptChannel qualityChannel = JavascriptChannel(
@@ -145,7 +138,10 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
     );
 
     return PopScope(
-      onPopInvoked: (didPop) => animationController.stop(),
+      onPopInvoked: (didPop) {
+        animationController.stop();
+        _serviceBloc.add(MoveStepperTo(step: 'Quality Check'));
+      },
       child: Scaffold(
           appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Quality Check', actions: [
             Container(
@@ -181,7 +177,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                     builder: (context, snapshot) {
                       return snapshot.hasData
                           ? BlocListener<VehiclePartsInteractionBloc2, VehiclePartsInteractionBlocState2>(
-                              listenWhen: (previous, current) => previous.status != current.status,
+                              listenWhen: (previous, current) => previous.mediaJsonStatus != current.mediaJsonStatus,
                               listener: (context, state) {
                                 if (state.mediaJsonStatus == MediaJsonStatus.success) {
                                   state.mapMedia.forEach((e, v) {
@@ -192,10 +188,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                 }
 
                                 if (state.status == VehiclePartsInteractionStatus.success) {
-                                  context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
                                   context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
-                                  navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
-                                  navigator.push('/inspectionOut');
                                 }
                               },
                               child: SizedBox(
@@ -348,7 +341,6 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                         scrollDirection: Axis.horizontal,
                                         children: state.mapMedia.entries.map((e) {
                                           int index = state.mapMedia.keys.toList().indexOf(e.key);
-                                          print('insets ${MediaQuery.of(context).viewInsets.bottom}');
                                           if (e.value.isAccepted == null) {
                                             sliderButtonControllers[index].position = Position.middle;
                                           } else if (e.value.isAccepted != null && e.value.isAccepted! == true) {

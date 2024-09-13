@@ -12,12 +12,12 @@ class BodyCanvas extends StatelessWidget {
 
   //General Parts for vehicle examination view
   //remaining for quality check view.
-  BodyCanvas({this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts, this.displayAcceptedStatus = false});
+  const BodyCanvas({super.key, this.generalParts, this.acceptedParts, this.rejectedParts, this.pendingParts, this.displayAcceptedStatus = false});
 
   @override
   Widget build(BuildContext context) {
     return CanvasTouchDetector(
-      gesturesToOverride: [GestureType.onTapDown],
+      gesturesToOverride: const [GestureType.onTapDown],
       builder: (context) => CustomPaint(
         painter: BodyPainter(
             context: context,

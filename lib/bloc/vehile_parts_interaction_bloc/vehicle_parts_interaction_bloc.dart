@@ -122,7 +122,6 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
       imageMedia = jsonDecode(await _repo.getImage(event.jobCardNo));
     } catch (e) {
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure));
-      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
       return;
     }
     for (var entry in imageMedia.entries) {
@@ -171,6 +170,7 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
     }
     await _repo.addQualityStatus(qualityCheckJson: {"id": event.jobCardNo, "data": qualityCheckJson}).then((onValue) {
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
+      navigator!.popAndPush('/inspectionOut');
     }).onError((e, s) {
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure));
     });
