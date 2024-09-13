@@ -42,9 +42,10 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
 
   // bloc variables
   late VehiclePartsInteractionBloc2 _interactionBloc;
-  late MultiBloc _multiBloc;
+  // late VehiclePartsInteractionBloc2 _interactionBloc;
   late ServiceBloc _serviceBloc;
   late int index;
+  late Future _resources;
   List hotSpots = [];
 
   // method to load java script file
@@ -58,8 +59,9 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
   @override
   void initState()  {
     super.initState();
+    _resources = loadJS();
     _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
-    _multiBloc = context.read<MultiBloc>();
+    // _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
     _serviceBloc = context.read<ServiceBloc>();
     _interactionBloc.state.mapMedia = {};
     
@@ -136,8 +138,8 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                             child: InkWell(
                                               onTap: () {
                                                
-                                                _multiBloc.add(ModifyVehicleInteractionStatus(
-                                                    selectedBodyPart: (hotSpots.elementAt(hotspotIndex)).key, isTapped: _multiBloc.state.isTapped));
+                                                _interactionBloc.add(ModifyVehicleInteractionStatus(
+                                                    selectedBodyPart: (hotSpots.elementAt(hotspotIndex)).key, isTapped: _interactionBloc.state.isTapped));
                                                 _pageController.jumpToPage(hotspotIndex);
                                                 _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
                                                 state.vehicleExaminationPageIndex = hotspotIndex;
@@ -176,7 +178,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                               return PopScope(
                                                                 canPop: true,
                                                                 onPopInvoked: (didPop) {
-                                                                  _multiBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
+                                                                  _interactionBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
                                                                 },
                                                                 child: AlertDialog(
                                                                     backgroundColor: Colors.white,
@@ -195,7 +197,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                                                 child: Row(
                                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                                   children: [
-                                                                                    context.watch<MultiBloc>().state.renamingStatus == HotspotRenamingStatus.initial
+                                                                                    context.watch<VehiclePartsInteractionBloc2>().state.renamingStatus == HotspotRenamingStatus.initial
                                                                                         ? Text(
                                                                                             hotSpots.elementAt(hotspotIndex).value.name,
                                                                                             style: TextStyle(fontSize: isMobile ? 16 : 18),
@@ -212,19 +214,19 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                                                               maxLines: 1,
                                                                                               decoration: InputDecoration(border: InputBorder.none),
                                                                                               onChanged: (value) async {
-                                                                                                _multiBloc.state.renamedValue = value;
-                                                                                                _multiBloc.state.renamingStatus = HotspotRenamingStatus.hotspotRenamed;
+                                                                                                _interactionBloc.state.renamedValue = value;
+                                                                                                _interactionBloc.state.renamingStatus = HotspotRenamingStatus.hotspotRenamed;
                                                                                               },
                                                                                             ),
                                                                                           ),
                                                                                     Spacer(),
-                                                                                    if (context.watch<MultiBloc>().state.renamingStatus ==
+                                                                                    if (context.watch<VehiclePartsInteractionBloc2>().state.renamingStatus ==
                                                                                         HotspotRenamingStatus.initial)
                                                                                       Align(
                                                                                         alignment: Alignment.centerRight,
                                                                                         child: IconButton(
                                                                                             onPressed: () {
-                                                                                              _multiBloc.add(ModifyRenamingStatus(
+                                                                                              _interactionBloc.add(ModifyRenamingStatus(
                                                                                                   renameStatus: HotspotRenamingStatus.openTextField));
                                                                                             },
                                                                                             icon: Icon(Icons.edit_rounded)),
@@ -259,7 +261,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                                                       _autoScrollController.scrollToIndex(nextIndex);
                                                                                       state.vehicleExaminationPageIndex = hotspotIndex;
                                                                                       _changeButtonColors(hotSpots.elementAt(nextIndex).key);
-                                                                                      _multiBloc.add(ModifyVehicleInteractionStatus(
+                                                                                      _interactionBloc.add(ModifyVehicleInteractionStatus(
                                                                                           selectedBodyPart: hotSpots.elementAt(nextIndex).key, isTapped: true));
                                                                                       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: nextIndex));
                                                                                       Navigator.pop(context);
@@ -290,33 +292,33 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                                                       state.vehicleExaminationPageIndex = hotspotIndex;
                                                                                       _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
                                                                                     }
-                                                                                    if (_multiBloc.state.renamingStatus == HotspotRenamingStatus.hotspotRenamed) {
+                                                                                    if (_interactionBloc.state.renamingStatus == HotspotRenamingStatus.hotspotRenamed) {
                                                                                       var value = hotSpots.elementAt(hotspotIndex).value;
-                                                                                      _multiBloc.state.renamedValue =
-                                                                                          _multiBloc.state.renamedValue!.trim().replaceAll(' ', '-');
+                                                                                      _interactionBloc.state.renamedValue =
+                                                                                          _interactionBloc.state.renamedValue!.trim().replaceAll(' ', '-');
                                                                                       // await webViewController
                                                                                       //     .runJavaScript(
-                                                                                      //         'renameHotspot("${hotSpots.elementAt(hotspotIndex).key}","${_multiBloc.state.renamedValue}")')
+                                                                                      //         'renameHotspot("${hotSpots.elementAt(hotspotIndex).key}","${_interactionBloc.state.renamedValue}")')
                                                                                       //     .catchError((e) {
                                                                                       //   print(e);
                                                                                       // });
-                                                                                      // _interactionBloc.state.mapMedia.putIfAbsent(_multiBloc.state.renamedValue ?? "",
+                                                                                      // _interactionBloc.state.mapMedia.putIfAbsent(_interactionBloc.state.renamedValue ?? "",
                                                                                       //     () {
                                                                                       //   return value;
                                                                                       // });
                                     
-                                                                                      // _interactionBloc.state.mapMedia[_multiBloc.state.renamedValue]!.name =
-                                                                                      //     _multiBloc.state.renamedValue!;
+                                                                                      // _interactionBloc.state.mapMedia[_interactionBloc.state.renamedValue]!.name =
+                                                                                      //     _interactionBloc.state.renamedValue!;
                                                                                       // _interactionBloc.state.mapMedia.remove(hotSpots.elementAt(hotspotIndex).key);
-                                                                                      // _multiBloc.state.selectedGeneralBodyPart = _multiBloc.state.renamedValue!;
-                                                                                      _interactionBloc.state.mapMedia[hotSpots.elementAt(hotspotIndex).key]!.name = _multiBloc.state.renamedValue!;
-                                                                                      _multiBloc.state.selectedGeneralBodyPart = hotSpots.elementAt(hotspotIndex).key;
+                                                                                      // _interactionBloc.state.selectedGeneralBodyPart = _interactionBloc.state.renamedValue!;
+                                                                                      _interactionBloc.state.mapMedia[hotSpots.elementAt(hotspotIndex).key]!.name = _interactionBloc.state.renamedValue!;
+                                                                                      _interactionBloc.state.selectedBodyPart = hotSpots.elementAt(hotspotIndex).key;
                                                                                       _pageController.jumpToPage(hotspotIndex);
                                                                                       _autoScrollController.scrollToIndex(hotspotIndex);
                                                                                       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
                                                                                       _changeButtonColors(
                                                                                           _interactionBloc.state.mapMedia.entries.elementAt(hotspotIndex).key);
-                                                                                      _multiBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
+                                                                                      _interactionBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
                                                                                       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
                                                                                     }
                                                                                     Navigator.pop(context);
@@ -359,8 +361,8 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                     controller: _pageController,
                                     physics: const ScrollPhysics(),
                                     onPageChanged: (value) {
-                                      _multiBloc
-                                          .add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(value).key, isTapped: _multiBloc.state.isTapped));
+                                      _interactionBloc
+                                          .add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(value).key, isTapped: _interactionBloc.state.isTapped));
                                       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: value));
                                       _autoScrollController.scrollToIndex(value,
                                           duration: const Duration(milliseconds: 500), preferPosition: AutoScrollPosition.begin);
@@ -395,14 +397,14 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                               child: Stack(
                                                 children: [
                                                   Skeletonizer(
-                                                    enabled: context.watch<MultiBloc>().state.selectedGeneralBodyPart.isEmpty ||
-                                                        !context.watch<MultiBloc>().state.isTapped,
+                                                    enabled: state.selectedBodyPart!.isEmpty ||
+                                                        !state.isTapped!,
                                                     child: TextFormField(
                                                       // key: _formKey,
                                                       // focusNode: commentsFocus,
                                                       controller: TextEditingController(
-                                                          text: state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!.comments),
-                                                      // initialValue: state.mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!.comments,
+                                                          text: state.mapMedia[state.selectedBodyPart]!.comments),
+                                                      // initialValue: state.mapMedia[context.watch<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart]!.comments,
                                                       maxLines: 5,
                                                       cursorColor: Colors.white,
                                                       style: const TextStyle(color: Colors.white),
@@ -421,7 +423,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
                                                       onChanged: (value) {
                                                         _interactionBloc.add(
-                                                            AddCommentsEvent(name: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name, comments: value,));
+                                                            AddCommentsEvent(name: _interactionBloc.state.selectedBodyPart!, comments: value,));
                                                       },
                                                     ),
                                                   ),
@@ -431,13 +433,13 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                         padding: EdgeInsets.zero,
                                                         onPressed: () async {
                                                           // commentsFocus.unfocus();
-                                                          if (state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images!.length < 3) {
+                                                          if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.length < 3) {
                                                             ImagePicker imagePicker = ImagePicker();
                                                             XFile? image =
                                                                 await imagePicker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
                                                             if (image != null) {
                                                               _interactionBloc.add(
-                                                                  AddImageEvent(name: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name, image: image));
+                                                                  AddImageEvent(name: _interactionBloc.state.selectedBodyPart!, image: image));
                                                             }
                                                           }
                                                         },
@@ -487,14 +489,11 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                           right: -14.0,
                                                           child: IconButton(
                                                               onPressed: () {
-                                                                if (context
-                                                                        .read<VehiclePartsInteractionBloc2>()
-                                                                        .state
-                                                                        .mapMedia[state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name]!
+                                                                if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                         .images !=
                                                                     null) {
                                                                   _interactionBloc.add(RemoveImageEvent(
-                                                                      name: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name, index: index));
+                                                                      name: _interactionBloc.state.selectedBodyPart!, index: index));
                                                                 }
                                                               },
                                                               icon: const CircleAvatar(
@@ -512,8 +511,8 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                       hotSpots.elementAt(pageIndex).value.images == null ? 0 : hotSpots.elementAt(pageIndex).value.images!.length,
                                                 )),
                                                 Gap(size.height*0.02),
-                                            if (state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images != null &&
-                                                state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.images!.isNotEmpty)
+                                            if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images != null &&
+                                                state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.isNotEmpty)
                                               InkWell(
                                                 radius: isMobile ? size.width * 0.06 : size.width * 0.024,
                                                 borderRadius: BorderRadius.circular(20),
@@ -531,7 +530,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                     return;
                                                   }
                                                   // commentsFocus.unfocus();
-                                                  if (state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.comments!.trim().isEmpty) {
+                                                  if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.comments!.trim().isEmpty) {
                                                     DMSCustomWidgets.DMSFlushbar(
                                                       size,
                                                       context,
@@ -544,10 +543,10 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                   } else {
                                                     //use service.jobcard number
                                                     _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
-                                                        bodyPartName: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name,
+                                                        bodyPartName: _interactionBloc.state.selectedBodyPart!,
                                                         serviceBookingNo: _serviceBloc.state.service!.serviceBookingNo!,
                                                         ) as VehiclePartsInteractionBlocEvent2);
-                                                        if(hotSpots.last.key == state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name){
+                                                        if(hotSpots.last.key == _interactionBloc.state.selectedBodyPart){
                                                           Navigator.pop(context);
                                                         }
                                                   }
@@ -567,7 +566,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                             offset: Offset(0, 0))
                                                       ]),
                                                       child: Text(
-                                                        (hotSpots.last.key != state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name)
+                                                        (hotSpots.last.key != _interactionBloc.state.selectedBodyPart)
                                                             ? 'Upload'
                                                             : " Upload & Save",
                                                         textAlign: TextAlign.center,
@@ -608,9 +607,9 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
             .then(
           (value) async {
             _changeButtonColors("");
-            //     _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: _multiBloc.state.selectedGeneralBodyPart, isTapped: false));
+            //     _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: _interactionBloc.state.selectedGeneralBodyPart, isTapped: false));
             //   await Future.delayed(Duration(milliseconds: 800));
-            //  _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+            //  _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
           },
         );
   }
@@ -627,11 +626,11 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
         Map<String, dynamic> data = jsonDecode(message.message);
 
         if (data["type"] == "hotspot-create") {
-          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+          _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
           _interactionBloc.add(AddHotspotEvent(name: data["name"]!, position: data["position"], normal: data["normal"]));
         } else if (data["type"] == "hotspot-click") {
            Haptics.vibrate(HapticsType.light);
-          _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+          _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
         }
         // bottom sheet for diaplying hotspots, comments and images
         getBottomSheet(context,size,isMobile);
@@ -651,8 +650,8 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
             padding: EdgeInsets.zero,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(24),boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]), 
             child: Switch(value: true, onChanged: (value){
-              _multiBloc.state.selectedGeneralBodyPart="";
-              _multiBloc.state.isTapped=false;
+              _interactionBloc.state.selectedBodyPart="";
+              _interactionBloc.state.isTapped=false;
               navigator.pushReplacement('/vehicleExamination');
             },inactiveThumbColor: Colors.white,inactiveTrackColor: Colors.black,trackOutlineColor: const WidgetStatePropertyAll(Colors.black),),
           )]),
@@ -668,7 +667,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
           child: Stack(
             children: [
               FutureBuilder(
-                  future: loadJS(),
+                  future: _resources,
                   builder: (context, snapshot) {
                     return snapshot.hasData
                         ? Column(
@@ -709,7 +708,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                     _pageController.jumpToPage(elementIndex);
                                       _autoScrollController.scrollToIndex(elementIndex);
                                       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: elementIndex));
-                                       _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: e.key, isTapped: true));
+                                       _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: e.key, isTapped: true));
                                     return;
                                   }
                                   elementIndex++;

@@ -56,3 +56,9 @@ class AddHotspotEvent extends VehiclePartsInteractionBlocEvent {
   String name;
   AddHotspotEvent({required this.name});
 }
+
+class ModifyVehicleInteractionStatus extends VehiclePartsInteractionBlocEvent {
+  String selectedBodyPart;
+  bool isTapped;
+  ModifyVehicleInteractionStatus({required this.selectedBodyPart, required this.isTapped});
+}

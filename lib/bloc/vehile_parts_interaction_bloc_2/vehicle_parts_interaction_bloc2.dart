@@ -32,7 +32,9 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
         _onModifyVehicleExaminationPageIndex as EventHandler<ModifyVehicleExaminationPageIndex, VehiclePartsInteractionBlocState2>);
     on<AddHotspotEvent>(_onAddHotspot as EventHandler<AddHotspotEvent, VehiclePartsInteractionBlocState2>);
     on<RemoveHotspotEvent>(_onRemoveHotspot as EventHandler<RemoveHotspotEvent, VehiclePartsInteractionBlocState2>);
-    on<BodyPartSelected>(_onModifyVehicleInteractionStatus);
+    // on<BodyPartSelected>(_onModifyVehicleInteractionStatus as EventHandler<BodyPartSelected, VehiclePartsInteractionBlocState2>);
+     on<ModifyVehicleInteractionStatus>(_onModifyVehicleInteractionStatus as EventHandler<ModifyVehicleInteractionStatus, VehiclePartsInteractionBlocState2>);
+    on<ModifyRenamingStatus>(_onModifyRenamingStatus);
   }
 
   final Repository _repo;
@@ -104,6 +106,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
         compressedImagesBase64List.add(base64String);
       }
       partJson = {
+        "name": state.mapMedia[event.bodyPartName]!.name,
         "images": compressedImagesBase64List,
         "comments": state.mapMedia[event.bodyPartName]!.comments ?? "",
         "position": state.mapMedia[event.bodyPartName]!.dataPosition,
@@ -122,9 +125,9 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     );
   }
 
-  void _onModifyVehicleInteractionStatus(BodyPartSelected event, Emitter<VehiclePartsInteractionBlocState2> emit) {
-    emit(state.copyWith(mapMedia: state.mapMedia,status: VehiclePartsInteractionStatus.initial, selectedGeneralBodyPart: event.selectedBodyPart));
-  }
+  // void _onModifyVehicleInteractionStatus(BodyPartSelected event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+  //   emit(state.copyWith(mapMedia: state.mapMedia,status: VehiclePartsInteractionStatus.initial, selectedGeneralBodyPart: event.selectedBodyPart));
+  // }
 
   void _onFetchVehicleMedia(FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
     emit(state.copyWith(mapMedia: state.mapMedia,status: VehiclePartsInteractionStatus.loading, mediaJsonStatus: MediaJsonStatus.loading));
@@ -153,7 +156,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
       state.mapMedia.putIfAbsent(
           entry.key,
           () => VehiclePartMedia2(
-              name: entry.key,
+              name: entry.value["name"]??entry.key,
               images: images,
               comments: entry.value["comments"],
               dataPosition: entry.value["position"],
@@ -167,7 +170,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
               reasonForRejection: entry.value["rejectedReason"]));
     }
     emit(state.copyWith(mapMedia: state.mapMedia,status: VehiclePartsInteractionStatus.initial,
-        mediaJsonStatus: MediaJsonStatus.success, selectedGeneralBodyPart: state.mapMedia.entries.first.key));
+        mediaJsonStatus: MediaJsonStatus.success, selectedBodyPart: state.mapMedia.entries.first.key));
   }
 
   void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
@@ -194,5 +197,12 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
 
   void _onModifyVehicleExaminationPageIndex(ModifyVehicleExaminationPageIndex event, Emitter<VehiclePartsInteractionBlocState2> emit) {
     emit(state.copyWith(mapMedia: state.mapMedia,status: state.status, vehicleExaminationPageIndex: event.index));
+  }
+
+    void _onModifyVehicleInteractionStatus(ModifyVehicleInteractionStatus event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+    emit(state.copyWith( selectedBodyPart: event.selectedBodyPart, isTapped: event.isTapped));
+  }
+  void _onModifyRenamingStatus(ModifyRenamingStatus event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+    emit(state.copyWith(renamingStatus: event.renameStatus,renamedValue: event.renamedValue));
   }
 }

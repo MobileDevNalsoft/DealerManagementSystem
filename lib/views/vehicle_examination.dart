@@ -31,7 +31,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
 
     //initaializing empty object
     context.read<VehiclePartsInteractionBloc>().state.mapMedia = {};
-    context.read<MultiBloc>().state.selectedGeneralBodyPart="";
+    context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart = "";
   }
 
   Future loadSvg() async {
@@ -69,20 +69,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
               return Stack(
                 children: [
                   Stack(
-                    children: [
-                      BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(listener: (context, state) {
-                        if (state.status == VehiclePartsInteractionStatus.success) {
-                          DMSCustomWidgets.DMSFlushbar(size, context,
-                              message: "Successfully uploaded",
-                              icon: const Icon(
-                                Icons.cloud_upload_rounded,
-                                color: Colors.white,
-                              ));
-                          // Updating with initial parameters
-                          context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
-                        }
-                      }, builder: (context, state) {
-                        return Container(
+                    children: [ Container(
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width,
                           decoration: const BoxDecoration(
@@ -93,12 +80,29 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                                   stops: [0.1, 0.5, 1])),
                           child: Transform.scale(
                             scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
-                            child: BodyCanvas(
-                              generalParts: snapshot.data,
+                            child: 
+                            BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
+                              listener: (context, state) {
+                                  if (state.status == VehiclePartsInteractionStatus.success) {
+                          DMSCustomWidgets.DMSFlushbar(size, context,
+                              message: "Successfully uploaded",
+                              icon: const Icon(
+                                Icons.cloud_upload_rounded,
+                                color: Colors.white,
+                              ));
+                          // Updating with initial parameters
+                          context.read<VehiclePartsInteractionBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                        }
+                              },
+                              builder: (context, state) {
+                                return BodyCanvas(
+                                  generalParts: snapshot.data,
+                                );
+                              },
                             ),
                           ),
-                        );
-                      }),
+                        ),
+                    
 
                       //zoom in zoom out buttons
                       Positioned(
@@ -155,15 +159,15 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                           ),
                         ),
                       ),
-                      if (context.watch<MultiBloc>().state.isTapped)
+                      if (context.read<VehiclePartsInteractionBloc>().state.isTapped)
                         Positioned(
                             left: isMobile ? size.width * 0.04 : null,
                             right: isMobile ? null : size.width * 0.16,
                             top: isMobile ? 150 : size.width * 0.08,
                             child: Comments(
                               vehiclePartMedia:
-                                  context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] ??
-                                      VehiclePartMedia(name: context.read<MultiBloc>().state.selectedGeneralBodyPart, isUploaded: false),
+                                  context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart] ??
+                                      VehiclePartMedia(name: context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart!, isUploaded: false),
                             )),
                       Positioned(
                         bottom: isMobile ? size.height * 0.12 : size.height * 0.040,
@@ -171,7 +175,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                         child: GestureDetector(
                           onTap: () {
                             // After vehicle examination navigation user from home page to list of jobcards.
-                            if (!context.read<MultiBloc>().state.isTapped) {
+                            if (!context.read<VehiclePartsInteractionBloc>().state.isTapped!) {
                               navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                             }
                           },

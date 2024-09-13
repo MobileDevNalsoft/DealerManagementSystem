@@ -65,14 +65,14 @@ class ScaleVehicle extends MultiBlocEvent {
 }
 
 // triggers when any part of vehicle svg image is tapped.
-class ModifyVehicleInteractionStatus extends MultiBlocEvent {
-  String selectedBodyPart;
-  bool isTapped;
-  ModifyVehicleInteractionStatus({required this.selectedBodyPart, required this.isTapped});
-}
+// class ModifyVehicleInteractionStatus extends MultiBlocEvent {
+//   String selectedBodyPart;
+//   bool isTapped;
+//   ModifyVehicleInteractionStatus({required this.selectedBodyPart, required this.isTapped});
+// }
 
-class ModifyRenamingStatus extends MultiBlocEvent{
-  HotspotRenamingStatus renameStatus;
-  String? renamedValue;
-  ModifyRenamingStatus({required this.renameStatus,this.renamedValue});
-}
+// class ModifyRenamingStatus extends MultiBlocEvent{
+//   HotspotRenamingStatus renameStatus;
+//   String? renamedValue;
+//   ModifyRenamingStatus({required this.renameStatus,this.renamedValue});
+// }

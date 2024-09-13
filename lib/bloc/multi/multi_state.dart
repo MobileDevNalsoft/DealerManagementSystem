@@ -1,8 +1,6 @@
 part of 'multi_bloc.dart';
 
-enum MultiStateStatus { initial, loading, success, failure }
-enum HotspotRenamingStatus {initial, openTextField, hotspotRenamed}
-class MultiBlocState {
+enum MultiStateStatus { initial, loading, success, failure }class MultiBlocState {
   MultiBlocState(
       {this.date,
       this.year,
@@ -12,9 +10,9 @@ class MultiBlocState {
       this.status,
       this.reverseClippedWidgets = false,
       this.scaleFactor,
-      this.isTapped = false,
-      this.selectedGeneralBodyPart = '',
-      this.renamingStatus=HotspotRenamingStatus.initial,
+      // this.isTapped = false,
+      // this.selectedGeneralBodyPart = '',
+    
       this.renamedValue
       });
 
@@ -26,9 +24,9 @@ class MultiBlocState {
   Map<int, bool>? checkBoxStates;
   bool? reverseClippedWidgets;
   double? scaleFactor;
-  String selectedGeneralBodyPart;
-  bool isTapped;
-  HotspotRenamingStatus renamingStatus;
+  // String selectedGeneralBodyPart;
+  // bool isTapped;
+
   String? renamedValue;
   factory MultiBlocState.initial() {
     return MultiBlocState(
@@ -69,7 +67,7 @@ class MultiBlocState {
     double? scaleFactor,
     String? selectedGeneralBodyPart,
     bool? isTapped,
-    HotspotRenamingStatus? renamingStatus,
+
     String? renamedValue
   }) {
     return MultiBlocState(
@@ -81,9 +79,9 @@ class MultiBlocState {
         status: status ?? this.status,
         reverseClippedWidgets: reverseClippedWidgets ?? this.reverseClippedWidgets,
         scaleFactor: scaleFactor ?? this.scaleFactor,
-        isTapped: isTapped ?? this.isTapped,
-        selectedGeneralBodyPart: selectedGeneralBodyPart ?? this.selectedGeneralBodyPart,
-        renamingStatus: renamingStatus??this.renamingStatus,
+        // isTapped: isTapped ?? this.isTapped,
+        // selectedGeneralBodyPart: selectedGeneralBodyPart ?? this.selectedGeneralBodyPart,
+
         renamedValue: renamedValue??this.renamedValue
         );
   }

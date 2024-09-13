@@ -56,7 +56,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
   late VehiclePartsInteractionBloc2 _interactionBloc;
   late MultiBloc _multiBloc;
   late ServiceBloc _serviceBloc;
-
+  late Future _resources;
   Size size = const Size(0, 0);
 
   double dragStart = 0;
@@ -67,7 +67,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   // method to load java script file
   Future<List<String>> loadJS() async {
-    const List<String> resources = [];
+     List<String> resources = [];
     resources.add(await rootBundle.loadString('assets/quality.js'));
     resources.add(await rootBundle.loadString('assets/styles.css'));
     return resources;
@@ -84,6 +84,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
   void initState() {
     super.initState();
     _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
+    _resources = loadJS();
     _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
     _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
@@ -103,7 +104,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   void updateButtonsList(int index) {
     if (index >= 0 && index < hotSpots.length) {
-      _interactionBloc.add(BodyPartSelected(selectedBodyPart: hotSpots.elementAt(index).key));
+      _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(index).key));
       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: index));
       _autoScrollController.scrollToIndex(index, duration: const Duration(milliseconds: 500), preferPosition: AutoScrollPosition.begin);
       _changeButtonColors(hotSpots.elementAt(index).key, true);
@@ -127,7 +128,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
         Map<String, dynamic> data = jsonDecode(message.message);
 
         if (data["type"] == "hotspot-click") {
-          _interactionBloc.add(BodyPartSelected(selectedBodyPart: data["name"]!));
+          _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!));
           int index = _interactionBloc.state.mapMedia.entries.toList().indexWhere((element) => element.key == data["name"]);
           _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: index));
           _autoScrollController.scrollToIndex(index);
@@ -175,7 +176,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
             child: Stack(
               children: [
                 FutureBuilder(
-                    future: loadJS(),
+                    future: _resources,
                     builder: (context, snapshot) {
                       return snapshot.hasData
                           ? BlocListener<VehiclePartsInteractionBloc2, VehiclePartsInteractionBlocState2>(
@@ -279,7 +280,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                 index: index,
                                                 child: InkWell(
                                                   onTap: () {
-                                                    _interactionBloc.add(BodyPartSelected(selectedBodyPart: hotSpots.elementAt(index).key));
+                                                    _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(index).key));
                                                     _changeButtonColors(hotSpots.elementAt(index).key, true);
                                                     _autoScrollController.scrollToIndex(index);
                                                     if (index > state.vehicleExaminationPageIndex) {
@@ -298,7 +299,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                         borderRadius: BorderRadius.circular(16),
-                                                        color: state.vehicleExaminationPageIndex == index ? Colors.orange.shade200 : Colors.white,
+                                                        color: context.watch<VehiclePartsInteractionBloc2>().state.vehicleExaminationPageIndex == index ? Colors.orange.shade200 : Colors.white,
                                                         boxShadow: [
                                                           BoxShadow(
                                                               blurRadius: state.vehicleExaminationPageIndex == index ? 0 : 5,
@@ -313,7 +314,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                          hotSpots.elementAt(index).key,
+                                                          hotSpots.elementAt(index).value.name,
                                                           style: const TextStyle(
                                                             fontWeight: FontWeight.w800,
                                                           ),
@@ -346,14 +347,14 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                         children: state.mapMedia.entries.map((e) {
                                           int index = state.mapMedia.keys.toList().indexOf(e.key);
                                           print('insets ${MediaQuery.of(context).viewInsets.bottom}');
-                                          if (e.value.isAccepted == null) {
+                                          if(sliderButtonControllers.isNotEmpty){if (e.value.isAccepted == null) {
                                             sliderButtonControllers[index].position = Position.middle;
                                           } else if (e.value.isAccepted != null && e.value.isAccepted! == true) {
                                             sliderButtonControllers[index].position = Position.right;
                                           } else if (e.value.isAccepted != null && e.value.isAccepted! == false) {
                                             sliderButtonControllers[index].position = Position.left;
-                                          }
-                                          return !state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart)
+                                          }}
+                                          return !state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc2>().state.selectedBodyPart)
                                               ? const Padding(
                                                   padding: EdgeInsets.all(8.0),
                                                   child: Text(
@@ -406,7 +407,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                           context.watch<VehiclePartsInteractionBloc2>().state.mapMedia[context
                                                                                       .watch<VehiclePartsInteractionBloc2>()
                                                                                       .state
-                                                                                      .selectedGeneralBodyPart] ==
+                                                                                      .selectedBodyPart] ==
                                                                                   null
                                                                               ? "No data"
                                                                               : e.value.comments!,
@@ -424,7 +425,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                               .watch<VehiclePartsInteractionBloc2>()
                                                                               .state
                                                                               .mapMedia[
-                                                                                  context.watch<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart]!
+                                                                                  context.watch<VehiclePartsInteractionBloc2>().state.selectedBodyPart]!
                                                                               .images ==
                                                                           null
                                                                       ? 0
@@ -528,10 +529,10 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                     } else {
                                                                                       _interactionBloc
                                                                                           .state
-                                                                                          .mapMedia[_interactionBloc.state.selectedGeneralBodyPart]!
+                                                                                          .mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                                           .reasonForRejection = rejectionController.text;
                                                                                       _interactionBloc.add(ModifyAcceptedEvent(
-                                                                                          bodyPartName: _interactionBloc.state.selectedGeneralBodyPart,
+                                                                                          bodyPartName: _interactionBloc.state.selectedBodyPart!,
                                                                                           isAccepted: false));
                                                                                       navigator.pop();
                                                                                     }
@@ -573,7 +574,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                       size: size,
                                                                       controller: rejectionController,
                                                                       onCancel: () {
-                                                                        _interactionBloc.state.mapMedia[_interactionBloc.state.selectedGeneralBodyPart]!
+                                                                        _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                             .reasonForRejection = '';
                                                                         navigator.pop();
                                                                       },
@@ -586,10 +587,10 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                 color: Colors.white,
                                                                               ));
                                                                         } else {
-                                                                          _interactionBloc.state.mapMedia[_interactionBloc.state.selectedGeneralBodyPart]!
+                                                                          _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                               .reasonForRejection = rejectionController.text;
                                                                           _interactionBloc.add(ModifyAcceptedEvent(
-                                                                              bodyPartName: _interactionBloc.state.selectedGeneralBodyPart, isAccepted: false));
+                                                                              bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: false));
                                                                           navigator.pop();
                                                                           if (index == state.mapMedia.length - 1) {
                                                                             DMSCustomWidgets.showSubmitDialog(
@@ -598,10 +599,10 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                 onNo: () {
                                                                                   _interactionBloc
                                                                                       .state
-                                                                                      .mapMedia[_interactionBloc.state.selectedGeneralBodyPart]!
+                                                                                      .mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                                       .reasonForRejection = '';
                                                                                   _interactionBloc.add(ModifyAcceptedEvent(
-                                                                                      bodyPartName: _interactionBloc.state.selectedGeneralBodyPart,
+                                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!,
                                                                                       isAccepted: null));
                                                                                   navigator.pop();
                                                                                 },
@@ -639,16 +640,16 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                 },
                                                                 onRightLabelReached: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
-                                                                      bodyPartName: _interactionBloc.state.selectedGeneralBodyPart, isAccepted: true));
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: true));
                                                                   if (index == state.mapMedia.length - 1) {
                                                                     DMSCustomWidgets.showSubmitDialog(
                                                                         size: size,
                                                                         context: context,
                                                                         onNo: () {
-                                                                          _interactionBloc.state.mapMedia[_interactionBloc.state.selectedGeneralBodyPart]!
+                                                                          _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                               .reasonForRejection = '';
                                                                           _interactionBloc.add(ModifyAcceptedEvent(
-                                                                              bodyPartName: _interactionBloc.state.selectedGeneralBodyPart, isAccepted: null));
+                                                                              bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
                                                                           navigator.pop();
                                                                         },
                                                                         onYes: () {
@@ -681,7 +682,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                 },
                                                                 onNoStatus: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
-                                                                      bodyPartName: _interactionBloc.state.selectedGeneralBodyPart, isAccepted: null));
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
                                                                 },
                                                                 leftLabel: Text(
                                                                   'Rejected',

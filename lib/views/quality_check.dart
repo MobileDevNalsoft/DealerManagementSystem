@@ -59,7 +59,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
   //Closing the bottom sheet on moving it below the min pixels
   void removeSheetOnBelowMin() {
     if (draggableScrollableController.pixels < 190) {
-      _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+      _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
     }
   }
 
@@ -135,11 +135,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
           children: [
             Stack(
               children: [
-                FutureBuilder(
-                    future: _resources,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Container(
+                
+                       Container(
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width,
                           decoration: const BoxDecoration(
@@ -148,29 +145,37 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                   stops: [0.1, 0.5, 1])),
-                          child: Transform.scale(
-                            scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
-                            child: GestureDetector(
-                              onScaleUpdate: (details) {
-                                _multiBloc.add(ScaleVehicle(factor: details.scale));
-                              },
-                              // Canvas to build the car model.
-                              child: BodyCanvas(
-                                  displayAcceptedStatus: true,
-                                  generalParts: snapshot.data[0],
-                                  acceptedParts: snapshot.data[1],
-                                  rejectedParts: snapshot.data[2],
-                                  pendingParts: snapshot.data[3]),
-                            ),
-                          ),
-                        );
-                      } else {
+                          child: FutureBuilder(
+                            future: _resources,
+
+                            builder: (context,snapshot) {
+                              if (snapshot.hasData) {
+                              return Transform.scale(
+                                scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
+                                child: GestureDetector(
+                                  onScaleUpdate: (details) {
+                                    _multiBloc.add(ScaleVehicle(factor: details.scale));
+                                  },
+                                  // Canvas to build the car model.
+                                  child: BodyCanvas(
+                                      displayAcceptedStatus: true,
+                                      generalParts: snapshot.data[0],
+                                      acceptedParts: snapshot.data[1],
+                                      rejectedParts: snapshot.data[2],
+                                      pendingParts: snapshot.data[3]),
+                                ),
+                              );}
+                             else {
                         return SizedBox();
-                      }
-                    }),
+                      } 
+                            }
+                            
+                          ),
+                        ),
+                     
 
                 //Displaying the sheet only when any part is not tapped
-                if (!context.watch<MultiBloc>().state.isTapped)
+                if (!context.watch<VehiclePartsInteractionBloc>().state.isTapped)
                   Positioned(
                     bottom: size.height * 0.1,
                     left: isMobile ? size.width * 0.38 : size.width * 0.455,
@@ -274,7 +279,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                     ),
                   ),
                 ),
-                if (context.watch<MultiBloc>().state.isTapped)
+                if (context.watch<VehiclePartsInteractionBloc>().state.isTapped)
                   isMobile
                       ? Center(
                           child: Padding(
@@ -286,34 +291,34 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                               shouldCloseOnMinExtent: true,
                               minChildSize: 0.25,
                               // Bottom sheet sizes
-                              maxChildSize: !_interactionBloc.state.mapMedia.containsKey(context.watch<MultiBloc>().state.selectedGeneralBodyPart)
+                              maxChildSize: !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                                   ? 0.25
                                   : context
                                                   .watch<VehiclePartsInteractionBloc>()
                                                   .state
-                                                  .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                  .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                   .isAccepted ==
                                               null ||
                                           context
                                                   .watch<VehiclePartsInteractionBloc>()
                                                   .state
-                                                  .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                  .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                   .isAccepted ==
                                               true
                                       ? 0.5
                                       : 0.8,
-                              initialChildSize: !_interactionBloc.state.mapMedia.containsKey(context.watch<MultiBloc>().state.selectedGeneralBodyPart)
+                              initialChildSize: !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                                   ? 0.25
                                   : context
                                                   .watch<VehiclePartsInteractionBloc>()
                                                   .state
-                                                  .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                  .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                   .isAccepted ==
                                               null ||
                                           context
                                                   .watch<VehiclePartsInteractionBloc>()
                                                   .state
-                                                  .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                  .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                   .isAccepted ==
                                               true
                                       ? 0.5
@@ -352,7 +357,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                         alignment: Alignment.centerRight,
                                                         child: IconButton(
                                                           onPressed: () {
-                                                            _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                                                            _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
                                                           },
                                                           icon: const Icon(
                                                             Icons.cancel,
@@ -375,7 +380,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                             ),
                                           ),
                                           // if no images and comments are present for the vehicle part
-                                          !_interactionBloc.state.mapMedia.containsKey(context.watch<MultiBloc>().state.selectedGeneralBodyPart)
+                                          !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                                               ? const SliverToBoxAdapter(
                                                   child: Padding(
                                                     padding: EdgeInsets.all(8.0),
@@ -397,7 +402,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                           children: [
                                                             const Gap(8),
                                                             Text(
-                                                              context.watch<MultiBloc>().state.selectedGeneralBodyPart.replaceAll('_', ' ').toUpperCase(),
+                                                              context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart!.replaceAll('_', ' ').toUpperCase(),
                                                               style: TextStyle(
                                                                   fontWeight: FontWeight.w600, color: Colors.white, fontSize: ParentSize.maxWidth * 0.042),
                                                             ),
@@ -415,13 +420,13 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                 context
                                                                             .watch<VehiclePartsInteractionBloc>()
                                                                             .state
-                                                                            .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart] ==
+                                                                            .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart] ==
                                                                         null
                                                                     ? "No data"
                                                                     : context
                                                                         .watch<VehiclePartsInteractionBloc>()
                                                                         .state
-                                                                        .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                        .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                         .comments!,
                                                                 style: TextStyle(
                                                                     color: const Color.fromARGB(255, 223, 220, 220), fontSize: ParentSize.maxWidth * 0.040)),
@@ -457,14 +462,14 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                                 itemCount: context
                                                                                             .watch<VehiclePartsInteractionBloc>()
                                                                                             .state
-                                                                                            .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                            .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                             .images ==
                                                                                         null
                                                                                     ? 0
                                                                                     : context
                                                                                         .watch<VehiclePartsInteractionBloc>()
                                                                                         .state
-                                                                                        .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                        .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                         .images!
                                                                                         .length,
                                                                                 builder: (BuildContext context, int index) {
@@ -477,7 +482,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                                       File(context
                                                                                           .watch<VehiclePartsInteractionBloc>()
                                                                                           .state
-                                                                                          .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                          .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                           .images![index]
                                                                                           .path),
                                                                                     ),
@@ -486,7 +491,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                                         tag: context
                                                                                             .watch<VehiclePartsInteractionBloc>()
                                                                                             .state
-                                                                                            .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                            .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                             .images![index]
                                                                                             .path),
                                                                                   );
@@ -512,7 +517,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                     File(context
                                                                         .watch<VehiclePartsInteractionBloc>()
                                                                         .state
-                                                                        .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                        .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                         .images![index]
                                                                         .path),
                                                                     fit: BoxFit.fitWidth,
@@ -523,14 +528,14 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                             itemCount: context
                                                                         .watch<VehiclePartsInteractionBloc>()
                                                                         .state
-                                                                        .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                        .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                         .images ==
                                                                     null
                                                                 ? 0
                                                                 : context
                                                                     .watch<VehiclePartsInteractionBloc>()
                                                                     .state
-                                                                    .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                    .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                     .images!
                                                                     .length,
                                                           ),
@@ -538,15 +543,15 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                         Center(
                                                           child: Builder(
                                                             builder: (context) {
-                                                              if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted ==
+                                                              if (_interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted ==
                                                                   null) {
                                                                 sliderButtonController.position = Position.middle;
                                                               } else if (_interactionBloc
-                                                                      .state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted ==
+                                                                      .state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted ==
                                                                   true) {
                                                                 sliderButtonController.position = Position.right;
                                                               } else if (_interactionBloc
-                                                                      .state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted ==
+                                                                      .state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted ==
                                                                   false) {
                                                                 sliderButtonController.position = Position.left;
                                                               } else {
@@ -558,16 +563,16 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                 controller: sliderButtonController,
                                                                 onRightLabelReached: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
-                                                                      bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: true));
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: true));
                                                                 },
                                                                 onLeftLabelReached: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
-                                                                      bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: false));
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: false));
                                                                 },
                                                                 isMobile: isMobile,
                                                                 onNoStatus: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
-                                                                      bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: null));
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
                                                                 },
                                                               );
                                                             },
@@ -577,15 +582,15 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                         if (context
                                                                 .read<VehiclePartsInteractionBloc>()
                                                                 .state
-                                                                .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] !=
+                                                                .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart] !=
                                                             null)
                                                           Builder(
                                                             builder: (context) {
                                                               if (_interactionBloc
-                                                                      .state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!.isAccepted ==
+                                                                      .state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.isAccepted ==
                                                                   false) {
                                                                 rejectionController.text = _interactionBloc
-                                                                        .state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.reasonForRejection ??
+                                                                        .state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection ??
                                                                     "";
 
                                                                 return Column(
@@ -614,7 +619,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                           ),
                                                                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
                                                                       onChanged: (value) {
-                                                                        _interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!
+                                                                        _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                             .reasonForRejection = value;
                                                                       },
                                                                     ),
@@ -624,13 +629,13 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                         if (context
                                                                                     .read<VehiclePartsInteractionBloc>()
                                                                                     .state
-                                                                                    .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                    .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                     .reasonForRejection ==
                                                                                 null ||
                                                                             context
                                                                                 .read<VehiclePartsInteractionBloc>()
                                                                                 .state
-                                                                                .mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                 .reasonForRejection!
                                                                                 .isEmpty) {
                                                                           DMSCustomWidgets.DMSFlushbar(
@@ -645,7 +650,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                           return;
                                                                         }
                                                                         //bringing to intial status when needed
-                                                                        _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                                                                        _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
                                                                       },
                                                                       child: Container(
                                                                           alignment: Alignment.center,
@@ -675,7 +680,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                               }
                                                             },
                                                           ),
-                                                        if (_interactionBloc.state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] != null)
+                                                        if (_interactionBloc.state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart] != null)
                                                           const SizedBox(
                                                             height: 40,
                                                           )
@@ -696,15 +701,15 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                       // For tab screen
                       Positioned(
                           right: size.width * 0.16,
-                          top: context.watch<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(context.read<MultiBloc>().state.selectedGeneralBodyPart)
+                          top: context.watch<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                               ? size.height * 0.08
                               : size.height * 0.16,
                           child: Container(
                             width: size.width * 0.32,
                             height:
-                                context.watch<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(context.read<MultiBloc>().state.selectedGeneralBodyPart)
-                                    ? (_interactionBloc.state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!.isAccepted == null ||
-                                            _interactionBloc.state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!.isAccepted == true)
+                                context.watch<VehiclePartsInteractionBloc>().state.mapMedia.containsKey(context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart)
+                                    ? (_interactionBloc.state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.isAccepted == null ||
+                                            _interactionBloc.state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.isAccepted == true)
                                         ? size.height * 0.42
                                         : size.height * 0.68
                                     : size.height * 0.16,
@@ -734,7 +739,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                 alignment: Alignment.centerRight,
                                                 child: IconButton(
                                                   onPressed: () {
-                                                    _multiBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                                                    _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
                                                   },
                                                   icon: const Icon(
                                                     Icons.cancel,
@@ -746,7 +751,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                         ),
                                       ],
                                     ),
-                                    !_interactionBloc.state.mapMedia.containsKey(context.watch<MultiBloc>().state.selectedGeneralBodyPart)
+                                    !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                                         ? const Padding(
                                             padding: EdgeInsets.all(8.0),
                                             child: Text(
@@ -766,7 +771,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                     children: [
                                                       const Gap(8),
                                                       Text(
-                                                        context.watch<MultiBloc>().state.selectedGeneralBodyPart.replaceAll('_', ' ').toUpperCase(),
+                                                        context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart!.replaceAll('_', ' ').toUpperCase(),
                                                         style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: size.maxWidth * 0.042),
                                                       ),
                                                     ],
@@ -783,13 +788,13 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                           context
                                                                       .watch<VehiclePartsInteractionBloc>()
                                                                       .state
-                                                                      .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart] ==
+                                                                      .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart] ==
                                                                   null
                                                               ? "No data"
                                                               : context
                                                                   .watch<VehiclePartsInteractionBloc>()
                                                                   .state
-                                                                  .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                  .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                   .comments!,
                                                           style: TextStyle(color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.maxWidth * 0.040)),
                                                     ],
@@ -822,14 +827,14 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                           itemCount: context
                                                                                       .watch<VehiclePartsInteractionBloc>()
                                                                                       .state
-                                                                                      .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                      .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                       .images ==
                                                                                   null
                                                                               ? 0
                                                                               : context
                                                                                   .watch<VehiclePartsInteractionBloc>()
                                                                                   .state
-                                                                                  .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                  .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                   .images!
                                                                                   .length,
                                                                           builder: (BuildContext context, int index) {
@@ -842,7 +847,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                                 File(context
                                                                                     .watch<VehiclePartsInteractionBloc>()
                                                                                     .state
-                                                                                    .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                    .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                     .images![index]
                                                                                     .path),
                                                                               ),
@@ -851,7 +856,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                                   tag: context
                                                                                       .watch<VehiclePartsInteractionBloc>()
                                                                                       .state
-                                                                                      .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                                      .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                                       .images![index]
                                                                                       .path),
                                                                             );
@@ -877,7 +882,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                               File(context
                                                                   .watch<VehiclePartsInteractionBloc>()
                                                                   .state
-                                                                  .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                  .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                   .images![index]
                                                                   .path),
                                                               fit: BoxFit.fitWidth,
@@ -888,19 +893,19 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                       itemCount: context
                                                                   .watch<VehiclePartsInteractionBloc>()
                                                                   .state
-                                                                  .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                                  .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                   .images ==
                                                               null
                                                           ? 0
                                                           : context
                                                               .watch<VehiclePartsInteractionBloc>()
                                                               .state
-                                                              .mapMedia[context.watch<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                              .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                               .images!
                                                               .length,
                                                     ),
                                                   ),
-                                                  BlocBuilder<MultiBloc, MultiBlocState>(
+                                                  BlocBuilder<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
                                                     builder: (context, state) {
                                                       // slider button
                                                       return CustomSliderButton(
@@ -909,16 +914,16 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                         controller: sliderButtonController,
                                                         onRightLabelReached: () {
                                                           _interactionBloc.add(
-                                                              ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: true));
+                                                              ModifyAcceptedEvent(bodyPartName: state.selectedBodyPart!, isAccepted: true));
                                                         },
                                                         onLeftLabelReached: () {
                                                           _interactionBloc.add(
-                                                              ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: false));
+                                                              ModifyAcceptedEvent(bodyPartName: state.selectedBodyPart!, isAccepted: false));
                                                         },
                                                         isMobile: isMobile,
                                                         onNoStatus: () {
                                                           _interactionBloc.add(
-                                                              ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: null));
+                                                              ModifyAcceptedEvent(bodyPartName: state.selectedBodyPart!, isAccepted: null));
                                                         },
                                                       );
                                                       // CustomSliderButton1(
@@ -961,13 +966,13 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                     },
                                                   ),
                                                   const Gap(16),
-                                                  if (_interactionBloc.state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart] != null)
+                                                  if (_interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart] != null)
                                                     BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
                                                       listener: (context, state) {},
                                                       builder: (context, state) {
-                                                        if (state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!.isAccepted == false) {
+                                                        if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted == false) {
                                                           rejectionController = TextEditingController(
-                                                              text: _interactionBloc.state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!
+                                                              text: _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                       .reasonForRejection ??
                                                                   "");
 
@@ -996,15 +1001,15 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                     ),
                                                                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
                                                                 onChanged: (value) {
-                                                                  state.mapMedia[context.read<MultiBloc>().state.selectedGeneralBodyPart]!.reasonForRejection =
+                                                                  state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection =
                                                                       value;
                                                                 },
                                                               ),
                                                               const Gap(16),
                                                               GestureDetector(
                                                                 onTap: () {
-                                                                  context.read<MultiBloc>().state.selectedGeneralBodyPart = "";
-                                                                  context.read<MultiBloc>().state.isTapped = false;
+                                                                  _interactionBloc.state.selectedBodyPart = "";
+                                                                  _interactionBloc.state.isTapped = false;
                                                                 },
                                                                 child: Container(
                                                                     alignment: Alignment.center,
@@ -1128,11 +1133,11 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
 //     _leftPosition = widget.size.width * 0.168;
 //     _startPosition = widget.size.width * 0.39;
 //     _rightPosition = widget.size.width * 0.63;
-//     if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == null) {
+//     if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedBodyPart]!.isAccepted == null) {
 //       _initialPosition = _startPosition;
-//     } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == true) {
+//     } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedBodyPart]!.isAccepted == true) {
 //       _initialPosition = _rightPosition;
-//     } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == false) {
+//     } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedBodyPart]!.isAccepted == false) {
 //       _initialPosition = _leftPosition;
 //     }
 //     _position = _initialPosition;
@@ -1154,7 +1159,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
 //     if (_position >= _rightPosition - 20) {
 //       setState(() {
 //         _position = _rightPosition;
-//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: true));
+//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedBodyPart, isAccepted: true));
 //       });
 //       await Future.delayed(Duration(seconds: 1));
 //       widget.onDismissed();
@@ -1163,13 +1168,13 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
 //       setState(() {
 //         _position = _leftPosition;
 
-//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: false));
+//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedBodyPart, isAccepted: false));
 //       });
 //       return;
 //     } else {
 //       setState(() {
 //         _position = _startPosition;
-//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: null));
+//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedBodyPart, isAccepted: null));
 //       });
 //     }
 //   }
@@ -1179,11 +1184,11 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
 //     context.read<ServiceBloc>().state.index = 0;
 //     return BlocListener<MultiBloc, MultiBlocState>(
 //       listener: (context, state) {
-//         if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == null) {
+//         if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedBodyPart]!.isAccepted == null) {
 //           _initialPosition = _startPosition;
-//         } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == true) {
+//         } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedBodyPart]!.isAccepted == true) {
 //           _initialPosition = _rightPosition;
-//         } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == false) {
+//         } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedBodyPart]!.isAccepted == false) {
 //           _initialPosition = _leftPosition;
 //         }
 //         _position = _initialPosition;

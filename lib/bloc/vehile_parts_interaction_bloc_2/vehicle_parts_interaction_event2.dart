@@ -65,7 +65,19 @@ class RemoveHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
 }
 
 // triggers when any part of vehicle svg image is tapped.
-class BodyPartSelected extends VehiclePartsInteractionBlocEvent2 {
+// class BodyPartSelected extends VehiclePartsInteractionBlocEvent2 {
+//   String selectedBodyPart;
+//   BodyPartSelected({required this.selectedBodyPart});
+// }
+
+class ModifyVehicleInteractionStatus extends VehiclePartsInteractionBlocEvent2 {
   String selectedBodyPart;
-  BodyPartSelected({required this.selectedBodyPart});
+  bool? isTapped;
+  ModifyVehicleInteractionStatus({required this.selectedBodyPart,  this.isTapped});
+}
+
+class ModifyRenamingStatus extends VehiclePartsInteractionBlocEvent2{
+  HotspotRenamingStatus renameStatus;
+  String? renamedValue;
+  ModifyRenamingStatus({required this.renameStatus,this.renamedValue});
 }

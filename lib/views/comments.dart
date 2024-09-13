@@ -242,10 +242,11 @@ class _CommentsState extends State<Comments> with SingleTickerProviderStateMixin
                             } else {
                               //use service/jobcard number
                               print(context.read<ServiceBloc>().state.jobCardNo);
-                              print('sb no ${context.read<ServiceBloc>().state.service!.serviceBookingNo!}');
+                              // print('sb no ${context.read<ServiceBloc>().state.service!.serviceBookingNo!}');
                               context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(
                                   bodyPartName: widget.vehiclePartMedia.name,
-                                  serviceBookingNo: context.read<ServiceBloc>().state.service!.serviceBookingNo!) as VehiclePartsInteractionBlocEvent);
+                                  serviceBookingNo: context.read<ServiceBloc>().state.service!.serviceBookingNo!
+                                  ) as VehiclePartsInteractionBlocEvent);
                             }
                           },
                           child: Container(
@@ -278,7 +279,7 @@ class _CommentsState extends State<Comments> with SingleTickerProviderStateMixin
                       (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.comments!.isEmpty &&
                           context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isEmpty) ||
                       context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.isUploaded) {
-                    context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                    context.read<VehiclePartsInteractionBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
 
                     return;
                   }

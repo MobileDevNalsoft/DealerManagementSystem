@@ -82,7 +82,7 @@ class BodyPainter extends CustomPainter {
       } else if (["front_bumper", "rear_bumper"].contains(muscle.name)) {
         paint.color = Color.fromRGBO(133, 127, 127, 0.612);
       }
-      if (context.read<MultiBloc>().state.selectedGeneralBodyPart == muscle.name) {
+      if (context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart == muscle.name) {
         //color of the selected part
         paint.color = Colors.white;
       }
@@ -93,7 +93,7 @@ class BodyPainter extends CustomPainter {
         onTapDown: (details) {
           // on tap actions is only for parts
           if (!muscle.name.startsWith('text')) {
-            context.read<MultiBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: muscle.name, isTapped: true));
+            context.read<VehiclePartsInteractionBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: muscle.name, isTapped: true));
           }
         },
       );

@@ -25,8 +25,8 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     on<AddClippedWidgets>(_onAddClippedWidgets);
     on<MultiBlocStatusChange>(_onMultiBlocStatusChange);
     on<ScaleVehicle>(_onScaleVehicle);
-    on<ModifyVehicleInteractionStatus>(_onModifyVehicleInteractionStatus);
-    on<ModifyRenamingStatus>(_onModifyRenamingStatus);
+    // on<ModifyVehicleInteractionStatus>(_onModifyVehicleInteractionStatus);
+    // on<ModifyRenamingStatus>(_onModifyRenamingStatus);
   }
 
   void _onDateChanged(DateChanged event, Emitter<MultiBlocState> emit) {
@@ -45,7 +45,6 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
       salesPersons: jsonData,
       status: MultiStateStatus.success,
     ));
-    print(state.salesPersons);
   }
 
   void _onCheckBoxTapped(CheckBoxTapped event, Emitter<MultiBlocState> emit) {
@@ -106,10 +105,10 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
     emit(state.copyWith(scaleFactor: event.factor));
   }
 
-  void _onModifyVehicleInteractionStatus(ModifyVehicleInteractionStatus event, Emitter<MultiBlocState> emit) {
-    emit(state.copyWith(selectedGeneralBodyPart: event.selectedBodyPart, isTapped: event.isTapped));
-  }
-  void _onModifyRenamingStatus(ModifyRenamingStatus event, Emitter<MultiBlocState> emit) {
-    emit(state.copyWith(renamingStatus: event.renameStatus,renamedValue: event.renamedValue));
-  }
+//   void _onModifyVehicleInteractionStatus(ModifyVehicleInteractionStatus event, Emitter<MultiBlocState> emit) {
+//     emit(state.copyWith(selectedGeneralBodyPart: event.selectedBodyPart, isTapped: event.isTapped));
+//   }
+//   void _onModifyRenamingStatus(ModifyRenamingStatus event, Emitter<MultiBlocState> emit) {
+//     emit(state.copyWith(renamingStatus: event.renameStatus,renamedValue: event.renamedValue));
+//   }
 }
