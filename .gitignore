@@ -139,3 +139,6 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 !.vscode/settings.json
 package_config.json
+.dart_tool/package_config.json
+.dart_tool/package_config_subset
+windows/flutter/generated_plugin_registrant.cc

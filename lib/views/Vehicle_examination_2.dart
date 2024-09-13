@@ -5,6 +5,7 @@ import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc_2/vehicle_parts_interaction_bloc2.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
+import 'package:dms/models/vehicle_parts_media2.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
@@ -61,6 +62,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
     _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
     _interactionBloc.state.mapMedia = {};
+    
     
   }
 
@@ -133,8 +135,9 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                             index: hotspotIndex,
                                             child: InkWell(
                                               onTap: () {
+                                               
                                                 _multiBloc.add(ModifyVehicleInteractionStatus(
-                                                    selectedBodyPart: hotSpots.elementAt(hotspotIndex).key, isTapped: _multiBloc.state.isTapped));
+                                                    selectedBodyPart: (hotSpots.elementAt(hotspotIndex)).key, isTapped: _multiBloc.state.isTapped));
                                                 _pageController.jumpToPage(hotspotIndex);
                                                 _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
                                                 state.vehicleExaminationPageIndex = hotspotIndex;
@@ -158,7 +161,7 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                   children: [
                                                     Gap(size.width * 0.024),
                                                     Text(
-                                                      hotSpots.elementAt(hotspotIndex).key.toString().replaceAll('-', ' '),
+                                                      hotSpots.elementAt(hotspotIndex).value.name.toString(),
                                                       style: const TextStyle(
                                                         fontWeight: FontWeight.w800,
                                                       ),
@@ -194,14 +197,14 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                                                   children: [
                                                                                     context.watch<MultiBloc>().state.renamingStatus == HotspotRenamingStatus.initial
                                                                                         ? Text(
-                                                                                            hotSpots.elementAt(hotspotIndex).key,
+                                                                                            hotSpots.elementAt(hotspotIndex).value.name,
                                                                                             style: TextStyle(fontSize: isMobile ? 16 : 18),
                                                                                           )
                                                                                         : Expanded(
                                                                                             child: TextFormField(
                                                                                               selectionControls: MaterialTextSelectionControls(),
                                                                                               controller:
-                                                                                                  TextEditingController(text: hotSpots.elementAt(hotspotIndex).key),
+                                                                                                  TextEditingController(text: hotSpots.elementAt(hotspotIndex).value.name),
                                                                                               showCursor: true,
                                                                                               autofocus: true,
                                                                                               cursorColor: Colors.black,
@@ -291,21 +294,23 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                                                                       var value = hotSpots.elementAt(hotspotIndex).value;
                                                                                       _multiBloc.state.renamedValue =
                                                                                           _multiBloc.state.renamedValue!.trim().replaceAll(' ', '-');
-                                                                                      await webViewController
-                                                                                          .runJavaScript(
-                                                                                              'renameHotspot("${hotSpots.elementAt(hotspotIndex).key}","${_multiBloc.state.renamedValue}")')
-                                                                                          .catchError((e) {
-                                                                                        print(e);
-                                                                                      });
-                                                                                      _interactionBloc.state.mapMedia.putIfAbsent(_multiBloc.state.renamedValue ?? "",
-                                                                                          () {
-                                                                                        return value;
-                                                                                      });
+                                                                                      // await webViewController
+                                                                                      //     .runJavaScript(
+                                                                                      //         'renameHotspot("${hotSpots.elementAt(hotspotIndex).key}","${_multiBloc.state.renamedValue}")')
+                                                                                      //     .catchError((e) {
+                                                                                      //   print(e);
+                                                                                      // });
+                                                                                      // _interactionBloc.state.mapMedia.putIfAbsent(_multiBloc.state.renamedValue ?? "",
+                                                                                      //     () {
+                                                                                      //   return value;
+                                                                                      // });
                                     
-                                                                                      _interactionBloc.state.mapMedia[_multiBloc.state.renamedValue]!.name =
-                                                                                          _multiBloc.state.renamedValue!;
-                                                                                      _interactionBloc.state.mapMedia.remove(hotSpots.elementAt(hotspotIndex).key);
-                                                                                      _multiBloc.state.selectedGeneralBodyPart = _multiBloc.state.renamedValue!;
+                                                                                      // _interactionBloc.state.mapMedia[_multiBloc.state.renamedValue]!.name =
+                                                                                      //     _multiBloc.state.renamedValue!;
+                                                                                      // _interactionBloc.state.mapMedia.remove(hotSpots.elementAt(hotspotIndex).key);
+                                                                                      // _multiBloc.state.selectedGeneralBodyPart = _multiBloc.state.renamedValue!;
+                                                                                      _interactionBloc.state.mapMedia[hotSpots.elementAt(hotspotIndex).key]!.name = _multiBloc.state.renamedValue!;
+                                                                                      _multiBloc.state.selectedGeneralBodyPart = hotSpots.elementAt(hotspotIndex).key;
                                                                                       _pageController.jumpToPage(hotspotIndex);
                                                                                       _autoScrollController.scrollToIndex(hotspotIndex);
                                                                                       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
