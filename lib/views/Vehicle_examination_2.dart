@@ -540,7 +540,6 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                               );
                                             } else {
                                               //use service.jobcard number
-                                              print('sb no ${_serviceBloc.state.service!.serviceBookingNo}');
                                               _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
                                                   bodyPartName: state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.name,
                                                   serviceBookingNo: _serviceBloc.state.service!.serviceBookingNo!) as VehiclePartsInteractionBlocEvent2);

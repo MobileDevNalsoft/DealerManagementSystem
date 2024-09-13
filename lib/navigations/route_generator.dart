@@ -86,8 +86,8 @@ class RouteGenerator {
         // final args = settings.arguments as GeneralBodyParts;
         return Transitions.slideLeftTransition(
             VehicleExamination(
-              // generalParts: args.generalParts,
-            ),
+                // generalParts: args.generalParts,
+                ),
             settings);
       case '/gatePass':
         return Transitions.slideLeftTransition(const GatePass(), settings);
@@ -114,12 +114,7 @@ class RouteGenerator {
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/qualityCheck':
-        final jobCardNo = settings.arguments as String;
-        return Transitions.slideLeftTransition(
-            QualityCheck(
-              jobCardNo: jobCardNo,
-            ),
-            settings);
+        return Transitions.slideLeftTransition(const QualityCheck(), settings);
       case '/serviceBooking':
         return Transitions.slideUpTransition(ServiceBooking(), settings);
       case '/vehicleInfo':
@@ -154,7 +149,6 @@ class RouteGenerator {
     }
   }
 }
-
 
 class Transitions {
   static PageRouteBuilder<dynamic> slideUpTransition(Widget page, RouteSettings settings) {

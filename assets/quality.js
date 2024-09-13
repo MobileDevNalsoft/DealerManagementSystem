@@ -16,7 +16,7 @@ function receiveHotspots(name, position, normal){
             "data-position",
             position
         );
-        hotspot.id=name;
+        
         hotspot.setAttribute(
             "data-normal",
             normal

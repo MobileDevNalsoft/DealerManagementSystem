@@ -86,11 +86,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           } else {
             navigator!.pushAndRemoveUntil('/vehicleExamination', '/home');
           }
-          emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         } else {
           emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
-
-          emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         }
       },
     ).onError(
@@ -154,7 +151,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(getServiceStatus: GetServiceStatus.loading));
     await _repo.getHistory(event.query!, 0, param: event.vehicleRegNo).then(
       (json) {
-        print('json $json');
         if (json['response_code'] == 200) {
           List<Service> services = [];
           for (Map<String, dynamic> service in json['data']) {
@@ -182,8 +178,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           for (Map<String, dynamic> service in json['data']) {
             jobCards.add(Service.fromJson(service));
           }
-          emit(state.copyWith(getJobCardStatus: GetJobCardStatus.success, serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
-          emit(state.copyWith(filteredJobCards: jobCards));
+          emit(state.copyWith(
+              getJobCardStatus: GetJobCardStatus.success, serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards, filteredJobCards: jobCards));
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
         }

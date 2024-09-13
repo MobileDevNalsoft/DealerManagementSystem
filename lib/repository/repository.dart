@@ -215,7 +215,7 @@ class Repository {
         Log.d(apiResponse.response);
         // if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
         // print(jsonDecode(apiResponse.response!.data).runtimeType);
-        return apiResponse.response!.data["items"][0]["image"];
+        return apiResponse.response!.data["items"][0]["vehicle_examination"];
         // } else {
         //   throw apiResponse.error;
         // }
@@ -251,7 +251,6 @@ class Repository {
   }
 
   Future<int> addQualityStatus({Map<String, dynamic>? qualityCheckJson}) async {
-    print(qualityCheckJson);
     ApiResponse apiResponse = await _api.post('qualityCheckStatus', data: qualityCheckJson);
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {

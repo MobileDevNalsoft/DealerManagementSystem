@@ -10,8 +10,6 @@ import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
-import 'package:dms/views/inspection_out.dart';
-import 'package:dms/views/list_of_jobcards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -19,13 +17,11 @@ import 'package:lottie/lottie.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../bloc/service/service_bloc.dart';
 
 class QualityCheck extends StatefulWidget {
-  final String jobCardNo;
-  const QualityCheck({super.key, required this.jobCardNo});
+  const QualityCheck({super.key});
   @override
   State<QualityCheck> createState() => _QualityCheckState();
 }
@@ -33,25 +29,37 @@ class QualityCheck extends StatefulWidget {
 class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderStateMixin, ConnectivityMixin {
   TextEditingController rejectionController = TextEditingController();
   FocusNode rejectionFocus = FocusNode();
+
   late DraggableScrollableController draggableScrollableController;
+
   final NavigatorService navigator = getIt<NavigatorService>();
+
   SliderButtonController sliderButtonController = SliderButtonController();
+
   late VehiclePartsInteractionBloc _interactionBloc;
   late MultiBloc _multiBloc;
   late ServiceBloc _serviceBloc;
+
   late Future _resources;
+
   @override
   void initState() {
     super.initState();
+
     _resources = loadSvgs();
+
     _interactionBloc = context.read<VehiclePartsInteractionBloc>();
     _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
 
     _interactionBloc.state.mapMedia = {};
+    _interactionBloc.state.status = VehiclePartsInteractionStatus.initial;
+
     // fetching images and comments for the jobCard Number
     // remove widget.jobCardNo for release version.
-    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: context.read<ServiceBloc>().state.service!.jobCardNo ?? widget.jobCardNo));
+
+    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+
     draggableScrollableController = DraggableScrollableController();
     draggableScrollableController.addListener(removeSheetOnBelowMin);
   }
@@ -63,7 +71,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
     }
   }
 
-  Future loadSvgs() async {
+  Future<List<List<GeneralBodyPart>>> loadSvgs() async {
     List<List<GeneralBodyPart>> svgResources = [];
     svgResources.add(await loadSvgImage(svgImage: 'assets/images/image.svg')); //generalParts
     svgResources.add(await loadSvgImage(svgImage: 'assets/images/image_accept.svg')); //acceptedParts
@@ -165,7 +173,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                           ),
                         );
                       } else {
-                        return SizedBox();
+                        return const SizedBox();
                       }
                     }),
 
@@ -202,7 +210,7 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                               return;
                             }
                           }
-                          _interactionBloc.add(SubmitQualityCheckStatusEvent(jobCardNo: widget.jobCardNo));
+                          _interactionBloc.add(SubmitQualityCheckStatusEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
                         },
                         child: Container(
                             alignment: Alignment.center,
@@ -553,8 +561,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                                 sliderButtonController.position = Position.left;
                                                               }
                                                               return CustomSliderButton(
-                                                                leftLabel: Text("Reject"),
-                                                                rightLabel: Text("Accept"),
+                                                                leftLabel: const Text("Reject"),
+                                                                rightLabel: const Text("Accept"),
                                                                 controller: sliderButtonController,
                                                                 onRightLabelReached: () {
                                                                   _interactionBloc.add(ModifyAcceptedEvent(
@@ -904,8 +912,8 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                     builder: (context, state) {
                                                       // slider button
                                                       return CustomSliderButton(
-                                                        leftLabel: Text("Reject"),
-                                                        rightLabel: Text("Accept"),
+                                                        leftLabel: const Text("Reject"),
+                                                        rightLabel: const Text("Accept"),
                                                         controller: sliderButtonController,
                                                         onRightLabelReached: () {
                                                           _interactionBloc.add(
@@ -921,43 +929,6 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                                                               ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: null));
                                                         },
                                                       );
-                                                      // CustomSliderButton1(
-                                                      //     interactionBloc: _interactionBloc,
-                                                      //     size: Size(size.maxWidth, size.maxHeight),
-                                                      //     context: context,
-                                                      //     rightLabel: const Text(
-                                                      //       "Accept",
-                                                      //       style: TextStyle(color: Colors.green),
-                                                      //     ),
-                                                      //     leftLabel: const Text(
-                                                      //       "Reject",
-                                                      //       style: TextStyle(color: Colors.red),
-                                                      //     ),
-                                                      //     icon: const Stack(
-                                                      //       children: [
-                                                      //         CircleAvatar(
-                                                      //           backgroundColor: Color.fromRGBO(38, 38, 40, 1),
-                                                      //         ),
-                                                      //         Positioned(
-                                                      //             top: 8,
-                                                      //             child: Icon(
-                                                      //               Icons.chevron_left_rounded,
-                                                      //               color: Colors.white,
-                                                      //               shadows: [],
-                                                      //             )),
-                                                      //         Positioned(
-                                                      //             top: 8,
-                                                      //             right: 1,
-                                                      //             child: Icon(
-                                                      //               Icons.chevron_right_rounded,
-                                                      //               color: Colors.white,
-                                                      //             ))
-                                                      //       ],
-                                                      //     ),
-                                                      //     onDismissed: () {
-                                                      //       draggableScrollableController.animateTo(0,
-                                                      //           duration: const Duration(milliseconds: 800), curve: Easing.emphasizedDecelerate);
-                                                      //     });
                                                     },
                                                   ),
                                                   const Gap(16),
@@ -1052,9 +1023,9 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
                   listener: (context, state) {
                     switch (state.status) {
                       case VehiclePartsInteractionStatus.success:
-                        context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
-                        context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
-                        navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
+                        _serviceBloc.state.service!.status = 'Inspection Out';
+                        _serviceBloc.add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
+                        navigator.popAndPush('/jobCardDetails');
                         navigator.push('/inspectionOut');
                       case VehiclePartsInteractionStatus.failure:
                         DMSCustomWidgets.DMSFlushbar(
@@ -1085,161 +1056,3 @@ class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderSt
         ));
   }
 }
-
-// class CustomSliderButton1 extends StatefulWidget {
-//   final Size size;
-//   final BuildContext context;
-//   final Widget leftLabel;
-//   final Widget rightLabel;
-//   final Widget icon;
-//   final interactionBloc;
-//   // ignore: prefer_typing_uninitialized_variables
-//   final onDismissed;
-//   const CustomSliderButton1(
-//       {Key? key,
-//       required this.size,
-//       required this.context,
-//       required this.leftLabel,
-//       required this.rightLabel,
-//       required this.icon,
-//       required this.onDismissed,
-//       required this.interactionBloc})
-//       : super(key: key);
-
-//   @override
-//   // ignore: library_private_types_in_public_api
-//   _CustomSliderButton1State createState() => _CustomSliderButton1State();
-// }
-
-// class _CustomSliderButton1State extends State<CustomSliderButton1> {
-//   late double _position;
-//   late double _startPosition;
-//   late double _rightPosition;
-//   late double _leftPosition;
-//   late double _initialPosition;
-//   late MultiBloc _multiBloc;
-//   dynamic _interactionBloc;
-//   @override
-//   void initState() {
-//     super.initState();
-//     _interactionBloc = widget.interactionBloc;
-//     // initial postitions of tthe slider
-//     _multiBloc = context.read<MultiBloc>();
-//     _leftPosition = widget.size.width * 0.168;
-//     _startPosition = widget.size.width * 0.39;
-//     _rightPosition = widget.size.width * 0.63;
-//     if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == null) {
-//       _initialPosition = _startPosition;
-//     } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == true) {
-//       _initialPosition = _rightPosition;
-//     } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == false) {
-//       _initialPosition = _leftPosition;
-//     }
-//     _position = _initialPosition;
-//   }
-
-//   void _onPanUpdate(DragUpdateDetails details) {
-//     setState(() {
-//       _position = details.localPosition.dx;
-//       if (_position > _rightPosition) {
-//         _position = _rightPosition;
-//       } else if (_position < _leftPosition) {
-//         _position = _leftPosition;
-//       }
-//     });
-//   }
-
-//   void _onPanEnd(DragEndDetails details) async {
-//     // moving the slider to right or left if it very near to the respective positions
-//     if (_position >= _rightPosition - 20) {
-//       setState(() {
-//         _position = _rightPosition;
-//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: true));
-//       });
-//       await Future.delayed(Duration(seconds: 1));
-//       widget.onDismissed();
-//       return;
-//     } else if (_position <= _leftPosition + 20) {
-//       setState(() {
-//         _position = _leftPosition;
-
-//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: false));
-//       });
-//       return;
-//     } else {
-//       setState(() {
-//         _position = _startPosition;
-//         _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _multiBloc.state.selectedGeneralBodyPart, isAccepted: null));
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     context.read<ServiceBloc>().state.index = 0;
-//     return BlocListener<MultiBloc, MultiBlocState>(
-//       listener: (context, state) {
-//         if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == null) {
-//           _initialPosition = _startPosition;
-//         } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == true) {
-//           _initialPosition = _rightPosition;
-//         } else if (_interactionBloc.state.mapMedia[_multiBloc.state.selectedGeneralBodyPart]!.isAccepted == false) {
-//           _initialPosition = _leftPosition;
-//         }
-//         _position = _initialPosition;
-//       },
-//       child: GestureDetector(
-//         onPanUpdate: _onPanUpdate,
-//         onPanEnd: _onPanEnd,
-//         child: Stack(
-//           children: [
-//             Align(
-//               alignment: Alignment.center,
-//               child: Container(
-//                 decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(22),
-//                     color: const Color.fromRGBO(36, 38, 40, 1),
-//                     boxShadow: const [BoxShadow(color: Color.fromARGB(255, 255, 159, 69), blurRadius: 3, spreadRadius: 0.3)]),
-//                 width: widget.size.width * 0.58,
-//                 height: 45,
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Align(
-//                       child: Padding(padding: const EdgeInsets.only(left: 16.0), child: widget.leftLabel),
-//                     ),
-//                     Align(
-//                       alignment: Alignment.centerRight,
-//                       child: Padding(padding: const EdgeInsets.only(right: 16.0), child: widget.rightLabel),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             Positioned(
-//               left: _position,
-//               top: 1.5,
-//               child: Container(
-//                 width: 42,
-//                 height: 42,
-//                 decoration: BoxDecoration(
-//                     color: const Color.fromRGBO(36, 38, 40, 1),
-//                     borderRadius: BorderRadius.circular(40),
-//                     boxShadow: const [BoxShadow(color: Color.fromARGB(255, 255, 159, 69), blurRadius: 0.1, spreadRadius: 0.5)]),
-//                 child: Center(
-//                     child: (_position == _rightPosition)
-//                         ? Lottie.asset("assets/lottie/success.json", repeat: false)
-//                         : (_position == _leftPosition)
-//                             ? Lottie.asset("assets/lottie/error2.json", repeat: false)
-//                             : const Icon(
-//                                 Icons.switch_left_rounded,
-//                                 color: Colors.white,
-//                               )),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

@@ -170,12 +170,9 @@ class VehiclePartsInteractionBloc extends Bloc<VehiclePartsInteractionBlocEvent,
       });
     }
     await _repo.addQualityStatus(qualityCheckJson: {"id": event.jobCardNo, "data": qualityCheckJson}).then((onValue) {
-      print("after api call");
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.success));
-      // emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
     }).onError((e, s) {
       emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.failure));
-      emit(state.copyWith(state.mapMedia, VehiclePartsInteractionStatus.initial));
     });
   }
 

@@ -43,6 +43,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
     _serviceBloc.state.inspectionJsonUploadStatus = InspectionJsonUploadStatus.initial;
 
     _serviceBloc.state.index = 0;
+
+    _serviceBloc.add(GetInspectionDetails(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
   }
 
   @override
@@ -247,6 +249,7 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                               ));
                                                           return;
                                                         }
+                                                        navigator.pop();
                                                         state.json = state.json!;
                                                         _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
                                                         _serviceBloc

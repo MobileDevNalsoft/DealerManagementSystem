@@ -86,7 +86,9 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
     _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
     _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
-    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+    _interactionBloc.state.status = VehiclePartsInteractionStatus.initial;
+    _interactionBloc.state.mapMedia = {};
+
     _interactionBloc.state.vehicleExaminationPageIndex = 0;
     tween = Tween(begin: 0.0, end: (sharedPreferences.getBool('isMobile') ?? true ? 0.8 : 1));
     animationController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
@@ -210,6 +212,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                   id: 'quality',
                                   onWebViewCreated: (value) async {
                                     webViewController = value;
+                                    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
                                   },
                                   javascriptChannels: {qualityChannel},
                                 ),
