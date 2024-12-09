@@ -1,0 +1,18 @@
+part of 'authentication_bloc.dart';
+
+enum AuthenticationStatus { initial, loading, success, invalidCredentials, failure }
+
+final class AuthenticationState {
+  AuthenticationState({this.authenticationStatus, this.obscure});
+
+  AuthenticationStatus? authenticationStatus;
+  bool? obscure;
+
+  factory AuthenticationState.initial() {
+    return AuthenticationState(authenticationStatus: AuthenticationStatus.initial, obscure: true);
+  }
+
+  AuthenticationState copyWith({AuthenticationStatus? authenticationStatus, bool? obscure}) {
+    return AuthenticationState(authenticationStatus: authenticationStatus ?? this.authenticationStatus, obscure: obscure ?? this.obscure);
+  }
+}

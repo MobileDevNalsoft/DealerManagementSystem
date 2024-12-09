@@ -1,0 +1,309 @@
+import 'dart:convert';
+
+import 'package:dms/logger/logger.dart';
+import 'package:network_calls/src.dart';
+
+class Repository {
+  final NetworkCalls _api;
+
+  Repository({required NetworkCalls api}) : _api = api;
+
+  Future<int> addVehicle(Map<String, dynamic> payload) async {
+    ApiResponse apiResponse = await _api.post('addVehicle', data: payload);
+
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> addService(Map<String, dynamic> payload) async {
+    ApiResponse apiResponse = await _api.post('addService', data: payload);
+
+    Log.d(payload);
+    if (apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return {'response_code': response["response_code"], 'service_booking_no': response["service_booking_no"]};
+      } else {
+        Log.e(apiResponse.response);
+        return {'response_code': response["response_code"]};
+      }
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> getVehicle(String registrationNo) async {
+    ApiResponse apiResponse = await _api.get('getVehicle', queryParameters: {"registrationNo": registrationNo});
+
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> getCustomer(String customerContactNo) async {
+    ApiResponse apiResponse = await _api.get('getCustomer', queryParameters: {"customerContactNo": customerContactNo});
+
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> getHistory(String query, int pageNo, {String? param}) async {
+    ApiResponse apiResponse = await _api.get('getHistory', queryParameters: {"query_type": query, "pageNo": pageNo, "param": param ?? ""});
+
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> getSBRequirements() async {
+    ApiResponse apiResponse = await _api.get("getSBRequirements");
+
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> getVehicleCustomer(String registrationNo) async {
+    ApiResponse apiResponse = await _api.get('getVehicleCustomer', queryParameters: {"registrationNo": registrationNo});
+
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        return jsonDecode(apiResponse.response!.data);
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> getInspection(String jobCardNo) async {
+    ApiResponse apiResponse = await _api.get('getInspection', queryParameters: {"jobCardNo": jobCardNo});
+
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        return jsonDecode(apiResponse.response!.data);
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future<List<dynamic>> getSalesPersons(String searchText) async {
+    print(searchText);
+    ApiResponse apiResponse = await _api.get('getSalesPerson', queryParameters: {"search_text": searchText});
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          print(jsonDecode(apiResponse.response!.data)["data"].runtimeType);
+          return (jsonDecode(apiResponse.response!.data)["data"]);
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future<int> addVehicleMedia(Map<String, dynamic> image) async {
+    print(image);
+    ApiResponse apiResponse = await _api.post('addImage', data: {
+      "image": jsonEncode(image),
+    });
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return 200;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future<int> addinspection(Map<String, dynamic> payload) async {
+    ApiResponse apiResponse = await _api.post('addInspection', data: payload);
+    if (apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        return response["response_code"];
+      } else {
+        return response["response_code"];
+      }
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<Map<String, dynamic>> authenticateUser(String username, String password) async {
+    ApiResponse apiResponse = await _api.get('authenticateUser', queryParameters: {"username": username, "password": password});
+
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      return response;
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future<int> updateJobCardStatus(String jobCardStatus, String jobCardNo) async {
+    ApiResponse apiResponse = await _api.post('updateJobCardStatus', queryParameters: {"status": jobCardStatus, "jobCardNo": jobCardNo});
+    if (apiResponse.response!.statusCode == 200) {
+      final response = jsonDecode(apiResponse.response!.data);
+      if (response["response_code"] == 200) {
+        Log.d(apiResponse.response);
+        return response["response_code"];
+      } else {
+        Log.e(apiResponse.response);
+        return response["response_code"];
+      }
+    } else {
+      Log.e(apiResponse.error);
+      throw Error();
+    }
+  }
+
+  Future getImage(String jobCardNo) async {
+    ApiResponse apiResponse = await _api.get('getImage', queryParameters: {"jobCardNo": jobCardNo});
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        // if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+        // print(jsonDecode(apiResponse.response!.data).runtimeType);
+        return apiResponse.response!.data["items"][0]["vehicle_examination"];
+        // } else {
+        //   throw apiResponse.error;
+        // }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future<int> addVehiclePartMedia({Map<String, dynamic>? bodyPartData, required String id, required String name}) async {
+    print('body part data $bodyPartData');
+    ApiResponse apiResponse = await _api.post('addVehiclePartMedia', data: {
+      "id": id,
+      "name": name,
+      "data": jsonEncode(bodyPartData),
+    });
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return 200;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future<int> addQualityStatus({Map<String, dynamic>? qualityCheckJson}) async {
+    ApiResponse apiResponse = await _api.post('qualityCheckStatus', data: qualityCheckJson);
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return 200;
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future generateGatePass({required String jobCardNo}) async {
+    ApiResponse apiResponse = await _api.post('gatePass', queryParameters: {"jobCardNo": jobCardNo});
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        Log.d(apiResponse.response);
+        if (jsonDecode(apiResponse.response!.data)["response_code"] == 200) {
+          return jsonDecode(apiResponse.response!.data);
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+
+  Future getGatePass({required String jobCardNo}) async {
+    ApiResponse apiResponse = await _api.get('gatePass', queryParameters: {"jobCardNo": jobCardNo});
+    if (apiResponse.response != null) {
+      if (apiResponse.response!.statusCode == 200) {
+        if ((apiResponse.response!.data)["count"] == 1) {
+          if ((apiResponse.response!.data)["items"][0]["gate_pass_out_no"] != null) {
+            return (apiResponse.response!.data)["items"][0];
+          } else {
+            throw apiResponse.error;
+          }
+        } else {
+          throw apiResponse.error;
+        }
+      } else {
+        throw apiResponse.error;
+      }
+    } else {
+      throw Error();
+    }
+  }
+}

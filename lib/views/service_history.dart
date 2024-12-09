@@ -1,0 +1,241 @@
+import 'package:dms/bloc/service/service_bloc.dart';
+import 'package:dms/inits/init.dart';
+import 'package:dms/models/services.dart';
+import 'package:dms/views/DMS_custom_widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
+import '../navigations/navigator_service.dart';
+
+class ServiceHistory extends StatefulWidget {
+  const ServiceHistory({super.key});
+
+  @override
+  State<ServiceHistory> createState() => _ServiceHistoryState();
+}
+
+class _ServiceHistoryState extends State<ServiceHistory> {
+  late ServiceHistoryDataSource serviceHistoryDataSource;
+  DataGridController dataGridController = DataGridController();
+  final CustomColumnSizer _customColumnSizer = CustomColumnSizer();
+  final NavigatorService navigator = getIt<NavigatorService>();
+
+  late ServiceBloc _serviceBloc;
+  @override
+  void initState() {
+    super.initState();
+
+    _serviceBloc = context.read<ServiceBloc>();
+    _serviceBloc.state.copyWith(getServiceStatus: GetServiceStatus.initial);
+    _serviceBloc.add(GetServiceHistory(query: '2022'));
+    _serviceBloc.state.getServiceStatus = GetServiceStatus.initial;
+  }
+
+  // @override
+  // void dispose() {
+  //   SystemChrome.setPreferredOrientations([
+  //     DeviceOrientation.portraitUp,
+  //     DeviceOrientation.portraitDown,
+  //   ]);
+  //   super.dispose();
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
+
+    // Set preferred orientations based on device type
+    // if (!isMobile) {
+    //   SystemChrome.setPreferredOrientations([
+    //     DeviceOrientation.landscapeLeft,
+    //     DeviceOrientation.landscapeRight,
+    //   ]);
+    // } else {
+    //   SystemChrome.setPreferredOrientations([
+    //     DeviceOrientation.portraitUp,
+    //     DeviceOrientation.portraitDown,
+    //   ]);
+    // }
+
+    Size size = MediaQuery.of(context).size;
+
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        // SystemChrome.setPreferredOrientations([
+        //   DeviceOrientation.portraitUp,
+        //   DeviceOrientation.portraitDown,
+        // ]);
+      },
+      child: OrientationBuilder(builder: (context, orientation) {
+        // SystemChrome.setPreferredOrientations([
+        //   DeviceOrientation.landscapeLeft,
+        //   DeviceOrientation.landscapeRight
+        // ]);
+        return Hero(
+          tag: 'serviceHistory',
+          transitionOnUserGestures: true,
+          child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              extendBodyBehindAppBar: false,
+              appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Service History'),
+              body: Container(
+                height: size.height,
+                width: double.infinity,
+                margin: EdgeInsets.zero,
+                padding: EdgeInsets.only(top: size.height * 0.01, left: size.width * (isMobile ? 0.01 : 0.03)),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
+                ),
+                child: SfDataGridTheme(
+                  data: SfDataGridThemeData.raw(
+                      headerColor: Colors.white,
+                      currentCellStyle: const DataGridCurrentCellStyle(
+                        borderColor: Colors.black,
+                        borderWidth: 2,
+                      )),
+                  child: BlocBuilder<ServiceBloc, ServiceState>(
+                    builder: (context, state) {
+                      switch (state.getServiceStatus) {
+                        case GetServiceStatus.loading:
+                          return Transform(
+                            transform: Matrix4.translationValues(0, -40, 0),
+                            child: Center(
+                              child: Lottie.asset('assets/lottie/car_loading.json',
+                                  height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
+                            ),
+                          );
+                        case GetServiceStatus.success:
+                          return SfDataGrid(
+                            columnSizer: _customColumnSizer,
+                            columnWidthMode: ColumnWidthMode.fitByColumnName,
+                            source: ServiceHistoryDataSource(serviceHistoryData: state.services!),
+                            gridLinesVisibility: GridLinesVisibility.both,
+                            headerGridLinesVisibility: GridLinesVisibility.both,
+                            showHorizontalScrollbar: false,
+                            allowEditing: true,
+                            shrinkWrapColumns: false,
+                            shrinkWrapRows: false,
+                            allowSorting: true,
+                            allowColumnsResizing: true,
+                            allowColumnsDragging: true,
+                            columnResizeMode: ColumnResizeMode.onResize,
+                            allowFiltering: true,
+                            editingGestureType: EditingGestureType.doubleTap,
+                            onCellDoubleTap: (details) {
+                              dataGridController.beginEdit(details.rowColumnIndex);
+                            },
+                            controller: dataGridController,
+                            columns: <GridColumn>[
+                              GridColumn(
+                                  allowEditing: true,
+                                  width: 150,
+                                  columnName: 'sno',
+                                  label: Container(
+                                      padding: const EdgeInsets.all(16.0),
+                                      alignment: Alignment.center,
+                                      child: const Text(
+                                        'Sno',
+                                      ))),
+                              GridColumn(
+                                  columnName: 'date',
+                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Date'))),
+                              GridColumn(
+                                  columnName: 'Job Card no.',
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: const Text(
+                                          'Job Card no.',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ))),
+                              GridColumn(
+                                  columnName: 'Location',
+                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Location'))),
+                              GridColumn(
+                                  columnName: 'Job Type',
+                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Job Type'))),
+                            ],
+                          );
+                        default:
+                          return const SizedBox();
+                      }
+                    },
+                  ),
+                ),
+              )),
+        );
+      }),
+    );
+  }
+}
+
+class CustomColumnSizer extends ColumnSizer {
+  @override
+  double computeCellWidth(GridColumn column, DataGridRow row, Object? cellValue, TextStyle textStyle) {
+    if (column.columnName == 'Sno') {
+      cellValue = cellValue;
+    } else if (column.columnName == 'Date') {
+      cellValue = cellValue;
+    }
+
+    return super.computeCellWidth(column, row, cellValue, textStyle);
+  }
+}
+
+class ServiceHistoryDataSource extends DataGridSource {
+  /// Creates the serviceHistory data source class with required details.
+  ServiceHistoryDataSource({required List<Service> serviceHistoryData}) {
+    _serviceHistoryData = serviceHistoryData
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+              DataGridCell<int>(
+                columnName: 'sno',
+                value: serviceHistoryData.indexOf(e),
+              ),
+              DataGridCell<String>(columnName: 'date', value: e.scheduledDate),
+              DataGridCell<String>(columnName: 'Job Card no.', value: e.jobCardNo),
+              DataGridCell<String>(columnName: 'Location', value: e.location),
+              DataGridCell<String>(columnName: 'Job Type', value: e.jobType),
+            ]))
+        .toList();
+  }
+
+  List<DataGridRow> _serviceHistoryData = [];
+
+  @override
+  List<DataGridRow> get rows => _serviceHistoryData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        color: Colors.white,
+        cells: row.getCells().map<Widget>((e) {
+          return e.columnName == "Job Card no."
+              ? InkWell(
+                  onTap: () {
+                    print("${e.value}");
+                  },
+                  child: Center(
+                      child: Text(
+                    e.value.toString(),
+                    style: const TextStyle(color: Colors.blue),
+                  )),
+                )
+              : Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(e.value.toString()),
+                );
+        }).toList());
+  }
+}
