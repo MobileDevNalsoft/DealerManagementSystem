@@ -27,9 +27,9 @@ class PageChange extends ServiceEvent {
 
 // triggers when submit buttom is pressed in inspection in page.
 class InspectionJsonAdded extends ServiceEvent {
-  final String serviceBookingNo;
+  final String dynamicNo;
   final String inspectionIn;
-  InspectionJsonAdded({required this.serviceBookingNo, required this.inspectionIn});
+  InspectionJsonAdded({required this.dynamicNo, required this.inspectionIn});
 }
 
 // used for dynamic updation of inspection json.
@@ -84,4 +84,9 @@ class DropDownOpen extends ServiceEvent {}
 class ModifyGatePassStatus extends ServiceEvent {
   final GatePassStatus status;
   ModifyGatePassStatus({required this.status});
+}
+
+class MoveStepperTo extends ServiceEvent {
+  String step;
+  MoveStepperTo({required this.step});
 }

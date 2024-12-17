@@ -13,7 +13,7 @@ import '../navigations/navigator_service.dart';
 import 'custom_widgets/stepper.dart';
 
 class JobCardDetails extends StatefulWidget {
-  JobCardDetails({super.key});
+  const JobCardDetails({super.key});
 
   @override
   State<JobCardDetails> createState() => _JobCardDetailsState();
@@ -31,9 +31,13 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
   late Animation<double> animation;
   late Tween<double> tween;
 
+  // bloc variables
+  late ServiceBloc _serviceBloc;
+
   @override
   void initState() {
     super.initState();
+    _serviceBloc = context.read<ServiceBloc>();
     tween = Tween(begin: 0.0, end: (sharedPreferences.getBool('isMobile') ?? true ? 0.8 : 1));
     animationController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
     animation = CurvedAnimation(parent: animationController, curve: Curves.easeIn).drive(tween);
@@ -52,9 +56,6 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
     // responsive UI
     Size size = MediaQuery.of(context).size;
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
-
-    // Get the ServiceBloc instance from the context using BlocProvider
-    final ServiceBloc _serviceBloc = context.read<ServiceBloc>();
 
     // Define the stages of the work flow
     List<String> dmsFlow = ['New', 'Work in progress', 'Quality Check', 'Inspection Out', 'Completed'];
@@ -137,7 +138,7 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.only(topLeft: Radius.circular(isMobile ? 25 : 35), topRight: Radius.circular(isMobile ? 25 : 35)),
-                                  boxShadow: [
+                                  boxShadow: const [
                                     BoxShadow(color: Colors.black12, blurRadius: 10, blurStyle: BlurStyle.normal, offset: Offset(1, 1), spreadRadius: 10)
                                   ]),
                               child: Column(
@@ -154,19 +155,23 @@ class _JobCardDetailsState extends State<JobCardDetails> with TickerProviderStat
                                   // creates stepper widget to show the status of the job card
                                   Expanded(
                                       flex: 25,
-                                      child: Stepper(
-                                        steps: dmsFlow
-                                            .map((e) => Step(
-                                                  activeStep: dmsFlow.indexWhere((e) => e == _serviceBloc.state.service!.status),
-                                                  currentStep: dmsFlow.indexOf(e),
-                                                  icons: icons,
-                                                  stepperLength: dmsFlow.length,
-                                                  title: e,
-                                                  statusLines: statusLines,
-                                                  pendingStatusLines: pendingStatusLines,
-                                                  jobCardNo: _serviceBloc.state.service!.jobCardNo!,
-                                                ))
-                                            .toList(),
+                                      child: BlocBuilder<ServiceBloc, ServiceState>(
+                                        builder: (context, state) {
+                                          return Stepper(
+                                            steps: dmsFlow
+                                                .map((e) => Step(
+                                                      activeStep: dmsFlow.indexWhere((e) => e == _serviceBloc.state.service!.status),
+                                                      currentStep: dmsFlow.indexOf(e),
+                                                      icons: icons,
+                                                      stepperLength: dmsFlow.length,
+                                                      title: e,
+                                                      statusLines: statusLines,
+                                                      pendingStatusLines: pendingStatusLines,
+                                                      jobCardNo: _serviceBloc.state.service!.jobCardNo!,
+                                                    ))
+                                                .toList(),
+                                          );
+                                        },
                                       )),
                                 ],
                               ));

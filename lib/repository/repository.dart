@@ -251,7 +251,6 @@ class Repository {
   }
 
   Future<int> addQualityStatus({Map<String, dynamic>? qualityCheckJson}) async {
-    print(qualityCheckJson);
     ApiResponse apiResponse = await _api.post('qualityCheckStatus', data: qualityCheckJson);
     if (apiResponse.response != null) {
       if (apiResponse.response!.statusCode == 200) {

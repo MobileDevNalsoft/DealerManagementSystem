@@ -41,6 +41,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<DropDownOpen>(_onDropDownOpen);
     on<GetMyJobCards>(_onGetMyJobCards);
     on<ModifyGatePassStatus>(_onModifyGatePassStatus);
+    on<MoveStepperTo>(_onMoveStepperTo);
   }
 
   final Repository _repo;
@@ -77,20 +78,17 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future<void> _onInspectionJsonAdded(InspectionJsonAdded event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
-    await _repo.addinspection({'sb_no': event.serviceBookingNo, 'inspection_details': jsonEncode(state.json).toString(), 'in': event.inspectionIn}).then(
+    await _repo.addinspection({'dynamic_no': event.dynamicNo, 'inspection_details': jsonEncode(state.json).toString(), 'in': event.inspectionIn}).then(
       (value) async {
         if (value == 200) {
           emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
           if (event.inspectionIn == 'false') {
-            navigator!.pushAndRemoveUntil('/gatePass', '/listOfJobCards');
+            navigator!.popAndPush('/gatePass');
           } else {
             navigator!.pushAndRemoveUntil('/vehicleExamination', '/home');
           }
-          emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         } else {
           emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
-
-          emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.initial));
         }
       },
     ).onError(
@@ -154,7 +152,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(getServiceStatus: GetServiceStatus.loading));
     await _repo.getHistory(event.query!, 0, param: event.vehicleRegNo).then(
       (json) {
-        print('json $json');
         if (json['response_code'] == 200) {
           List<Service> services = [];
           for (Map<String, dynamic> service in json['data']) {
@@ -182,8 +179,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           for (Map<String, dynamic> service in json['data']) {
             jobCards.add(Service.fromJson(service));
           }
-          emit(state.copyWith(getJobCardStatus: GetJobCardStatus.success, serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards));
-          emit(state.copyWith(filteredJobCards: jobCards));
+          emit(state.copyWith(
+              getJobCardStatus: GetJobCardStatus.success, serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards, filteredJobCards: jobCards));
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
         }
@@ -199,7 +196,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.loading));
     await _repo.getHistory('myJobCards', 0, param: getIt<SharedPreferences>().getString('user_name')).then(
       (json) {
-        print('json $json');
         if (json['response_code'] == 200) {
           List<Service> jobCards = [];
           for (Map<String, dynamic> service in json['data']) {
@@ -221,7 +217,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state.copyWith(getInspectionStatus: GetInspectionStatus.loading));
     await _repo.getInspection(event.jobCardNo!).then(
       (json) {
-        print('json ${jsonDecode(json["data"]).runtimeType}');
         if (json['response_code'] == 200) {
           emit(state.copyWith(json: jsonDecode(json["data"]), getInspectionStatus: GetInspectionStatus.success));
         } else {
@@ -317,5 +312,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   void _onModifyGatePassStatus(ModifyGatePassStatus event, Emitter<ServiceState> emit) {
     emit(state.copyWith(gatePassStatus: event.status));
+  }
+
+  void _onMoveStepperTo(MoveStepperTo event, Emitter<ServiceState> emit) {
+    state.service!.status = event.step;
+    emit(state.copyWith(service: state.service));
   }
 }

@@ -18,8 +18,7 @@ import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
 
 class ServiceBooking extends StatefulWidget {
-  PageController? pageController;
-  ServiceBooking({Key? key, this.pageController}) : super(key: key);
+  const ServiceBooking({super.key});
 
   @override
   State<ServiceBooking> createState() => _ServiceBooking();
@@ -935,7 +934,7 @@ class CustomSliderButton extends StatefulWidget {
   final bool isMobile;
   final ServiceBookingSliderButtonController sliderController;
 
-  CustomSliderButton(
+  const CustomSliderButton(
       {Key? key,
       required this.size,
       required this.context,
