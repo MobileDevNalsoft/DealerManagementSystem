@@ -48,8 +48,8 @@ class _ClippedButtonState extends State<ClippedButton> with TickerProviderStateM
           child: Container(
             alignment: Alignment.center,
             color: Colors.black,
-            height: size.height * (isMobile ? 0.2 : 0.2),
-            width: size.width * (isMobile ? 0.2 : 0.16),
+            height: size.height * (isMobile ? 0.2 : 0.18),
+            width: size.width * (isMobile ? 0.2 : 0.14),
             child: Transform.flip(
               flipY: widget.flipImageY,
               child: Image.asset(
