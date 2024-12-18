@@ -79,7 +79,6 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
     super.initState();
     _interactionBloc = context.read<VehiclePartsInteractionBloc2>();
     _resources = loadJS();
-    _multiBloc = context.read<MultiBloc>();
     _serviceBloc = context.read<ServiceBloc>();
     _interactionBloc.state.status = VehiclePartsInteractionStatus.initial;
     _interactionBloc.state.mediaJsonStatus = MediaJsonStatus.initial;
@@ -379,9 +378,9 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                     }
                                                   },
                                                   child: Container(
-                                                      padding: EdgeInsets.all(size.width * 0.05),
+                                                      padding:isMobile? EdgeInsets.all(size.width * 0.05):EdgeInsets.symmetric(horizontal: size.width*0.05,vertical:size.width*0.032),
                                                       margin: EdgeInsets.zero,
-                                                      width: isMobile ? size.width : size.width * 0.32,
+                                                      width:  size.width,
                                                       child: Stack(
                                                         children: [
                                                           CustomScrollView(
@@ -392,7 +391,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Transform.translate(
-                                                                      offset: Offset(0, size.height * 0.005),
+                                                                      offset: Offset(0, size.height *(isMobile?0.005: 0.01)),
                                                                       child: const CircleAvatar(
                                                                         radius: 6,
                                                                         backgroundColor: Colors.white,
@@ -409,13 +408,14 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                               ? "No data"
                                                                               : e.value.comments!,
                                                                           style: TextStyle(
-                                                                              color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.width * 0.040)),
+                                                                              color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.width *(isMobile? 0.040:0.032))),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               ),
                                                               SliverGap(size.height * 0.03),
                                                               SliverGrid.builder(
+
                                                                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                                       crossAxisCount: 3, crossAxisSpacing: size.width * 0.02),
                                                                   itemCount: context
@@ -461,15 +461,16 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                         },
                                                                                       ),
                                                                                       Positioned(
-                                                                                        top: 10,
+                                                                                        top: size.height*0.056,
+                                                                                        right:size.width*0.02,
                                                                                         child: IconButton(
                                                                                             onPressed: () {
                                                                                               navigator.pop();
                                                                                             },
-                                                                                            icon: const Icon(
+                                                                                            icon:  Icon(
                                                                                               Icons.highlight_remove_rounded,
                                                                                               color: Colors.white,
-                                                                                              size: 28,
+                                                                                              size: isMobile?28:size.width*0.042,
                                                                                             )),
                                                                                       ),
                                                                                     ],
@@ -479,6 +480,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                           child: Image.file(
                                                                             File(e.value.images![index].path),
                                                                             fit: BoxFit.fitWidth,
+                                                                            scale: size.width * 0.002,
                                                                           ),
                                                                         ),
                                                                       )),
@@ -493,7 +495,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         children: [
                                                                           Transform.translate(
-                                                                            offset: Offset(0, size.height * 0.005),
+                                                                      offset: Offset(0, size.height *(isMobile?0.005: 0.01)),
                                                                             child: const CircleAvatar(
                                                                               radius: 6,
                                                                               backgroundColor: Colors.red,
@@ -503,9 +505,10 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                           Text("Rejection Reason",
                                                                               style: TextStyle(
                                                                                   color: const Color.fromARGB(255, 223, 220, 220),
-                                                                                  fontSize: size.width * 0.040)),
+                                                                                  fontSize: size.width * (isMobile? 0.040:0.032))),
                                                                           Gap(size.width * 0.03),
                                                                           InkWell(
+                                                                            
                                                                             radius: size.height * 0.05,
                                                                             onTap: () {
                                                                               rejectionController.text = e.value.reasonForRejection!;
@@ -536,20 +539,21 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                   },
                                                                                   context: context);
                                                                             },
-                                                                            child: const Icon(
+                                                                            child: Icon(
                                                                               Icons.edit_note_rounded,
                                                                               color: Color.fromARGB(255, 223, 220, 220),
+                                                                              size: size.width*0.042,
                                                                             ),
                                                                           ),
                                                                         ],
                                                                       ),
                                                                       Gap(size.width * 0.02),
                                                                       Padding(
-                                                                        padding: EdgeInsets.only(left: size.width * 0.12),
+                                                                        padding: EdgeInsets.only(left: size.width * (isMobile? 0.12:0.08)),
                                                                         child: Text(
                                                                           e.value.reasonForRejection!,
                                                                           style: TextStyle(
-                                                                              color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.width * 0.040),
+                                                                              color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.width *(isMobile? 0.040:0.028)),
                                                                           softWrap: true,
                                                                         ),
                                                                       ),
@@ -563,8 +567,8 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                             left: size.width * 0.2,
                                                             child: CustomSliderButton(
                                                                 controller: sliderButtonControllers[index],
-                                                                height: size.height * 0.065,
-                                                                width: size.width * 0.5,
+                                                                height: size.height * (isMobile?0.065:0.06),
+                                                                width: size.width *  (isMobile?0.5:0.42),
                                                                 onLeftLabelReached: () {
                                                                   rejectionController.text = e.value.reasonForRejection ?? '';
                                                                   DMSCustomWidgets.showReasonDialog(
@@ -594,13 +598,13 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                 size: size,
                                                                                 context: context,
                                                                                 onNo: () {
-                                                                                  _interactionBloc
-                                                                                      .state
-                                                                                      .mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                                      .reasonForRejection = '';
-                                                                                  _interactionBloc.add(ModifyAcceptedEvent(
-                                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!,
-                                                                                      isAccepted: null));
+                                                                                  // _interactionBloc
+                                                                                  //     .state
+                                                                                  //     .mapMedia[_interactionBloc.state.selectedBodyPart]!
+                                                                                  //     .reasonForRejection = '';
+                                                                                  // _interactionBloc.add(ModifyAcceptedEvent(
+                                                                                  //     bodyPartName: _interactionBloc.state.selectedBodyPart!,
+                                                                                  //     isAccepted: null));
                                                                                   navigator.pop();
                                                                                 },
                                                                                 onYes: () {
@@ -624,6 +628,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                           Icons.error,
                                                                                           color: Colors.white,
                                                                                         ));
+                                                                                        navigator.pop();
                                                                                     return;
                                                                                   }
                                                                                   _interactionBloc.add(SubmitQualityCheckStatusEvent(
@@ -642,11 +647,12 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                     DMSCustomWidgets.showSubmitDialog(
                                                                         size: size,
                                                                         context: context,
+                                                                        contentText: "Hey Advisor...\n Are you done with quality checks?",
                                                                         onNo: () {
-                                                                          _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                              .reasonForRejection = '';
-                                                                          _interactionBloc.add(ModifyAcceptedEvent(
-                                                                              bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
+                                                                          // _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
+                                                                          //     .reasonForRejection = '';
+                                                                          // _interactionBloc.add(ModifyAcceptedEvent(
+                                                                          //     bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
                                                                           navigator.pop();
                                                                         },
                                                                         onYes: () {
@@ -663,17 +669,19 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                 ));
                                                                             return;
                                                                           } else if (noStatusParts.isNotEmpty) {
+                                                                            navigator.pop();
                                                                             DMSCustomWidgets.DMSFlushbar(size, context,
                                                                                 message: 'Please update status for ${noStatusParts.first.key}',
                                                                                 icon: const Icon(
                                                                                   Icons.error,
                                                                                   color: Colors.white,
                                                                                 ));
-                                                                            return;
+                                                                            
                                                                           }
+                                                                          else{
                                                                           _interactionBloc.add(
                                                                               SubmitQualityCheckStatusEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
-                                                                          navigator.pop();
+                                                                          navigator.pop();}
                                                                         });
                                                                   }
                                                                 },

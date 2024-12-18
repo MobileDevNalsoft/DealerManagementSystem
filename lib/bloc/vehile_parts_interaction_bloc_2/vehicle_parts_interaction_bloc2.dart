@@ -125,9 +125,9 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     );
   }
 
-  void _onModifyVehicleInteractionStatus(BodyPartSelected event, Emitter<VehiclePartsInteractionBlocState2> emit) {
-    emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.initial, selectedGeneralBodyPart: event.selectedBodyPart));
-  }
+  // void _onModifyVehicleInteractionStatus(BodyPartSelected event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+  //   emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.initial, selectedGeneralBodyPart: event.selectedBodyPart));
+  // }
 
   void _onFetchVehicleMedia(FetchVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
     emit(state.copyWith(mediaJsonStatus: MediaJsonStatus.loading));

@@ -566,7 +566,7 @@ class DMSCustomWidgets {
   }
 
   // dialog to show when inspection out to be submitted
-  static void showSubmitDialog({required Size size, required BuildContext context, required void Function()? onYes, required void Function()? onNo}) {
+  static void showSubmitDialog({required Size size, required BuildContext context, required void Function()? onYes, required void Function()? onNo,String? contentText}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -584,7 +584,7 @@ class DMSCustomWidgets {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: size.width * (isMobile ? 0.03 : 0.02)),
-                      child: Text(
+                      child: Text(contentText??
                         'Hey Advisor...\nAre you done with inspection ?',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
                       ),

@@ -159,6 +159,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                           ),
                         ),
                       ),
+                     
                       if (context.read<VehiclePartsInteractionBloc>().state.isTapped)
                         Positioned(
                             left: isMobile ? size.width * 0.04 : null,

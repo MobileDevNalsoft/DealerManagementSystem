@@ -1,4 +1,5 @@
 import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
+import 'package:dms/models/services.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
 
     // get json to create widgets dynamically
     _serviceBloc.add(GetJson());
+    _serviceBloc.state.service = Service(serviceBookingNo: 'SB-BWS-277');
   }
 
   @override

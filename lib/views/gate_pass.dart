@@ -87,18 +87,18 @@ class _GatePassState extends State<GatePass> {
                           child: Container(
                             alignment: Alignment.center,
                             height: size.height * (isMobile ? 0.42 : 0.5),
-                            width: size.width * 0.8,
+                            width: size.width * (isMobile?0.8:0.72),
                             decoration: const BoxDecoration(color: Colors.white),
                             child: Column(
                               children: [
                                 Gap(size.height * (isMobile ? 0.02 : 0.03)),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Gap(size.width * 0.26),
+                                    Gap(size.width * (isMobile?0.26:0.1)),
+                                    if(!isMobile)Spacer(),
                                     Text(
                                       "Gate Pass",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: size.width * 0.06),
+                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: size.width * (isMobile?0.06:0.05)),
                                     ),
                                     const Spacer(),
                                     Align(

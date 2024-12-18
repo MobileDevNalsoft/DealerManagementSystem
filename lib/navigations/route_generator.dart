@@ -114,7 +114,7 @@ class RouteGenerator {
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/qualityCheck':
-        return Transitions.slideLeftTransition(const QualityCheck(), settings);
+        return Transitions.slideLeftTransition(const QualityCheck(jobCardNo: '',), settings);
       case '/serviceBooking':
         return Transitions.slideUpTransition(ServiceBooking(), settings);
       case '/vehicleInfo':
