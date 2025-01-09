@@ -647,7 +647,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                     DMSCustomWidgets.showSubmitDialog(
                                                                         size: size,
                                                                         context: context,
-                                                                        contentText: "Hey Advisor...\n Are you done with quality checks?",
+                                                                        contentText: "Are you done with quality checks?",
                                                                         onNo: () {
                                                                           // _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
                                                                           //     .reasonForRejection = '';

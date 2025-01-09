@@ -80,6 +80,7 @@ class MultiBloc extends Bloc<MultiBlocEvent, MultiBlocState> {
         print('render ${renderBox.size.height}');
         print('present offset ${event.scrollController.offset}');
         print('scroll offset $scrollOffset');
+        print(event.scrollController.offset + scrollOffset);
         await event.scrollController.animateTo(
           math.max(0, event.scrollController.offset + scrollOffset),
           duration: const Duration(milliseconds: 350),

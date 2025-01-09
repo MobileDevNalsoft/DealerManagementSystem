@@ -77,6 +77,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   Future<void> _onInspectionJsonAdded(InspectionJsonAdded event, Emitter<ServiceState> emit) async {
+    print("from bloc ${event.dynamicNo} ${event.inspectionIn}");
     emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
     await _repo.addinspection({'dynamic_no': event.dynamicNo, 'inspection_details': jsonEncode(state.json).toString(), 'in': event.inspectionIn}).then(
       (value) async {

@@ -44,7 +44,6 @@ class _InspectionInState extends State<InspectionIn> with ConnectivityMixin {
 
     // get json to create widgets dynamically
     _serviceBloc.add(GetJson());
-    _serviceBloc.state.service = Service(serviceBookingNo: 'SB-BWS-277');
   }
 
   @override

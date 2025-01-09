@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:dms/models/vehicle_parts_media2.dart';
@@ -85,7 +86,8 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
   }
 
   void _onRemoveImage(RemoveImageEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
-    state.mapMedia[event.name]!.images!.removeAt(event.index);
+    print("from RemoveImageEvent ${event.image}");
+    state.mapMedia[event.name]!.images!.remove(event.image);
     emit(state.copyWith(mapMedia: state.mapMedia, status: state.status));
   }
 

@@ -393,204 +393,209 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
                                     // ]),
 
                                     // elevation: 10,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        const Gap(8),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                                          height: size.height * 0.15,
-                                          //  width: size.width * 0.65,
-                                          child: Stack(
-                                            children: [
-                                              Skeletonizer(
-                                                enabled: state.selectedBodyPart!.isEmpty || !state.isTapped!,
-                                                child: TextFormField(
-                                                  // key: _formKey,
-                                                  // focusNode: commentsFocus,
-                                                  controller: TextEditingController(text: state.mapMedia[state.selectedBodyPart]!.comments),
-                                                  // initialValue: state.mapMedia[context.watch<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart]!.comments,
-                                                  maxLines: 5,
-                                                  cursorColor: Colors.white,
-                                                  style: const TextStyle(color: Colors.white),
-                                                  decoration: InputDecoration(
-                                                      hintStyle: const TextStyle(fontSize: 16, color: Colors.white60),
-                                                      fillColor: const Color.fromRGBO(38, 38, 40, 1),
-                                                      filled: true,
-                                                      contentPadding: const EdgeInsets.only(left: 16, top: 16),
-                                                      hintText: "Comments",
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(16.0),
-                                                        borderSide: const BorderSide(
-                                                          color: Color.fromARGB(255, 145, 95, 22),
-                                                        ),
-                                                      ),
-                                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
-                                                  onChanged: (value) {
-                                                    _interactionBloc.add(AddCommentsEvent(
-                                                      name: _interactionBloc.state.selectedBodyPart!,
-                                                      comments: value,
-                                                    ));
-                                                  },
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.bottomRight,
-                                                child: IconButton(
-                                                    padding: isMobile? EdgeInsets.zero:EdgeInsets.only(bottom: size.height*0.032
-                                                    ),
-                                                    onPressed: () async {
-                                                      // commentsFocus.unfocus();
-                                                      if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.length < 3) {
-                                                        ImagePicker imagePicker = ImagePicker();
-
-                                                        XFile? image =
-                                                            await imagePicker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
-                                                        if (image != null) {
-                                                          _interactionBloc.add(AddImageEvent(name: _interactionBloc.state.selectedBodyPart!, image: image));
-                                                        }
-                                                        print('images ${hotSpots.elementAt(pageIndex).value.images}');
-                                                      }
-                                                    },
-                                                    icon: Stack(
-                                                      alignment: Alignment.center,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.add_photo_alternate_rounded,
-                                                          color: Colors.white60,
-                                                        ),
-                                                        ColorFiltered(
-                                                          colorFilter: ColorFilter.mode(Colors.orange.shade200, BlendMode.srcATop),
-                                                          child: Lottie.asset(
-                                                            "assets/lottie/highlight.json",
-                                                            width: 50,
-                                                            // controller: animationController,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const Gap(8),
-                                        if (hotSpots.elementAt(pageIndex).value.images != null && hotSpots.elementAt(pageIndex).value.images.length != 0)
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                            height: hotSpots.elementAt(pageIndex).value.images == null || hotSpots.elementAt(pageIndex).value.images!.isEmpty
-                                                ? 0
-                                                : isMobile
-                                                    ? size.height * 0.14
-                                                    : size.height * 0.16,
-                                            child: Row(
-                                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: hotSpots.elementAt(pageIndex).value.images.map<Widget>((image) => 
-                                                      Padding(
-                                                        padding: const EdgeInsets.all(8.0),
-                                                        child: Stack(
-                                                          children: [
-                                                            SizedBox(
-                                                              height: size.height*0.132,
-                                                              child: ClipRRect(
-                                                                borderRadius: BorderRadius.circular(12),
-                                                                child: Image.file(
-                                                                  File(image.path),
-                                                                  fit: BoxFit.fitWidth,
-                                                                  scale: size.width * 0.002,
-                                                                ),
-                                                              ),
+                                    child: LayoutBuilder(
+                                      builder: (context,constraints){
+                                        return Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const Gap(8),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                                              height: size.height * 0.15,
+                                              //  width: size.width * 0.65,
+                                              child: Stack(
+                                                children: [
+                                                  Skeletonizer(
+                                                    enabled: state.selectedBodyPart!.isEmpty || !state.isTapped!,
+                                                    child: TextFormField(
+                                                      // key: _formKey,
+                                                      // focusNode: commentsFocus,
+                                                      controller: TextEditingController(text: state.mapMedia[state.selectedBodyPart]!.comments),
+                                                      // initialValue: state.mapMedia[context.watch<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart]!.comments,
+                                                      maxLines: 5,
+                                                      cursorColor: Colors.white,
+                                                      style: const TextStyle(color: Colors.white),
+                                                      decoration: InputDecoration(
+                                                          hintStyle: const TextStyle(fontSize: 16, color: Colors.white60),
+                                                          fillColor: const Color.fromRGBO(38, 38, 40, 1),
+                                                          filled: true,
+                                                          contentPadding: const EdgeInsets.only(left: 16, top: 16),
+                                                          hintText: "Comments",
+                                                          focusedBorder: OutlineInputBorder(
+                                                            borderRadius: BorderRadius.circular(16.0),
+                                                            borderSide: const BorderSide(
+                                                              color: Color.fromARGB(255, 145, 95, 22),
                                                             ),
-                                                            Positioned(
-                                                              top: -14,
-                                                              right: -14.0,
-                                                              child: IconButton(
-                                                                onPressed: () {
-                                                                  if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images != null) {
-                                                                    _interactionBloc
-                                                                        .add(RemoveImageEvent(name: _interactionBloc.state.selectedBodyPart!, index: index));
-                                                                  }
-                                                                },
-                                                                icon: const CircleAvatar(
-                                                                  radius: 8,
-                                                                  backgroundColor: Colors.white,
-                                                                  child: Icon(
-                                                                    Icons.remove_circle_rounded,
-                                                                    color: Color.fromARGB(255, 167, 38, 38),
-                                                                    size: 16,
-                                                                  ),
-                                                                ),
+                                                          ),
+                                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
+                                                      onChanged: (value) {
+                                                        _interactionBloc.add(AddCommentsEvent(
+                                                          name: _interactionBloc.state.selectedBodyPart!,
+                                                          comments: value,
+                                                        ));
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment: Alignment.bottomRight,
+                                                    child: IconButton(
+                                                        padding: isMobile? EdgeInsets.zero:EdgeInsets.only(bottom: size.height*0.032
+                                                        ),
+                                                        onPressed: () async {
+                                                          // commentsFocus.unfocus();
+                                                          if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.length < 3) {
+                                                            ImagePicker imagePicker = ImagePicker();
+                                        
+                                                            XFile? image =
+                                                                await imagePicker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
+                                                            if (image != null) {
+                                                              _interactionBloc.add(AddImageEvent(name: _interactionBloc.state.selectedBodyPart!, image: image));
+                                                            }
+                                                            print('images ${hotSpots.elementAt(pageIndex).value.images}');
+                                                          }
+                                                        },
+                                                        icon: Stack(
+                                                          alignment: Alignment.center,
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.add_photo_alternate_rounded,
+                                                              color: Colors.white60,
+                                                            ),
+                                                            ColorFiltered(
+                                                              colorFilter: ColorFilter.mode(Colors.orange.shade200, BlendMode.srcATop),
+                                                              child: Lottie.asset(
+                                                                "assets/lottie/highlight.json",
+                                                                width: 50,
+                                                                // controller: animationController,
                                                               ),
                                                             )
                                                           ],
-                                                        ),
-                                                      ))
-                                                  .toList(),
-                                            ),
-                                          ),
-
-                                        Gap(size.height * 0.02),
-                                        if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images != null &&
-                                            state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.isNotEmpty)
-                                          InkWell(
-                                            radius: isMobile ? size.width * 0.06 : size.width * 0.024,
-                                            borderRadius: BorderRadius.circular(20),
-                                            onTap: () {
-                                              commentsFocus.requestFocus();
-                                              if (!isConnected()) {
-                                                DMSCustomWidgets.DMSFlushbar(size, context,
-                                                    message: 'Looks like you'
-                                                        're offline. Please check your connection and try again',
-                                                    icon: const Icon(
-                                                      Icons.error,
-                                                      color: Colors.white,
-                                                    ));
-                                                return;
-                                              }
-                                              // commentsFocus.unfocus();
-                                              if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.comments!.trim().isEmpty) {
-                                                DMSCustomWidgets.DMSFlushbar(
-                                                  size,
-                                                  context,
-                                                  message: "Please add comments",
-                                                  icon: const Icon(
-                                                    Icons.error,
-                                                    color: Colors.white,
+                                                        )),
                                                   ),
-                                                );
-                                              } else {
-                                                //use service.jobcard number
-                                                _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
-                                                  bodyPartName: _interactionBloc.state.selectedBodyPart!,
-                                                  serviceBookingNo: _serviceBloc.state.service!.serviceBookingNo!,
-                                                ) as VehiclePartsInteractionBlocEvent2);
-                                                if (hotSpots.last.key == _interactionBloc.state.selectedBodyPart) {
-                                                  Navigator.pop(context);
-                                                }
-                                              }
-                                            },
-                                            child: IntrinsicWidth(
-                                              child: Container(
-                                                  alignment: Alignment.center,
-                                                  height: size.height * 0.04,
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  // width: isMobile ? size.width * 0.2 : size.width * 0.08,
-                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: const [
-                                                    BoxShadow(
-                                                        blurRadius: 8,
-                                                        blurStyle: BlurStyle.outer,
-                                                        spreadRadius: 0,
-                                                        color: Color.fromRGBO(255, 204, 128, 1),
-                                                        offset: Offset(0, 0))
-                                                  ]),
-                                                  child: Text(
-                                                    (hotSpots.last.key != _interactionBloc.state.selectedBodyPart) ? 'Upload' : " Upload & Save",
-                                                    textAlign: TextAlign.center,
-                                                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                                                  )),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        // const Gap(16)
-                                      ],
+                                            const Gap(8),
+                                            if (hotSpots.elementAt(pageIndex).value.images != null && hotSpots.elementAt(pageIndex).value.images.length != 0)
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                height: hotSpots.elementAt(pageIndex).value.images == null || hotSpots.elementAt(pageIndex).value.images!.isEmpty
+                                                    ? 0
+                                                    : isMobile
+                                                        ? size.height * 0.14
+                                                        : size.height * 0.16,
+                                                child: Row(
+                                                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: hotSpots.elementAt(pageIndex).value.images.map<Widget>((image) => 
+                                                          Padding(
+                                                            padding:  EdgeInsets.all(constraints.maxWidth*0.014),
+                                                            child: Stack(
+                                                              children: [
+                                                                SizedBox(
+                                                                  // height: constraints.maxHeight*0.5,
+                                                                  width: constraints.maxWidth*0.28,
+                                                                  child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(12),
+                                                                    child: Image.file(
+                                                                      File(image.path),
+                                                                      fit: BoxFit.fill,
+                                                                      // scale: size.width * 0.002,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Positioned(
+                                                                  top: -14,
+                                                                  right: -14.0,
+                                                                  child: IconButton(
+                                                                    onPressed: () {
+                                                                      if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images != null) {
+                                                                        _interactionBloc
+                                                                            .add(RemoveImageEvent(name: _interactionBloc.state.selectedBodyPart!, image: image));
+                                                                      }
+                                                                    },
+                                                                    icon: const CircleAvatar(
+                                                                      radius: 8,
+                                                                      backgroundColor: Colors.white,
+                                                                      child: Icon(
+                                                                        Icons.remove_circle_rounded,
+                                                                        color: Color.fromARGB(255, 167, 38, 38),
+                                                                        size: 16,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ))
+                                                      .toList(),
+                                                ),
+                                              ),
+                                        
+                                            Gap(size.height * 0.02),
+                                            if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images != null &&
+                                                state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.isNotEmpty)
+                                              InkWell(
+                                                radius: isMobile ? size.width * 0.06 : size.width * 0.024,
+                                                borderRadius: BorderRadius.circular(20),
+                                                onTap: () {
+                                                  commentsFocus.requestFocus();
+                                                  if (!isConnected()) {
+                                                    DMSCustomWidgets.DMSFlushbar(size, context,
+                                                        message: 'Looks like you'
+                                                            're offline. Please check your connection and try again',
+                                                        icon: const Icon(
+                                                          Icons.error,
+                                                          color: Colors.white,
+                                                        ));
+                                                    return;
+                                                  }
+                                                  // commentsFocus.unfocus();
+                                                  if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.comments!.trim().isEmpty) {
+                                                    DMSCustomWidgets.DMSFlushbar(
+                                                      size,
+                                                      context,
+                                                      message: "Please add comments",
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.white,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    //use service.jobcard number
+                                                    _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
+                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!,
+                                                      serviceBookingNo: _serviceBloc.state.service!.serviceBookingNo!,
+                                                    ) as VehiclePartsInteractionBlocEvent2);
+                                                    if (hotSpots.last.key == _interactionBloc.state.selectedBodyPart) {
+                                                      Navigator.pop(context);
+                                                    }
+                                                  }
+                                                },
+                                                child: IntrinsicWidth(
+                                                  child: Container(
+                                                      alignment: Alignment.center,
+                                                      height: size.height * 0.04,
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      // width: isMobile ? size.width * 0.2 : size.width * 0.08,
+                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: const [
+                                                        BoxShadow(
+                                                            blurRadius: 8,
+                                                            blurStyle: BlurStyle.outer,
+                                                            spreadRadius: 0,
+                                                            color: Color.fromRGBO(255, 204, 128, 1),
+                                                            offset: Offset(0, 0))
+                                                      ]),
+                                                      child: Text(
+                                                        (hotSpots.last.key != _interactionBloc.state.selectedBodyPart) ? 'Upload' : " Upload & Save",
+                                                        textAlign: TextAlign.center,
+                                                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                                                      )),
+                                                ),
+                                              ),
+                                            // const Gap(16)
+                                          ],
+                                        );
+                                      }
                                     ),
                                   );
                                 },
@@ -605,15 +610,13 @@ class _VehicleExamination2State extends State<VehicleExamination2> with Connecti
               ),
               if (context.watch<VehiclePartsInteractionBloc2>().state.status == VehiclePartsInteractionStatus.loading)
                 Positioned(
-                  left: 0, //size.width*0.4,
-                  top: size.height * 0.08,
-                  child: Container(
-                    // height: size.height*4,
-                    width: size.width,
-                    color: Colors.black12,
-                    child: Lottie.asset('assets/lottie/car_loading.json',
-                        height: isMobile ? size.height * 0.2 : size.height * 0.32, width: isMobile ? size.width * 0.2 : size.width * 0.32),
-                  ),
+                  left: 200, 
+                  top: 200,
+                  bottom:200,
+                  right: 200,
+                  child: Lottie.asset('assets/lottie/car_loading.json',
+                      // height: isMobile ? size.height * 0.2 : size.height * 0.32, width: isMobile ? size.width * 0.2 : size.width * 0.32
+                      ),
                 )
             ],
           );

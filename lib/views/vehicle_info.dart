@@ -472,7 +472,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
               ),
               SizedBox(
                 height: size.height*0.44,
-                width: size.width*0.72,
+                width:  vehicleRegNoController.text.isEmpty?size.width*0.2:size.width*0.72,
                 child: BlocBuilder<VehicleBloc, VehicleState>(
                   builder: (context, state) {
                     switch (state.status) {
@@ -481,13 +481,17 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                       case VehicleStatus.loading:
                         return Lottie.asset(
                           "assets/lottie/steering.json",
-                          width: size.width * 0.1,
+                          // width: size.width * 0.1,
                         );
                       default:
                         if (vehicleRegNoController.text.isEmpty) {
-                          return Image.asset(
-                            "assets/images/vehicle_search.png",
-                            width: size.width * (isMobile ? 0.3 : 0.06),
+                          return LayoutBuilder(
+                            builder: (context,psize) {
+                              return Image.asset(
+                                "assets/images/vehicle_search.png",
+                                fit: BoxFit.scaleDown,
+                              );
+                            }
                           );
                         }
                         // if vehicle not found
@@ -496,22 +500,22 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              // Expanded(
+                              //   flex: 20,
+                              //   child: Gap(size.height * 0.01),
+                              // ),
                               Expanded(
-                                flex: 20,
-                                child: Gap(size.height * 0.01),
-                              ),
-                              Expanded(
-                                flex: 8,
+                                flex: 2,
                                 child: Icon(
                                   Icons.car_crash_rounded,
                                   size: size.width * (isMobile ? 0.11 : 0.11),
                                 ),
                               ),
                               if (!isMobile)
-                                Expanded(
-                                  flex: 5,
-                                  child: Gap(size.height * 0.01),
-                                ),
+                                // Expanded(
+                                //   flex: 5,
+                                //   child: Gap(size.height * 0.01),
+                                // ),
                               Expanded(
                                 flex: 5,
                                 child: Text(
