@@ -63,7 +63,9 @@ class _ServiceMainSample extends State<ServiceMainSample> {
 
   void _onVehRegNumUnfocused() {
     if (!vehRegNumFocus.hasFocus && vehRegNumController.text.isNotEmpty) {
-      context.read<VehicleBloc>().add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
+      context
+          .read<VehicleBloc>()
+          .add(FetchVehicleCustomer(registrationNo: vehRegNumController.text));
     }
   }
 
@@ -109,7 +111,8 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
+                icon:
+                    const Icon(Icons.arrow_back_rounded, color: Colors.white)),
             title: const Text(
               "Service",
               style: TextStyle(color: Colors.white, fontSize: 18),
@@ -123,18 +126,25 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                 width: size.width,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Color.fromARGB(255, 241, 193, 193), Color.fromARGB(255, 235, 136, 136), Color.fromARGB(255, 226, 174, 174)],
+                      colors: [
+                        Color.fromARGB(255, 241, 193, 193),
+                        Color.fromARGB(255, 235, 136, 136),
+                        Color.fromARGB(255, 226, 174, 174)
+                      ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       stops: [0.01, 0.35, 1]),
                 ),
-                child: BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
+                child: BlocBuilder<ServiceBloc, ServiceState>(
+                    builder: (context, state) {
                   switch (state.getSBRequirementsStatus) {
                     case GetSBRequirementsStatus.loading:
                       return Transform(
                         transform: Matrix4.translationValues(0, -40, 0),
                         child: Center(
-                          child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6),
+                          child: Lottie.asset('assets/lottie/car_loading.json',
+                              height: size.height * 0.5,
+                              width: size.width * 0.6),
                         ),
                       );
                     case GetSBRequirementsStatus.success:
@@ -151,38 +161,52 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                       size: size,
                                       hint: 'Location',
                                       items: state.locations!,
-                                      icon: locFocus.hasFocus ? const Icon(Icons.arrow_drop_up) : const Icon(Icons.arrow_drop_down),
+                                      icon: locFocus.hasFocus
+                                          ? const Icon(Icons.arrow_drop_up)
+                                          : const Icon(Icons.arrow_drop_down),
                                       focus: locFocus,
-                                      typeAheadController: locTypeAheadController,
+                                      typeAheadController:
+                                          locTypeAheadController,
                                       scrollController: scrollController,
                                       isMobile: isMobile),
                                   Gap(size.height * (isMobile ? 0.01 : 0.03)),
                                   BlocConsumer<VehicleBloc, VehicleState>(
                                     listener: (context, state) {
-                                      if (state.status == VehicleStatus.vehicleAlreadyAdded) {
-                                        customerController.text = state.vehicle!.cusotmerName!;
-                                      } else if (state.status == VehicleStatus.newVehicle) {
-                                        FocusManager.instance.primaryFocus?.unfocus();
+                                      if (state.status ==
+                                          VehicleStatus.vehicleAlreadyAdded) {
+                                        customerController.text =
+                                            state.vehicle!.cusotmerName!;
+                                      } else if (state.status ==
+                                          VehicleStatus.newVehicle) {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
                                         showDialog(
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              contentPadding: EdgeInsets.only(top: size.height * 0.02, left: size.width * 0.03),
+                                              contentPadding: EdgeInsets.only(
+                                                  top: size.height * 0.02,
+                                                  left: size.width * 0.03),
                                               content: SizedBox(
                                                 height: size.height * 0.115,
                                                 width: size.width * 0.5,
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    const Text('Oops! This Vehicle not Registered with us'),
+                                                    const Text(
+                                                        'Oops! This Vehicle not Registered with us'),
                                                     Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
                                                       children: [
                                                         TextButton(
                                                           onPressed: () {
-                                                            Navigator.pop(context);
+                                                            Navigator.pop(
+                                                                context);
                                                           },
-                                                          child: const Text('Ok'),
+                                                          child:
+                                                              const Text('Ok'),
                                                         ),
                                                       ],
                                                     )
@@ -192,9 +216,12 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                             );
                                           },
                                         );
-                                      } else if (state.status == VehicleStatus.failure) {
-                                        DMSCustomWidgets.DMSFlushbar(size, context,
-                                            message: 'Something went wrong. Please try again later',
+                                      } else if (state.status ==
+                                          VehicleStatus.failure) {
+                                        DMSCustomWidgets.DMSFlushbar(
+                                            size, context,
+                                            message:
+                                                'Something went wrong. Please try again later',
                                             icon: const Icon(
                                               Icons.error,
                                               color: Colors.white,
@@ -206,8 +233,15 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                           context: context,
                                           size: size,
                                           hint: 'Vehicle Registration Number',
-                                          inputFormatters: [UpperCaseTextFormatter()],
-                                          icon: state.status == VehicleStatus.vehicleAlreadyAdded ? const Icon(Icons.check_circle_rounded) : null,
+                                          inputFormatters: [
+                                            UpperCaseTextFormatter()
+                                          ],
+                                          icon: state.status ==
+                                                  VehicleStatus
+                                                      .vehicleAlreadyAdded
+                                              ? const Icon(
+                                                  Icons.check_circle_rounded)
+                                              : null,
                                           isMobile: isMobile,
                                           textcontroller: vehRegNumController,
                                           focusNode: vehRegNumFocus,
@@ -230,7 +264,8 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                   Gap(size.height * (isMobile ? 0.01 : 0.03)),
                                   BlocBuilder<MultiBloc, MultiBlocState>(
                                     builder: (context, state) {
-                                      return DMSCustomWidgets.ScheduleDateCalendar(
+                                      return DMSCustomWidgets
+                                          .ScheduleDateCalendar(
                                         context: context,
                                         date: state.date,
                                         size: size,
@@ -256,10 +291,13 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                               ),
                               Row(
                                 children: [
-                                  Gap(isMobile ? (size.width * 0.7) : (size.width * 0.595)),
+                                  Gap(isMobile
+                                      ? (size.width * 0.7)
+                                      : (size.width * 0.595)),
                                   BlocBuilder<VehicleBloc, VehicleState>(
                                     builder: (context, state) {
-                                      if (state.status == VehicleStatus.vehicleAlreadyAdded) {
+                                      if (state.status ==
+                                          VehicleStatus.vehicleAlreadyAdded) {
                                         return ElevatedButton(
                                             onPressed: () {
                                               locFocus.unfocus();
@@ -268,30 +306,66 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                               kmsFocus.unfocus();
                                               CustomWidgets.CustomDialogBox(
                                                   context: context,
-                                                  contentPadding: EdgeInsets.symmetric(vertical: isMobile ? 20 : 40, horizontal: isMobile ? 12 : 40),
-                                                  child: DMSCustomWidgets.CustomDataFields(
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: isMobile
+                                                              ? 20
+                                                              : 40,
+                                                          horizontal: isMobile
+                                                              ? 12
+                                                              : 40),
+                                                  child: DMSCustomWidgets
+                                                      .CustomDataFields(
                                                     context: context,
-                                                    propertyList: ["Chassis no.", "Make", "Model", "Varient", "Color"],
+                                                    propertyList: [
+                                                      "Chassis no.",
+                                                      "Make",
+                                                      "Model",
+                                                      "Varient",
+                                                      "Color"
+                                                    ],
                                                     valueList: [
-                                                      state.vehicle!.chassisNumber ?? "",
+                                                      state.vehicle!
+                                                              .chassisNumber ??
+                                                          "",
                                                       state.vehicle!.make ?? "",
-                                                      state.vehicle!.model ?? "",
-                                                      state.vehicle!.varient ?? "",
+                                                      state.vehicle!.model ??
+                                                          "",
+                                                      state.vehicle!.varient ??
+                                                          "",
                                                       state.vehicle!.color ?? ""
                                                     ],
                                                     propertyFontStyle:
-                                                        TextStyle(fontSize: isMobile ? 16 : 18, fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
-                                                    valueFontStyle: TextStyle(fontSize: isMobile ? 16 : 18, fontFamily: 'Roboto'),
+                                                        TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 16
+                                                                : 18,
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                    valueFontStyle: TextStyle(
+                                                        fontSize:
+                                                            isMobile ? 16 : 18,
+                                                        fontFamily: 'Roboto'),
                                                   ));
                                             },
                                             style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.white,
-                                                minimumSize: isMobile ? const Size(65, 10) : const Size(80.0, 20.0),
+                                                minimumSize: isMobile
+                                                    ? const Size(65, 10)
+                                                    : const Size(80.0, 20.0),
                                                 padding: EdgeInsets.zero,
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5))),
                                             child: Text(
                                               'view more',
-                                              style: TextStyle(color: Colors.black, fontSize: isMobile ? 12 : 14),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: isMobile ? 12 : 14),
                                             ));
                                       } else {
                                         return SizedBox(
@@ -301,7 +375,9 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                     },
                                   ),
                                   Spacer(
-                                    flex: isMobile ? (size.width * 0.1).round() : (size.width * 0.3).round(),
+                                    flex: isMobile
+                                        ? (size.width * 0.1).round()
+                                        : (size.width * 0.3).round(),
                                   )
                                 ],
                               ),
@@ -315,15 +391,23 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                     String message = "";
                                     if (locTypeAheadController.text.isEmpty) {
                                       message = "Location cannot be empty";
-                                    } else if (!state.locations!.contains(locTypeAheadController.text)) {
+                                    } else if (!state.locations!.contains(
+                                        locTypeAheadController.text)) {
                                       message = "Invalid Location";
-                                    } else if (vehRegNumController.text.isEmpty) {
-                                      message = "Vehicle registration number cannot be empty";
-                                    } else if (context.read<MultiBloc>().state.date == null) {
+                                    } else if (vehRegNumController
+                                        .text.isEmpty) {
+                                      message =
+                                          "Vehicle registration number cannot be empty";
+                                    } else if (context
+                                            .read<MultiBloc>()
+                                            .state
+                                            .date ==
+                                        null) {
                                       message = "Please select schedule date";
                                     }
                                     if (message != "") {
-                                      DMSCustomWidgets.DMSFlushbar(size, context,
+                                      DMSCustomWidgets.DMSFlushbar(
+                                          size, context,
                                           message: message,
                                           icon: const Icon(
                                             Icons.error,
@@ -332,23 +416,39 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                       return;
                                     } else {
                                       Service service = Service(
-                                          registrationNo: vehRegNumController.text,
-                                          scheduledDate: context.read<MultiBloc>().state.date!.toString().substring(0, 10),
+                                          registrationNo:
+                                              vehRegNumController.text,
+                                          scheduledDate: context
+                                              .read<MultiBloc>()
+                                              .state
+                                              .date!
+                                              .toString()
+                                              .substring(0, 10),
                                           location: locTypeAheadController.text,
                                           kms: int.parse(kmsController.text),
-                                          customerName: customerController.text);
+                                          customerName:
+                                              customerController.text);
 
                                       Navigator.push(
                                         context,
                                         PageRouteBuilder(
-                                          transitionDuration: const Duration(milliseconds: 200),
-                                          pageBuilder: (context, animation, secondaryAnimation) =>
-                                              ServiceProceedSample(clearFields: clearFields, homeData: service.toJson()),
-                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          transitionDuration:
+                                              const Duration(milliseconds: 200),
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              ServiceProceedSample(
+                                                  clearFields: clearFields,
+                                                  homeData: service.toJson()),
+                                          transitionsBuilder: (context,
+                                              animation,
+                                              secondaryAnimation,
+                                              child) {
                                             const begin = Offset(1, 0.0);
                                             const end = Offset.zero;
-                                            final tween = Tween(begin: begin, end: end);
-                                            final offsetAnimation = animation.drive(tween);
+                                            final tween =
+                                                Tween(begin: begin, end: end);
+                                            final offsetAnimation =
+                                                animation.drive(tween);
                                             return SlideTransition(
                                               position: offsetAnimation,
                                               child: child,
@@ -361,13 +461,17 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                   style: ElevatedButton.styleFrom(
                                       minimumSize: const Size(70.0, 35.0),
                                       padding: EdgeInsets.zero,
-                                      backgroundColor: const Color.fromARGB(255, 145, 19, 19),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 145, 19, 19),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5))),
                                   child: const Text(
                                     'next',
                                     style: TextStyle(color: Colors.white),
                                   )),
-                              if (MediaQuery.of(context).viewInsets.bottom != 0) Gap(size.height * (isMobile ? 0.4 : 0.5)),
+                              if (MediaQuery.of(context).viewInsets.bottom != 0)
+                                Gap(size.height * (isMobile ? 0.4 : 0.5)),
                             ],
                           ),
                         ],
@@ -379,16 +483,20 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                   }
                 }),
               ),
-              if (context.watch<VehicleBloc>().state.status == VehicleStatus.loading)
+              if (context.watch<VehicleBloc>().state.status ==
+                  VehicleStatus.loading)
                 Container(
                   color: Colors.black54,
-                  child: Center(child: Lottie.asset('assets/lottie/car_loading.json', height: size.height * 0.5, width: size.width * 0.6)),
+                  child: Center(
+                      child: Lottie.asset('assets/lottie/car_loading.json',
+                          height: size.height * 0.5, width: size.width * 0.6)),
                 )
             ],
           ),
           floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
               ? Padding(
-                  padding: EdgeInsets.only(right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
+                  padding: EdgeInsets.only(
+                      right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
                   child: CustomWidgets.CustomExpandableFAB(
                       horizontalAlignment: isMobile ? -17 : -40,
                       verticalAlignment: -15,
@@ -413,7 +521,9 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                 ),
                                 Text(
                                   'test',
-                                  style: TextStyle(color: Colors.white, fontSize: isMobile ? 11 : 14),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isMobile ? 11 : 14),
                                 )
                               ],
                             ),
@@ -424,7 +534,8 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                           width: size.width * (isMobile ? 0.24 : 0.1),
                           child: GestureDetector(
                             onTap: () {
-                              context.read<VehicleBloc>().state.status = VehicleStatus.initial;
+                              context.read<VehicleBloc>().state.status =
+                                  VehicleStatus.initial;
                             },
                             child: Column(
                               children: [
@@ -436,7 +547,9 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                 ),
                                 Text(
                                   'Add Vehicle',
-                                  style: TextStyle(color: Colors.white, fontSize: isMobile ? 11 : 14),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isMobile ? 11 : 14),
                                 )
                               ],
                             ),
@@ -447,7 +560,8 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                           width: size.width * (isMobile ? 0.24 : 0.1),
                           child: GestureDetector(
                             onTap: () {
-                              context.read<VehicleBloc>().state.status = VehicleStatus.initial;
+                              context.read<VehicleBloc>().state.status =
+                                  VehicleStatus.initial;
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const ServiceHistory(),
                               ));
@@ -461,7 +575,9 @@ class _ServiceMainSample extends State<ServiceMainSample> {
                                 ),
                                 Text(
                                   'History',
-                                  style: TextStyle(color: Colors.white, fontSize: isMobile ? 11 : 14),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: isMobile ? 11 : 14),
                                 )
                               ],
                             ),
@@ -481,8 +597,10 @@ class SlideRightRoute extends PageRouteBuilder {
   SlideRightRoute({required this.page})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) => SlideTransition(
-            position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero).animate(animation),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+            position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+                .animate(animation),
             child: child,
           ),
         );
@@ -493,8 +611,10 @@ class ScaleRoute extends PageRouteBuilder {
   ScaleRoute({required this.page})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) => ScaleTransition(
-            scale: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              ScaleTransition(
+            scale: Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+                parent: animation, curve: Curves.fastOutSlowIn)),
             child: child,
           ),
         );
@@ -506,8 +626,11 @@ class RotationRoute extends PageRouteBuilder {
       : super(
             pageBuilder: (context, animation, secondaryAnimation) => page,
             transitionDuration: const Duration(milliseconds: 200),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) => RotationTransition(
-                  turns: Tween<double>(begin: -0.5, end: 0).animate(CurvedAnimation(parent: animation, curve: Curves.linear)),
+            transitionsBuilder: (context, animation, secondaryAnimation,
+                    child) =>
+                RotationTransition(
+                  turns: Tween<double>(begin: -0.5, end: 0).animate(
+                      CurvedAnimation(parent: animation, curve: Curves.linear)),
                   child: child,
                 ));
 }

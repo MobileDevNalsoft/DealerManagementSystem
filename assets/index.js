@@ -51,8 +51,8 @@ modelViewer.ontouchstart = (event) => {
         let hotspot = document.createElement("div");
 
         let pulsatingCircle = document.createElement("div");
-        pulsatingCircle.classList.add("pulsating-circle");  
-  
+        pulsatingCircle.classList.add("pulsating-circle");
+
         hotspot.appendChild(pulsatingCircle);
 
         hotspot.classList.add(["hotspot-button"]);
@@ -69,17 +69,20 @@ modelViewer.ontouchstart = (event) => {
           positionAndNormal.normal.toString()
         );
         hotspot.setAttribute("data-visibility-attribute", "visible");
-        hotspot.firstChild.style.animation="pulse 1.5s ease-in-out infinite";
-        console.log("normal "+ positionAndNormal.normal);
-        console.log("position"+ positionAndNormal.position);
-        
+        hotspot.firstChild.style.animation = "pulse 1.5s ease-in-out infinite";
+        console.log("normal " + positionAndNormal.normal);
+        console.log("position" + positionAndNormal.position);
 
         hotspot.onclick = function () {
           changeHotSpotColors(hotspot.getAttribute("id"), true);
-          hotspot.firstChild.style.animation="pulse 1.5s ease-in-out infinite";
-          console.log("clicked "+hotspot.getAttribute("id"))
+          hotspot.firstChild.style.animation =
+            "pulse 1.5s ease-in-out infinite";
+          console.log("clicked " + hotspot.getAttribute("id"));
           window.flutterChannel.postMessage(
-            JSON.stringify({ type: "hotspot-click", name: hotspot.getAttribute("id") })
+            JSON.stringify({
+              type: "hotspot-click",
+              name: hotspot.getAttribute("id"),
+            })
           );
         };
 
@@ -107,9 +110,8 @@ modelViewer.ontouchend = (event) => {
   clearTimeout(longPressTimer);
 };
 
-
-modelViewer.addEventListener('touchstart', function (e) {
-  if(e.touches.length > 1) {
+modelViewer.addEventListener("touchstart", function (e) {
+  if (e.touches.length > 1) {
     clearTimeout(longPressTimer);
   }
 });
@@ -128,7 +130,7 @@ function changeHotSpotColors(selectedHotspotName, changeCamera) {
   for (var hotspot of allHotspots) {
     if (hotspot.getAttribute("id") == selectedHotspotName) {
       hotspot.style.backgroundColor = "orange";
-      hotspot.firstChild.style.animation="pulse 1.5s ease-in-out infinite";
+      hotspot.firstChild.style.animation = "pulse 1.5s ease-in-out infinite";
       if (changeCamera == true) {
         const normal = hotspot.getAttribute("data-normal");
 
@@ -143,19 +145,19 @@ function changeHotSpotColors(selectedHotspotName, changeCamera) {
         const phi = Math.acos(y);
 
         modelViewer.cameraOrbit = `${theta}rad ${phi}rad auto`;
-        modelViewer.camerTarget = '0 0 0'
+        modelViewer.camerTarget = "0 0 0";
 
         console.log(modelViewer.cameraOrbit);
       }
     } else {
       hotspot.style.backgroundColor = "white";
-      hotspot.firstChild.style.animation="none";
+      hotspot.firstChild.style.animation = "none";
     }
   }
 }
 
 // function renameHotspot(previousName,newName){
-  
+
 //   document.getElementById(previousName).setAttribute("id",newName);
 //   console.log(previousName+ ' ' +newName);
 //   console.log("prev node"+""+document.getElementById(previousName));

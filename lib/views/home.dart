@@ -18,7 +18,8 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, ConnectivityMixin {
+class _HomeViewState extends State<HomeView>
+    with TickerProviderStateMixin, ConnectivityMixin {
   // Service to handle navigation within the app
   final NavigatorService navigator = getIt<NavigatorService>();
 
@@ -61,7 +62,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
           // Fill the entire screen
           height: double.infinity,
           width: double.infinity,
-          decoration: const BoxDecoration(gradient: LinearGradient(colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1])),
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.black45, Colors.black26, Colors.black45],
+                  stops: [0.1, 0.5, 1])),
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -92,14 +96,22 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                     },
                     child: Container(
                       alignment: Alignment.center,
-                      width: size.width * (isMobile? 0.15:0.1),
-                      height: size.height * (isMobile?  0.08:0.06),
+                      width: size.width * (isMobile ? 0.15 : 0.1),
+                      height: size.height * (isMobile ? 0.08 : 0.06),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Colors.black45, Colors.black87, Colors.black],
-                            stops: [0.05, 0.5, 1]),
+                            colors: [
+                              Colors.black45,
+                              Colors.black87,
+                              Colors.black
+                            ],
+                            stops: [
+                              0.05,
+                              0.5,
+                              1
+                            ]),
                         shape: BoxShape.circle,
                         boxShadow: [
                           const BoxShadow(
@@ -155,8 +167,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                           // creates a custom button shape according to the path in the clipper
                           clipper: ButtonClipper(isMobile: isMobile),
                           image: 'add_vehicle_icon.png',
-                          imageHeight: size.height *  (isMobile? 0.1:0.08),
-                          imageWidth: size.width * (isMobile?  0.1:0.08),
+                          imageHeight: size.height * (isMobile ? 0.1 : 0.08),
+                          imageWidth: size.width * (isMobile ? 0.1 : 0.08),
                         ),
                       ),
                     ),
@@ -175,7 +187,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                         }
                       },
                       onDoubleTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceMainSample()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => ServiceMainSample()));
                       },
                       child: Hero(
                         tag: 'myJobCards',
@@ -184,8 +199,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                           flipButtonX: true,
                           clipper: ButtonClipper(isMobile: isMobile),
                           image: 'person_icon.png',
-                          imageHeight: size.height *(isMobile? 0.07:0.05),
-                          imageWidth: size.width *(isMobile? 0.07:0.05),
+                          imageHeight: size.height * (isMobile ? 0.07 : 0.05),
+                          imageWidth: size.width * (isMobile ? 0.07 : 0.05),
                         ),
                       ),
                     ),
@@ -220,8 +235,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                         child: ClippedButton(
                             clipper: ButtonClipperMid(isMobile: isMobile),
                             image: 'vehicle_search_icon.png',
-                            imageHeight: size.height *(isMobile? 0.095:0.07),
-                            imageWidth: size.width * (isMobile?0.095:0.07)),
+                            imageHeight:
+                                size.height * (isMobile ? 0.095 : 0.07),
+                            imageWidth: size.width * (isMobile ? 0.095 : 0.07)),
                       ),
                     ),
                     GestureDetector(
@@ -235,8 +251,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                           flipButtonX: true,
                           clipper: ButtonClipperMid(isMobile: isMobile),
                           image: 'home_icon.png',
-                          imageHeight: size.height * (isMobile?0.08:0.06),
-                          imageWidth: size.width *(isMobile? 0.08:0.06),
+                          imageHeight: size.height * (isMobile ? 0.08 : 0.06),
+                          imageWidth: size.width * (isMobile ? 0.08 : 0.06),
                         ),
                       ),
                     ),
@@ -273,8 +289,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                           flipImageY: true,
                           clipper: ButtonClipper(isMobile: isMobile),
                           image: 'job_cards_icon.png',
-                          imageHeight: size.height *(isMobile? 0.085:0.06),
-                          imageWidth: size.width * (isMobile?0.085:0.06),
+                          imageHeight: size.height * (isMobile ? 0.085 : 0.06),
+                          imageWidth: size.width * (isMobile ? 0.085 : 0.06),
                         ),
                       ),
                     ),
@@ -314,8 +330,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, Conn
                           flipImageY: true,
                           clipper: ButtonClipper(isMobile: isMobile),
                           image: 'history_icon.png',
-                          imageHeight: size.height *(isMobile? 0.08:0.06),
-                          imageWidth: size.width * (isMobile?0.08:0.06),
+                          imageHeight: size.height * (isMobile ? 0.08 : 0.06),
+                          imageWidth: size.width * (isMobile ? 0.08 : 0.06),
                         ),
                       ),
                     ),

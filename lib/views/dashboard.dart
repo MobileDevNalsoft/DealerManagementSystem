@@ -34,8 +34,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 3));
-    animation = CurvedAnimation(parent: animationController, curve: Curves.ease);
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    animation =
+        CurvedAnimation(parent: animationController, curve: Curves.ease);
     animation.addListener(() {
       setState(() {});
     });
@@ -65,17 +67,22 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
           resizeToAvoidBottomInset: false,
           // Disable app bar extending behind content
           extendBodyBehindAppBar: false,
-          appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'DashBoard'),
+          appBar: DMSCustomWidgets.appBar(
+              size: size, isMobile: isMobile, title: 'DashBoard'),
           // Create the body of the dashboard
           body: Container(
             height: size.height,
             width: size.width,
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1])),
+                    colors: [Colors.black45, Colors.black26, Colors.black45],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.1, 0.5, 1])),
             // This Column widget defines a section with the title "Job Cards This Week" and a container
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Set minimum height for this column
+              mainAxisSize:
+                  MainAxisSize.min, // Set minimum height for this column
               children: [
                 Gap(size.height * 0.01),
                 Expanded(
@@ -86,7 +93,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                       Expanded(
                         child: Text(
                           'Job Cards This Week',
-                          style: TextStyle(fontSize: (isMobile ? 16 : 18), fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                          style: TextStyle(
+                              fontSize: (isMobile ? 16 : 18),
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis),
                         ),
                       )
                     ],
@@ -123,7 +133,12 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       border: Border.all(color: Colors.white),
                                       color: Colors.black12,
                                       boxShadow: const [
-                                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black38, offset: Offset(0, 0))
+                                        BoxShadow(
+                                            blurRadius: 10,
+                                            blurStyle: BlurStyle.outer,
+                                            spreadRadius: 0,
+                                            color: Colors.black38,
+                                            offset: Offset(0, 0))
                                       ]),
                                 ),
                               ),
@@ -142,7 +157,12 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       border: Border.all(color: Colors.white),
                                       color: Colors.black54,
                                       boxShadow: const [
-                                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
+                                        BoxShadow(
+                                            blurRadius: 10,
+                                            blurStyle: BlurStyle.outer,
+                                            spreadRadius: 0,
+                                            color: Colors.black26,
+                                            offset: Offset(0, 0))
                                       ]),
                                 ),
                               ),
@@ -153,12 +173,16 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                   height: size.height * 0.11,
                                   width: size.width * 0.45,
                                   decoration: BoxDecoration(
-                                    border: const Border(left: BorderSide(color: Colors.white), bottom: BorderSide(color: Colors.white)),
+                                    border: const Border(
+                                        left: BorderSide(color: Colors.white),
+                                        bottom:
+                                            BorderSide(color: Colors.white)),
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.black,
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const Expanded(
@@ -175,7 +199,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       const Expanded(
                                         flex: 2,
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Expanded(
@@ -189,7 +214,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                               flex: 3,
                                               child: Text(
                                                 '4',
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                             ),
                                           ],
@@ -201,7 +227,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                             alignment: Alignment.bottomRight,
                                             child: Text(
                                               'view all',
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             )),
                                       )
                                     ],
@@ -233,7 +260,12 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       border: Border.all(color: Colors.white),
                                       color: Colors.black12,
                                       boxShadow: const [
-                                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black38, offset: Offset(0, 0))
+                                        BoxShadow(
+                                            blurRadius: 10,
+                                            blurStyle: BlurStyle.outer,
+                                            spreadRadius: 0,
+                                            color: Colors.black38,
+                                            offset: Offset(0, 0))
                                       ]),
                                 ),
                               ),
@@ -252,7 +284,12 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       border: Border.all(color: Colors.white),
                                       color: Colors.black54,
                                       boxShadow: const [
-                                        BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black26, offset: Offset(0, 0))
+                                        BoxShadow(
+                                            blurRadius: 10,
+                                            blurStyle: BlurStyle.outer,
+                                            spreadRadius: 0,
+                                            color: Colors.black26,
+                                            offset: Offset(0, 0))
                                       ]),
                                 ),
                               ),
@@ -263,12 +300,16 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                   height: size.height * 0.11,
                                   width: size.width * 0.45,
                                   decoration: BoxDecoration(
-                                    border: const Border(left: BorderSide(color: Colors.white), bottom: BorderSide(color: Colors.white)),
+                                    border: const Border(
+                                        left: BorderSide(color: Colors.white),
+                                        bottom:
+                                            BorderSide(color: Colors.white)),
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.black,
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const Expanded(
@@ -285,7 +326,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                       const Expanded(
                                         flex: 2,
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Expanded(
@@ -299,7 +341,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                               flex: 3,
                                               child: Text(
                                                 '5',
-                                                style: TextStyle(color: Colors.white),
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                             ),
                                           ],
@@ -311,7 +354,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                             alignment: Alignment.bottomRight,
                                             child: Text(
                                               'view all',
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             )),
                                       )
                                     ],
@@ -333,7 +377,10 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                       Expanded(
                         child: Text(
                           "Today's Job Cards Stats",
-                          style: TextStyle(fontSize: (isMobile ? 16 : 18), fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+                          style: TextStyle(
+                              fontSize: (isMobile ? 16 : 18),
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis),
                         ),
                       )
                     ],
@@ -346,13 +393,18 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                       opacity: animation.value,
                       child: Container(
                         padding: EdgeInsets.only(top: size.height * 0.02),
-                        decoration:
-                            BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.black, border: Border.all(color: Colors.white, width: 1.5)),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.black,
+                            border:
+                                Border.all(color: Colors.white, width: 1.5)),
                         width: size.width * 0.9,
                         child: LayoutBuilder(builder: (context, constraints) {
                           return SfCartesianChart(
                               primaryXAxis: CategoryAxis(
-                                labelStyle: TextStyle(color: Colors.white, fontSize: isMobile ? 14 : 16),
+                                labelStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: isMobile ? 14 : 16),
                                 majorGridLines: const MajorGridLines(
                                   width: 0,
                                 ),
@@ -371,29 +423,41 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                 animationDuration: 100,
                                 duration: 2000,
                                 shadowColor: Colors.black,
-                                builder: (data, point, series, pointIndex, seriesIndex) => IntrinsicWidth(
+                                builder: (data, point, series, pointIndex,
+                                        seriesIndex) =>
+                                    IntrinsicWidth(
                                   child: Container(
                                       height: constraints.maxHeight * 0.1,
                                       margin: EdgeInsets.only(
-                                          left: constraints.maxWidth * 0.03, right: constraints.maxWidth * 0.03, top: constraints.maxWidth * 0.02),
-                                      child: Text((data as BarData).abbreviation)),
+                                          left: constraints.maxWidth * 0.03,
+                                          right: constraints.maxWidth * 0.03,
+                                          top: constraints.maxWidth * 0.02),
+                                      child:
+                                          Text((data as BarData).abbreviation)),
                                 ),
                               ),
                               borderWidth: 0,
                               series: [
                                 ColumnSeries<BarData, String>(
                                   dataSource: barData,
-                                  xValueMapper: (BarData data, _) => data.xLabel,
-                                  yValueMapper: (BarData data, _) => data.yValue,
+                                  xValueMapper: (BarData data, _) =>
+                                      data.xLabel,
+                                  yValueMapper: (BarData data, _) =>
+                                      data.yValue,
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.orange.shade200,
-                                  dataLabelMapper: (datum, index) => datum.yValue.toString(),
+                                  dataLabelMapper: (datum, index) =>
+                                      datum.yValue.toString(),
                                   dataLabelSettings: DataLabelSettings(
                                     isVisible: true,
                                     useSeriesColor: true,
-                                    builder: (data, point, series, pointIndex, seriesIndex) => Text(
+                                    builder: (data, point, series, pointIndex,
+                                            seriesIndex) =>
+                                        Text(
                                       (data as BarData).yValue.toString(),
-                                      style: TextStyle(color: Colors.white, fontSize: isMobile ? 10 : 14),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: isMobile ? 10 : 14),
                                     ),
                                   ),
                                   width: 0.6,
@@ -419,5 +483,6 @@ class BarData {
   String xLabel;
   int yValue;
   String abbreviation;
-  BarData({required this.xLabel, required this.yValue, required this.abbreviation});
+  BarData(
+      {required this.xLabel, required this.yValue, required this.abbreviation});
 }

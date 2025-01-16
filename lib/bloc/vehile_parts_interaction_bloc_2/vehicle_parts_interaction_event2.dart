@@ -25,10 +25,12 @@ class SubmitVehicleMediaEvent extends VehiclePartsInteractionBlocEvent2 {
   SubmitVehicleMediaEvent();
 }
 
-class SubmitBodyPartVehicleMediaEvent extends VehiclePartsInteractionBlocEvent2 {
+class SubmitBodyPartVehicleMediaEvent
+    extends VehiclePartsInteractionBlocEvent2 {
   String serviceBookingNo;
   String bodyPartName;
-  SubmitBodyPartVehicleMediaEvent({required this.bodyPartName, required this.serviceBookingNo});
+  SubmitBodyPartVehicleMediaEvent(
+      {required this.bodyPartName, required this.serviceBookingNo});
 }
 
 class FetchVehicleMediaEvent extends VehiclePartsInteractionBlocEvent2 {
@@ -47,7 +49,8 @@ class SubmitQualityCheckStatusEvent extends VehiclePartsInteractionBlocEvent2 {
   SubmitQualityCheckStatusEvent({required this.jobCardNo});
 }
 
-class ModifyVehicleExaminationPageIndex extends VehiclePartsInteractionBlocEvent2 {
+class ModifyVehicleExaminationPageIndex
+    extends VehiclePartsInteractionBlocEvent2 {
   int index;
   ModifyVehicleExaminationPageIndex({required this.index});
 }
@@ -56,7 +59,8 @@ class AddHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
   String name;
   String normal;
   String position;
-  AddHotspotEvent({required this.name, required this.normal, required this.position});
+  AddHotspotEvent(
+      {required this.name, required this.normal, required this.position});
 }
 
 class RemoveHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
@@ -73,11 +77,12 @@ class RemoveHotspotEvent extends VehiclePartsInteractionBlocEvent2 {
 class ModifyVehicleInteractionStatus extends VehiclePartsInteractionBlocEvent2 {
   String selectedBodyPart;
   bool? isTapped;
-  ModifyVehicleInteractionStatus({required this.selectedBodyPart,  this.isTapped});
+  ModifyVehicleInteractionStatus(
+      {required this.selectedBodyPart, this.isTapped});
 }
 
-class ModifyRenamingStatus extends VehiclePartsInteractionBlocEvent2{
+class ModifyRenamingStatus extends VehiclePartsInteractionBlocEvent2 {
   HotspotRenamingStatus renameStatus;
   String? renamedValue;
-  ModifyRenamingStatus({required this.renameStatus,this.renamedValue});
+  ModifyRenamingStatus({required this.renameStatus, this.renamedValue});
 }

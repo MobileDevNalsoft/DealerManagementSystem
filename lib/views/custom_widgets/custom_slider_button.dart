@@ -124,7 +124,8 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
         _sliderButtonController.position = Position.moving;
       },
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: widget.width, maxHeight: widget.height),
+        constraints:
+            BoxConstraints(maxWidth: widget.width, maxHeight: widget.height),
         child: Stack(
           children: [
             Align(
@@ -133,7 +134,12 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                     BoxDecoration(
                         borderRadius: BorderRadius.circular(widget.height),
                         color: const Color.fromRGBO(36, 38, 40, 1),
-                        boxShadow: [BoxShadow(color: Colors.orange.shade200, blurRadius: 3, spreadRadius: 0.3)]),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.orange.shade200,
+                              blurRadius: 3,
+                              spreadRadius: 0.3)
+                        ]),
                 width: widget.width,
                 height: widget.height * 0.95,
                 child: Row(
@@ -149,7 +155,10 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                             baseColor: Colors.red,
                             highlightColor: Colors.grey.shade100,
                             enabled: true,
-                            child: _sliderButtonController.currentPosition != _leftPosition ? widget.leftLabel : const SizedBox()),
+                            child: _sliderButtonController.currentPosition !=
+                                    _leftPosition
+                                ? widget.leftLabel
+                                : const SizedBox()),
                       ),
                     ),
                     Align(
@@ -161,7 +170,10 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                             baseColor: Colors.green,
                             highlightColor: Colors.grey.shade100,
                             enabled: true,
-                            child: _sliderButtonController.currentPosition != _rightPosition ? widget.rightLabel : const SizedBox()),
+                            child: _sliderButtonController.currentPosition !=
+                                    _rightPosition
+                                ? widget.rightLabel
+                                : const SizedBox()),
                       ),
                     ),
                   ],
@@ -177,12 +189,21 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: const Color.fromRGBO(36, 38, 40, 1),
-                    boxShadow: [BoxShadow(color: Colors.orange.shade200, blurRadius: 3, spreadRadius: 0.5)]),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.orange.shade200,
+                          blurRadius: 3,
+                          spreadRadius: 0.5)
+                    ]),
                 child: Center(
-                    child: (_sliderButtonController.currentPosition == _rightPosition)
-                        ? Lottie.asset("assets/lottie/success.json", repeat: false)
-                        : (_sliderButtonController.currentPosition == _leftPosition)
-                            ? Lottie.asset("assets/lottie/error2.json", repeat: false)
+                    child: (_sliderButtonController.currentPosition ==
+                            _rightPosition)
+                        ? Lottie.asset("assets/lottie/success.json",
+                            repeat: false)
+                        : (_sliderButtonController.currentPosition ==
+                                _leftPosition)
+                            ? Lottie.asset("assets/lottie/error2.json",
+                                repeat: false)
                             : const Icon(
                                 Icons.switch_left_rounded,
                                 color: Colors.white,
@@ -201,7 +222,8 @@ class SliderButtonController extends ChangeNotifier {
   Position position;
   double currentPosition;
 
-  SliderButtonController({this.position = Position.middle, this.currentPosition = 0});
+  SliderButtonController(
+      {this.position = Position.middle, this.currentPosition = 0});
 
   set setPosition(newPosition) {
     position = newPosition;

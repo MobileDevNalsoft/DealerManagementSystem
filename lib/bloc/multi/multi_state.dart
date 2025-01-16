@@ -1,6 +1,8 @@
 part of 'multi_bloc.dart';
 
-enum MultiStateStatus { initial, loading, success, failure }class MultiBlocState {
+enum MultiStateStatus { initial, loading, success, failure }
+
+class MultiBlocState {
   MultiBlocState(
       {this.date,
       this.year,
@@ -12,9 +14,8 @@ enum MultiStateStatus { initial, loading, success, failure }class MultiBlocState
       this.scaleFactor,
       // this.isTapped = false,
       // this.selectedGeneralBodyPart = '',
-    
-      this.renamedValue
-      });
+
+      this.renamedValue});
 
   DateTime? date;
   int? selectedRadioOption;
@@ -56,20 +57,18 @@ enum MultiStateStatus { initial, loading, success, failure }class MultiBlocState
     );
   }
 
-  MultiBlocState copyWith({
-    DateTime? date,
-    int? year,
-    List<SalesPerson>? salesPersons,
-    MultiStateStatus? status,
-    int? selectedRadioOption,
-    Map<int, bool>? checkBoxStates,
-    bool? reverseClippedWidgets,
-    double? scaleFactor,
-    String? selectedGeneralBodyPart,
-    bool? isTapped,
-
-    String? renamedValue
-  }) {
+  MultiBlocState copyWith(
+      {DateTime? date,
+      int? year,
+      List<SalesPerson>? salesPersons,
+      MultiStateStatus? status,
+      int? selectedRadioOption,
+      Map<int, bool>? checkBoxStates,
+      bool? reverseClippedWidgets,
+      double? scaleFactor,
+      String? selectedGeneralBodyPart,
+      bool? isTapped,
+      String? renamedValue}) {
     return MultiBlocState(
         date: date ?? this.date,
         year: year ?? this.year,
@@ -77,12 +76,12 @@ enum MultiStateStatus { initial, loading, success, failure }class MultiBlocState
         checkBoxStates: checkBoxStates ?? this.checkBoxStates,
         salesPersons: salesPersons ?? this.salesPersons,
         status: status ?? this.status,
-        reverseClippedWidgets: reverseClippedWidgets ?? this.reverseClippedWidgets,
+        reverseClippedWidgets:
+            reverseClippedWidgets ?? this.reverseClippedWidgets,
         scaleFactor: scaleFactor ?? this.scaleFactor,
         // isTapped: isTapped ?? this.isTapped,
         // selectedGeneralBodyPart: selectedGeneralBodyPart ?? this.selectedGeneralBodyPart,
 
-        renamedValue: renamedValue??this.renamedValue
-        );
+        renamedValue: renamedValue ?? this.renamedValue);
   }
 }

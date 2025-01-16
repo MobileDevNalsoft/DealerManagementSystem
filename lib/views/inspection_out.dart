@@ -23,7 +23,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
   // controllers
   final PageController _pageController = PageController();
   final AutoScrollController _autoScrollController = AutoScrollController();
-  final SliderButtonController _sliderButtonController = SliderButtonController();
+  final SliderButtonController _sliderButtonController =
+      SliderButtonController();
 
   TextEditingController rejectionController = TextEditingController();
 
@@ -40,11 +41,13 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
     _serviceBloc = context.read<ServiceBloc>();
 
     // initialize required statuses
-    _serviceBloc.state.inspectionJsonUploadStatus = InspectionJsonUploadStatus.initial;
+    _serviceBloc.state.inspectionJsonUploadStatus =
+        InspectionJsonUploadStatus.initial;
 
     _serviceBloc.state.index = 0;
 
-    _serviceBloc.add(GetInspectionDetails(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+    _serviceBloc.add(GetInspectionDetails(
+        jobCardNo: _serviceBloc.state.service!.jobCardNo!));
   }
 
   @override
@@ -67,17 +70,23 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
         child: Scaffold(
           // restricts widget resizing when keyboard appears
           resizeToAvoidBottomInset: false,
-          appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Inspection Out'),
+          appBar: DMSCustomWidgets.appBar(
+              size: size, isMobile: isMobile, title: 'Inspection Out'),
           body: Container(
             padding: EdgeInsets.only(top: size.height * 0.01),
             height: size.height,
             width: size.width,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
+                  colors: [Colors.black45, Colors.black26, Colors.black45],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.1, 0.5, 1]),
             ),
-            child: BlocConsumer<ServiceBloc, ServiceState>(listener: (context, state) {
-              if (state.inspectionJsonUploadStatus == InspectionJsonUploadStatus.success) {
+            child: BlocConsumer<ServiceBloc, ServiceState>(
+                listener: (context, state) {
+              if (state.inspectionJsonUploadStatus ==
+                  InspectionJsonUploadStatus.success) {
                 //context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
               }
             }, builder: (context, state) {
@@ -88,7 +97,10 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                     transform: Matrix4.translationValues(0, -40, 0),
                     child: Center(
                       child: Lottie.asset('assets/lottie/car_loading.json',
-                          height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
+                          height:
+                              isMobile ? size.height * 0.5 : size.height * 0.32,
+                          width:
+                              isMobile ? size.width * 0.6 : size.width * 0.32),
                     ),
                   );
                 case GetInspectionStatus.success:
@@ -105,7 +117,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                     children: [
                       Gap(size.height * 0.008),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size.width * 0.005),
                         child: SizedBox(
                           height: size.height * (isMobile ? 0.04 : 0.035),
                           child: ListView(
@@ -118,19 +131,32 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                       controller: _autoScrollController,
                                       index: buttonsText.indexOf(e),
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.008),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: size.width * 0.008),
                                         child: SizedBox(
                                           height: size.height * 0.035,
                                           child: TextButton(
                                               style: TextButton.styleFrom(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                  backgroundColor: state.index == buttonsText.indexOf(e) ? Colors.black : Colors.grey.shade400,
-                                                  foregroundColor: state.index == buttonsText.indexOf(e) ? Colors.white : const Color.fromARGB(255, 29, 22, 22),
-                                                  side: const BorderSide(color: Colors.black)),
+                                                  padding: const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  backgroundColor: state.index ==
+                                                          buttonsText.indexOf(e)
+                                                      ? Colors.black
+                                                      : Colors.grey.shade400,
+                                                  foregroundColor: state.index ==
+                                                          buttonsText.indexOf(e)
+                                                      ? Colors.white
+                                                      : const Color.fromARGB(
+                                                          255, 29, 22, 22),
+                                                  side: const BorderSide(
+                                                      color: Colors.black)),
                                               onPressed: () {
-                                                _pageController.jumpToPage(buttonsText.indexOf(e));
+                                                _pageController.jumpToPage(
+                                                    buttonsText.indexOf(e));
                                               },
-                                              child: Text(e, style: TextStyle(fontSize: isMobile ? 14 : 18))),
+                                              child: Text(e,
+                                                  style: TextStyle(
+                                                      fontSize: isMobile ? 14 : 18))),
                                         ),
                                       ),
                                     ))
@@ -151,7 +177,9 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                               // Updates the service bloc with the current page index
                               _serviceBloc.add(PageChange(index: value));
                               // Scrolls Buttons list corresponding to the current page index
-                              _autoScrollController.scrollToIndex(value, duration: const Duration(milliseconds: 500), preferPosition: AutoScrollPosition.begin);
+                              _autoScrollController.scrollToIndex(value,
+                                  duration: const Duration(milliseconds: 500),
+                                  preferPosition: AutoScrollPosition.begin);
                             },
                             itemBuilder: (context, pageIndex) => Stack(
                               children: [
@@ -160,12 +188,24 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                     Expanded(
                                       // Creates a list view for each page
                                       child: ListView.builder(
-                                        itemCount: state.json![buttonsText[pageIndex]].length - 1,
+                                        itemCount: state
+                                                .json![buttonsText[pageIndex]]
+                                                .length -
+                                            1,
                                         itemBuilder: (context, index) {
                                           // sets slider position based on each page status in json
-                                          _sliderButtonController.position = state.json![buttonsText[pageIndex]].last['status'] == "Accepted"
+                                          _sliderButtonController
+                                              .position = state
+                                                      .json![buttonsText[
+                                                          pageIndex]]
+                                                      .last['status'] ==
+                                                  "Accepted"
                                               ? Position.right
-                                              : state.json![buttonsText[pageIndex]].last['status'] == "Rejected"
+                                              : state
+                                                          .json![buttonsText[
+                                                              pageIndex]]
+                                                          .last['status'] ==
+                                                      "Rejected"
                                                   ? Position.left
                                                   : Position.middle;
                                           // Renders a column for each item in the list
@@ -173,16 +213,27 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                             children: [
                                               Gap(size.height * 0.01),
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Gap(size.width * 0.05),
                                                   SizedBox(
                                                     width: size.width * 0.2,
                                                     child: Wrap(
                                                       children: [
-                                                        Text(state.json![buttonsText[pageIndex]][index]['properties']['label'],
-                                                            style: TextStyle(fontSize: isMobile ? 14 : 18)),
+                                                        Text(
+                                                            state.json![buttonsText[
+                                                                            pageIndex]]
+                                                                        [index][
+                                                                    'properties']
+                                                                ['label'],
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    isMobile
+                                                                        ? 14
+                                                                        : 18)),
                                                       ],
                                                     ),
                                                   ),
@@ -191,7 +242,8 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                   getWidget(
                                                       context: context,
                                                       index: index,
-                                                      page: buttonsText[pageIndex],
+                                                      page: buttonsText[
+                                                          pageIndex],
                                                       json: state.json!,
                                                       size: size,
                                                       isMobile: isMobile),
@@ -205,80 +257,137 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                     // slider button to accept or reject each part inspection
                                     CustomSliderButton(
                                         height: size.height * 0.07,
-                                        width: size.width * (isMobile ? 0.55 : 0.5),
+                                        width: size.width *
+                                            (isMobile ? 0.55 : 0.5),
                                         controller: _sliderButtonController,
                                         isMobile: isMobile,
                                         onLeftLabelReached: () {
-                                          state.json![buttonsText[pageIndex]].last['status'] = 'Rejected';
-                                          _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                          rejectionController.text = state.json![buttonsText[pageIndex]].last['reason'] ?? '';
+                                          state.json![buttonsText[pageIndex]]
+                                              .last['status'] = 'Rejected';
+                                          _serviceBloc.add(
+                                              InspectionJsonUpdated(
+                                                  json: state.json!));
+                                          rejectionController.text = state
+                                                  .json![buttonsText[pageIndex]]
+                                                  .last['reason'] ??
+                                              '';
                                           DMSCustomWidgets.showReasonDialog(
                                               size: size,
                                               context: context,
                                               controller: rejectionController,
                                               onCancel: () {
-                                                state.json![buttonsText[pageIndex]].last['status'] = '';
-                                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                state
+                                                    .json![
+                                                        buttonsText[pageIndex]]
+                                                    .last['status'] = '';
+                                                _serviceBloc.add(
+                                                    InspectionJsonUpdated(
+                                                        json: state.json!));
                                                 navigator.pop();
                                               },
                                               onDone: () {
-                                                state.json![buttonsText[pageIndex]].last['reason'] = rejectionController.text;
-                                                _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                                if (rejectionController.text.isEmpty) {
-                                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                                      message: "Reason cannot be empty",
+                                                state
+                                                        .json![buttonsText[
+                                                            pageIndex]]
+                                                        .last['reason'] =
+                                                    rejectionController.text;
+                                                _serviceBloc.add(
+                                                    InspectionJsonUpdated(
+                                                        json: state.json!));
+                                                if (rejectionController
+                                                    .text.isEmpty) {
+                                                  DMSCustomWidgets.DMSFlushbar(
+                                                      size, context,
+                                                      message:
+                                                          "Reason cannot be empty",
                                                       icon: const Icon(
                                                         Icons.error,
                                                         color: Colors.white,
                                                       ));
                                                 } else {
-                                                  state.json![buttonsText[pageIndex]].last['reason'] = rejectionController.text;
-                                                  _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                  state
+                                                          .json![buttonsText[
+                                                              pageIndex]]
+                                                          .last['reason'] =
+                                                      rejectionController.text;
+                                                  _serviceBloc.add(
+                                                      InspectionJsonUpdated(
+                                                          json: state.json!));
                                                   navigator.pop();
-                                                  if (pageIndex == buttonsText.length - 1) {
-                                                    DMSCustomWidgets.showSubmitDialog(
-                                                        size: size,
-                                                        context: context,
-                                                        onNo: () {
-                                                          state.json![buttonsText[pageIndex]].last['status'] = '';
-                                                          _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                                          navigator.pop();
-                                                        },
-                                                        onYes: () {
-                                                          if (!isConnected()) {
-                                                            DMSCustomWidgets.DMSFlushbar(size, context,
-                                                                message: 'Looks like you'
-                                                                    're offline. Please check your connection and try again.',
-                                                                icon: const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors.white,
-                                                                ));
-                                                            return;
-                                                          }
-                                                          navigator.pop();
+                                                  if (pageIndex ==
+                                                      buttonsText.length - 1) {
+                                                    DMSCustomWidgets
+                                                        .showSubmitDialog(
+                                                            size: size,
+                                                            context: context,
+                                                            onNo: () {
+                                                              state
+                                                                  .json![buttonsText[
+                                                                      pageIndex]]
+                                                                  .last['status'] = '';
+                                                              _serviceBloc.add(
+                                                                  InspectionJsonUpdated(
+                                                                      json: state
+                                                                          .json!));
+                                                              navigator.pop();
+                                                            },
+                                                            onYes: () {
+                                                              if (!isConnected()) {
+                                                                DMSCustomWidgets.DMSFlushbar(
+                                                                    size,
+                                                                    context,
+                                                                    message:
+                                                                        'Looks like you'
+                                                                        're offline. Please check your connection and try again.',
+                                                                    icon:
+                                                                        const Icon(
+                                                                      Icons
+                                                                          .error,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ));
+                                                                return;
+                                                              }
+                                                              navigator.pop();
 
-                                                          _serviceBloc.add(InspectionJsonAdded(dynamicNo: state.service!.jobCardNo!, inspectionIn: 'false'));
-                                                        });
+                                                              _serviceBloc.add(InspectionJsonAdded(
+                                                                  dynamicNo: state
+                                                                      .service!
+                                                                      .jobCardNo!,
+                                                                  inspectionIn:
+                                                                      'false'));
+                                                            });
                                                   }
                                                 }
                                               });
                                         },
                                         onRightLabelReached: () {
-                                          state.json![buttonsText[pageIndex]].last['status'] = 'Accepted';
-                                          _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
-                                          if (pageIndex == buttonsText.length - 1) {
+                                          state.json![buttonsText[pageIndex]]
+                                              .last['status'] = 'Accepted';
+                                          _serviceBloc.add(
+                                              InspectionJsonUpdated(
+                                                  json: state.json!));
+                                          if (pageIndex ==
+                                              buttonsText.length - 1) {
                                             DMSCustomWidgets.showSubmitDialog(
                                                 size: size,
                                                 context: context,
                                                 onNo: () {
-                                                  state.json![buttonsText[pageIndex]].last['status'] = '';
-                                                  _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                                  state
+                                                      .json![buttonsText[
+                                                          pageIndex]]
+                                                      .last['status'] = '';
+                                                  _serviceBloc.add(
+                                                      InspectionJsonUpdated(
+                                                          json: state.json!));
                                                   navigator.pop();
                                                 },
                                                 onYes: () {
                                                   if (!isConnected()) {
-                                                    DMSCustomWidgets.DMSFlushbar(size, context,
-                                                        message: 'Looks like you'
+                                                    DMSCustomWidgets.DMSFlushbar(
+                                                        size, context,
+                                                        message:
+                                                            'Looks like you'
                                                             're offline. Please check your connection and try again.',
                                                         icon: const Icon(
                                                           Icons.error,
@@ -287,30 +396,50 @@ class _InspectionOutState extends State<InspectionOut> with ConnectivityMixin {
                                                     return;
                                                   }
 
-                                                  _serviceBloc.add(InspectionJsonAdded(dynamicNo: state.service!.jobCardNo!, inspectionIn: 'false'));
+                                                  _serviceBloc.add(
+                                                      InspectionJsonAdded(
+                                                          dynamicNo: state
+                                                              .service!
+                                                              .jobCardNo!,
+                                                          inspectionIn:
+                                                              'false'));
                                                   navigator.pop();
                                                 });
                                           }
                                         },
                                         onNoStatus: () {
-                                          state.json![buttonsText[pageIndex]].last['status'] = '';
-                                          _serviceBloc.add(InspectionJsonUpdated(json: state.json!));
+                                          state.json![buttonsText[pageIndex]]
+                                              .last['status'] = '';
+                                          _serviceBloc.add(
+                                              InspectionJsonUpdated(
+                                                  json: state.json!));
                                         },
                                         leftLabel: Text(
                                           'Reject',
-                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: isMobile ? 14 : 18),
                                         ),
                                         rightLabel: Text(
                                           'Accept',
-                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: isMobile ? 14 : 18),
                                         )),
                                     Gap(size.height * 0.02)
                                   ],
                                 ),
-                                if (state.inspectionJsonUploadStatus == InspectionJsonUploadStatus.loading)
+                                if (state.inspectionJsonUploadStatus ==
+                                    InspectionJsonUploadStatus.loading)
                                   Center(
-                                    child: Lottie.asset('assets/lottie/car_loading.json',
-                                        height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
+                                    child: Lottie.asset(
+                                        'assets/lottie/car_loading.json',
+                                        height: isMobile
+                                            ? size.height * 0.5
+                                            : size.height * 0.32,
+                                        width: isMobile
+                                            ? size.width * 0.6
+                                            : size.width * 0.32),
                                   ),
                               ],
                             ),

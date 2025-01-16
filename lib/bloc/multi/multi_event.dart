@@ -38,7 +38,10 @@ class OnFocusChange extends MultiBlocEvent {
   final FocusNode focusNode;
   final ScrollController scrollController;
   final BuildContext context;
-  OnFocusChange({required this.focusNode, required this.scrollController, required this.context});
+  OnFocusChange(
+      {required this.focusNode,
+      required this.scrollController,
+      required this.context});
 }
 
 // related to clipped widgets in the vehicle info view. those clipped widgets are reversed when this event is triggered.

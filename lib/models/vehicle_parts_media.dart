@@ -7,5 +7,11 @@ class VehiclePartMedia {
   bool isUploaded;
   bool? isAccepted;
   String? reasonForRejection;
-  VehiclePartMedia({required this.name, this.comments, this.images, required this.isUploaded, this.isAccepted, this.reasonForRejection = ""});
+  VehiclePartMedia(
+      {required this.name,
+      this.comments,
+      this.images,
+      required this.isUploaded,
+      this.isAccepted,
+      this.reasonForRejection = ""});
 }

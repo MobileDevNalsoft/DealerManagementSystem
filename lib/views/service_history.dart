@@ -84,15 +84,21 @@ class _ServiceHistoryState extends State<ServiceHistory> {
           child: Scaffold(
               resizeToAvoidBottomInset: false,
               extendBodyBehindAppBar: false,
-              appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Service History'),
+              appBar: DMSCustomWidgets.appBar(
+                  size: size, isMobile: isMobile, title: 'Service History'),
               body: Container(
                 height: size.height,
                 width: double.infinity,
                 margin: EdgeInsets.zero,
-                padding: EdgeInsets.only(top: size.height * 0.01, left: size.width * (isMobile ? 0.01 : 0.03)),
+                padding: EdgeInsets.only(
+                    top: size.height * 0.01,
+                    left: size.width * (isMobile ? 0.01 : 0.03)),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
+                      colors: [Colors.black45, Colors.black26, Colors.black45],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.1, 0.5, 1]),
                 ),
                 child: SfDataGridTheme(
                   data: SfDataGridThemeData.raw(
@@ -108,15 +114,22 @@ class _ServiceHistoryState extends State<ServiceHistory> {
                           return Transform(
                             transform: Matrix4.translationValues(0, -40, 0),
                             child: Center(
-                              child: Lottie.asset('assets/lottie/car_loading.json',
-                                  height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
+                              child: Lottie.asset(
+                                  'assets/lottie/car_loading.json',
+                                  height: isMobile
+                                      ? size.height * 0.5
+                                      : size.height * 0.32,
+                                  width: isMobile
+                                      ? size.width * 0.6
+                                      : size.width * 0.32),
                             ),
                           );
                         case GetServiceStatus.success:
                           return SfDataGrid(
                             columnSizer: _customColumnSizer,
                             columnWidthMode: ColumnWidthMode.fitByColumnName,
-                            source: ServiceHistoryDataSource(serviceHistoryData: state.services!),
+                            source: ServiceHistoryDataSource(
+                                serviceHistoryData: state.services!),
                             gridLinesVisibility: GridLinesVisibility.both,
                             headerGridLinesVisibility: GridLinesVisibility.both,
                             showHorizontalScrollbar: false,
@@ -130,7 +143,8 @@ class _ServiceHistoryState extends State<ServiceHistory> {
                             allowFiltering: true,
                             editingGestureType: EditingGestureType.doubleTap,
                             onCellDoubleTap: (details) {
-                              dataGridController.beginEdit(details.rowColumnIndex);
+                              dataGridController
+                                  .beginEdit(details.rowColumnIndex);
                             },
                             controller: dataGridController,
                             columns: <GridColumn>[
@@ -146,7 +160,10 @@ class _ServiceHistoryState extends State<ServiceHistory> {
                                       ))),
                               GridColumn(
                                   columnName: 'date',
-                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Date'))),
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: const Text('Date'))),
                               GridColumn(
                                   columnName: 'Job Card no.',
                                   label: Container(
@@ -161,10 +178,16 @@ class _ServiceHistoryState extends State<ServiceHistory> {
                                       ))),
                               GridColumn(
                                   columnName: 'Location',
-                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Location'))),
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: const Text('Location'))),
                               GridColumn(
                                   columnName: 'Job Type',
-                                  label: Container(padding: const EdgeInsets.all(8.0), alignment: Alignment.center, child: const Text('Job Type'))),
+                                  label: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      alignment: Alignment.center,
+                                      child: const Text('Job Type'))),
                             ],
                           );
                         default:
@@ -182,7 +205,8 @@ class _ServiceHistoryState extends State<ServiceHistory> {
 
 class CustomColumnSizer extends ColumnSizer {
   @override
-  double computeCellWidth(GridColumn column, DataGridRow row, Object? cellValue, TextStyle textStyle) {
+  double computeCellWidth(GridColumn column, DataGridRow row, Object? cellValue,
+      TextStyle textStyle) {
     if (column.columnName == 'Sno') {
       cellValue = cellValue;
     } else if (column.columnName == 'Date') {
@@ -203,7 +227,8 @@ class ServiceHistoryDataSource extends DataGridSource {
                 value: serviceHistoryData.indexOf(e),
               ),
               DataGridCell<String>(columnName: 'date', value: e.scheduledDate),
-              DataGridCell<String>(columnName: 'Job Card no.', value: e.jobCardNo),
+              DataGridCell<String>(
+                  columnName: 'Job Card no.', value: e.jobCardNo),
               DataGridCell<String>(columnName: 'Location', value: e.location),
               DataGridCell<String>(columnName: 'Job Type', value: e.jobType),
             ]))

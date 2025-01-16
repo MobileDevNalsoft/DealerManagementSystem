@@ -3,5 +3,6 @@ class GeneralBodyPart {
   String path;
   String color;
 
-  GeneralBodyPart({required this.name, required this.path, required this.color});
+  GeneralBodyPart(
+      {required this.name, required this.path, required this.color});
 }

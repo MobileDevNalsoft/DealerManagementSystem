@@ -1,109 +1,104 @@
 {
-    "Front Side": [
-        {
-            "widget": "checkBox",
-            "properties": {
-                "label": "IsWashed",
-                "value": false
-            }
-        },
-        {
-            "widget": "textField",
-            "properties":{
-                "label": "Remarks",
-                "value": ""
-            }
-        },
-        {
-            "status": "",
-            "reason": ""
-        }
-    ],
-    "Rear Side": [
-        {
-            "widget": "checkBox",
-            "properties": {
-                "label": "Denting Required",
-                "value": false
-            }
-        },
-        {
-            "widget": "textField",
-            "properties":{
-                "label": "Remarks",
-                "value": ""
-            }
-        },
-        {
-            "widget": "radioButtons",
-            "properties": {
-                "label": "Denting Type",
-                "value": 1,
-                "options": [
-                    "No Dents",
-                    "Creased Dents",
-                    "Round Dents",
-                    "Sharp Dents"
-                ]
-            }
-        },
-        {
-            "status": "",
-            "reason": ""
-        }
-    ],
-    "Interior Condition": [
-        {
-            "widget": "dropDown",
-            "properties": {
-                "label": "Ac Vent",
-                "items": [
-                    "-",
-                    "Front Left Hand Side",
-                    "Rear Left Hand Side",
-                    "Front Right Hand Side",
-                    "Rear Right Hand Side"
-                ],
-                "value": ""
-            }
-        },
-        {
-            "widget": "textField",
-            "properties": {
-                "label": "No. of Seat Covers\nRequired",
-                "value": ""
-            }
-        },
-        {
-            "widget": "textField",
-            "properties":{
-                "label": "Remarks",
-                "value": ""
-            }
-        },
-        {
-            "status": "",
-            "reason": ""
-        }
-    ],
-    "Paint Condition": [
-        {
-            "widget": "checkBox",
-            "properties": {
-                "label": "Repair Scratches",
-                "value": false
-            }
-        },
-        {
-            "widget": "textField",
-            "properties": {
-                "label": "Remarks",
-                "value": ""
-            }
-        },
-        {
-            "status": "",
-            "reason": ""
-        }
-    ]
+  "Front Side": [
+    {
+      "widget": "checkBox",
+      "properties": {
+        "label": "IsWashed",
+        "value": false
+      }
+    },
+    {
+      "widget": "textField",
+      "properties": {
+        "label": "Remarks",
+        "value": ""
+      }
+    },
+    {
+      "status": "",
+      "reason": ""
+    }
+  ],
+  "Rear Side": [
+    {
+      "widget": "checkBox",
+      "properties": {
+        "label": "Denting Required",
+        "value": false
+      }
+    },
+    {
+      "widget": "textField",
+      "properties": {
+        "label": "Remarks",
+        "value": ""
+      }
+    },
+    {
+      "widget": "radioButtons",
+      "properties": {
+        "label": "Denting Type",
+        "value": 1,
+        "options": ["No Dents", "Creased Dents", "Round Dents", "Sharp Dents"]
+      }
+    },
+    {
+      "status": "",
+      "reason": ""
+    }
+  ],
+  "Interior Condition": [
+    {
+      "widget": "dropDown",
+      "properties": {
+        "label": "Ac Vent",
+        "items": [
+          "-",
+          "Front Left Hand Side",
+          "Rear Left Hand Side",
+          "Front Right Hand Side",
+          "Rear Right Hand Side"
+        ],
+        "value": ""
+      }
+    },
+    {
+      "widget": "textField",
+      "properties": {
+        "label": "No. of Seat Covers\nRequired",
+        "value": ""
+      }
+    },
+    {
+      "widget": "textField",
+      "properties": {
+        "label": "Remarks",
+        "value": ""
+      }
+    },
+    {
+      "status": "",
+      "reason": ""
+    }
+  ],
+  "Paint Condition": [
+    {
+      "widget": "checkBox",
+      "properties": {
+        "label": "Repair Scratches",
+        "value": false
+      }
+    },
+    {
+      "widget": "textField",
+      "properties": {
+        "label": "Remarks",
+        "value": ""
+      }
+    },
+    {
+      "status": "",
+      "reason": ""
+    }
+  ]
 }

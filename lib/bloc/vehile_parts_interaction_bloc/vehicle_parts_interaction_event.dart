@@ -28,7 +28,8 @@ class SubmitVehicleMediaEvent extends VehiclePartsInteractionBlocEvent {
 class SubmitBodyPartVehicleMediaEvent extends VehiclePartsInteractionBlocEvent {
   String serviceBookingNo;
   String bodyPartName;
-  SubmitBodyPartVehicleMediaEvent({required this.bodyPartName, required this.serviceBookingNo});
+  SubmitBodyPartVehicleMediaEvent(
+      {required this.bodyPartName, required this.serviceBookingNo});
 }
 
 class FetchVehicleMediaEvent extends VehiclePartsInteractionBlocEvent {
@@ -47,7 +48,8 @@ class SubmitQualityCheckStatusEvent extends VehiclePartsInteractionBlocEvent {
   SubmitQualityCheckStatusEvent({required this.jobCardNo});
 }
 
-class ModifyVehicleExaminationPageIndex extends VehiclePartsInteractionBlocEvent {
+class ModifyVehicleExaminationPageIndex
+    extends VehiclePartsInteractionBlocEvent {
   int index;
   ModifyVehicleExaminationPageIndex({required this.index});
 }
@@ -60,5 +62,6 @@ class AddHotspotEvent extends VehiclePartsInteractionBlocEvent {
 class ModifyVehicleInteractionStatus extends VehiclePartsInteractionBlocEvent {
   String selectedBodyPart;
   bool isTapped;
-  ModifyVehicleInteractionStatus({required this.selectedBodyPart, required this.isTapped});
+  ModifyVehicleInteractionStatus(
+      {required this.selectedBodyPart, required this.isTapped});
 }

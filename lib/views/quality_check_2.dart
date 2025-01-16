@@ -29,10 +29,13 @@ class QualityCheck2 extends StatefulWidget {
   State<QualityCheck2> createState() => _QualityCheck2State();
 }
 
-class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, TickerProviderStateMixin {
+class _QualityCheck2State extends State<QualityCheck2>
+    with ConnectivityMixin, TickerProviderStateMixin {
   // related to UI when tapped on 3D model hotspot
-  final ScrollController _listController = ScrollController(initialScrollOffset: 0);
-  final AutoScrollController _autoScrollController = AutoScrollController(initialScrollOffset: 0);
+  final ScrollController _listController =
+      ScrollController(initialScrollOffset: 0);
+  final AutoScrollController _autoScrollController =
+      AutoScrollController(initialScrollOffset: 0);
 
   TextEditingController commentsController = TextEditingController();
   TextEditingController rejectionController = TextEditingController();
@@ -41,7 +44,8 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   List<SliderButtonController> sliderButtonControllers = [];
 
-  DraggableScrollableController draggableScrollableController = DraggableScrollableController();
+  DraggableScrollableController draggableScrollableController =
+      DraggableScrollableController();
 
   late WebViewController webViewController;
 
@@ -61,7 +65,7 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   // method to load java script file
   Future<List<String>> loadJS() async {
-     List<String> resources = [];
+    List<String> resources = [];
     resources.add(await rootBundle.loadString('assets/quality.js'));
     resources.add(await rootBundle.loadString('assets/styles.css'));
     return resources;
@@ -85,9 +89,14 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
     _interactionBloc.state.mapMedia = {};
     _interactionBloc.state.vehicleExaminationPageIndex = 0;
 
-    tween = Tween(begin: 0.0, end: (sharedPreferences.getBool('isMobile') ?? true ? 0.8 : 1));
-    animationController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
-    animation = CurvedAnimation(parent: animationController, curve: Curves.easeIn).drive(tween);
+    tween = Tween(
+        begin: 0.0,
+        end: (sharedPreferences.getBool('isMobile') ?? true ? 0.8 : 1));
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 1500), vsync: this);
+    animation =
+        CurvedAnimation(parent: animationController, curve: Curves.easeIn)
+            .drive(tween);
     animationController.forward();
   }
 
@@ -100,15 +109,19 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
 
   void updateButtonsList(int index) {
     if (index >= 0 && index < hotSpots.length) {
-      _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(index).key));
+      _interactionBloc.add(ModifyVehicleInteractionStatus(
+          selectedBodyPart: hotSpots.elementAt(index).key));
       _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: index));
-      _autoScrollController.scrollToIndex(index, duration: const Duration(milliseconds: 500), preferPosition: AutoScrollPosition.begin);
+      _autoScrollController.scrollToIndex(index,
+          duration: const Duration(milliseconds: 500),
+          preferPosition: AutoScrollPosition.begin);
       _changeButtonColors(hotSpots.elementAt(index).key, true);
     }
   }
 
   void _changeButtonColors(String name, bool rotate) async {
-    await webViewController.runJavaScript('changeHotSpotColors("$name", $rotate)');
+    await webViewController
+        .runJavaScript('changeHotSpotColors("$name", $rotate)');
   }
 
   @override
@@ -123,16 +136,31 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
         Map<String, dynamic> data = jsonDecode(message.message);
 
         if (data["type"] == "hotspot-click") {
-          _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!));
-          int index = _interactionBloc.state.mapMedia.entries.toList().indexWhere((element) => element.key == data["name"]);
+          _interactionBloc.add(
+              ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!));
+          int index = _interactionBloc.state.mapMedia.entries
+              .toList()
+              .indexWhere((element) => element.key == data["name"]);
           _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: index));
           _autoScrollController.scrollToIndex(index);
           if (index > _interactionBloc.state.vehicleExaminationPageIndex) {
-            _listController.animateTo(_listController.offset + (index - _interactionBloc.state.vehicleExaminationPageIndex) * size.width,
-                duration: const Duration(milliseconds: 500), curve: Curves.ease);
+            _listController.animateTo(
+                _listController.offset +
+                    (index -
+                            _interactionBloc
+                                .state.vehicleExaminationPageIndex) *
+                        size.width,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease);
           } else {
-            _listController.animateTo(_listController.offset - (-index + _interactionBloc.state.vehicleExaminationPageIndex) * size.width,
-                duration: const Duration(milliseconds: 500), curve: Curves.ease);
+            _listController.animateTo(
+                _listController.offset -
+                    (-index +
+                            _interactionBloc
+                                .state.vehicleExaminationPageIndex) *
+                        size.width,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease);
           }
         }
       },
@@ -144,30 +172,46 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
         _serviceBloc.add(MoveStepperTo(step: 'Quality Check'));
       },
       child: Scaffold(
-          appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Quality Check', actions: [
-            Container(
-              margin: EdgeInsets.only(right: size.width * 0.024),
-              padding: EdgeInsets.zero,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
-              child: Switch(
-                value: true,
-                onChanged: (value) {
-                  navigator.pushReplacement('/qualityCheck', arguments: _serviceBloc.state.service!.jobCardNo);
-                },
-                inactiveThumbColor: Colors.white,
-                inactiveTrackColor: Colors.black,
-                trackOutlineColor: const WidgetStatePropertyAll(Colors.black),
-              ),
-            )
-          ]),
+          appBar: DMSCustomWidgets.appBar(
+              size: size,
+              isMobile: isMobile,
+              title: 'Quality Check',
+              actions: [
+                Container(
+                  margin: EdgeInsets.only(right: size.width * 0.024),
+                  padding: EdgeInsets.zero,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 10,
+                            spreadRadius: -5,
+                            color: Colors.orange.shade200,
+                            offset: const Offset(0, 0))
+                      ]),
+                  child: Switch(
+                    value: true,
+                    onChanged: (value) {
+                      navigator.pushReplacement('/qualityCheck',
+                          arguments: _serviceBloc.state.service!.jobCardNo);
+                    },
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.black,
+                    trackOutlineColor:
+                        const WidgetStatePropertyAll(Colors.black),
+                  ),
+                )
+              ]),
           body: Container(
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.black45, Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                    colors: [
+                      Colors.black45,
+                      Color.fromARGB(40, 104, 103, 103),
+                      Colors.black45
+                    ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: [0.1, 0.5, 1])),
@@ -177,19 +221,30 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                     future: _resources,
                     builder: (context, snapshot) {
                       return snapshot.hasData
-                          ? BlocListener<VehiclePartsInteractionBloc2, VehiclePartsInteractionBlocState2>(
-                              listenWhen: (previous, current) => previous.mediaJsonStatus != current.mediaJsonStatus,
+                          ? BlocListener<VehiclePartsInteractionBloc2,
+                              VehiclePartsInteractionBlocState2>(
+                              listenWhen: (previous, current) =>
+                                  previous.mediaJsonStatus !=
+                                  current.mediaJsonStatus,
                               listener: (context, state) {
-                                if (state.mediaJsonStatus == MediaJsonStatus.success) {
+                                if (state.mediaJsonStatus ==
+                                    MediaJsonStatus.success) {
                                   state.mapMedia.forEach((e, v) {
-                                    webViewController.runJavaScript('receiveHotspots("$e","${v.dataPosition}", "${v.normalPosition}")');
-                                    sliderButtonControllers.add(SliderButtonController());
+                                    webViewController.runJavaScript(
+                                        'receiveHotspots("$e","${v.dataPosition}", "${v.normalPosition}")');
+                                    sliderButtonControllers
+                                        .add(SliderButtonController());
                                   });
-                                  _changeButtonColors(state.mapMedia.entries.first.key, true);
+                                  _changeButtonColors(
+                                      state.mapMedia.entries.first.key, true);
                                 }
 
-                                if (state.status == VehiclePartsInteractionStatus.success) {
-                                  context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
+                                if (state.status ==
+                                    VehiclePartsInteractionStatus.success) {
+                                  context.read<ServiceBloc>().add(GetJobCards(
+                                      query: getIt<SharedPreferences>()
+                                          .getStringList('locations')!
+                                          .first));
                                 }
                               },
                               child: SizedBox(
@@ -206,18 +261,27 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                   id: 'quality',
                                   onWebViewCreated: (value) async {
                                     webViewController = value;
-                                    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+                                    _interactionBloc.add(FetchVehicleMediaEvent(
+                                        jobCardNo: _serviceBloc
+                                            .state.service!.jobCardNo!));
                                   },
                                   javascriptChannels: {qualityChannel},
                                 ),
                               ),
                             )
                           : Center(
-                              child: Lottie.asset('assets/lottie/car_loading.json',
-                                  height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
+                              child: Lottie.asset(
+                                  'assets/lottie/car_loading.json',
+                                  height: isMobile
+                                      ? size.height * 0.5
+                                      : size.height * 0.32,
+                                  width: isMobile
+                                      ? size.width * 0.6
+                                      : size.width * 0.32),
                             );
                     }),
-                BlocBuilder<VehiclePartsInteractionBloc2, VehiclePartsInteractionBlocState2>(
+                BlocBuilder<VehiclePartsInteractionBloc2,
+                    VehiclePartsInteractionBlocState2>(
                   builder: (context, state) {
                     switch (state.mediaJsonStatus) {
                       case MediaJsonStatus.success:
@@ -235,25 +299,30 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                               width: size.width,
                               decoration: const BoxDecoration(
                                   color: Color.fromRGBO(26, 26, 27, 1),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(24),
+                                      topRight: Radius.circular(24))),
                               child: CustomScrollView(
                                 controller: scrollController,
                                 physics: const NeverScrollableScrollPhysics(),
                                 slivers: [
                                   SliverToBoxAdapter(
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Gap(size.width * 0.455),
                                         Container(
                                           decoration: const BoxDecoration(
                                             color: Colors.grey,
-                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
                                           ),
                                           height: size.height * 0.006,
                                           width: size.width * 0.1,
                                           padding: EdgeInsets.zero,
-                                          margin: EdgeInsets.symmetric(vertical: size.height * 0.006),
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: size.height * 0.006),
                                         ),
                                         const Spacer(),
                                       ],
@@ -264,7 +333,8 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                       height: size.height * 0.06,
                                       width: size.width * 0.98,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(1000),
+                                        borderRadius:
+                                            BorderRadius.circular(1000),
                                         child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             controller: _autoScrollController,
@@ -272,55 +342,142 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                             itemBuilder: (context, index) {
                                               return AutoScrollTag(
                                                 key: ValueKey(index),
-                                                controller: _autoScrollController,
+                                                controller:
+                                                    _autoScrollController,
                                                 index: index,
                                                 child: InkWell(
                                                   onTap: () {
-                                                    _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(index).key));
-                                                    _changeButtonColors(hotSpots.elementAt(index).key, true);
-                                                    _autoScrollController.scrollToIndex(index);
-                                                    if (index > state.vehicleExaminationPageIndex) {
+                                                    _interactionBloc.add(
+                                                        ModifyVehicleInteractionStatus(
+                                                            selectedBodyPart:
+                                                                hotSpots
+                                                                    .elementAt(
+                                                                        index)
+                                                                    .key));
+                                                    _changeButtonColors(
+                                                        hotSpots
+                                                            .elementAt(index)
+                                                            .key,
+                                                        true);
+                                                    _autoScrollController
+                                                        .scrollToIndex(index);
+                                                    if (index >
+                                                        state
+                                                            .vehicleExaminationPageIndex) {
                                                       _listController.animateTo(
-                                                          _listController.offset + (index - state.vehicleExaminationPageIndex) * size.width,
-                                                          duration: const Duration(milliseconds: 500),
+                                                          _listController
+                                                                  .offset +
+                                                              (index -
+                                                                      state
+                                                                          .vehicleExaminationPageIndex) *
+                                                                  size.width,
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      500),
                                                           curve: Curves.ease);
                                                     } else {
                                                       _listController.animateTo(
-                                                          _listController.offset - (-index + state.vehicleExaminationPageIndex) * size.width,
-                                                          duration: const Duration(milliseconds: 500),
+                                                          _listController
+                                                                  .offset -
+                                                              (-index +
+                                                                      state
+                                                                          .vehicleExaminationPageIndex) *
+                                                                  size.width,
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      500),
                                                           curve: Curves.ease);
                                                     }
-                                                    state.vehicleExaminationPageIndex = index;
+                                                    state.vehicleExaminationPageIndex =
+                                                        index;
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(16),
-                                                        color: context.watch<VehiclePartsInteractionBloc2>().state.vehicleExaminationPageIndex == index ? Colors.orange.shade200 : Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                        color: context
+                                                                    .watch<
+                                                                        VehiclePartsInteractionBloc2>()
+                                                                    .state
+                                                                    .vehicleExaminationPageIndex ==
+                                                                index
+                                                            ? Colors
+                                                                .orange.shade200
+                                                            : Colors.white,
                                                         boxShadow: [
                                                           BoxShadow(
-                                                              blurRadius: state.vehicleExaminationPageIndex == index ? 0 : 5,
-                                                              blurStyle: BlurStyle.outer,
+                                                              blurRadius:
+                                                                  state.vehicleExaminationPageIndex ==
+                                                                          index
+                                                                      ? 0
+                                                                      : 5,
+                                                              blurStyle:
+                                                                  BlurStyle
+                                                                      .outer,
                                                               spreadRadius: 0,
-                                                              color: Colors.orange.shade200,
-                                                              offset: const Offset(0, 0))
+                                                              color: Colors
+                                                                  .orange
+                                                                  .shade200,
+                                                              offset:
+                                                                  const Offset(
+                                                                      0, 0))
                                                         ]),
-                                                    margin: EdgeInsets.symmetric(vertical: size.width * 0.02, horizontal: size.height * 0.005),
-                                                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical:
+                                                                size.width *
+                                                                    0.02,
+                                                            horizontal:
+                                                                size.height *
+                                                                    0.005),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                size.width *
+                                                                    0.03),
                                                     alignment: Alignment.center,
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                          hotSpots.elementAt(index).value.name,
-                                                          style: const TextStyle(
-                                                            fontWeight: FontWeight.w800,
+                                                          hotSpots
+                                                              .elementAt(index)
+                                                              .value
+                                                              .name,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w800,
                                                           ),
                                                         ),
-                                                        if (hotSpots[index].value.isAccepted != null) Gap(size.width * 0.015),
-                                                        if (hotSpots[index].value.isAccepted != null)
+                                                        if (hotSpots[index]
+                                                                .value
+                                                                .isAccepted !=
+                                                            null)
+                                                          Gap(size.width *
+                                                              0.015),
+                                                        if (hotSpots[index]
+                                                                .value
+                                                                .isAccepted !=
+                                                            null)
                                                           Icon(
-                                                            hotSpots[index].value.isAccepted! ? Icons.check_rounded : Icons.close_rounded,
-                                                            size: size.height * 0.025,
-                                                            color: hotSpots[index].value.isAccepted! ? Colors.green : Colors.red,
+                                                            hotSpots[index]
+                                                                    .value
+                                                                    .isAccepted!
+                                                                ? Icons
+                                                                    .check_rounded
+                                                                : Icons
+                                                                    .close_rounded,
+                                                            size: size.height *
+                                                                0.025,
+                                                            color: hotSpots[
+                                                                        index]
+                                                                    .value
+                                                                    .isAccepted!
+                                                                ? Colors.green
+                                                                : Colors.red,
                                                           )
                                                       ],
                                                     ),
@@ -338,179 +495,271 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                       width: size.width * 0.9,
                                       child: ListView(
                                         controller: _listController,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         scrollDirection: Axis.horizontal,
-                                        children: state.mapMedia.entries.map((e) {
-                                          int index = state.mapMedia.keys.toList().indexOf(e.key);
-                                          print('insets ${MediaQuery.of(context).viewInsets.bottom}');
-                                          if(sliderButtonControllers.isNotEmpty){if (e.value.isAccepted == null) {
-                                            sliderButtonControllers[index].position = Position.middle;
-                                          } else if (e.value.isAccepted != null && e.value.isAccepted! == true) {
-                                            sliderButtonControllers[index].position = Position.right;
-                                          } else if (e.value.isAccepted != null && e.value.isAccepted! == false) {
-                                            sliderButtonControllers[index].position = Position.left;
-                                          }}
-                                          return !state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc2>().state.selectedBodyPart)
+                                        children:
+                                            state.mapMedia.entries.map((e) {
+                                          int index = state.mapMedia.keys
+                                              .toList()
+                                              .indexOf(e.key);
+                                          print(
+                                              'insets ${MediaQuery.of(context).viewInsets.bottom}');
+                                          if (sliderButtonControllers
+                                              .isNotEmpty) {
+                                            if (e.value.isAccepted == null) {
+                                              sliderButtonControllers[index]
+                                                  .position = Position.middle;
+                                            } else if (e.value.isAccepted !=
+                                                    null &&
+                                                e.value.isAccepted! == true) {
+                                              sliderButtonControllers[index]
+                                                  .position = Position.right;
+                                            } else if (e.value.isAccepted !=
+                                                    null &&
+                                                e.value.isAccepted! == false) {
+                                              sliderButtonControllers[index]
+                                                  .position = Position.left;
+                                            }
+                                          }
+                                          return !state.mapMedia.containsKey(context
+                                                  .watch<
+                                                      VehiclePartsInteractionBloc2>()
+                                                  .state
+                                                  .selectedBodyPart)
                                               ? const Padding(
                                                   padding: EdgeInsets.all(8.0),
                                                   child: Text(
                                                     "No data found",
                                                     textAlign: TextAlign.center,
-                                                    style: TextStyle(color: Colors.white54),
+                                                    style: TextStyle(
+                                                        color: Colors.white54),
                                                   ),
                                                 )
                                               : GestureDetector(
-                                                  behavior: HitTestBehavior.translucent,
-                                                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                                                  onHorizontalDragStart: (details) {
-                                                    dragStart = details.localPosition.dx;
+                                                  behavior: HitTestBehavior
+                                                      .translucent,
+                                                  onTap: () => FocusManager
+                                                      .instance.primaryFocus
+                                                      ?.unfocus(),
+                                                  onHorizontalDragStart:
+                                                      (details) {
+                                                    dragStart = details
+                                                        .localPosition.dx;
                                                   },
-                                                  onHorizontalDragEnd: (details) {
-                                                    dragEnd = details.localPosition.dx;
-                                                    if (dragStart > dragEnd + 50) {
-                                                      updateButtonsList(((_listController.offset / size.width) + 1).toInt());
-                                                      _listController.animateTo(_listController.offset + size.width,
-                                                          duration: const Duration(milliseconds: 500), curve: Curves.ease);
-                                                    } else if (dragStart < dragEnd - 50) {
-                                                      updateButtonsList(((_listController.offset / size.width) - 1).toInt());
-                                                      _listController.animateTo(_listController.offset - size.width,
-                                                          duration: const Duration(milliseconds: 500), curve: Curves.ease);
+                                                  onHorizontalDragEnd:
+                                                      (details) {
+                                                    dragEnd = details
+                                                        .localPosition.dx;
+                                                    if (dragStart >
+                                                        dragEnd + 50) {
+                                                      updateButtonsList(
+                                                          ((_listController
+                                                                          .offset /
+                                                                      size.width) +
+                                                                  1)
+                                                              .toInt());
+                                                      _listController.animateTo(
+                                                          _listController
+                                                                  .offset +
+                                                              size.width,
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      500),
+                                                          curve: Curves.ease);
+                                                    } else if (dragStart <
+                                                        dragEnd - 50) {
+                                                      updateButtonsList(
+                                                          ((_listController
+                                                                          .offset /
+                                                                      size.width) -
+                                                                  1)
+                                                              .toInt());
+                                                      _listController.animateTo(
+                                                          _listController
+                                                                  .offset -
+                                                              size.width,
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      500),
+                                                          curve: Curves.ease);
                                                     }
                                                   },
                                                   child: Container(
-                                                      padding:isMobile? EdgeInsets.all(size.width * 0.05):EdgeInsets.symmetric(horizontal: size.width*0.05,vertical:size.width*0.032),
+                                                      padding: isMobile
+                                                          ? EdgeInsets.all(
+                                                              size.width * 0.05)
+                                                          : EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  size.width *
+                                                                      0.05,
+                                                              vertical:
+                                                                  size.width *
+                                                                      0.032),
                                                       margin: EdgeInsets.zero,
-                                                      width:  size.width,
+                                                      width: size.width,
                                                       child: Stack(
                                                         children: [
                                                           CustomScrollView(
-                                                            controller: scrollController,
+                                                            controller:
+                                                                scrollController,
                                                             slivers: [
                                                               SliverToBoxAdapter(
                                                                 child: Row(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
-                                                                    Transform.translate(
-                                                                      offset: Offset(0, size.height *(isMobile?0.005: 0.01)),
-                                                                      child: const CircleAvatar(
-                                                                        radius: 6,
-                                                                        backgroundColor: Colors.white,
+                                                                    Transform
+                                                                        .translate(
+                                                                      offset: Offset(
+                                                                          0,
+                                                                          size.height *
+                                                                              (isMobile ? 0.005 : 0.01)),
+                                                                      child:
+                                                                          const CircleAvatar(
+                                                                        radius:
+                                                                            6,
+                                                                        backgroundColor:
+                                                                            Colors.white,
                                                                       ),
                                                                     ),
-                                                                    Gap(size.width * 0.02),
+                                                                    Gap(size.width *
+                                                                        0.02),
                                                                     Expanded(
                                                                       child: Text(
-                                                                          context.watch<VehiclePartsInteractionBloc2>().state.mapMedia[context
-                                                                                      .watch<VehiclePartsInteractionBloc2>()
-                                                                                      .state
-                                                                                      .selectedBodyPart] ==
-                                                                                  null
+                                                                          context.watch<VehiclePartsInteractionBloc2>().state.mapMedia[context.watch<VehiclePartsInteractionBloc2>().state.selectedBodyPart] == null
                                                                               ? "No data"
-                                                                              : e.value.comments!,
+                                                                              : e
+                                                                                  .value.comments!,
                                                                           style: TextStyle(
-                                                                              color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.width *(isMobile? 0.040:0.032))),
+                                                                              color: const Color.fromARGB(255, 223, 220, 220),
+                                                                              fontSize: size.width * (isMobile ? 0.040 : 0.032))),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               ),
-                                                              SliverGap(size.height * 0.03),
-                                                              SliverGrid.builder(
-
-                                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                                      crossAxisCount: 3, crossAxisSpacing: size.width * 0.02),
-                                                                  itemCount: context
-                                                                              .watch<VehiclePartsInteractionBloc2>()
-                                                                              .state
-                                                                              .mapMedia[
-                                                                                  context.watch<VehiclePartsInteractionBloc2>().state.selectedBodyPart]!
-                                                                              .images ==
-                                                                          null
-                                                                      ? 0
-                                                                      : e.value.images!.length,
-                                                                  itemBuilder: (context, index) => ClipRRect(
-                                                                        borderRadius: BorderRadius.circular(16),
-                                                                        child: InkWell(
-                                                                          onTap: () {
-                                                                            showDialog(
-                                                                                context: context,
-                                                                                useSafeArea: true,
-                                                                                builder: (context) {
-                                                                                  return Stack(
-                                                                                    children: [
-                                                                                      PhotoViewGallery.builder(
-                                                                                        allowImplicitScrolling: true,
-                                                                                        pageController: PageController(initialPage: index),
-                                                                                        backgroundDecoration: const BoxDecoration(
-                                                                                          color: Colors.transparent,
-                                                                                        ),
-                                                                                        pageSnapping: true,
-                                                                                        itemCount: e.value.images == null ? 0 : e.value.images!.length,
-                                                                                        builder: (BuildContext context, int index) {
-                                                                                          return PhotoViewGalleryPageOptions(
-                                                                                            disableGestures: false,
-                                                                                            maxScale: 1.5,
-                                                                                            filterQuality: FilterQuality.high,
-                                                                                            basePosition: Alignment.center,
-                                                                                            imageProvider: FileImage(
-                                                                                              File(e.value.images![index].path),
+                                                              SliverGap(
+                                                                  size.height *
+                                                                      0.03),
+                                                              SliverGrid
+                                                                  .builder(
+                                                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount:
+                                                                              3,
+                                                                          crossAxisSpacing: size.width *
+                                                                              0.02),
+                                                                      itemCount: context.watch<VehiclePartsInteractionBloc2>().state.mapMedia[context.watch<VehiclePartsInteractionBloc2>().state.selectedBodyPart]!.images ==
+                                                                              null
+                                                                          ? 0
+                                                                          : e
+                                                                              .value
+                                                                              .images!
+                                                                              .length,
+                                                                      itemBuilder: (context,
+                                                                              index) =>
+                                                                          ClipRRect(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(16),
+                                                                            child:
+                                                                                InkWell(
+                                                                              onTap: () {
+                                                                                showDialog(
+                                                                                    context: context,
+                                                                                    useSafeArea: true,
+                                                                                    builder: (context) {
+                                                                                      return Stack(
+                                                                                        children: [
+                                                                                          PhotoViewGallery.builder(
+                                                                                            allowImplicitScrolling: true,
+                                                                                            pageController: PageController(initialPage: index),
+                                                                                            backgroundDecoration: const BoxDecoration(
+                                                                                              color: Colors.transparent,
                                                                                             ),
-                                                                                            initialScale: PhotoViewComputedScale.contained * 0.8,
-                                                                                            heroAttributes:
-                                                                                                PhotoViewHeroAttributes(tag: e.value.images![index].path),
-                                                                                          );
-                                                                                        },
-                                                                                      ),
-                                                                                      Positioned(
-                                                                                        top: size.height*0.056,
-                                                                                        right:size.width*0.02,
-                                                                                        child: IconButton(
-                                                                                            onPressed: () {
-                                                                                              navigator.pop();
+                                                                                            pageSnapping: true,
+                                                                                            itemCount: e.value.images == null ? 0 : e.value.images!.length,
+                                                                                            builder: (BuildContext context, int index) {
+                                                                                              return PhotoViewGalleryPageOptions(
+                                                                                                disableGestures: false,
+                                                                                                maxScale: 1.5,
+                                                                                                filterQuality: FilterQuality.high,
+                                                                                                basePosition: Alignment.center,
+                                                                                                imageProvider: FileImage(
+                                                                                                  File(e.value.images![index].path),
+                                                                                                ),
+                                                                                                initialScale: PhotoViewComputedScale.contained * 0.8,
+                                                                                                heroAttributes: PhotoViewHeroAttributes(tag: e.value.images![index].path),
+                                                                                              );
                                                                                             },
-                                                                                            icon:  Icon(
-                                                                                              Icons.highlight_remove_rounded,
-                                                                                              color: Colors.white,
-                                                                                              size: isMobile?28:size.width*0.042,
-                                                                                            )),
-                                                                                      ),
-                                                                                    ],
-                                                                                  );
-                                                                                });
-                                                                          },
-                                                                          child: Image.file(
-                                                                            File(e.value.images![index].path),
-                                                                            fit: BoxFit.fitWidth,
-                                                                            scale: size.width * 0.002,
-                                                                          ),
-                                                                        ),
-                                                                      )),
-                                                              SliverGap(size.height * 0.03),
-                                                              if (e.value.reasonForRejection != null && e.value.isAccepted == false)
+                                                                                          ),
+                                                                                          Positioned(
+                                                                                            top: size.height * 0.056,
+                                                                                            right: size.width * 0.02,
+                                                                                            child: IconButton(
+                                                                                                onPressed: () {
+                                                                                                  navigator.pop();
+                                                                                                },
+                                                                                                icon: Icon(
+                                                                                                  Icons.highlight_remove_rounded,
+                                                                                                  color: Colors.white,
+                                                                                                  size: isMobile ? 28 : size.width * 0.042,
+                                                                                                )),
+                                                                                          ),
+                                                                                        ],
+                                                                                      );
+                                                                                    });
+                                                                              },
+                                                                              child: Image.file(
+                                                                                File(e.value.images![index].path),
+                                                                                fit: BoxFit.fitWidth,
+                                                                                scale: size.width * 0.002,
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                              SliverGap(
+                                                                  size.height *
+                                                                      0.03),
+                                                              if (e.value.reasonForRejection !=
+                                                                      null &&
+                                                                  e.value.isAccepted ==
+                                                                      false)
                                                                 SliverToBoxAdapter(
                                                                   child: Column(
-                                                                    mainAxisSize: MainAxisSize.min,
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
                                                                     children: [
                                                                       Row(
-                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
                                                                         children: [
-                                                                          Transform.translate(
-                                                                      offset: Offset(0, size.height *(isMobile?0.005: 0.01)),
-                                                                            child: const CircleAvatar(
+                                                                          Transform
+                                                                              .translate(
+                                                                            offset:
+                                                                                Offset(0, size.height * (isMobile ? 0.005 : 0.01)),
+                                                                            child:
+                                                                                const CircleAvatar(
                                                                               radius: 6,
                                                                               backgroundColor: Colors.red,
                                                                             ),
                                                                           ),
-                                                                          Gap(size.width * 0.02),
-                                                                          Text("Rejection Reason",
-                                                                              style: TextStyle(
-                                                                                  color: const Color.fromARGB(255, 223, 220, 220),
-                                                                                  fontSize: size.width * (isMobile? 0.040:0.032))),
-                                                                          Gap(size.width * 0.03),
+                                                                          Gap(size.width *
+                                                                              0.02),
+                                                                          Text(
+                                                                              "Rejection Reason",
+                                                                              style: TextStyle(color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.width * (isMobile ? 0.040 : 0.032))),
+                                                                          Gap(size.width *
+                                                                              0.03),
                                                                           InkWell(
-                                                                            
-                                                                            radius: size.height * 0.05,
-                                                                            onTap: () {
+                                                                            radius:
+                                                                                size.height * 0.05,
+                                                                            onTap:
+                                                                                () {
                                                                               rejectionController.text = e.value.reasonForRejection!;
                                                                               DMSCustomWidgets.showReasonDialog(
                                                                                   size: size,
@@ -527,34 +776,36 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                                                             color: Colors.white,
                                                                                           ));
                                                                                     } else {
-                                                                                      _interactionBloc
-                                                                                          .state
-                                                                                          .mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                                          .reasonForRejection = rejectionController.text;
-                                                                                      _interactionBloc.add(ModifyAcceptedEvent(
-                                                                                          bodyPartName: _interactionBloc.state.selectedBodyPart!,
-                                                                                          isAccepted: false));
+                                                                                      _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection = rejectionController.text;
+                                                                                      _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: false));
                                                                                       navigator.pop();
                                                                                     }
                                                                                   },
                                                                                   context: context);
                                                                             },
-                                                                            child: Icon(
+                                                                            child:
+                                                                                Icon(
                                                                               Icons.edit_note_rounded,
                                                                               color: Color.fromARGB(255, 223, 220, 220),
-                                                                              size: size.width*0.042,
+                                                                              size: size.width * 0.042,
                                                                             ),
                                                                           ),
                                                                         ],
                                                                       ),
-                                                                      Gap(size.width * 0.02),
+                                                                      Gap(size.width *
+                                                                          0.02),
                                                                       Padding(
-                                                                        padding: EdgeInsets.only(left: size.width * (isMobile? 0.12:0.08)),
-                                                                        child: Text(
-                                                                          e.value.reasonForRejection!,
+                                                                        padding:
+                                                                            EdgeInsets.only(left: size.width * (isMobile ? 0.12 : 0.08)),
+                                                                        child:
+                                                                            Text(
+                                                                          e.value
+                                                                              .reasonForRejection!,
                                                                           style: TextStyle(
-                                                                              color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.width *(isMobile? 0.040:0.028)),
-                                                                          softWrap: true,
+                                                                              color: const Color.fromARGB(255, 223, 220, 220),
+                                                                              fontSize: size.width * (isMobile ? 0.040 : 0.028)),
+                                                                          softWrap:
+                                                                              true,
                                                                         ),
                                                                       ),
                                                                     ],
@@ -563,137 +814,164 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                                                             ],
                                                           ),
                                                           Positioned(
-                                                            bottom: size.height * 0.1,
-                                                            left: size.width * 0.2,
-                                                            child: CustomSliderButton(
-                                                                controller: sliderButtonControllers[index],
-                                                                height: size.height * (isMobile?0.065:0.06),
-                                                                width: size.width *  (isMobile?0.5:0.42),
-                                                                onLeftLabelReached: () {
-                                                                  rejectionController.text = e.value.reasonForRejection ?? '';
-                                                                  DMSCustomWidgets.showReasonDialog(
-                                                                      size: size,
-                                                                      controller: rejectionController,
-                                                                      onCancel: () {
-                                                                        _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                            .reasonForRejection = '';
-                                                                        navigator.pop();
-                                                                      },
-                                                                      onDone: () {
-                                                                        if (rejectionController.text.isEmpty) {
-                                                                          DMSCustomWidgets.DMSFlushbar(size, context,
-                                                                              message: "Reason cannot be empty",
-                                                                              icon: const Icon(
-                                                                                Icons.error,
-                                                                                color: Colors.white,
-                                                                              ));
-                                                                        } else {
-                                                                          _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                              .reasonForRejection = rejectionController.text;
-                                                                          _interactionBloc.add(ModifyAcceptedEvent(
-                                                                              bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: false));
-                                                                          navigator.pop();
-                                                                          if (index == state.mapMedia.length - 1) {
-                                                                            DMSCustomWidgets.showSubmitDialog(
-                                                                                size: size,
-                                                                                context: context,
-                                                                                onNo: () {
-                                                                                  // _interactionBloc
-                                                                                  //     .state
-                                                                                  //     .mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                                  //     .reasonForRejection = '';
-                                                                                  // _interactionBloc.add(ModifyAcceptedEvent(
-                                                                                  //     bodyPartName: _interactionBloc.state.selectedBodyPart!,
-                                                                                  //     isAccepted: null));
-                                                                                  navigator.pop();
-                                                                                },
-                                                                                onYes: () {
-                                                                                  List<MapEntry<String, VehiclePartMedia2>> noStatusParts = state
-                                                                                      .mapMedia.entries
-                                                                                      .where((element) => element.value.isAccepted == null)
-                                                                                      .toList();
-                                                                                  if (!isConnected()) {
-                                                                                    DMSCustomWidgets.DMSFlushbar(size, context,
-                                                                                        message: 'Looks like you'
-                                                                                            're offline. Please check your connection and try again.',
-                                                                                        icon: const Icon(
-                                                                                          Icons.error,
-                                                                                          color: Colors.white,
-                                                                                        ));
-                                                                                    return;
-                                                                                  } else if (noStatusParts.isNotEmpty) {
-                                                                                    DMSCustomWidgets.DMSFlushbar(size, context,
-                                                                                        message: 'Please update status for ${noStatusParts.first.key}',
-                                                                                        icon: const Icon(
-                                                                                          Icons.error,
-                                                                                          color: Colors.white,
-                                                                                        ));
-                                                                                        navigator.pop();
-                                                                                    return;
-                                                                                  }
-                                                                                  _interactionBloc.add(SubmitQualityCheckStatusEvent(
-                                                                                      jobCardNo: _serviceBloc.state.service!.jobCardNo!));
-                                                                                  navigator.pop();
-                                                                                });
-                                                                          }
-                                                                        }
-                                                                      },
-                                                                      context: context);
-                                                                },
-                                                                onRightLabelReached: () {
-                                                                  _interactionBloc.add(ModifyAcceptedEvent(
-                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: true));
-                                                                  if (index == state.mapMedia.length - 1) {
-                                                                    DMSCustomWidgets.showSubmitDialog(
-                                                                        size: size,
-                                                                        context: context,
-                                                                        contentText: "Are you done with quality checks?",
-                                                                        onNo: () {
-                                                                          // _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                          //     .reasonForRejection = '';
-                                                                          // _interactionBloc.add(ModifyAcceptedEvent(
-                                                                          //     bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
-                                                                          navigator.pop();
-                                                                        },
-                                                                        onYes: () {
-                                                                          List<MapEntry<String, VehiclePartMedia2>> noStatusParts = state.mapMedia.entries
-                                                                              .where((element) => element.value.isAccepted == null)
-                                                                              .toList();
-                                                                          if (!isConnected()) {
-                                                                            DMSCustomWidgets.DMSFlushbar(size, context,
-                                                                                message: 'Looks like you'
-                                                                                    're offline. Please check your connection and try again.',
-                                                                                icon: const Icon(
-                                                                                  Icons.error,
-                                                                                  color: Colors.white,
-                                                                                ));
-                                                                            return;
-                                                                          } else if (noStatusParts.isNotEmpty) {
+                                                            bottom:
+                                                                size.height *
+                                                                    0.1,
+                                                            left: size.width *
+                                                                0.2,
+                                                            child:
+                                                                CustomSliderButton(
+                                                                    controller:
+                                                                        sliderButtonControllers[
+                                                                            index],
+                                                                    height: size.height *
+                                                                        (isMobile
+                                                                            ? 0.065
+                                                                            : 0.06),
+                                                                    width: size
+                                                                            .width *
+                                                                        (isMobile
+                                                                            ? 0.5
+                                                                            : 0.42),
+                                                                    onLeftLabelReached:
+                                                                        () {
+                                                                      rejectionController
+                                                                          .text = e
+                                                                              .value
+                                                                              .reasonForRejection ??
+                                                                          '';
+                                                                      DMSCustomWidgets.showReasonDialog(
+                                                                          size: size,
+                                                                          controller: rejectionController,
+                                                                          onCancel: () {
+                                                                            _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection =
+                                                                                '';
                                                                             navigator.pop();
-                                                                            DMSCustomWidgets.DMSFlushbar(size, context,
-                                                                                message: 'Please update status for ${noStatusParts.first.key}',
-                                                                                icon: const Icon(
-                                                                                  Icons.error,
-                                                                                  color: Colors.white,
-                                                                                ));
-                                                                            
-                                                                          }
-                                                                          else{
-                                                                          _interactionBloc.add(
-                                                                              SubmitQualityCheckStatusEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
-                                                                          navigator.pop();}
-                                                                        });
-                                                                  }
-                                                                },
-                                                                onNoStatus: () {
-                                                                  _interactionBloc.add(ModifyAcceptedEvent(
-                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
-                                                                },
-                                                                leftLabel: Text(
-                                                                  'Rejected',
-                                                                  style: TextStyle(fontSize: size.height * 0.015),
-                                                                ),
-                                                                rightLabel: Text('Accepted', style: TextStyle(fontSize: size.height * 0.015))),
+                                                                          },
+                                                                          onDone: () {
+                                                                            if (rejectionController.text.isEmpty) {
+                                                                              DMSCustomWidgets.DMSFlushbar(size, context,
+                                                                                  message: "Reason cannot be empty",
+                                                                                  icon: const Icon(
+                                                                                    Icons.error,
+                                                                                    color: Colors.white,
+                                                                                  ));
+                                                                            } else {
+                                                                              _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection = rejectionController.text;
+                                                                              _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: false));
+                                                                              navigator.pop();
+                                                                              if (index == state.mapMedia.length - 1) {
+                                                                                DMSCustomWidgets.showSubmitDialog(
+                                                                                    size: size,
+                                                                                    context: context,
+                                                                                    onNo: () {
+                                                                                      // _interactionBloc
+                                                                                      //     .state
+                                                                                      //     .mapMedia[_interactionBloc.state.selectedBodyPart]!
+                                                                                      //     .reasonForRejection = '';
+                                                                                      // _interactionBloc.add(ModifyAcceptedEvent(
+                                                                                      //     bodyPartName: _interactionBloc.state.selectedBodyPart!,
+                                                                                      //     isAccepted: null));
+                                                                                      navigator.pop();
+                                                                                    },
+                                                                                    onYes: () {
+                                                                                      List<MapEntry<String, VehiclePartMedia2>> noStatusParts = state.mapMedia.entries.where((element) => element.value.isAccepted == null).toList();
+                                                                                      if (!isConnected()) {
+                                                                                        DMSCustomWidgets.DMSFlushbar(size, context,
+                                                                                            message: 'Looks like you'
+                                                                                                're offline. Please check your connection and try again.',
+                                                                                            icon: const Icon(
+                                                                                              Icons.error,
+                                                                                              color: Colors.white,
+                                                                                            ));
+                                                                                        return;
+                                                                                      } else if (noStatusParts.isNotEmpty) {
+                                                                                        DMSCustomWidgets.DMSFlushbar(size, context,
+                                                                                            message: 'Please update status for ${noStatusParts.first.key}',
+                                                                                            icon: const Icon(
+                                                                                              Icons.error,
+                                                                                              color: Colors.white,
+                                                                                            ));
+                                                                                        navigator.pop();
+                                                                                        return;
+                                                                                      }
+                                                                                      _interactionBloc.add(SubmitQualityCheckStatusEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+                                                                                      navigator.pop();
+                                                                                    });
+                                                                              }
+                                                                            }
+                                                                          },
+                                                                          context: context);
+                                                                    },
+                                                                    onRightLabelReached:
+                                                                        () {
+                                                                      _interactionBloc.add(ModifyAcceptedEvent(
+                                                                          bodyPartName: _interactionBloc
+                                                                              .state
+                                                                              .selectedBodyPart!,
+                                                                          isAccepted:
+                                                                              true));
+                                                                      if (index ==
+                                                                          state.mapMedia.length -
+                                                                              1) {
+                                                                        DMSCustomWidgets.showSubmitDialog(
+                                                                            size: size,
+                                                                            context: context,
+                                                                            contentText: "Are you done with quality checks?",
+                                                                            onNo: () {
+                                                                              // _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
+                                                                              //     .reasonForRejection = '';
+                                                                              // _interactionBloc.add(ModifyAcceptedEvent(
+                                                                              //     bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
+                                                                              navigator.pop();
+                                                                            },
+                                                                            onYes: () {
+                                                                              List<MapEntry<String, VehiclePartMedia2>> noStatusParts = state.mapMedia.entries.where((element) => element.value.isAccepted == null).toList();
+                                                                              if (!isConnected()) {
+                                                                                DMSCustomWidgets.DMSFlushbar(size, context,
+                                                                                    message: 'Looks like you'
+                                                                                        're offline. Please check your connection and try again.',
+                                                                                    icon: const Icon(
+                                                                                      Icons.error,
+                                                                                      color: Colors.white,
+                                                                                    ));
+                                                                                return;
+                                                                              } else if (noStatusParts.isNotEmpty) {
+                                                                                navigator.pop();
+                                                                                DMSCustomWidgets.DMSFlushbar(size, context,
+                                                                                    message: 'Please update status for ${noStatusParts.first.key}',
+                                                                                    icon: const Icon(
+                                                                                      Icons.error,
+                                                                                      color: Colors.white,
+                                                                                    ));
+                                                                              } else {
+                                                                                _interactionBloc.add(SubmitQualityCheckStatusEvent(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+                                                                                navigator.pop();
+                                                                              }
+                                                                            });
+                                                                      }
+                                                                    },
+                                                                    onNoStatus:
+                                                                        () {
+                                                                      _interactionBloc.add(ModifyAcceptedEvent(
+                                                                          bodyPartName: _interactionBloc
+                                                                              .state
+                                                                              .selectedBodyPart!,
+                                                                          isAccepted:
+                                                                              null));
+                                                                    },
+                                                                    leftLabel:
+                                                                        Text(
+                                                                      'Rejected',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              size.height * 0.015),
+                                                                    ),
+                                                                    rightLabel: Text(
+                                                                        'Accepted',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                size.height * 0.015))),
                                                           )
                                                         ],
                                                       )),
@@ -712,15 +990,26 @@ class _QualityCheck2State extends State<QualityCheck2> with ConnectivityMixin, T
                     }
                   },
                 ),
-                if (context.watch<VehiclePartsInteractionBloc2>().state.mediaJsonStatus == MediaJsonStatus.loading ||
-                    context.watch<VehiclePartsInteractionBloc2>().state.status == VehiclePartsInteractionStatus.loading)
+                if (context
+                            .watch<VehiclePartsInteractionBloc2>()
+                            .state
+                            .mediaJsonStatus ==
+                        MediaJsonStatus.loading ||
+                    context
+                            .watch<VehiclePartsInteractionBloc2>()
+                            .state
+                            .status ==
+                        VehiclePartsInteractionStatus.loading)
                   Container(
                     height: double.infinity,
                     width: double.infinity,
                     decoration: const BoxDecoration(color: Colors.black26),
                     child: Center(
                       child: Lottie.asset('assets/lottie/car_loading.json',
-                          height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32),
+                          height:
+                              isMobile ? size.height * 0.5 : size.height * 0.32,
+                          width:
+                              isMobile ? size.width * 0.6 : size.width * 0.32),
                     ),
                   )
               ],

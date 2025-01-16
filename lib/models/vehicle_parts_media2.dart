@@ -9,5 +9,13 @@ class VehiclePartMedia2 {
   String? reasonForRejection;
   String? normalPosition;
   String? dataPosition;
-  VehiclePartMedia2({required this.name, this.comments, this.images, required this.isUploaded, this.isAccepted, this.reasonForRejection = "",this.normalPosition,this.dataPosition});
+  VehiclePartMedia2(
+      {required this.name,
+      this.comments,
+      this.images,
+      required this.isUploaded,
+      this.isAccepted,
+      this.reasonForRejection = "",
+      this.normalPosition,
+      this.dataPosition});
 }

@@ -31,7 +31,8 @@ class ClippedButton extends StatefulWidget {
   State<ClippedButton> createState() => _ClippedButtonState();
 }
 
-class _ClippedButtonState extends State<ClippedButton> with TickerProviderStateMixin {
+class _ClippedButtonState extends State<ClippedButton>
+    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -43,7 +44,12 @@ class _ClippedButtonState extends State<ClippedButton> with TickerProviderStateM
         flipY: widget.flipButtonY,
         child: ClipShadowPath(
           shadow: widget.shadow ??
-              BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.orange.shade200, offset: const Offset(0, 0)),
+              BoxShadow(
+                  blurRadius: 20,
+                  blurStyle: BlurStyle.outer,
+                  spreadRadius: 25,
+                  color: Colors.orange.shade200,
+                  offset: const Offset(0, 0)),
           clipper: widget.clipper,
           child: Container(
             alignment: Alignment.center,
@@ -77,7 +83,11 @@ class VehicleInfoClippedButton extends StatelessWidget {
   Widget child;
   Color? decorationColor;
   Color shadowColor;
-  VehicleInfoClippedButton({this.flipX = false, this.decorationColor, required this.child, required this.shadowColor});
+  VehicleInfoClippedButton(
+      {this.flipX = false,
+      this.decorationColor,
+      required this.child,
+      required this.shadowColor});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +102,10 @@ class VehicleInfoClippedButton extends StatelessWidget {
         child: Container(
           height: size.height * (isMobile ? 0.5 : 0.58),
           width: size.width * (isMobile ? 0.94 : 0.9),
-          decoration: BoxDecoration(color: !context.watch<MultiBloc>().state.reverseClippedWidgets! ? decorationColor : null),
+          decoration: BoxDecoration(
+              color: !context.watch<MultiBloc>().state.reverseClippedWidgets!
+                  ? decorationColor
+                  : null),
           child: child,
         ),
       ),
@@ -156,9 +169,18 @@ class ButtonClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(size.width - (isMobile ? 33.5 : 43.5), (isMobile ? 20 : 35));
-    path.quadraticBezierTo(size.width - (isMobile ? 18 : 15), (isMobile ? 28 : 48), size.width - (isMobile ? 13.4 : 10), (isMobile ? 40.2 : 75.2));
-    path.lineTo(size.width - (isMobile ? 5 : 0), size.height - (isMobile ? 70 : 60));
-    path.quadraticBezierTo(size.width + (isMobile ? 3.35 : 0), size.height - (isMobile ? 30.15 : 25), size.width - (isMobile ? 20.1 : 30), size.height - 20.1);
+    path.quadraticBezierTo(
+        size.width - (isMobile ? 18 : 15),
+        (isMobile ? 28 : 48),
+        size.width - (isMobile ? 13.4 : 10),
+        (isMobile ? 40.2 : 75.2));
+    path.lineTo(
+        size.width - (isMobile ? 5 : 0), size.height - (isMobile ? 70 : 60));
+    path.quadraticBezierTo(
+        size.width + (isMobile ? 3.35 : 0),
+        size.height - (isMobile ? 30.15 : 25),
+        size.width - (isMobile ? 20.1 : 30),
+        size.height - 20.1);
     path.lineTo(0, size.height);
     path.lineTo(0, 0);
     path.close();
@@ -166,7 +188,8 @@ class ButtonClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
+      oldClipper != this;
 }
 
 // this class is used to clip buttons in the home page
@@ -180,10 +203,17 @@ class ButtonClipperMid extends CustomClipper<Path> {
     Path path = Path();
     path.lineTo(0, (isMobile ? 20 : 35));
     path.lineTo(size.width - (isMobile ? 40 : 50), (isMobile ? 5 : 10));
-    path.quadraticBezierTo(size.width - 10, (isMobile ? -10 : 0), size.width - 5, (isMobile ? 20 : 30));
-    path.cubicTo(size.width + (isMobile ? 0 : 5), size.height * 0.4, size.width + (isMobile ? 0 : 5), size.height * 0.6, size.width - 5,
+    path.quadraticBezierTo(size.width - 10, (isMobile ? -10 : 0),
+        size.width - 5, (isMobile ? 20 : 30));
+    path.cubicTo(
+        size.width + (isMobile ? 0 : 5),
+        size.height * 0.4,
+        size.width + (isMobile ? 0 : 5),
+        size.height * 0.6,
+        size.width - 5,
         size.height - (isMobile ? 20 : 30));
-    path.quadraticBezierTo(size.width - 10, size.height + (isMobile ? 10 : 0), size.width - 40, size.height - 5);
+    path.quadraticBezierTo(size.width - 10, size.height + (isMobile ? 10 : 0),
+        size.width - 40, size.height - 5);
     path.lineTo(0, size.height - (isMobile ? 20 : 35));
     path.lineTo(0, 0);
     path.close();
@@ -191,7 +221,8 @@ class ButtonClipperMid extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
+      oldClipper != this;
 }
 
 // this custom clipper is used to clip widgets in vehicle info page
@@ -207,17 +238,23 @@ class VehicleInfoClipper extends CustomClipper<Path> {
     Path path = Path();
     path.moveTo(x1, y1);
     path.lineTo(x1, y - 20);
-    path.arcToPoint(Offset(x1 + 20, y), radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x1 + 20, y),
+        radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x - 20, y);
-    path.arcToPoint(Offset(x, y - 20), radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x, y - 20),
+        radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x, y1 + 80);
-    path.arcToPoint(Offset(x - 20, y1 + 60), radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x - 20, y1 + 60),
+        radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x - (size.width * 0.45), y1 + 60);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40), radius: const Radius.circular(20), clockwise: true);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 20), y1 + 40),
+        radius: const Radius.circular(20), clockwise: true);
     path.lineTo(x - (size.width * 0.45 + 20), y1 + 20);
-    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1), radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x - (size.width * 0.45 + 40), y1),
+        radius: const Radius.circular(20), clockwise: false);
     path.lineTo(x1 + 20, y1);
-    path.arcToPoint(Offset(x1, y1 + 20), radius: const Radius.circular(20), clockwise: false);
+    path.arcToPoint(Offset(x1, y1 + 20),
+        radius: const Radius.circular(20), clockwise: false);
     path.close();
     return path;
   }
