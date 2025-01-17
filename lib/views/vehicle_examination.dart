@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/inits/init.dart';
@@ -75,7 +74,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                         width: MediaQuery.of(context).size.width,
                         decoration: const BoxDecoration(
                             gradient: LinearGradient(
-                                colors: [Colors.black45, ui.Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                                colors: [Colors.black45, Color.fromARGB(40, 104, 103, 103), Colors.black45],
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 stops: [0.1, 0.5, 1])),

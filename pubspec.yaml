@@ -47,8 +47,8 @@ dependencies:
   dropdown_button2: ^2.3.9
   flutter_typeahead: ^5.2.0
   flutter_keyboard_visibility: ^6.0.0
-  syncfusion_flutter_datagrid: ^28.1.33
-  syncfusion_flutter_core: ^28.1.33
+  syncfusion_flutter_datagrid: ^27.2.5
+  syncfusion_flutter_core: ^27.2.5
   bloc: ^8.1.4
   flutter_bloc: ^8.1.5
   get_it: ^8.0.3
@@ -57,7 +57,7 @@ dependencies:
   logger: ^2.3.0
   gap: ^3.0.1
   flutter_spinkit: ^5.2.1
-  syncfusion_flutter_datepicker: ^28.1.33
+  syncfusion_flutter_datepicker: ^27.2.5
   another_flushbar: ^1.12.30
   lottie: ^3.1.2
   intl: ^0.19.0
@@ -92,7 +92,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   equatable: ^2.0.5
   o3d: ^3.1.2
-  syncfusion_flutter_charts:
+  syncfusion_flutter_charts: ^27.2.5
   fl_chart: ^0.69.2
   vibration: ^1.8.4
   webview_flutter: ^4.9.0
