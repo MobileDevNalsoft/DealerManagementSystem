@@ -144,7 +144,7 @@ final class ServiceState {
       index: index ?? this.index,
       sliderPosition: sliderPosition ?? this.sliderPosition,
       value: value ?? this.value,
-      getSBRequirementsStatus: serviceLocationsStatus ?? this.getSBRequirementsStatus,
+      getSBRequirementsStatus: serviceLocationsStatus ?? getSBRequirementsStatus,
       getInspectionStatus: getInspectionStatus ?? this.getInspectionStatus,
       serviceUploadStatus: serviceUploadStatus ?? this.serviceUploadStatus,
       bottomNavigationBarActiveIndex: bottomNavigationBarActiveIndex ?? this.bottomNavigationBarActiveIndex,

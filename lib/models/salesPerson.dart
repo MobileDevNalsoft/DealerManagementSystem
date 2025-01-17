@@ -10,9 +10,9 @@ class SalesPerson {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['emp_id'] = this.empId;
-    data['emp_name'] = this.empName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['emp_id'] = empId;
+    data['emp_name'] = empName;
     return data;
   }
 }

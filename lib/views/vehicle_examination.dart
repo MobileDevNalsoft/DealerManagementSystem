@@ -1,10 +1,10 @@
+
 import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/vehiclemodule/body_canvas.dart';
-import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:dms/views/comments.dart';
@@ -14,7 +14,7 @@ import 'package:lottie/lottie.dart';
 
 class VehicleExamination extends StatefulWidget {
   //  List<GeneralBodyPart>? generalParts;
-  VehicleExamination({
+  const VehicleExamination({
     super.key,
   });
 
@@ -74,7 +74,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                         width: MediaQuery.of(context).size.width,
                         decoration: const BoxDecoration(
                             gradient: LinearGradient(
-                                colors: [Colors.black45, Color.fromARGB(40, 104, 103, 103), Colors.black45],
+                                colors: [Colors.black45,  Color.fromARGB(40, 104, 103, 103), Colors.black45],
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 stops: [0.1, 0.5, 1])),
@@ -176,7 +176,7 @@ class _VehicleExaminationState extends State<VehicleExamination> with SingleTick
                         child: GestureDetector(
                           onTap: () {
                             // After vehicle examination navigation user from home page to list of jobcards.
-                            if (!context.read<VehiclePartsInteractionBloc>().state.isTapped!) {
+                            if (!context.read<VehiclePartsInteractionBloc>().state.isTapped) {
                               navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                             }
                           },

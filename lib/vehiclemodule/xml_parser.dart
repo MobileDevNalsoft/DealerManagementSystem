@@ -11,13 +11,13 @@ Future<List<GeneralBodyPart>> loadSvgImage({required String svgImage}) async {
 
   final paths = document.findAllElements('path');
 
-  paths.forEach((element) {
+  for (var element in paths) {
     String partName = element.getAttribute('id').toString();
     String partPath = element.getAttribute('d').toString();
     String partClass = element.getAttribute('class').toString();
 
     GeneralBodyPart part = GeneralBodyPart(name: partName, path: partPath, color: partClass);
     parts.add(part);
-  });
+  }
   return parts;
 }

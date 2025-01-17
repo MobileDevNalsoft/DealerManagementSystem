@@ -25,6 +25,7 @@ class ServiceProceedSample extends StatefulWidget {
   Function? clearFields;
 
   ServiceProceedSample({super.key, required this.homeData, this.clearFields});
+  @override
   State<ServiceProceedSample> createState() => _ServiceProceedSample();
 }
 
@@ -493,14 +494,13 @@ class CustomSliderButton extends StatefulWidget {
   final onDismissed;
   ServiceUploadStatus sliderStatus;
   CustomSliderButton(
-      {Key? key,
+      {super.key,
       required this.size,
       required this.context,
       required this.label,
       required this.icon,
       required this.onDismissed,
-      this.sliderStatus = ServiceUploadStatus.initial})
-      : super(key: key);
+      this.sliderStatus = ServiceUploadStatus.initial});
 
   @override
   _CustomSliderButtonState createState() => _CustomSliderButtonState();

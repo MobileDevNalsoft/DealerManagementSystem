@@ -1,17 +1,10 @@
-import 'package:dms/bloc/multi/multi_bloc.dart';
-import 'package:dms/bloc/service/service_bloc.dart';
-import 'package:dms/navigations/route_generator.dart';
 import 'package:dms/network_handler_mixin/network_handler.dart';
-import 'package:dms/vehiclemodule/xml_model.dart';
-import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/DMS_custom_widgets.dart';
 import 'package:flutter/material.dart' hide Stepper, Step;
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../inits/init.dart';
-import '../../logger/logger.dart';
 import '../../navigations/navigator_service.dart';
 
 // this class is used to create a stepper widget to show the flow of the job card status in job card details.

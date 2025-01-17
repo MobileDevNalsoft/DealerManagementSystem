@@ -17,7 +17,7 @@ class CustomSliderButton extends StatefulWidget {
   final void Function() onNoStatus;
   final Widget rightLabel;
   CustomSliderButton(
-      {Key? key,
+      {super.key,
       this.height = 45,
       this.width = 190,
       this.isMobile = true,
@@ -27,8 +27,7 @@ class CustomSliderButton extends StatefulWidget {
       required this.onRightLabelReached,
       required this.onNoStatus,
       required this.leftLabel,
-      required this.rightLabel})
-      : super(key: key);
+      required this.rightLabel});
 
   @override
   _CustomSliderButtonState createState() => _CustomSliderButtonState();

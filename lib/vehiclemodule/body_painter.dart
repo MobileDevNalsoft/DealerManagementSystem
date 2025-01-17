@@ -1,4 +1,4 @@
-import 'package:dms/bloc/multi/multi_bloc.dart';
+import 'dart:ui' as ui;
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class BodyPainter extends CustomPainter {
   final List<GeneralBodyPart>? pendingParts;
   final bool displayAcceptedStatus;
   String previousSelected = '';
-  final Image? uiImage;
+  final ui.Image? uiImage;
   static int cnt = 0;
   late double translateX;
   late double translateY;
@@ -65,7 +65,7 @@ class BodyPainter extends CustomPainter {
 
     for (var muscle in generalParts!) {
       Path path = parseSvgPath(muscle.path);
-      paint.color = const Color.fromARGB(133, 97, 97, 194);
+      paint.color = const ui.Color.fromARGB(133, 97, 97, 194);
       if (muscle.name.startsWith("text")) {
         paint.color = Colors.black;
       } else if (["front_window", "rear_window", "rear_right_window", "rear_left_window", "front_left_window", "front_right_window"].contains(muscle.name)) {
@@ -108,7 +108,7 @@ class BodyPainter extends CustomPainter {
             }
           }
           if (acceptedPart.isNotEmpty) {
-            paint.color = const Color.fromARGB(255, 66, 255, 66);
+            paint.color = const ui.Color.fromARGB(255, 66, 255, 66);
             Path path = parseSvgPath(acceptedPart);
             myCanvas.drawPath(path.transform(matrix4.storage), paint, paintStyleForTouch: PaintingStyle.fill);
           }
@@ -121,7 +121,7 @@ class BodyPainter extends CustomPainter {
             }
           }
           if (rejectedPart.isNotEmpty) {
-            paint.color = const Color.fromARGB(255, 247, 25, 25);
+            paint.color = const ui.Color.fromARGB(255, 247, 25, 25);
             Path path = parseSvgPath(rejectedPart);
             myCanvas.drawPath(path.transform(matrix4.storage), paint, paintStyleForTouch: PaintingStyle.fill);
           }
@@ -134,7 +134,7 @@ class BodyPainter extends CustomPainter {
             }
           }
           if (pendingPart.isNotEmpty) {
-            paint.color = const Color.fromARGB(255, 255, 145, 2);
+            paint.color = const ui.Color.fromARGB(255, 255, 145, 2);
             Path path = parseSvgPath(pendingPart);
             myCanvas.drawPath(path.transform(matrix4.storage), paint, paintStyleForTouch: PaintingStyle.fill);
           }

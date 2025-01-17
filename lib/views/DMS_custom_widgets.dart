@@ -253,7 +253,7 @@ class DMSCustomWidgets {
           },
           onTap: () {
             // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
-            context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode!, scrollController: scrollController, context: context));
+            context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode, scrollController: scrollController, context: context));
           },
           // Set text field properties
           minLines: 1,
@@ -566,8 +566,7 @@ class DMSCustomWidgets {
   }
 
   // dialog to show when inspection out to be submitted
-  static void showSubmitDialog(
-      {required Size size, required BuildContext context, required void Function()? onYes, required void Function()? onNo, String? contentText}) {
+  static void showSubmitDialog({required Size size, required BuildContext context, required void Function()? onYes, required void Function()? onNo,String? contentText}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -585,8 +584,8 @@ class DMSCustomWidgets {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: size.width * (isMobile ? 0.03 : 0.02)),
-                      child: Text(
-                        contentText ?? 'Hey Advisor...\nAre you done with inspection ?',
+                      child: Text(contentText??
+                        'Hey Advisor...\nAre you done with inspection ?',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
                       ),
                     ),
@@ -822,7 +821,7 @@ class InitCapCaseTextFormatter extends TextInputFormatter {
 // returns widget dynamically according to the widget name extracted from json.
 Widget getWidget(
     {required Size size, required String page, required int index, required Map<String, dynamic> json, required BuildContext context, required bool isMobile}) {
-  ServiceBloc _serviceBloc = context.read<ServiceBloc>();
+  ServiceBloc serviceBloc = context.read<ServiceBloc>();
   // Switch statement to handle different widget types based on "widget" key in JSON
   switch (json[page][index]['widget']) {
     case "checkBox":
@@ -840,7 +839,7 @@ Widget getWidget(
             side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
             onChanged: (value) {
               json[page][index]['properties']['value'] = value;
-              _serviceBloc.add(InspectionJsonUpdated(json: json));
+              serviceBloc.add(InspectionJsonUpdated(json: json));
             },
           ),
         ),
@@ -873,7 +872,7 @@ Widget getWidget(
               hintStyle: TextStyle(color: Colors.black38, fontSize: isMobile ? 14 : 18),
             ),
             onChanged: (value) {
-              _serviceBloc.state.json![page][index]['properties']['value'] = value;
+              serviceBloc.state.json![page][index]['properties']['value'] = value;
             }),
       );
     case "dropDown":
@@ -909,7 +908,7 @@ Widget getWidget(
           value: json[page][index]['properties']['value'],
           onChanged: (String? value) {
             json[page][index]['properties']['value'] = value;
-            _serviceBloc.add(InspectionJsonUpdated(json: json));
+            serviceBloc.add(InspectionJsonUpdated(json: json));
           },
           buttonStyleData: ButtonStyleData(
             height: size.height * 0.04,
@@ -978,7 +977,7 @@ Widget getWidget(
                     splashRadius: 20, // Change the splash radius when clicked
                     onChanged: (value) {
                       json[page][index]['properties']['value'] = value;
-                      _serviceBloc.add(InspectionJsonUpdated(json: json));
+                      serviceBloc.add(InspectionJsonUpdated(json: json));
                     },
                   ),
                 ),

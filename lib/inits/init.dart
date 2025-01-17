@@ -1,8 +1,3 @@
-import 'package:dms/bloc/authentication/authentication_bloc.dart';
-import 'package:dms/bloc/customer/customer_bloc.dart';
-import 'package:dms/bloc/multi/multi_bloc.dart';
-import 'package:dms/bloc/service/service_bloc.dart';
-import 'package:dms/bloc/vehicle/vehicle_bloc.dart';
 import 'package:dms/constants/app_constants.dart';
 import 'package:dms/navigations/navigator_service.dart';
 import 'package:dms/repository/repository.dart';

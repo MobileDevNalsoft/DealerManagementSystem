@@ -200,7 +200,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                         child: Align(
                                             alignment: Alignment.bottomRight,
                                             child: Text(
-                                              'view all',
+                                              '',
                                               style: TextStyle(color: Colors.white),
                                             )),
                                       )
@@ -310,7 +310,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                                         child: Align(
                                             alignment: Alignment.bottomRight,
                                             child: Text(
-                                              'view all',
+                                              '',
                                               style: TextStyle(color: Colors.white),
                                             )),
                                       )
@@ -345,6 +345,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
                     child: Opacity(
                       opacity: animation.value,
                       child: Container(
+
                         padding: EdgeInsets.only(top: size.height * 0.02),
                         decoration:
                             BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.black, border: Border.all(color: Colors.white, width: 1.5)),

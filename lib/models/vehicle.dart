@@ -68,7 +68,7 @@ class Vehicle {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['vehicle_type'] = vehicleType;
     data['chassis_no'] = chassisNumber;
     data['model'] = model;

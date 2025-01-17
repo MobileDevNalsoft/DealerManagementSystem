@@ -1,4 +1,3 @@
-import 'package:dms/vehiclemodule/xml_model.dart';
 import 'package:dms/views/Vehicle_examination_2.dart';
 import 'package:dms/views/add_vehicle.dart';
 import 'package:dms/views/dashboard.dart';
@@ -114,11 +113,7 @@ class RouteGenerator {
           reverseTransitionDuration: const Duration(milliseconds: 500),
         );
       case '/qualityCheck':
-        return Transitions.slideLeftTransition(
-            const QualityCheck(
-              jobCardNo: '',
-            ),
-            settings);
+        return Transitions.slideLeftTransition(const QualityCheck(jobCardNo: '',), settings);
       case '/serviceBooking':
         return Transitions.slideUpTransition(ServiceBooking(), settings);
       case '/vehicleInfo':

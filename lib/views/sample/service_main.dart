@@ -17,7 +17,7 @@ import '../../inits/init.dart';
 
 class ServiceMainSample extends StatefulWidget {
   PageController? pageController;
-  ServiceMainSample({Key? key, this.pageController}) : super(key: key);
+  ServiceMainSample({super.key, this.pageController});
 
   @override
   State<ServiceMainSample> createState() => _ServiceMainSample();

@@ -77,7 +77,7 @@ class VehicleInfoClippedButton extends StatelessWidget {
   Widget child;
   Color? decorationColor;
   Color shadowColor;
-  VehicleInfoClippedButton({this.flipX = false, this.decorationColor, required this.child, required this.shadowColor});
+  VehicleInfoClippedButton({super.key, this.flipX = false, this.decorationColor, required this.child, required this.shadowColor});
 
   @override
   Widget build(BuildContext context) {

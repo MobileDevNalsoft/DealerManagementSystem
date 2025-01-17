@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../logger/logger.dart';
 
 part 'vehicle_parts_interaction_event2.dart';
 part 'vehicle_parts_interaction_state2.dart';
@@ -33,7 +32,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     on<AddHotspotEvent>(_onAddHotspot as EventHandler<AddHotspotEvent, VehiclePartsInteractionBlocState2>);
     on<RemoveHotspotEvent>(_onRemoveHotspot as EventHandler<RemoveHotspotEvent, VehiclePartsInteractionBlocState2>);
     // on<BodyPartSelected>(_onModifyVehicleInteractionStatus as EventHandler<BodyPartSelected, VehiclePartsInteractionBlocState2>);
-    on<ModifyVehicleInteractionStatus>(_onModifyVehicleInteractionStatus as EventHandler<ModifyVehicleInteractionStatus, VehiclePartsInteractionBlocState2>);
+     on<ModifyVehicleInteractionStatus>(_onModifyVehicleInteractionStatus as EventHandler<ModifyVehicleInteractionStatus, VehiclePartsInteractionBlocState2>);
     on<ModifyRenamingStatus>(_onModifyRenamingStatus);
   }
 
@@ -89,6 +88,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     state.mapMedia[event.name]!.images!.remove(event.image);
     emit(state.copyWith(mapMedia: state.mapMedia, status: state.status));
   }
+
 
   void _onSubmitBodyPartVehicleMedia(SubmitBodyPartVehicleMediaEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) async {
     emit(state.copyWith(mapMedia: state.mapMedia, status: VehiclePartsInteractionStatus.loading));
@@ -156,7 +156,7 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
       state.mapMedia.putIfAbsent(
           entry.key,
           () => VehiclePartMedia2(
-              name: entry.value["name"] ?? entry.key,
+              name: entry.value["name"]??entry.key,
               images: images,
               comments: entry.value["comments"],
               dataPosition: entry.value["position"],
@@ -169,11 +169,8 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
                   : null,
               reasonForRejection: entry.value["rejectedReason"]));
     }
-    emit(state.copyWith(
-        mapMedia: state.mapMedia,
-        status: VehiclePartsInteractionStatus.initial,
-        mediaJsonStatus: MediaJsonStatus.success,
-        selectedBodyPart: state.mapMedia.entries.first.key));
+    emit(state.copyWith(mapMedia: state.mapMedia,status: VehiclePartsInteractionStatus.initial,
+        mediaJsonStatus: MediaJsonStatus.success, selectedBodyPart: state.mapMedia.entries.first.key));
   }
 
   void _onModifyAcceptedStatus(ModifyAcceptedEvent event, Emitter<VehiclePartsInteractionBlocState2> emit) {
@@ -201,11 +198,10 @@ class VehiclePartsInteractionBloc2 extends Bloc<VehiclePartsInteractionBlocEvent
     emit(state.copyWith(mapMedia: state.mapMedia, status: state.status, vehicleExaminationPageIndex: event.index));
   }
 
-  void _onModifyVehicleInteractionStatus(ModifyVehicleInteractionStatus event, Emitter<VehiclePartsInteractionBlocState2> emit) {
-    emit(state.copyWith(selectedBodyPart: event.selectedBodyPart, isTapped: event.isTapped));
+    void _onModifyVehicleInteractionStatus(ModifyVehicleInteractionStatus event, Emitter<VehiclePartsInteractionBlocState2> emit) {
+    emit(state.copyWith( selectedBodyPart: event.selectedBodyPart, isTapped: event.isTapped));
   }
-
   void _onModifyRenamingStatus(ModifyRenamingStatus event, Emitter<VehiclePartsInteractionBlocState2> emit) {
-    emit(state.copyWith(renamingStatus: event.renameStatus, renamedValue: event.renamedValue));
+    emit(state.copyWith(renamingStatus: event.renameStatus,renamedValue: event.renamedValue));
   }
 }

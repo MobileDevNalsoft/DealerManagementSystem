@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dms/bloc/multi/multi_bloc.dart';
 import 'package:dms/bloc/service/service_bloc.dart';
 import 'package:dms/bloc/vehile_parts_interaction_bloc/vehicle_parts_interaction_bloc.dart';
 import 'package:dms/models/vehicle_parts_media.dart';
@@ -245,7 +244,8 @@ class _CommentsState extends State<Comments> with SingleTickerProviderStateMixin
                               // print('sb no ${context.read<ServiceBloc>().state.service!.serviceBookingNo!}');
                               context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(
                                   bodyPartName: widget.vehiclePartMedia.name,
-                                  serviceBookingNo: context.read<ServiceBloc>().state.service!.serviceBookingNo!) as VehiclePartsInteractionBlocEvent);
+                                  serviceBookingNo: context.read<ServiceBloc>().state.service!.serviceBookingNo!
+                                  ) as VehiclePartsInteractionBlocEvent);
                             }
                           },
                           child: Container(

@@ -935,15 +935,14 @@ class CustomSliderButton extends StatefulWidget {
   final ServiceBookingSliderButtonController sliderController;
 
   const CustomSliderButton(
-      {Key? key,
+      {super.key,
       required this.size,
       required this.context,
       required this.label,
       required this.icon,
       required this.onDismissed,
       required this.sliderController,
-      required this.isMobile})
-      : super(key: key);
+      required this.isMobile});
 
   @override
   _CustomSliderButtonState createState() => _CustomSliderButtonState();
@@ -1025,7 +1024,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
         _sliderController.currentPosition = _startPosition;
       }
     }
-    print("from build current position${_sliderController.currentPosition} ${_startPosition} ${_endPosition}");
+    print("from build current position${_sliderController.currentPosition} $_startPosition $_endPosition");
     return GestureDetector(
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,

@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:dms/inits/init.dart';
 import 'package:dms/models/services.dart';
 import 'package:dms/repository/repository.dart';
-import 'package:dms/vehiclemodule/xml_parser.dart';
 import 'package:dms/views/custom_widgets/custom_slider_button.dart';
 import 'package:dms/views/service_booking.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../logger/logger.dart';
 import '../../navigations/navigator_service.dart';
-import '../../navigations/route_generator.dart';
 
 part 'service_event.dart';
 part 'service_state.dart';
@@ -77,7 +75,6 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   Future<void> _onInspectionJsonAdded(InspectionJsonAdded event, Emitter<ServiceState> emit) async {
-    print("from bloc ${event.dynamicNo} ${event.inspectionIn}");
     emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
     await _repo.addinspection({'dynamic_no': event.dynamicNo, 'inspection_details': jsonEncode(state.json).toString(), 'in': event.inspectionIn}).then(
       (value) async {

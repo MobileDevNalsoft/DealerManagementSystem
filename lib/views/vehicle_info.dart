@@ -98,155 +98,162 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         ),
                       ),
                     // Gap(size.height * 0.025),
-                    Container(
-                      margin: EdgeInsets.only(top: constraints.maxHeight * 0.032),
-                      width: constraints.maxWidth * (isMobile ? 0.9 : 0.9),
-                      height: constraints.maxHeight * (isMobile ? 0.3 : 0.32),
-                      child: BlocConsumer<ServiceBloc, ServiceState>(
-                        listener: (context, state) {
-                          if (state.getServiceStatus == GetServiceStatus.success) {
-                            focusNode.unfocus();
-                          }
-                        },
-                        builder: (context, state) {
-                          // Service history of the vehicle
-                          return CustomScrollView(
-                            slivers: [
-                              (state.services == null || state.services!.isEmpty) // vehicle with no services
-                                  ? SliverToBoxAdapter(
-                                      child: Center(
-                                          heightFactor: isMobile ? size.height * 0.01 : 8,
-                                          child: Text("No services found !",
-                                              style: TextStyle(
-                                                  color: Colors.white, fontSize: size.width * (isMobile ? 0.045 : 0.016), fontWeight: FontWeight.w300))))
-                                  : SliverList(
-                                      delegate: SliverChildBuilderDelegate((context, index) {
-                                      return Skeletonizer(
-                                          enableSwitchAnimation: true,
-                                          enabled:
-                                              state.getJobCardStatus == GetJobCardStatus.loading || state.jobCardStatusUpdate == JobCardStatusUpdate.loading,
-                                          child: SizedBox(
-                                            width: constraints.maxWidth * (isMobile ? 0.9 : 0.72),
-                                            height: constraints.maxHeight * (isMobile ? 0.14 : 0.24),
-                                            child: ClipPath(
-                                              clipper: TicketClipper(),
-                                              child: Card(
-                                                elevation: 5,
-                                                surfaceTintColor: Colors.orange.shade200,
-                                                shadowColor: Colors.orange.shade200,
-                                                margin: EdgeInsets.symmetric(
-                                                  vertical: constraints.maxHeight * 0.006,
-                                                ),
-                                                color: Colors.white,
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                  children: [
-                                                    Row(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Gap(constraints.maxWidth * 0.03),
-                                                        Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Gap(constraints.maxWidth * (isMobile ? 0.05 : 0.008)),
-                                                                Image.asset(
-                                                                  'assets/images/job_card.png',
-                                                                  width: constraints.maxWidth * 0.048,
-                                                                  // scale: constraints.maxWidth * (isMobile ? 0.05 : 0.012),
-                                                                  color: Colors.black,
-                                                                ),
-                                                                Gap(constraints.maxWidth * (isMobile ? 0.02 : 0.012)),
-                                                                Text(
-                                                                  textAlign: TextAlign.center,
-                                                                  state.getServiceStatus == GetServiceStatus.success ? state.services![index].jobCardNo! : 'NA',
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.w600,
-                                                                    fontSize: isMobile ? 13 : 15,
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: constraints.maxHeight * (isMobile ? 0.06 : 0.032),
+                        ),
+                        width: constraints.maxWidth * (isMobile ? 0.9 : 0.9),
+                        // height: constraints.maxHeight * (isMobile ? 0.8 : 0.32),
+                        child: BlocConsumer<ServiceBloc, ServiceState>(
+                          listener: (context, state) {
+                            if (state.getServiceStatus == GetServiceStatus.success) {
+                              focusNode.unfocus();
+                            }
+                          },
+                          builder: (context, state) {
+                            // Service history of the vehicle
+                            return CustomScrollView(
+                              slivers: [
+                                (state.services == null || state.services!.isEmpty) // vehicle with no services
+                                    ? SliverToBoxAdapter(
+                                        child: Center(
+                                            heightFactor: isMobile ? size.height * 0.01 : 8,
+                                            child: Text("No services found !",
+                                                style: TextStyle(
+                                                    color: Colors.white, fontSize: size.width * (isMobile ? 0.045 : 0.016), fontWeight: FontWeight.w300))))
+                                    : SliverList(
+                                        delegate: SliverChildBuilderDelegate((context, index) {
+                                        return Skeletonizer(
+                                            enableSwitchAnimation: true,
+                                            enabled:
+                                                state.getJobCardStatus == GetJobCardStatus.loading || state.jobCardStatusUpdate == JobCardStatusUpdate.loading,
+                                            child: SizedBox(
+                                              width: constraints.maxWidth * (isMobile ? 0.9 : 0.72),
+                                              height: constraints.maxHeight * (isMobile ? 0.2 : 0.24),
+                                              child: ClipPath(
+                                                clipper: TicketClipper(),
+                                                child: Card(
+                                                  elevation: 5,
+                                                  surfaceTintColor: Colors.orange.shade200,
+                                                  shadowColor: Colors.orange.shade200,
+                                                  margin: EdgeInsets.symmetric(
+                                                    vertical: constraints.maxHeight * 0.006,
+                                                  ),
+                                                  color: Colors.white,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [
+                                                      Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Gap(constraints.maxWidth * 0.03),
+                                                          Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Gap(constraints.maxWidth * (isMobile ? 0.05 : 0.008)),
+                                                                  Image.asset(
+                                                                    'assets/images/job_card.png',
+                                                                    width: constraints.maxWidth * 0.048,
+                                                                    // scale: constraints.maxWidth * (isMobile ? 0.05 : 0.012),
+                                                                    color: Colors.black,
                                                                   ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            Gap(size.width * 0.01),
-                                                            Row(
-                                                              children: [
-                                                                Gap(constraints.maxWidth * (isMobile ? 0.05 : 0.008)),
-                                                                Icon(
-                                                                  Icons.calendar_month_outlined,
-                                                                  size: isMobile ? null : constraints.maxWidth * 0.042,
-                                                                ),
-                                                                Gap(constraints.maxWidth * (isMobile ? 0.02 : 0.012)),
-                                                                SizedBox(
-                                                                  width: constraints.maxWidth * (isMobile ? 0.28 : 0.08),
-                                                                  child: SingleChildScrollView(
-                                                                    scrollDirection: Axis.horizontal,
-                                                                    child: Text(
-                                                                      textAlign: TextAlign.center,
-                                                                      state.getServiceStatus == GetServiceStatus.success
-                                                                          ? state.services![index].scheduledDate!
-                                                                          : '-',
-                                                                      style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
+                                                                  Gap(constraints.maxWidth * (isMobile ? 0.02 : 0.012)),
+                                                                  Text(
+                                                                    textAlign: TextAlign.center,
+                                                                    state.getServiceStatus == GetServiceStatus.success
+                                                                        ? state.services![index].jobCardNo!
+                                                                        : 'NA',
+                                                                    style: TextStyle(
+                                                                      fontWeight: FontWeight.w600,
+                                                                      fontSize: isMobile ? 13 : 15,
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              Gap(size.width * 0.01),
+                                                              Row(
+                                                                children: [
+                                                                  Gap(constraints.maxWidth * (isMobile ? 0.05 : 0.008)),
+                                                                  Icon(
+                                                                    Icons.calendar_month_outlined,
+                                                                    size: isMobile ? null : constraints.maxWidth * 0.042,
+                                                                  ),
+                                                                  Gap(constraints.maxWidth * (isMobile ? 0.02 : 0.012)),
+                                                                  SizedBox(
+                                                                    width: constraints.maxWidth * (isMobile ? 0.28 : 0.08),
+                                                                    child: SingleChildScrollView(
+                                                                      scrollDirection: Axis.horizontal,
+                                                                      child: Text(
+                                                                        textAlign: TextAlign.center,
+                                                                        state.getServiceStatus == GetServiceStatus.success
+                                                                            ? state.services![index].scheduledDate!
+                                                                            : '-',
+                                                                        style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Gap(constraints.maxWidth * 0.01),
-                                                          ],
-                                                        ),
-                                                        Gap(constraints.maxWidth * (isMobile ? 0.01 : 0.008)),
-                                                        Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Gap(size.height * 0.004),
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              children: [
-                                                                Gap(constraints.maxWidth * 0.058),
-                                                                Icon(Icons.mark_unread_chat_alt_outlined, size: isMobile ? null : constraints.maxWidth * 0.04),
-                                                                // Image.asset('assets/images/status.png', scale: constraints.maxWidth * 0.058),
-                                                                Gap(constraints.maxWidth * (isMobile ? 0.02 : 0.016)),
-                                                                Text(
-                                                                  textAlign: TextAlign.center,
-                                                                  state.getServiceStatus == GetServiceStatus.success
-                                                                      ? state.services![index].jobType ?? 'NA'
-                                                                      : 'NA',
-                                                                  style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Gap(constraints.maxWidth * 0.01),
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              children: [
-                                                                Gap(constraints.maxWidth * 0.058),
-                                                                Icon(Icons.location_on_outlined, size: isMobile ? null : constraints.maxWidth * 0.042),
-                                                                Gap(constraints.maxWidth * (isMobile ? 0.02 : 0.016)),
-                                                                Text(
-                                                                  textAlign: TextAlign.center,
-                                                                  state.getServiceStatus == GetServiceStatus.success
-                                                                      ? state.services![index].location ?? 'NA'
-                                                                      : 'NA',
-                                                                  style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ],
+                                                                ],
+                                                              ),
+                                                              Gap(constraints.maxWidth * 0.01),
+                                                            ],
+                                                          ),
+                                                          Gap(constraints.maxWidth * (isMobile ? 0.01 : 0.008)),
+                                                          Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Gap(size.height * 0.004),
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                children: [
+                                                                  Gap(constraints.maxWidth * 0.058),
+                                                                  Icon(Icons.mark_unread_chat_alt_outlined,
+                                                                      size: isMobile ? null : constraints.maxWidth * 0.04),
+                                                                  // Image.asset('assets/images/status.png', scale: constraints.maxWidth * 0.058),
+                                                                  Gap(constraints.maxWidth * (isMobile ? 0.016 : 0.016)),
+                                                                  Text(
+                                                                    textAlign: TextAlign.center,
+                                                                    state.getServiceStatus == GetServiceStatus.success
+                                                                        ? state.services![index].jobType ?? 'NA'
+                                                                        : 'NA',
+                                                                    style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Gap(constraints.maxWidth * 0.01),
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                children: [
+                                                                  Gap(constraints.maxWidth * 0.058),
+                                                                  Icon(Icons.location_on_outlined, size: isMobile ? null : constraints.maxWidth * 0.042),
+                                                                  Gap(constraints.maxWidth * (isMobile ? 0.02 : 0.016)),
+                                                                  Text(
+                                                                    textAlign: TextAlign.center,
+                                                                    state.getServiceStatus == GetServiceStatus.success
+                                                                        ? state.services![index].location ?? 'NA'
+                                                                        : 'NA',
+                                                                    style: TextStyle(fontSize: isMobile ? 13 : 15, fontWeight: FontWeight.w600),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ));
-                                    }, childCount: state.services != null ? state.services!.length : 0))
-                            ],
-                          );
-                        },
+                                            ));
+                                      }, childCount: state.services != null ? state.services!.length : 0))
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     )
                   ],
@@ -291,7 +298,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                           // Gap(isMobile ? constraints.maxWidth * 0.03 : constraints.maxWidth * 0.040),
                           Image.asset(
                             'assets/images/registration_no.png',
-                            width: constraints.maxWidth * 0.04,
+                            width: constraints.maxWidth * (isMobile ? 0.06 : 0.04),
                             // scale: constraints.maxWidth * (isMobile ? 0.055 : 0.012),
                             color: Colors.black,
                           ),
@@ -306,7 +313,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                     ),
                     if (!context.watch<MultiBloc>().state.reverseClippedWidgets!)
                       Padding(
-                        padding: EdgeInsets.only(left: constraints.maxWidth * (isMobile ? 0.45 : 0.12)),
+                        padding: EdgeInsets.only(left: constraints.maxWidth * (isMobile ? 0.12 : 0.12)),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: SizedBox(
@@ -318,14 +325,14 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                         ),
                       ),
                     Padding(
-                      padding: EdgeInsets.only(top: constraints.maxHeight * (isMobile ? 0.056 : 0.08), left: constraints.maxWidth * (isMobile ? 0.08 : 0.16)),
+                      padding: EdgeInsets.only(top: constraints.maxHeight * (isMobile ? 0.068 : 0.08), left: constraints.maxWidth * (isMobile ? 0.08 : 0.16)),
                       child: BlocBuilder<VehicleBloc, VehicleState>(
                         builder: (context, state) {
                           return Skeletonizer(
                             enabled: context.watch<VehicleBloc>().state.status == VehicleStatus.loading,
                             child: DMSCustomWidgets.CustomDataFields(
                                 context: context,
-                                contentPadding: constraints.maxWidth * (isMobile ? 0.08 : 0.12),
+                                contentPadding: constraints.maxWidth * (isMobile ? 0.04 : 0.12),
                                 spaceBetweenFields: constraints.maxWidth * (isMobile ? 0.03 : 0.02),
                                 propertyFontStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                                 valueFontStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
@@ -406,7 +413,7 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 onTap: () => focusNode.requestFocus(),
                 overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.032 : 0.2)),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.02 : 0.2)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -467,24 +474,26 @@ class _VehicleInfoState extends State<VehicleInfo> with ConnectivityMixin {
                 ),
               ),
               SizedBox(
-                height: size.height * 0.44,
-                width: vehicleRegNoController.text.isEmpty ? size.width * 0.2 : size.width * 0.72,
+                height: (isMobile ? size.height * 0.56 : size.height * 0.44),
+                width: vehicleRegNoController.text.isEmpty ? size.width * 0.2 : (isMobile ? size.width * 0.9 : size.width * 0.72),
                 child: BlocBuilder<VehicleBloc, VehicleState>(
                   builder: (context, state) {
                     switch (state.status) {
                       case VehicleStatus.vehicleAlreadyAdded:
                         return Stack(children: context.watch<MultiBloc>().state.reverseClippedWidgets! ? clipperWidgets.reversed.toList() : clipperWidgets);
                       case VehicleStatus.loading:
-                        return Lottie.asset(
-                          "assets/lottie/steering.json",
-                          // width: size.width * 0.1,
+                        return FittedBox(
+                          child: Lottie.asset(
+                            "assets/lottie/steering.json",
+                            width: size.width * 0.1,
+                          ),
                         );
                       default:
                         if (vehicleRegNoController.text.isEmpty) {
                           return LayoutBuilder(builder: (context, psize) {
                             return Image.asset(
                               "assets/images/vehicle_search.png",
-                              fit: BoxFit.scaleDown,
+                              fit: BoxFit.contain,
                             );
                           });
                         }
