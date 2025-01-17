@@ -138,19 +138,16 @@ final class ServiceState {
       jobCardNo: jobCardNo ?? this.jobCardNo,
       filteredJobCards: filteredJobCards ?? this.filteredJobCards,
       myJobCards: myJobCards ?? this.myJobCards,
-      inspectionJsonUploadStatus:
-          inspectionJsonUploadStatus ?? this.inspectionJsonUploadStatus,
+      inspectionJsonUploadStatus: inspectionJsonUploadStatus ?? this.inspectionJsonUploadStatus,
       json: json ?? this.json,
       jsonStatus: jsonStatus ?? this.jsonStatus,
       index: index ?? this.index,
       sliderPosition: sliderPosition ?? this.sliderPosition,
       value: value ?? this.value,
-      getSBRequirementsStatus:
-          serviceLocationsStatus ?? this.getSBRequirementsStatus,
+      getSBRequirementsStatus: serviceLocationsStatus ?? this.getSBRequirementsStatus,
       getInspectionStatus: getInspectionStatus ?? this.getInspectionStatus,
       serviceUploadStatus: serviceUploadStatus ?? this.serviceUploadStatus,
-      bottomNavigationBarActiveIndex:
-          bottomNavigationBarActiveIndex ?? this.bottomNavigationBarActiveIndex,
+      bottomNavigationBarActiveIndex: bottomNavigationBarActiveIndex ?? this.bottomNavigationBarActiveIndex,
       service: service ?? this.service,
       services: services ?? this.services,
       dropDownOpen: dropDownOpen ?? this.dropDownOpen,

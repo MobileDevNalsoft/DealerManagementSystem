@@ -54,16 +54,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(state);
   }
 
-  void _onSearchJobCards(
-      SearchJobCards event, Emitter<ServiceState> emit) async {
+  void _onSearchJobCards(SearchJobCards event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getJobCardStatus: GetJobCardStatus.loading));
     await Future.delayed(const Duration(milliseconds: 500), () {
-      emit(state.copyWith(
-          filteredJobCards: state.jobCards!
-              .where((e) => e.registrationNo!
-                  .toLowerCase()
-                  .contains(event.searchText.toLowerCase()))
-              .toList()));
+      emit(state.copyWith(filteredJobCards: state.jobCards!.where((e) => e.registrationNo!.toLowerCase().contains(event.searchText.toLowerCase())).toList()));
     });
     emit(state.copyWith(getJobCardStatus: GetJobCardStatus.success));
   }
@@ -73,8 +67,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     await rootBundle.loadString("assets/jsons/inspection.json").then(
       (value) {
         Log.d(value);
-        emit(state.copyWith(
-            json: jsonDecode(value), jsonStatus: JsonStatus.success));
+        emit(state.copyWith(json: jsonDecode(value), jsonStatus: JsonStatus.success));
       },
     ).onError(
       (error, stackTrace) {
@@ -83,68 +76,48 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onInspectionJsonAdded(
-      InspectionJsonAdded event, Emitter<ServiceState> emit) async {
+  Future<void> _onInspectionJsonAdded(InspectionJsonAdded event, Emitter<ServiceState> emit) async {
     print("from bloc ${event.dynamicNo} ${event.inspectionIn}");
-    emit(state.copyWith(
-        inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
-    await _repo.addinspection({
-      'dynamic_no': event.dynamicNo,
-      'inspection_details': jsonEncode(state.json).toString(),
-      'in': event.inspectionIn
-    }).then(
+    emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.loading));
+    await _repo.addinspection({'dynamic_no': event.dynamicNo, 'inspection_details': jsonEncode(state.json).toString(), 'in': event.inspectionIn}).then(
       (value) async {
         if (value == 200) {
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
+          emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.success));
           if (event.inspectionIn == 'false') {
             navigator!.popAndPush('/gatePass');
           } else {
             navigator!.pushAndRemoveUntil('/vehicleExamination', '/home');
           }
         } else {
-          emit(state.copyWith(
-              inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
+          emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
-        emit(state.copyWith(
-            inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
+        emit(state.copyWith(inspectionJsonUploadStatus: InspectionJsonUploadStatus.failure));
       },
     );
   }
 
-  void _onInspectionJsonUpdated(
-      InspectionJsonUpdated event, Emitter<ServiceState> emit) {
+  void _onInspectionJsonUpdated(InspectionJsonUpdated event, Emitter<ServiceState> emit) {
     emit(state.copyWith(json: event.json));
   }
 
-  Future<void> _onJobCardStatusUpdated(
-      JobCardStatusUpdated event, Emitter<ServiceState> emit) async {
+  Future<void> _onJobCardStatusUpdated(JobCardStatusUpdated event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.loading));
-    await _repo
-        .updateJobCardStatus(event.jobCardStatus!, event.jobCardNo!)
-        .then(
+    await _repo.updateJobCardStatus(event.jobCardStatus!, event.jobCardNo!).then(
       (value) {
         if (value == 200) {
-          emit(
-              state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.success));
+          emit(state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.success));
           if (event.jobCardStatus == 'CL') {
-            state.services!.add(state.jobCards!
-                .where((e) => e.jobCardNo == event.jobCardNo)
-                .first
-                .copyWith(
-                    scheduledDate:
-                        DateFormat('dd-mm-yyyy').format(DateTime.now())));
+            state.services!.add(
+                state.jobCards!.where((e) => e.jobCardNo == event.jobCardNo).first.copyWith(scheduledDate: DateFormat('dd-mm-yyyy').format(DateTime.now())));
             state.jobCards!.removeWhere((e) => e.jobCardNo == event.jobCardNo);
           }
-          emit(state.copyWith(
-              jobCards: state.jobCards, services: state.services));
+          emit(state.copyWith(jobCards: state.jobCards, services: state.services));
         } else {
           Log.e(value);
-          emit(
-              state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.failure));
+          emit(state.copyWith(jobCardStatusUpdate: JobCardStatusUpdate.failure));
         }
       },
     ).onError(
@@ -155,21 +128,17 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onServiceAdded(
-      ServiceAdded event, Emitter<ServiceState> emit) async {
+  Future<void> _onServiceAdded(ServiceAdded event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.loading));
     await _repo.addService(event.service.toJson()).then(
       (value) {
         if (value['response_code'] == 200) {
           emit(state.copyWith(
-              serviceUploadStatus: ServiceUploadStatus.success,
-              service: state.service!
-                  .copyWith(serviceBookingNo: value['service_booking_no'])));
+              serviceUploadStatus: ServiceUploadStatus.success, service: state.service!.copyWith(serviceBookingNo: value['service_booking_no'])));
           navigator!.pushAndRemoveUntil('/inspectionIn', '/home');
         } else {
           Log.e(value);
-          emit(
-              state.copyWith(serviceUploadStatus: ServiceUploadStatus.failure));
+          emit(state.copyWith(serviceUploadStatus: ServiceUploadStatus.failure));
         }
       },
     ).onError(
@@ -180,8 +149,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onGetServiceHistory(
-      GetServiceHistory event, Emitter<ServiceState> emit) async {
+  Future<void> _onGetServiceHistory(GetServiceHistory event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getServiceStatus: GetServiceStatus.loading));
     await _repo.getHistory(event.query!, 0, param: event.vehicleRegNo).then(
       (json) {
@@ -190,8 +158,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           for (Map<String, dynamic> service in json['data']) {
             services.add(Service.fromJson(service));
           }
-          emit(state.copyWith(
-              getServiceStatus: GetServiceStatus.success, services: services));
+          emit(state.copyWith(getServiceStatus: GetServiceStatus.success, services: services));
         } else {
           emit(state.copyWith(getServiceStatus: GetServiceStatus.failure));
         }
@@ -204,8 +171,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onGetJobCards(
-      GetJobCards event, Emitter<ServiceState> emit) async {
+  Future<void> _onGetJobCards(GetJobCards event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getJobCardStatus: GetJobCardStatus.loading));
     await _repo.getHistory(event.query!, 0).then(
       (json) {
@@ -215,10 +181,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
             jobCards.add(Service.fromJson(service));
           }
           emit(state.copyWith(
-              getJobCardStatus: GetJobCardStatus.success,
-              serviceUploadStatus: ServiceUploadStatus.initial,
-              jobCards: jobCards,
-              filteredJobCards: jobCards));
+              getJobCardStatus: GetJobCardStatus.success, serviceUploadStatus: ServiceUploadStatus.initial, jobCards: jobCards, filteredJobCards: jobCards));
         } else {
           emit(state.copyWith(getJobCardStatus: GetJobCardStatus.failure));
         }
@@ -230,25 +193,18 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onGetMyJobCards(
-      GetMyJobCards event, Emitter<ServiceState> emit) async {
+  Future<void> _onGetMyJobCards(GetMyJobCards event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.loading));
-    await _repo
-        .getHistory('myJobCards', 0,
-            param: getIt<SharedPreferences>().getString('user_name'))
-        .then(
+    await _repo.getHistory('myJobCards', 0, param: getIt<SharedPreferences>().getString('user_name')).then(
       (json) {
         if (json['response_code'] == 200) {
           List<Service> jobCards = [];
           for (Map<String, dynamic> service in json['data']) {
             jobCards.add(Service.fromJson(service));
           }
-          emit(state.copyWith(
-              getMyJobCardsStatus: GetMyJobCardsStatus.success,
-              myJobCards: jobCards));
+          emit(state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.success, myJobCards: jobCards));
         } else {
-          emit(
-              state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.failure));
+          emit(state.copyWith(getMyJobCardsStatus: GetMyJobCardsStatus.failure));
         }
       },
     ).onError(
@@ -258,18 +214,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onGetInspectionDetails(
-      GetInspectionDetails event, Emitter<ServiceState> emit) async {
+  Future<void> _onGetInspectionDetails(GetInspectionDetails event, Emitter<ServiceState> emit) async {
     emit(state.copyWith(getInspectionStatus: GetInspectionStatus.loading));
     await _repo.getInspection(event.jobCardNo!).then(
       (json) {
         if (json['response_code'] == 200) {
-          emit(state.copyWith(
-              json: jsonDecode(json["data"]),
-              getInspectionStatus: GetInspectionStatus.success));
+          emit(state.copyWith(json: jsonDecode(json["data"]), getInspectionStatus: GetInspectionStatus.success));
         } else {
-          emit(
-              state.copyWith(getInspectionStatus: GetInspectionStatus.failure));
+          emit(state.copyWith(getInspectionStatus: GetInspectionStatus.failure));
         }
       },
     ).onError(
@@ -279,11 +231,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  Future<void> _onGetSBRequirements(
-      GetSBRequirements event, Emitter<ServiceState> emit) async {
+  Future<void> _onGetSBRequirements(GetSBRequirements event, Emitter<ServiceState> emit) async {
     if (state.getSBRequirementsStatus != GetSBRequirementsStatus.success) {
-      emit(state.copyWith(
-          serviceLocationsStatus: GetSBRequirementsStatus.loading));
+      emit(state.copyWith(serviceLocationsStatus: GetSBRequirementsStatus.loading));
     }
     await _repo.getSBRequirements().then(
       (json) {
@@ -293,14 +243,12 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
               locations: json['locations'].map((e) => e.values.first).toList(),
               jobTypes: json['job_types'].map((e) => e.values.first).toList()));
         } else {
-          emit(state.copyWith(
-              serviceLocationsStatus: GetSBRequirementsStatus.failure));
+          emit(state.copyWith(serviceLocationsStatus: GetSBRequirementsStatus.failure));
         }
       },
     ).onError(
       (error, stackTrace) {
-        emit(state.copyWith(
-            serviceLocationsStatus: GetSBRequirementsStatus.failure));
+        emit(state.copyWith(serviceLocationsStatus: GetSBRequirementsStatus.failure));
       },
     );
   }
@@ -345,9 +293,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     await _repo.getGatePass(jobCardNo: event.jobCardNo).then(
       (value) {
         print("gatepassno ${value["gate_pass_out_no"]}");
-        emit(state.copyWith(
-            gatePassno: value["gate_pass_out_no"],
-            gatePassStatus: GatePassStatus.success));
+        emit(state.copyWith(gatePassno: value["gate_pass_out_no"], gatePassStatus: GatePassStatus.success));
       },
     ).onError(
       (error, stackTrace) async {
@@ -355,9 +301,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         await _repo.generateGatePass(jobCardNo: event.jobCardNo).then((value) {
           print("$value value");
           print("gatepassno ${value["gate_pass_out_no"]}");
-          emit(state.copyWith(
-              gatePassno: value["gate_pass_out_no"],
-              gatePassStatus: GatePassStatus.success));
+          emit(state.copyWith(gatePassno: value["gate_pass_out_no"], gatePassStatus: GatePassStatus.success));
         }).onError(
           (error, stackTrace) {
             emit(state.copyWith(gatePassStatus: GatePassStatus.failure));
@@ -367,8 +311,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
   }
 
-  void _onModifyGatePassStatus(
-      ModifyGatePassStatus event, Emitter<ServiceState> emit) {
+  void _onModifyGatePassStatus(ModifyGatePassStatus event, Emitter<ServiceState> emit) {
     emit(state.copyWith(gatePassStatus: event.status));
   }
 

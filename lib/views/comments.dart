@@ -20,8 +20,7 @@ class Comments extends StatefulWidget {
   State<Comments> createState() => _CommentsState();
 }
 
-class _CommentsState extends State<Comments>
-    with SingleTickerProviderStateMixin, ConnectivityMixin {
+class _CommentsState extends State<Comments> with SingleTickerProviderStateMixin, ConnectivityMixin {
   TextEditingController commentsController = TextEditingController();
   FocusNode commentsFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
@@ -29,8 +28,7 @@ class _CommentsState extends State<Comments>
   @override
   void initState() {
     super.initState();
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 2));
     widget.vehiclePartMedia.comments ??= "";
     widget.vehiclePartMedia.images ??= [];
 
@@ -65,17 +63,14 @@ class _CommentsState extends State<Comments>
                   padding: EdgeInsets.zero,
                   margin: EdgeInsets.zero,
                   width: isMobile ? size.width * 0.9 : size.width * 0.32,
-                  decoration: BoxDecoration(
-                      color: const Color.fromRGBO(26, 26, 27, 1),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 6,
-                          blurStyle: BlurStyle.normal,
-                          spreadRadius: 4,
-                          color: Colors.orange.shade200,
-                        )
-                      ]),
+                  decoration: BoxDecoration(color: const Color.fromRGBO(26, 26, 27, 1), borderRadius: BorderRadius.circular(24), boxShadow: [
+                    BoxShadow(
+                      blurRadius: 6,
+                      blurStyle: BlurStyle.normal,
+                      spreadRadius: 4,
+                      color: Colors.orange.shade200,
+                    )
+                  ]),
 
                   // elevation: 10,
                   child: Column(
@@ -85,20 +80,14 @@ class _CommentsState extends State<Comments>
                       Text(
                         widget.vehiclePartMedia.name
                             .replaceAll("_", " ")
-                            .replaceFirst(widget.vehiclePartMedia.name[0],
-                                widget.vehiclePartMedia.name[0].toUpperCase()),
+                            .replaceFirst(widget.vehiclePartMedia.name[0], widget.vehiclePartMedia.name[0].toUpperCase()),
                         style: TextStyle(
                             fontFamily: 'Roboto',
                             fontWeight: FontWeight.w400,
                             color: Colors.white,
                             fontSize: 20,
                             shadows: [
-                              BoxShadow(
-                                  blurRadius: 2,
-                                  blurStyle: BlurStyle.outer,
-                                  spreadRadius: 0,
-                                  color: Colors.orange.shade200,
-                                  offset: const Offset(0, 0))
+                              BoxShadow(blurRadius: 2, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
                             ],
                             letterSpacing: 0.4),
                       ),
@@ -117,13 +106,10 @@ class _CommentsState extends State<Comments>
                               cursorColor: Colors.white,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                  hintStyle: const TextStyle(
-                                      fontSize: 16, color: Colors.white60),
-                                  fillColor:
-                                      const Color.fromRGBO(38, 38, 40, 1),
+                                  hintStyle: const TextStyle(fontSize: 16, color: Colors.white60),
+                                  fillColor: const Color.fromRGBO(38, 38, 40, 1),
                                   filled: true,
-                                  contentPadding:
-                                      EdgeInsets.only(left: 16, top: 16),
+                                  contentPadding: EdgeInsets.only(left: 16, top: 16),
                                   hintText: "Comments",
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16.0),
@@ -131,13 +117,9 @@ class _CommentsState extends State<Comments>
                                       color: Color.fromARGB(255, 145, 95, 22),
                                     ),
                                   ),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16))),
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
                               onChanged: (value) {
-                                context.read<VehiclePartsInteractionBloc>().add(
-                                    AddCommentsEvent(
-                                        name: widget.vehiclePartMedia.name,
-                                        comments: value));
+                                context.read<VehiclePartsInteractionBloc>().add(AddCommentsEvent(name: widget.vehiclePartMedia.name, comments: value));
                               },
                             ),
                             Align(
@@ -146,21 +128,11 @@ class _CommentsState extends State<Comments>
                                   padding: EdgeInsets.zero,
                                   onPressed: () async {
                                     commentsFocus.unfocus();
-                                    if (widget.vehiclePartMedia.images!.length <
-                                        3) {
+                                    if (widget.vehiclePartMedia.images!.length < 3) {
                                       ImagePicker imagePicker = ImagePicker();
-                                      XFile? image =
-                                          await imagePicker.pickImage(
-                                              source: ImageSource.camera,
-                                              preferredCameraDevice:
-                                                  CameraDevice.rear);
+                                      XFile? image = await imagePicker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
                                       if (image != null) {
-                                        context
-                                            .read<VehiclePartsInteractionBloc>()
-                                            .add(AddImageEvent(
-                                                name: widget
-                                                    .vehiclePartMedia.name,
-                                                image: image));
+                                        context.read<VehiclePartsInteractionBloc>().add(AddImageEvent(name: widget.vehiclePartMedia.name, image: image));
                                       }
                                     }
                                   },
@@ -172,9 +144,7 @@ class _CommentsState extends State<Comments>
                                         color: Colors.white60,
                                       ),
                                       ColorFiltered(
-                                        colorFilter: ColorFilter.mode(
-                                            Colors.orange.shade200,
-                                            BlendMode.srcATop),
+                                        colorFilter: ColorFilter.mode(Colors.orange.shade200, BlendMode.srcATop),
                                         child: Lottie.asset(
                                           "assets/lottie/highlight.json",
                                           width: 50,
@@ -188,8 +158,7 @@ class _CommentsState extends State<Comments>
                         ),
                       ),
                       const Gap(8),
-                      BlocConsumer<VehiclePartsInteractionBloc,
-                          VehiclePartsInteractionBlocState>(
+                      BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
                         listener: (context, state) {
                           if (widget.vehiclePartMedia.images!.length == 3) {
                             animationController.reset();
@@ -200,27 +169,20 @@ class _CommentsState extends State<Comments>
                         },
                         builder: (context, state) {
                           return Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              height: widget.vehiclePartMedia.images == null ||
-                                      widget.vehiclePartMedia.images!.isEmpty
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              height: widget.vehiclePartMedia.images == null || widget.vehiclePartMedia.images!.isEmpty
                                   ? 0
                                   : isMobile
                                       ? size.height * 0.14
                                       : size.height * 0.18,
                               child: GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 16,
-                                        mainAxisSpacing: 16),
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 16, mainAxisSpacing: 16),
                                 itemBuilder: (context, index) {
                                   return Stack(fit: StackFit.expand, children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(12),
                                       child: Image.file(
-                                        File(widget.vehiclePartMedia
-                                            .images![index].path),
+                                        File(widget.vehiclePartMedia.images![index].path),
                                         fit: BoxFit.fitWidth,
                                       ),
                                     ),
@@ -229,23 +191,10 @@ class _CommentsState extends State<Comments>
                                         right: -14.0,
                                         child: IconButton(
                                             onPressed: () {
-                                              if (context
-                                                      .read<
-                                                          VehiclePartsInteractionBloc>()
-                                                      .state
-                                                      .mapMedia[widget
-                                                          .vehiclePartMedia
-                                                          .name]!
-                                                      .images !=
-                                                  null) {
+                                              if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images != null) {
                                                 context
-                                                    .read<
-                                                        VehiclePartsInteractionBloc>()
-                                                    .add(RemoveImageEvent(
-                                                        name: widget
-                                                            .vehiclePartMedia
-                                                            .name,
-                                                        index: index));
+                                                    .read<VehiclePartsInteractionBloc>()
+                                                    .add(RemoveImageEvent(name: widget.vehiclePartMedia.name, index: index));
                                               }
                                             },
                                             icon: const CircleAvatar(
@@ -253,25 +202,19 @@ class _CommentsState extends State<Comments>
                                               backgroundColor: Colors.white,
                                               child: Icon(
                                                 Icons.remove_circle_rounded,
-                                                color: Color.fromARGB(
-                                                    255, 167, 38, 38),
+                                                color: Color.fromARGB(255, 167, 38, 38),
                                                 size: 16,
                                               ),
                                             )))
                                   ]);
                                 },
-                                itemCount: widget.vehiclePartMedia.images ==
-                                        null
-                                    ? 0
-                                    : widget.vehiclePartMedia.images!.length,
+                                itemCount: widget.vehiclePartMedia.images == null ? 0 : widget.vehiclePartMedia.images!.length,
                               ));
                         },
                       ),
-                      if (widget.vehiclePartMedia.images != null &&
-                          widget.vehiclePartMedia.images!.isNotEmpty)
+                      if (widget.vehiclePartMedia.images != null && widget.vehiclePartMedia.images!.isNotEmpty)
                         InkWell(
-                          radius:
-                              isMobile ? size.width * 0.06 : size.width * 0.024,
+                          radius: isMobile ? size.width * 0.06 : size.width * 0.024,
                           borderRadius: BorderRadius.circular(20),
                           onTap: () {
                             if (!isConnected()) {
@@ -298,43 +241,25 @@ class _CommentsState extends State<Comments>
                               );
                             } else {
                               //use service/jobcard number
-                              print(
-                                  context.read<ServiceBloc>().state.jobCardNo);
+                              print(context.read<ServiceBloc>().state.jobCardNo);
                               // print('sb no ${context.read<ServiceBloc>().state.service!.serviceBookingNo!}');
-                              context.read<VehiclePartsInteractionBloc>().add(
-                                  SubmitBodyPartVehicleMediaEvent(
-                                          bodyPartName:
-                                              widget.vehiclePartMedia.name,
-                                          serviceBookingNo: context
-                                              .read<ServiceBloc>()
-                                              .state
-                                              .service!
-                                              .serviceBookingNo!)
-                                      as VehiclePartsInteractionBlocEvent);
+                              context.read<VehiclePartsInteractionBloc>().add(SubmitBodyPartVehicleMediaEvent(
+                                  bodyPartName: widget.vehiclePartMedia.name,
+                                  serviceBookingNo: context.read<ServiceBloc>().state.service!.serviceBookingNo!) as VehiclePartsInteractionBlocEvent);
                             }
                           },
                           child: Container(
                               alignment: Alignment.center,
                               height: size.height * 0.04,
-                              width: isMobile
-                                  ? size.width * 0.2
-                                  : size.width * 0.08,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black,
-                                  boxShadow: [
-                                    const BoxShadow(
-                                        blurRadius: 8,
-                                        blurStyle: BlurStyle.outer,
-                                        spreadRadius: 0,
-                                        color: Color.fromRGBO(255, 204, 128, 1),
-                                        offset: Offset(0, 0))
-                                  ]),
+                              width: isMobile ? size.width * 0.2 : size.width * 0.08,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                                const BoxShadow(
+                                    blurRadius: 8, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Color.fromRGBO(255, 204, 128, 1), offset: Offset(0, 0))
+                              ]),
                               child: const Text(
                                 textAlign: TextAlign.center,
                                 'Upload',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
+                                style: TextStyle(color: Colors.white, fontSize: 14),
                               )),
                         ),
                       const Gap(16)
@@ -349,69 +274,24 @@ class _CommentsState extends State<Comments>
               right: 4.0,
               child: IconButton(
                 onPressed: () {
-                  if (context
-                              .read<VehiclePartsInteractionBloc>()
-                              .state
-                              .mapMedia[widget.vehiclePartMedia.name] ==
-                          null ||
-                      (context
-                              .read<VehiclePartsInteractionBloc>()
-                              .state
-                              .mapMedia[widget.vehiclePartMedia.name]!
-                              .comments!
-                              .isEmpty &&
-                          context
-                              .read<VehiclePartsInteractionBloc>()
-                              .state
-                              .mapMedia[widget.vehiclePartMedia.name]!
-                              .images!
-                              .isEmpty) ||
-                      context
-                          .read<VehiclePartsInteractionBloc>()
-                          .state
-                          .mapMedia[widget.vehiclePartMedia.name]!
-                          .isUploaded) {
-                    context.read<VehiclePartsInteractionBloc>().add(
-                        ModifyVehicleInteractionStatus(
-                            selectedBodyPart: "", isTapped: false));
+                  if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name] == null ||
+                      (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.comments!.isEmpty &&
+                          context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isEmpty) ||
+                      context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.isUploaded) {
+                    context.read<VehiclePartsInteractionBloc>().add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
 
                     return;
                   }
                   String message = "";
-                  if (context
-                          .read<VehiclePartsInteractionBloc>()
-                          .state
-                          .mapMedia[widget.vehiclePartMedia.name]!
-                          .comments!
-                          .isNotEmpty &&
-                      context
-                          .read<VehiclePartsInteractionBloc>()
-                          .state
-                          .mapMedia[widget.vehiclePartMedia.name]!
-                          .images!
-                          .isEmpty) {
+                  if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.comments!.isNotEmpty &&
+                      context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isEmpty) {
                     message = 'Please add atleat one image';
                     print("git herer 1");
-                  } else if (context
-                          .read<VehiclePartsInteractionBloc>()
-                          .state
-                          .mapMedia[widget.vehiclePartMedia.name]!
-                          .comments!
-                          .isEmpty &&
-                      context
-                          .read<VehiclePartsInteractionBloc>()
-                          .state
-                          .mapMedia[widget.vehiclePartMedia.name]!
-                          .images!
-                          .isNotEmpty) {
+                  } else if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.comments!.isEmpty &&
+                      context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.images!.isNotEmpty) {
                     message = 'Please add comments';
                     print("git herer 2 ");
-                  } else if (context
-                          .read<VehiclePartsInteractionBloc>()
-                          .state
-                          .mapMedia[widget.vehiclePartMedia.name]!
-                          .isUploaded ==
-                      false) {
+                  } else if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[widget.vehiclePartMedia.name]!.isUploaded == false) {
                     message = 'Upload your files before closing';
                     print("git herer 3 ");
                   }

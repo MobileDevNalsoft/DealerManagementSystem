@@ -18,8 +18,7 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView>
-    with TickerProviderStateMixin, ConnectivityMixin {
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin, ConnectivityMixin {
   // Service to handle navigation within the app
   final NavigatorService navigator = getIt<NavigatorService>();
 
@@ -62,10 +61,7 @@ class _HomeViewState extends State<HomeView>
           // Fill the entire screen
           height: double.infinity,
           width: double.infinity,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.black45, Colors.black26, Colors.black45],
-                  stops: [0.1, 0.5, 1])),
+          decoration: const BoxDecoration(gradient: LinearGradient(colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1])),
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -102,16 +98,8 @@ class _HomeViewState extends State<HomeView>
                         gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [
-                              Colors.black45,
-                              Colors.black87,
-                              Colors.black
-                            ],
-                            stops: [
-                              0.05,
-                              0.5,
-                              1
-                            ]),
+                            colors: [Colors.black45, Colors.black87, Colors.black],
+                            stops: [0.05, 0.5, 1]),
                         shape: BoxShape.circle,
                         boxShadow: [
                           const BoxShadow(
@@ -187,10 +175,7 @@ class _HomeViewState extends State<HomeView>
                         }
                       },
                       onDoubleTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ServiceMainSample()));
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceMainSample()));
                       },
                       child: Hero(
                         tag: 'myJobCards',
@@ -235,8 +220,7 @@ class _HomeViewState extends State<HomeView>
                         child: ClippedButton(
                             clipper: ButtonClipperMid(isMobile: isMobile),
                             image: 'vehicle_search_icon.png',
-                            imageHeight:
-                                size.height * (isMobile ? 0.095 : 0.07),
+                            imageHeight: size.height * (isMobile ? 0.095 : 0.07),
                             imageWidth: size.width * (isMobile ? 0.095 : 0.07)),
                       ),
                     ),

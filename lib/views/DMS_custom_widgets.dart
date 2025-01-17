@@ -50,18 +50,14 @@ class DMSCustomWidgets {
           focusNode: focus,
           builder: (context, controller, focusNode) {
             return Padding(
-              padding: EdgeInsets.only(
-                  top: size.height * (isMobile ? 0.005 : 0.012)),
+              padding: EdgeInsets.only(top: size.height * (isMobile ? 0.005 : 0.012)),
               child: TextFormField(
                 // Call the onChanged function when the text changes
                 onChanged: onChanged,
                 // Focus the field when tapped
                 onTap: () {
                   // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
-                  context.read<MultiBloc>().add(OnFocusChange(
-                      focusNode: focusNode,
-                      scrollController: scrollController,
-                      context: context));
+                  context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode, scrollController: scrollController, context: context));
                 },
                 // Unfocus the field when tapped outside
                 onTapOutside: (event) => focusNode.unfocus(),
@@ -73,12 +69,8 @@ class DMSCustomWidgets {
                   fontSize: isMobile ? 13 : 16,
                 ),
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(
-                      left: 16, right: 16, bottom: size.height * 0.014),
-                  suffixIcon: Transform(
-                      transform:
-                          Matrix4.translationValues(0, (isMobile ? -2 : -8), 0),
-                      child: icon),
+                  contentPadding: EdgeInsets.only(left: 16, right: 16, bottom: size.height * 0.014),
+                  suffixIcon: Transform(transform: Matrix4.translationValues(0, (isMobile ? -2 : -8), 0), child: icon),
                   hintText: hint,
                   hintStyle: const TextStyle(
                     color: Colors.black38,
@@ -95,10 +87,7 @@ class DMSCustomWidgets {
           // Filter suggestions based on the pattern entered
           suggestionsCallback: (pattern) {
             if (suggestionsController == null) {
-              return items
-                  .where((item) =>
-                      item.toLowerCase().contains(pattern.toLowerCase()))
-                  .toList();
+              return items.where((item) => item.toLowerCase().contains(pattern.toLowerCase())).toList();
             }
             return items;
           },
@@ -108,9 +97,7 @@ class DMSCustomWidgets {
           emptyBuilder: (context) => Container(
             height: size.height * (isMobile ? 0.038 : 0.045),
             color: Colors.transparent,
-            padding: EdgeInsets.symmetric(
-                horizontal: size.width * (isMobile ? 0.02 : 0.02),
-                vertical: size.height * (isMobile ? 0.008 : 0.013)),
+            padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.02 : 0.02), vertical: size.height * (isMobile ? 0.008 : 0.013)),
             child: typeAheadController.text.isNotEmpty
                 ? Text(
                     'no items found',
@@ -133,9 +120,7 @@ class DMSCustomWidgets {
                     child: Container(
                       height: size.height * (isMobile ? 0.038 : 0.045),
                       color: Colors.transparent,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.width * (isMobile ? 0.02 : 0.02),
-                          vertical: size.height * (isMobile ? 0.008 : 0.013)),
+                      padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.02 : 0.02), vertical: size.height * (isMobile ? 0.008 : 0.013)),
                       child: Text(
                         suggestion,
                         style: TextStyle(fontSize: isMobile ? 13 : 16),
@@ -182,12 +167,10 @@ class DMSCustomWidgets {
       child: Card(
         elevation: 3,
         color: Colors.white,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Transform(
           // Adjust vertical position slightly for mobile layout
-          transform: Matrix4.translationValues(
-              0, size.width * (isMobile ? 0.0 : 0.007), 0),
+          transform: Matrix4.translationValues(0, size.width * (isMobile ? 0.0 : 0.007), 0),
           child: TextFormField(
             initialValue: initialValue,
             keyboardType: keyboardType,
@@ -200,33 +183,24 @@ class DMSCustomWidgets {
             onTap: () {
               // Trigger event on focus change in MultiBloc
               // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
-              context.read<MultiBloc>().add(OnFocusChange(
-                  focusNode: focusNode,
-                  scrollController: scrollController,
-                  context: context));
+              context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode, scrollController: scrollController, context: context));
             },
             key: key,
             focusNode: focusNode,
             cursorColor: Colors.black,
             controller: textcontroller,
             style: TextStyle(
-              fontSize:
-                  isMobile ? 13 : 16, // Adjust font size for mobile layout
+              fontSize: isMobile ? 13 : 16, // Adjust font size for mobile layout
             ),
             maxLength: 25, // Set maximum allowed characters
-            maxLengthEnforcement:
-                MaxLengthEnforcement.enforced, // Enforce max length
+            maxLengthEnforcement: MaxLengthEnforcement.enforced, // Enforce max length
             decoration: InputDecoration(
                 suffix: suffixIcon,
-                contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16, vertical: size.height * 0.016),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: size.height * 0.016),
                 counterText: "",
                 border: InputBorder.none,
                 hintText: hint,
-                hintStyle: TextStyle(
-                    color: Colors.black38,
-                    fontWeight: FontWeight.normal,
-                    fontSize: isMobile ? 13 : 16),
+                hintStyle: TextStyle(color: Colors.black38, fontWeight: FontWeight.normal, fontSize: isMobile ? 13 : 16),
                 suffixIcon: Transform(
                   // Adjust vertical position of suffix icon slightly
                   transform: Matrix4.translationValues(0, -2, 0),
@@ -267,8 +241,7 @@ class DMSCustomWidgets {
       child: Card(
         elevation: 3,
         color: Colors.white,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
         child: TextFormField(
           cursorColor: Colors.black,
           style: TextStyle(fontSize: isMobile ? 13 : 16),
@@ -280,10 +253,7 @@ class DMSCustomWidgets {
           },
           onTap: () {
             // when this event is triggered it automatically scrolls the searchable text field to a visible position above the keyboard.
-            context.read<MultiBloc>().add(OnFocusChange(
-                focusNode: focusNode!,
-                scrollController: scrollController,
-                context: context));
+            context.read<MultiBloc>().add(OnFocusChange(focusNode: focusNode!, scrollController: scrollController, context: context));
           },
           // Set text field properties
           minLines: 1,
@@ -294,8 +264,7 @@ class DMSCustomWidgets {
             contentPadding: const EdgeInsets.only(left: 15, top: 0),
             border: InputBorder.none, // Remove default border
             hintText: hint,
-            hintStyle: const TextStyle(
-                color: Colors.black45, fontWeight: FontWeight.normal),
+            hintStyle: const TextStyle(color: Colors.black45, fontWeight: FontWeight.normal),
           ),
         ),
       ),
@@ -304,8 +273,7 @@ class DMSCustomWidgets {
 
   /// This widget displays a clickable card to select a schedule date using a calendar dialog.
   // ignore: non_constant_identifier_names
-  static Widget ScheduleDateCalendar(
-      {context, required Size size, required bool isMobile, DateTime? date}) {
+  static Widget ScheduleDateCalendar({context, required Size size, required bool isMobile, DateTime? date}) {
     return SizedBox(
       height: size.height * (isMobile ? 0.06 : 0.05),
       width: size.width * (isMobile ? 0.8 : 0.6),
@@ -337,15 +305,11 @@ class DMSCustomWidgets {
                       },
                       onSubmit: (p0) {
                         // Handle submit action (update selected date)
-                        context
-                            .read<MultiBloc>()
-                            .add(DateChanged(date: p0 as DateTime));
+                        context.read<MultiBloc>().add(DateChanged(date: p0 as DateTime));
                         Navigator.pop(context);
                       },
                       headerStyle: const DateRangePickerHeaderStyle(
-                          backgroundColor: Colors.black,
-                          textStyle: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center),
+                          backgroundColor: Colors.black, textStyle: TextStyle(color: Colors.white), textAlign: TextAlign.center),
                     )),
               );
             },
@@ -354,23 +318,17 @@ class DMSCustomWidgets {
         child: Card(
             elevation: 3,
             color: Colors.white,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 9),
               child: Row(
                 children: [
                   Text(
-                    date == null
-                        ? '*Schedule Date'
-                        : DateFormat("dd MMM yyyy").format(date),
-                    style: TextStyle(
-                        color: date == null ? Colors.black38 : Colors.black,
-                        fontSize: isMobile ? 14 : 16),
+                    date == null ? '*Schedule Date' : DateFormat("dd MMM yyyy").format(date),
+                    style: TextStyle(color: date == null ? Colors.black38 : Colors.black, fontSize: isMobile ? 14 : 16),
                   ),
                   const MaxGap(500),
-                  const Icon(Icons.calendar_month_outlined,
-                      color: Colors.black38),
+                  const Icon(Icons.calendar_month_outlined, color: Colors.black38),
                 ],
               ),
             )),
@@ -448,11 +406,7 @@ class DMSCustomWidgets {
 
   /// This widget builds a custom year picker for selecting a vehicle's manufacturing year.
   static Widget CustomYearPicker(
-      {required Size size,
-      required bool isMobile,
-      required BuildContext context,
-      required TextEditingController mfgYearController,
-      int? year}) {
+      {required Size size, required bool isMobile, required BuildContext context, required TextEditingController mfgYearController, int? year}) {
     // Get the current year
     int now = DateTime.now().year;
     return SizedBox(
@@ -480,10 +434,7 @@ class DMSCustomWidgets {
                       Container(
                         height: size.height * 0.05,
                         decoration: const BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                topLeft: Radius.circular(10))),
+                            color: Colors.black, borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -491,9 +442,7 @@ class DMSCustomWidgets {
                               child: Text(
                                 'Select Year',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isMobile ? 14 : 18),
+                                style: TextStyle(color: Colors.white, fontSize: isMobile ? 14 : 18),
                               ),
                             ),
                           ],
@@ -503,17 +452,11 @@ class DMSCustomWidgets {
                       SizedBox(
                         height: size.height * 0.25,
                         child: GridView(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 1,
-                                    childAspectRatio:
-                                        size.height / size.width * 4),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1, childAspectRatio: size.height / size.width * 4),
                             children: yearsList
                                 .map((e) => InkWell(
                                       onTap: () {
-                                        context
-                                            .read<MultiBloc>()
-                                            .add(YearChanged(year: e));
+                                        context.read<MultiBloc>().add(YearChanged(year: e));
                                         mfgYearController.text = e.toString();
                                         Navigator.pop(context);
                                       },
@@ -523,9 +466,7 @@ class DMSCustomWidgets {
                                         child: Text(
                                           (e).toString(),
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: isMobile ? 14 : 18),
+                                          style: TextStyle(color: Colors.black, fontSize: isMobile ? 14 : 18),
                                         ),
                                       ),
                                     ))
@@ -536,18 +477,13 @@ class DMSCustomWidgets {
         },
         child: Card(
             color: Colors.white.withOpacity(1),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: size.width * (isMobile ? 0.04 : 0.018),
-                  vertical: size.height * (isMobile ? 0.013 : 0.012)),
+              padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.04 : 0.018), vertical: size.height * (isMobile ? 0.013 : 0.012)),
               child: Text(
                 /// Display "MFG Year" if no year is selected, otherwise display the selected year
                 year == null ? 'MFG Year' : year.toString(),
-                style: TextStyle(
-                    color: year == null ? Colors.black38 : Colors.black,
-                    fontSize: (isMobile ? 14 : 18)),
+                style: TextStyle(color: year == null ? Colors.black38 : Colors.black, fontSize: (isMobile ? 14 : 18)),
               ),
             )),
       ),
@@ -575,8 +511,7 @@ class DMSCustomWidgets {
         builder: (context) {
           return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               contentPadding: EdgeInsets.only(top: size.height * 0.01),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -594,20 +529,14 @@ class DMSCustomWidgets {
                     height: size.height * 0.05,
                     margin: EdgeInsets.all(size.height * 0.001),
                     decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                        color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: TextButton(
                             onPressed: onReject,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: Text(
                               rejectLable,
                             ),
@@ -620,10 +549,7 @@ class DMSCustomWidgets {
                         Expanded(
                           child: TextButton(
                             onPressed: onAccept,
-                            style: TextButton.styleFrom(
-                                fixedSize:
-                                    Size(size.width * 0.3, size.height * 0.1),
-                                foregroundColor: Colors.white),
+                            style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                             child: Text(
                               acceptLable,
                             ),
@@ -634,20 +560,14 @@ class DMSCustomWidgets {
                   )
                 ],
               ),
-              actionsPadding:
-                  EdgeInsets.zero, // Remove default padding around buttons
-              buttonPadding:
-                  EdgeInsets.zero); // Remove default padding around buttons
+              actionsPadding: EdgeInsets.zero, // Remove default padding around buttons
+              buttonPadding: EdgeInsets.zero); // Remove default padding around buttons
         });
   }
 
   // dialog to show when inspection out to be submitted
   static void showSubmitDialog(
-      {required Size size,
-      required BuildContext context,
-      required void Function()? onYes,
-      required void Function()? onNo,
-      String? contentText}) {
+      {required Size size, required BuildContext context, required void Function()? onYes, required void Function()? onNo, String? contentText}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -657,22 +577,17 @@ class DMSCustomWidgets {
             canPop: false,
             child: AlertDialog(
                 backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 contentPadding: EdgeInsets.only(top: size.height * 0.01),
                 content: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: size.width * (isMobile ? 0.03 : 0.02)),
+                      padding: EdgeInsets.only(left: size.width * (isMobile ? 0.03 : 0.02)),
                       child: Text(
-                        contentText ??
-                            'Hey Advisor...\nAre you done with inspection ?',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: isMobile ? 14 : 18),
+                        contentText ?? 'Hey Advisor...\nAre you done with inspection ?',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: isMobile ? 14 : 18),
                       ),
                     ),
                     Gap(size.height * 0.01),
@@ -680,20 +595,14 @@ class DMSCustomWidgets {
                       height: size.height * 0.05,
                       margin: EdgeInsets.all(size.height * 0.001),
                       decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
+                          color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: TextButton(
                               onPressed: onNo,
-                              style: TextButton.styleFrom(
-                                  fixedSize:
-                                      Size(size.width * 0.3, size.height * 0.1),
-                                  foregroundColor: Colors.white),
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                               child: Text(
                                 'No',
                                 style: TextStyle(fontSize: isMobile ? 14 : 18),
@@ -707,13 +616,8 @@ class DMSCustomWidgets {
                           Expanded(
                             child: TextButton(
                               onPressed: onYes,
-                              style: TextButton.styleFrom(
-                                  fixedSize:
-                                      Size(size.width * 0.3, size.height * 0.1),
-                                  foregroundColor: Colors.white),
-                              child: Text('Yes',
-                                  style:
-                                      TextStyle(fontSize: isMobile ? 14 : 18)),
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
+                              child: Text('Yes', style: TextStyle(fontSize: isMobile ? 14 : 18)),
                             ),
                           ),
                         ],
@@ -743,41 +647,34 @@ class DMSCustomWidgets {
             canPop: false,
             child: AlertDialog(
                 backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 contentPadding: EdgeInsets.only(top: size.height * 0.01),
                 content: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size.width * (isMobile ? 0.03 : 0.02)),
+                        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
                         child: Theme(
                           data: Theme.of(context).copyWith(),
                           child: TextFormField(
-                              selectionControls:
-                                  MaterialTextSelectionControls(),
+                              selectionControls: MaterialTextSelectionControls(),
                               controller: controller,
                               autofocus: true,
                               cursorColor: Colors.black,
                               style: TextStyle(fontSize: isMobile ? 14 : 18),
                               maxLength: 120,
                               maxLines: 5,
-                              maxLengthEnforcement:
-                                  MaxLengthEnforcement.enforced,
+                              maxLengthEnforcement: MaxLengthEnforcement.enforced,
                               decoration: InputDecoration(
-                                  hintStyle: TextStyle(
-                                      color: Colors.black26,
-                                      fontSize: isMobile ? 14 : 18),
+                                  hintStyle: TextStyle(color: Colors.black26, fontSize: isMobile ? 14 : 18),
                                   fillColor: Colors.white,
                                   counterText: '',
                                   filled: true,
                                   focusedBorder: const OutlineInputBorder(),
                                   enabledBorder: const OutlineInputBorder(),
                                   focusColor: Colors.black,
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 14, top: 14),
+                                  contentPadding: const EdgeInsets.only(left: 14, top: 14),
                                   hintText: "Reason for rejection",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
@@ -788,20 +685,14 @@ class DMSCustomWidgets {
                       height: size.height * 0.05,
                       margin: EdgeInsets.all(size.height * 0.001),
                       decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
+                          color: Colors.black, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: TextButton(
                               onPressed: onCancel,
-                              style: TextButton.styleFrom(
-                                  fixedSize:
-                                      Size(size.width * 0.3, size.height * 0.1),
-                                  foregroundColor: Colors.white),
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                               child: Text(
                                 'Cancel',
                                 style: TextStyle(fontSize: isMobile ? 14 : 18),
@@ -815,10 +706,7 @@ class DMSCustomWidgets {
                           Expanded(
                             child: TextButton(
                               onPressed: onDone,
-                              style: TextButton.styleFrom(
-                                  fixedSize:
-                                      Size(size.width * 0.3, size.height * 0.1),
-                                  foregroundColor: Colors.white),
+                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
                               child: Text(
                                 'Done',
                                 style: TextStyle(fontSize: isMobile ? 14 : 18),
@@ -837,11 +725,7 @@ class DMSCustomWidgets {
   }
 
   static PreferredSizeWidget appBar(
-      {required Size size,
-      required bool isMobile,
-      required String title,
-      void Function()? leadingOnPressed,
-      List<Widget>? actions}) {
+      {required Size size, required bool isMobile, required String title, void Function()? leadingOnPressed, List<Widget>? actions}) {
     return AppBar(
       // ensures scrollable widgets doesnt scroll underneath the appbar.
       scrolledUnderElevation: 0,
@@ -850,20 +734,11 @@ class DMSCustomWidgets {
       backgroundColor: Colors.black45,
       leadingWidth: size.width * 0.14,
       leading: Container(
-        margin: EdgeInsets.only(
-            left: size.width * (isMobile ? 0.022 : 0.036),
-            right: size.width * (isMobile ? 0.022 : 0.036)),
+        margin: EdgeInsets.only(left: size.width * (isMobile ? 0.022 : 0.036), right: size.width * (isMobile ? 0.022 : 0.036)),
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.black,
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 10,
-                  blurStyle: BlurStyle.outer,
-                  spreadRadius: 0,
-                  color: Colors.orange.shade200,
-                  offset: const Offset(0, 0))
-            ]),
+            boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
         child: Transform(
           transform: Matrix4.translationValues(-3, 0, 0),
           child: IconButton(
@@ -886,21 +761,11 @@ class DMSCustomWidgets {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular((isMobile ? 10 : 20)),
               color: Colors.black,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 10,
-                    blurStyle: BlurStyle.outer,
-                    spreadRadius: 0,
-                    color: Colors.orange.shade200,
-                    offset: const Offset(0, 0))
-              ]),
+              boxShadow: [BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
           child: Text(
             textAlign: TextAlign.center,
             title,
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-                fontSize: (isMobile ? 16 : 18)),
+            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: (isMobile ? 16 : 18)),
           )),
       centerTitle: true,
       actions: actions,
@@ -908,8 +773,7 @@ class DMSCustomWidgets {
   }
 
 // This function displays a custom flushbar message on the screen
-  static Future DMSFlushbar(Size size, BuildContext context,
-      {String message = 'message', Widget? icon}) async {
+  static Future DMSFlushbar(Size size, BuildContext context, {String message = 'message', Widget? icon}) async {
     // Check if the device is mobile based on screen size
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
@@ -918,26 +782,15 @@ class DMSCustomWidgets {
       backgroundColor: Colors.black,
       blockBackgroundInteraction: true,
       message: message,
-      padding: EdgeInsets.symmetric(
-          vertical: size.height * (isMobile ? 0.02 : 0.015),
-          horizontal: size.width * (isMobile ? 0 : 0.025)),
+      padding: EdgeInsets.symmetric(vertical: size.height * (isMobile ? 0.02 : 0.015), horizontal: size.width * (isMobile ? 0 : 0.025)),
       messageSize: isMobile ? 14 : 16,
       flushbarPosition: FlushbarPosition.TOP,
       duration: const Duration(seconds: 2),
       borderRadius: BorderRadius.circular(8),
       icon: icon,
-      boxShadows: [
-        BoxShadow(
-            blurRadius: 12,
-            blurStyle: BlurStyle.outer,
-            spreadRadius: 0,
-            color: Colors.orange.shade200,
-            offset: const Offset(0, 0))
-      ],
+      boxShadows: [BoxShadow(blurRadius: 12, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))],
       margin: EdgeInsets.only(
-          top: size.height * (isMobile ? 0.01 : 0.016),
-          left: size.width * (isMobile ? 0.04 : 0.25),
-          right: size.width * (isMobile ? 0.04 : 0.25)),
+          top: size.height * (isMobile ? 0.01 : 0.016), left: size.width * (isMobile ? 0.04 : 0.25), right: size.width * (isMobile ? 0.04 : 0.25)),
     ).show(context);
   }
 }
@@ -945,8 +798,7 @@ class DMSCustomWidgets {
 class UpperCaseTextFormatter extends TextInputFormatter {
   /// Converts all input text to uppercase.
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: newValue.text.toUpperCase(),
       selection: newValue.selection,
@@ -957,14 +809,11 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 class InitCapCaseTextFormatter extends TextInputFormatter {
   /// Capitalizes the first letter of each word in the input text.
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       // This implementation only capitalizes the first letter of the entire string.
       // For proper word capitalization, more complex logic is required.
-      text: newValue.text.isNotEmpty
-          ? newValue.text[0].toUpperCase() + newValue.text.substring(1)
-          : '',
+      text: newValue.text.isNotEmpty ? newValue.text[0].toUpperCase() + newValue.text.substring(1) : '',
       selection: newValue.selection,
     );
   }
@@ -972,12 +821,7 @@ class InitCapCaseTextFormatter extends TextInputFormatter {
 
 // returns widget dynamically according to the widget name extracted from json.
 Widget getWidget(
-    {required Size size,
-    required String page,
-    required int index,
-    required Map<String, dynamic> json,
-    required BuildContext context,
-    required bool isMobile}) {
+    {required Size size, required String page, required int index, required Map<String, dynamic> json, required BuildContext context, required bool isMobile}) {
   ServiceBloc _serviceBloc = context.read<ServiceBloc>();
   // Switch statement to handle different widget types based on "widget" key in JSON
   switch (json[page][index]['widget']) {
@@ -990,9 +834,8 @@ Widget getWidget(
           scale: size.height * 0.0013,
           child: Checkbox(
             checkColor: Colors.white,
-            fillColor: json[page][index]['properties']['value'] == true
-                ? const WidgetStatePropertyAll(Colors.black)
-                : const WidgetStatePropertyAll(Colors.white),
+            fillColor:
+                json[page][index]['properties']['value'] == true ? const WidgetStatePropertyAll(Colors.black) : const WidgetStatePropertyAll(Colors.white),
             value: json[page][index]['properties']['value'],
             side: const BorderSide(strokeAlign: 1, style: BorderStyle.solid),
             onChanged: (value) {
@@ -1008,16 +851,12 @@ Widget getWidget(
 
       textEditingController.text = json[page][index]['properties']['value'];
 
-      textEditingController.selection = TextSelection.fromPosition(
-          TextPosition(offset: textEditingController.text.length));
+      textEditingController.selection = TextSelection.fromPosition(TextPosition(offset: textEditingController.text.length));
 
       return Container(
         height: size.height * 0.11,
         width: size.width * 0.62,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(color: Colors.black)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, border: Border.all(color: Colors.black)),
         child: TextField(
             textInputAction: TextInputAction.done,
             controller: textEditingController,
@@ -1028,18 +867,13 @@ Widget getWidget(
             maxLength: 200,
             decoration: InputDecoration(
               counterText: '',
-              enabledBorder:
-                  const OutlineInputBorder(borderSide: BorderSide.none),
-              focusedBorder:
-                  const OutlineInputBorder(borderSide: BorderSide.none),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              hintStyle: TextStyle(
-                  color: Colors.black38, fontSize: isMobile ? 14 : 18),
+              enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+              contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              hintStyle: TextStyle(color: Colors.black38, fontSize: isMobile ? 14 : 18),
             ),
             onChanged: (value) {
-              _serviceBloc.state.json![page][index]['properties']['value'] =
-                  value;
+              _serviceBloc.state.json![page][index]['properties']['value'] = value;
             }),
       );
     case "dropDown":
@@ -1091,9 +925,7 @@ Widget getWidget(
             elevation: 0,
           ),
           iconStyleData: const IconStyleData(
-            icon: Icon(!false
-                ? Icons.keyboard_arrow_down_rounded
-                : Icons.keyboard_arrow_up_rounded),
+            icon: Icon(!false ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded),
             iconSize: 14,
             iconEnabledColor: Colors.black,
             iconDisabledColor: Colors.black,
@@ -1135,17 +967,14 @@ Widget getWidget(
                 (e) => ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
-                    json[page][index]['properties']['options']
-                        [options.indexOf(e)],
+                    json[page][index]['properties']['options'][options.indexOf(e)],
                     style: TextStyle(fontSize: isMobile ? 14 : 18),
                   ),
                   leading: Radio<int>(
                     value: options.indexOf(e) + 1,
                     groupValue: json[page][index]['properties']['value'],
-                    activeColor: Colors
-                        .white, // Change the active radio button color here
-                    fillColor: WidgetStateProperty.all(
-                        Colors.black), // Change the fill color when selected
+                    activeColor: Colors.white, // Change the active radio button color here
+                    fillColor: WidgetStateProperty.all(Colors.black), // Change the fill color when selected
                     splashRadius: 20, // Change the splash radius when clicked
                     onChanged: (value) {
                       json[page][index]['properties']['value'] = value;

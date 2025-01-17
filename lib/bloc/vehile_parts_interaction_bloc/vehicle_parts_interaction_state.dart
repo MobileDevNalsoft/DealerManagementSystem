@@ -1,12 +1,6 @@
 part of 'vehicle_parts_interaction_bloc.dart';
 
-enum VehiclePartsInteractionStatus {
-  initial,
-  loading,
-  success,
-  failure,
-  rebuild
-}
+enum VehiclePartsInteractionStatus { initial, loading, success, failure, rebuild }
 
 @immutable
 class VehiclePartsInteractionBlocState {
@@ -23,16 +17,11 @@ class VehiclePartsInteractionBlocState {
       this.isTapped = false});
 
   VehiclePartsInteractionBlocState copyWith(
-      {Map<String, VehiclePartMedia>? mapMedia,
-      status,
-      vehicleExaminationPageIndex,
-      String? selectedBodyPart,
-      bool? isTapped}) {
+      {Map<String, VehiclePartMedia>? mapMedia, status, vehicleExaminationPageIndex, String? selectedBodyPart, bool? isTapped}) {
     return VehiclePartsInteractionBlocState(
         mapMedia: mapMedia ?? this.mapMedia,
         status: status ?? this.status,
-        vehicleExaminationPageIndex:
-            vehicleExaminationPageIndex ?? this.vehicleExaminationPageIndex,
+        vehicleExaminationPageIndex: vehicleExaminationPageIndex ?? this.vehicleExaminationPageIndex,
         selectedBodyPart: selectedBodyPart ?? this.selectedBodyPart,
         isTapped: isTapped ?? this.isTapped);
   }

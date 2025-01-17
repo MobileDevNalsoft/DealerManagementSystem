@@ -16,8 +16,7 @@ Future<List<GeneralBodyPart>> loadSvgImage({required String svgImage}) async {
     String partPath = element.getAttribute('d').toString();
     String partClass = element.getAttribute('class').toString();
 
-    GeneralBodyPart part =
-        GeneralBodyPart(name: partName, path: partPath, color: partClass);
+    GeneralBodyPart part = GeneralBodyPart(name: partName, path: partPath, color: partClass);
     parts.add(part);
   });
   return parts;

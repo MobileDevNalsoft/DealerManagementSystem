@@ -1,12 +1,6 @@
 part of 'vehicle_parts_interaction_bloc2.dart';
 
-enum VehiclePartsInteractionStatus {
-  initial,
-  loading,
-  success,
-  failure,
-  rebuild
-}
+enum VehiclePartsInteractionStatus { initial, loading, success, failure, rebuild }
 
 enum MediaJsonStatus { initial, loading, success, failure }
 
@@ -46,8 +40,7 @@ class VehiclePartsInteractionBlocState2 {
         mapMedia: mapMedia ?? this.mapMedia,
         status: status ?? this.status,
         mediaJsonStatus: mediaJsonStatus ?? this.mediaJsonStatus,
-        vehicleExaminationPageIndex:
-            vehicleExaminationPageIndex ?? this.vehicleExaminationPageIndex,
+        vehicleExaminationPageIndex: vehicleExaminationPageIndex ?? this.vehicleExaminationPageIndex,
         selectedBodyPart: selectedBodyPart ?? this.selectedBodyPart,
         renamingStatus: renamingStatus ?? this.renamingStatus,
         isTapped: isTapped ?? this.isTapped,

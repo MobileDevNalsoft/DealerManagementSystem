@@ -76,8 +76,7 @@ class MultiBlocState {
         checkBoxStates: checkBoxStates ?? this.checkBoxStates,
         salesPersons: salesPersons ?? this.salesPersons,
         status: status ?? this.status,
-        reverseClippedWidgets:
-            reverseClippedWidgets ?? this.reverseClippedWidgets,
+        reverseClippedWidgets: reverseClippedWidgets ?? this.reverseClippedWidgets,
         scaleFactor: scaleFactor ?? this.scaleFactor,
         // isTapped: isTapped ?? this.isTapped,
         // selectedGeneralBodyPart: selectedGeneralBodyPart ?? this.selectedGeneralBodyPart,

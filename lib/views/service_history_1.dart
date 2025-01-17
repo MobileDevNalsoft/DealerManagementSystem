@@ -19,8 +19,7 @@ class ServiceHistory1 extends StatefulWidget {
   State<ServiceHistory1> createState() => _ServiceHistory1State();
 }
 
-class _ServiceHistory1State extends State<ServiceHistory1>
-    with TickerProviderStateMixin {
+class _ServiceHistory1State extends State<ServiceHistory1> with TickerProviderStateMixin {
   late ServiceBloc _serviceBloc;
 
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
@@ -50,17 +49,13 @@ class _ServiceHistory1State extends State<ServiceHistory1>
       child: Scaffold(
         // Prevent the layout from resizing to avoid bottom inset issues
         resizeToAvoidBottomInset: false,
-        appBar: DMSCustomWidgets.appBar(
-            size: size, isMobile: isMobile, title: 'Service History'),
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Service History'),
         body: Container(
           height: size.height,
           width: size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors: [Colors.black45, Colors.black26, Colors.black45],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.1, 0.5, 1]),
+                colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
           ),
           child: FutureBuilder(
               future: Future.delayed(const Duration(milliseconds: 600)),
@@ -69,16 +64,10 @@ class _ServiceHistory1State extends State<ServiceHistory1>
                   return BlocBuilder<ServiceBloc, ServiceState>(
                     builder: (context, state) {
                       return ListView.builder(
-                          itemCount:
-                              state.getServiceStatus == GetServiceStatus.success
-                                  ? state.services!.length
-                                  : 7,
+                          itemCount: state.getServiceStatus == GetServiceStatus.success ? state.services!.length : 7,
                           itemBuilder: (context, index) => Skeletonizer(
                               enableSwitchAnimation: true,
-                              enabled: state.getServiceStatus ==
-                                      GetServiceStatus.loading ||
-                                  state.getServiceStatus ==
-                                      GetServiceStatus.initial,
+                              enabled: state.getServiceStatus == GetServiceStatus.loading || state.getServiceStatus == GetServiceStatus.initial,
                               child: ClipShadowPath(
                                 clipper: TicketClipper(),
                                 shadow: const BoxShadow(
@@ -98,183 +87,105 @@ class _ServiceHistory1State extends State<ServiceHistory1>
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       Gap(size.height * 0.02),
                                       Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Gap(size.height *
-                                                  (isMobile ? 0.01 : 0.015)),
+                                              Gap(size.height * (isMobile ? 0.01 : 0.015)),
                                               Row(
                                                 children: [
-                                                  Gap(size.width *
-                                                      (isMobile
-                                                          ? 0.055
-                                                          : 0.08)),
+                                                  Gap(size.width * (isMobile ? 0.055 : 0.08)),
                                                   Image.asset(
                                                     'assets/images/job_card.png',
-                                                    scale: size.width *
-                                                        (isMobile
-                                                            ? 0.05
-                                                            : 0.015),
+                                                    scale: size.width * (isMobile ? 0.05 : 0.015),
                                                     color: Colors.black,
                                                   ),
                                                   Gap(size.width * 0.01),
                                                   InkWell(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
+                                                    borderRadius: BorderRadius.circular(20),
                                                     radius: 100,
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    customBorder:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)),
+                                                    splashColor: Colors.transparent,
+                                                    customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                                     enableFeedback: true,
                                                     onTap: () {
-                                                      state.service = state
-                                                          .services![index];
-                                                      navigator.push(
-                                                          '/jobCardDetails');
+                                                      state.service = state.services![index];
+                                                      navigator.push('/jobCardDetails');
                                                     },
                                                     child: Text(
-                                                      state.getServiceStatus ==
-                                                              GetServiceStatus
-                                                                  .success
-                                                          ? state
-                                                              .services![index]
-                                                              .jobCardNo!
-                                                          : 'JC-MAD-633',
+                                                      state.getServiceStatus == GetServiceStatus.success ? state.services![index].jobCardNo! : 'JC-MAD-633',
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: (isMobile
-                                                              ? 12
-                                                              : 16),
+                                                          fontWeight: FontWeight.w500,
+                                                          fontSize: (isMobile ? 12 : 16),
                                                           color: Colors.blue,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          decoration: TextDecoration.underline),
                                                     ),
                                                   )
                                                 ],
                                               ),
-                                              Gap(size.width *
-                                                  (isMobile ? 0.06 : 0.07)),
+                                              Gap(size.width * (isMobile ? 0.06 : 0.07)),
                                               Row(
                                                 children: [
-                                                  Gap(size.width *
-                                                      (isMobile
-                                                          ? 0.055
-                                                          : 0.082)),
+                                                  Gap(size.width * (isMobile ? 0.055 : 0.082)),
                                                   Image.asset(
                                                     'assets/images/registration_no.png',
-                                                    scale: size.width *
-                                                        (isMobile
-                                                            ? 0.055
-                                                            : 0.016),
+                                                    scale: size.width * (isMobile ? 0.055 : 0.016),
                                                   ),
                                                   Gap(size.width * 0.01),
                                                   SizedBox(
-                                                    width: size.width *
-                                                        (isMobile
-                                                            ? 0.28
-                                                            : 0.25),
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
+                                                    width: size.width * (isMobile ? 0.28 : 0.25),
+                                                    child: SingleChildScrollView(
+                                                      scrollDirection: Axis.horizontal,
                                                       child: Text(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        state.getServiceStatus ==
-                                                                GetServiceStatus
-                                                                    .success
-                                                            ? state
-                                                                .services![
-                                                                    index]
-                                                                .registrationNo!
+                                                        textAlign: TextAlign.center,
+                                                        state.getServiceStatus == GetServiceStatus.success
+                                                            ? state.services![index].registrationNo!
                                                             : 'TS09ED7884',
-                                                        style: TextStyle(
-                                                            fontSize: isMobile
-                                                                ? 13
-                                                                : 17),
+                                                        style: TextStyle(fontSize: isMobile ? 13 : 17),
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                              Gap(size.width *
-                                                  (isMobile ? 0.01 : 0.0016)),
+                                              Gap(size.width * (isMobile ? 0.01 : 0.0016)),
                                             ],
                                           ),
                                         ],
                                       ),
-                                      Gap(size.height *
-                                          (isMobile ? 0.02 : 0.02)),
+                                      Gap(size.height * (isMobile ? 0.02 : 0.02)),
                                       Container(
                                         height: size.height * 0.05,
-                                        width: size.width *
-                                            (isMobile ? 0.94 : 0.79),
-                                        margin: EdgeInsets.only(
-                                            bottom: size.height * 0.003),
+                                        width: size.width * (isMobile ? 0.94 : 0.79),
+                                        margin: EdgeInsets.only(bottom: size.height * 0.003),
                                         decoration: BoxDecoration(
                                             color: Colors.orange.shade200,
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(10),
-                                                    bottomRight:
-                                                        Radius.circular(10))),
+                                            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
-                                                Gap(size.width *
-                                                    (isMobile ? 0.01 : 0.03)),
+                                                Gap(size.width * (isMobile ? 0.01 : 0.03)),
                                                 Image.asset(
                                                   'assets/images/customer.png',
-                                                  scale: size.width *
-                                                      (isMobile ? 0.06 : 0.018),
+                                                  scale: size.width * (isMobile ? 0.06 : 0.018),
                                                 ),
-                                                Gap(size.width *
-                                                    (isMobile ? 0.01 : 0.02)),
+                                                Gap(size.width * (isMobile ? 0.01 : 0.02)),
                                                 SizedBox(
-                                                  width: size.width *
-                                                      (isMobile ? 0.36 : 0.33),
+                                                  width: size.width * (isMobile ? 0.36 : 0.33),
                                                   child: SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Text(
-                                                      state.getServiceStatus ==
-                                                              GetServiceStatus
-                                                                  .success
-                                                          ? state
-                                                              .services![index]
-                                                              .customerName!
+                                                      state.getServiceStatus == GetServiceStatus.success
+                                                          ? state.services![index].customerName!
                                                           : 'Customer Name',
-                                                      style: TextStyle(
-                                                          fontSize: isMobile
-                                                              ? 13
-                                                              : 17,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
+                                                      style:
+                                                          TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                     ),
                                                   ),
                                                 ),
@@ -285,34 +196,19 @@ class _ServiceHistory1State extends State<ServiceHistory1>
                                               children: [
                                                 Image.asset(
                                                   'assets/images/call.png',
-                                                  scale: size.width *
-                                                      (isMobile ? 0.06 : 0.018),
+                                                  scale: size.width * (isMobile ? 0.06 : 0.018),
                                                 ),
                                                 Gap(size.width * 0.01),
                                                 SizedBox(
-                                                  width: size.width *
-                                                      (isMobile ? 0.25 : 0.08),
+                                                  width: size.width * (isMobile ? 0.25 : 0.08),
                                                   child: SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Text(
-                                                      state.getServiceStatus ==
-                                                              GetServiceStatus
-                                                                  .success
-                                                          ? state
-                                                                  .services![
-                                                                      index]
-                                                                  .customerContact ??
-                                                              '-'
+                                                      state.getServiceStatus == GetServiceStatus.success
+                                                          ? state.services![index].customerContact ?? '-'
                                                           : 'Contact Number',
-                                                      style: TextStyle(
-                                                          fontSize: isMobile
-                                                              ? 13
-                                                              : 17,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
+                                                      style:
+                                                          TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                     ),
                                                   ),
                                                 ),
@@ -330,8 +226,7 @@ class _ServiceHistory1State extends State<ServiceHistory1>
                 }
                 return SizedBox(
                   child: ListView(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: size.width * (isMobile ? 0.03 : 0.1)),
+                    padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.1)),
                     shrinkWrap: true,
                     children: [1, 2, 3, 4, 5, 6]
                         .map((e) => ClipShadowPath(
@@ -344,10 +239,8 @@ class _ServiceHistory1State extends State<ServiceHistory1>
                                 spreadRadius: 1,
                               ),
                               child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: size.height * 0.006),
-                                height:
-                                    size.height * (isMobile ? 0.129 : 0.128),
+                                margin: EdgeInsets.symmetric(vertical: size.height * 0.006),
+                                height: size.height * (isMobile ? 0.129 : 0.128),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),

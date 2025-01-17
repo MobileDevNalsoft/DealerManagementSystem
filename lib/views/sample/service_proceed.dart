@@ -68,14 +68,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
     'Wiper blade replacement'
   ];
 
-  List<String> bayList = [
-    "Service Bay",
-    "Express Maintenance Bay",
-    "Body Repair Bay",
-    "Tire Service Bays",
-    "Diagnostic Bay",
-    "Wash Bay"
-  ];
+  List<String> bayList = ["Service Bay", "Express Maintenance Bay", "Body Repair Bay", "Tire Service Bays", "Diagnostic Bay", "Wash Bay"];
 
   late ServiceBloc _serviceBloc;
   NavigatorService navigator = getIt<NavigatorService>();
@@ -164,13 +157,11 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   hint: 'Booking Source',
                                   isMobile: isMobile,
                                   focus: bookingFocus,
-                                  typeAheadController:
-                                      bookingTypeAheadController,
+                                  typeAheadController: bookingTypeAheadController,
                                   icon: const Icon(Icons.arrow_drop_down),
                                   scrollController: scrollController),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (isMobile ? 0.005 : 0.015),
                               ),
                               DMSCustomWidgets.CustomDataCard(
                                   context: context,
@@ -182,8 +173,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   textcontroller: altContController,
                                   scrollController: scrollController),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (isMobile ? 0.005 : 0.015),
                               ),
                               DMSCustomWidgets.CustomDataCard(
                                   context: context,
@@ -193,43 +183,28 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   focusNode: altContPhoneNoFocus,
                                   textcontroller: altContPhoneNoController,
                                   keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    LengthLimitingTextInputFormatter(10)
-                                  ],
+                                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
                                   scrollController: scrollController),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (isMobile ? 0.005 : 0.015),
                               ),
                               BlocBuilder<MultiBloc, MultiBlocState>(
                                 builder: (context, state) {
                                   return DMSCustomWidgets.SearchableDropDown(
                                       size: size,
-                                      items: state.salesPersons == null
-                                          ? []
-                                          : state.salesPersons!
-                                              .map((e) =>
-                                                  "${e.empName}-${e.empId}")
-                                              .toList(),
+                                      items: state.salesPersons == null ? [] : state.salesPersons!.map((e) => "${e.empName}-${e.empId}").toList(),
                                       hint: 'Sales Person',
                                       // icon: const Icon(Icons.arrow_drop_down),
                                       isMobile: isMobile,
-                                      isLoading: state.status ==
-                                              MultiStateStatus.loading
-                                          ? true
-                                          : false,
+                                      isLoading: state.status == MultiStateStatus.loading ? true : false,
                                       focus: spFocus,
-                                      typeAheadController:
-                                          spTypeAheadController,
-                                      suggestionsController:
-                                          suggestionsController,
+                                      typeAheadController: spTypeAheadController,
+                                      suggestionsController: suggestionsController,
                                       scrollController: scrollController);
                                 },
                               ),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (isMobile ? 0.005 : 0.015),
                               ),
                               DMSCustomWidgets.SearchableDropDown(
                                   items: bayList,
@@ -240,8 +215,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   typeAheadController: bayTypeAheadController,
                                   scrollController: scrollController),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (isMobile ? 0.005 : 0.015),
                               ),
                               DMSCustomWidgets.SearchableDropDown(
                                   size: size,
@@ -254,8 +228,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   isMobile: isMobile,
                                   scrollController: scrollController),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (isMobile ? 0.005 : 0.015),
                               ),
                               DMSCustomWidgets.CustomTextFieldCard(
                                   size: size,
@@ -266,8 +239,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   focusNode: custConcernsFocus,
                                   textcontroller: custConcernsController),
                               SizedBox(
-                                height:
-                                    size.height * (isMobile ? 0.005 : 0.015),
+                                height: size.height * (isMobile ? 0.005 : 0.015),
                               ),
                               DMSCustomWidgets.CustomTextFieldCard(
                                   size: size,
@@ -295,15 +267,13 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   jobTypeAheadController.text = "";
                                   custConcernsController.text = "";
                                   remarksController.text = "";
-                                  DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message: 'Service Added Successfully');
+                                  DMSCustomWidgets.DMSFlushbar(size, context, message: 'Service Added Successfully');
 
                                   context.read<MultiBloc>().state.date = null;
                                   navigator.pushReplacement("/inspectionIn");
                                 case ServiceUploadStatus.failure:
                                   DMSCustomWidgets.DMSFlushbar(size, context,
-                                      message:
-                                          'Something went wrong. Please try again later',
+                                      message: 'Something went wrong. Please try again later',
                                       icon: const Icon(
                                         Icons.error,
                                         color: Colors.white,
@@ -318,16 +288,10 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                   return CustomSliderButton(
                                     context: context,
                                     size: size,
-                                    sliderStatus: context
-                                        .watch<ServiceBloc>()
-                                        .state
-                                        .serviceUploadStatus!,
+                                    sliderStatus: context.watch<ServiceBloc>().state.serviceUploadStatus!,
                                     label: const Text(
                                       "Proceed to receive",
-                                      style: TextStyle(
-                                          color: Color(0xff4a4a4a),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 17),
+                                      style: TextStyle(color: Color(0xff4a4a4a), fontWeight: FontWeight.w500, fontSize: 17),
                                     ),
                                     icon: const Icon(
                                       Icons.arrow_forward_ios_rounded,
@@ -343,68 +307,41 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                                       remarksFocus.unfocus();
                                       print(jobTypeAheadController.text);
 
-                                      String? message = _bookingSourceValidator(
-                                              bookingTypeAheadController
-                                                  .text) ??
-                                          (altContController.text.isEmpty
-                                              ? "Alternate Contact Person cannot be empty"
-                                              : null) ??
-                                          _altPersonContactNoValidation(
-                                              altContPhoneNoController.text) ??
-                                          _salesPersonValidator(
-                                              spTypeAheadController.text,
-                                              (state.salesPersons ?? [])
-                                                  .map((e) => e.empName)
-                                                  .toList()) ??
-                                          _bayValidator(
-                                              bayTypeAheadController.text,
-                                              bayList) ??
-                                          _jobTypeValidator(
-                                              jobTypeAheadController.text,
-                                              jobTypeList);
+                                      String? message = _bookingSourceValidator(bookingTypeAheadController.text) ??
+                                          (altContController.text.isEmpty ? "Alternate Contact Person cannot be empty" : null) ??
+                                          _altPersonContactNoValidation(altContPhoneNoController.text) ??
+                                          _salesPersonValidator(spTypeAheadController.text, (state.salesPersons ?? []).map((e) => e.empName).toList()) ??
+                                          _bayValidator(bayTypeAheadController.text, bayList) ??
+                                          _jobTypeValidator(jobTypeAheadController.text, jobTypeList);
 
                                       if (message != null) {
-                                        DMSCustomWidgets.DMSFlushbar(
-                                            size, context,
+                                        DMSCustomWidgets.DMSFlushbar(size, context,
                                             message: message,
                                             icon: const Icon(
                                               Icons.error,
                                               color: Colors.white,
                                             ));
                                       } else {
-                                        Service service =
-                                            Service.fromJson(widget.homeData);
+                                        Service service = Service.fromJson(widget.homeData);
 
                                         Service finalService = Service(
-                                            registrationNo:
-                                                service.registrationNo,
+                                            registrationNo: service.registrationNo,
                                             location: service.location,
                                             customerName: service.customerName,
-                                            scheduledDate:
-                                                service.scheduledDate,
+                                            scheduledDate: service.scheduledDate,
                                             kms: service.kms,
-                                            bookingSource:
-                                                bookingTypeAheadController.text,
-                                            alternateContactPerson:
-                                                altContController.text,
-                                            alternatePersonContactNo: int.parse(
-                                                altContPhoneNoController.text),
-                                            salesPerson: spTypeAheadController
-                                                .text
-                                                .split('-')[0],
+                                            bookingSource: bookingTypeAheadController.text,
+                                            alternateContactPerson: altContController.text,
+                                            alternatePersonContactNo: int.parse(altContPhoneNoController.text),
+                                            salesPerson: spTypeAheadController.text.split('-')[0],
                                             bay: bayTypeAheadController.text,
-                                            jobType:
-                                                jobTypeAheadController.text,
-                                            jobCardNo:
-                                                'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
-                                            customerConcerns:
-                                                custConcernsController.text,
+                                            jobType: jobTypeAheadController.text,
+                                            jobCardNo: 'JC-${service.location!.substring(0, 3).toUpperCase()}-${service.kms.toString().substring(0, 2)}',
+                                            customerConcerns: custConcernsController.text,
                                             remarks: remarksController.text);
 
                                         Log.d(finalService.toJson());
-                                        context.read<ServiceBloc>().add(
-                                            ServiceAdded(
-                                                service: finalService));
+                                        context.read<ServiceBloc>().add(ServiceAdded(service: finalService));
                                       }
                                     },
                                   );
@@ -436,8 +373,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
         // ),
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
             ? Padding(
-                padding: EdgeInsets.only(
-                    right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
+                padding: EdgeInsets.only(right: isMobile ? 5 : 40, bottom: isMobile ? 15 : 25),
                 child: CustomWidgets.CustomExpandableFAB(
                     horizontalAlignment: isMobile ? -17 : -38,
                     verticalAlignment: -15,
@@ -464,9 +400,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                               ),
                               Text(
                                 'Add Vehicle',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isMobile ? 11 : 14),
+                                style: TextStyle(color: Colors.white, fontSize: isMobile ? 11 : 14),
                               )
                             ],
                           ),
@@ -477,9 +411,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                         width: size.width * (isMobile ? 0.24 : 0.1),
                         child: GestureDetector(
                           onTap: () {
-                            context.read<VehicleBloc>().add(UpdateState(
-                                status: VehicleStatus.initial,
-                                vehicle: Vehicle()));
+                            context.read<VehicleBloc>().add(UpdateState(status: VehicleStatus.initial, vehicle: Vehicle()));
                             widget.clearFields!();
                             navigator.pushReplacement("/addVehicle");
                           },
@@ -492,9 +424,7 @@ class _ServiceProceedSample extends State<ServiceProceedSample> {
                               ),
                               Text(
                                 'History',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isMobile ? 11 : 14),
+                                style: TextStyle(color: Colors.white, fontSize: isMobile ? 11 : 14),
                               )
                             ],
                           ),
@@ -584,8 +514,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
   @override
   void initState() {
     super.initState();
-    print(
-        "stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus}");
+    print("stattus from init ${context.read<ServiceBloc>().state.serviceUploadStatus}");
     _position = widget.size.width * 0.22;
     _startPosition = widget.size.width * 0.22;
     _endPosition = widget.size.width * 0.68;
@@ -617,13 +546,10 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
     }
     await widget.onDismissed();
     setState(() {
-      print(
-          "status from state ${context.read<ServiceBloc>().state.serviceUploadStatus}");
-      if (context.read<ServiceBloc>().state.serviceUploadStatus ==
-          ServiceUploadStatus.initial) {
+      print("status from state ${context.read<ServiceBloc>().state.serviceUploadStatus}");
+      if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.initial) {
         _position = _startPosition;
-      } else if (context.read<ServiceBloc>().state.serviceUploadStatus ==
-          ServiceUploadStatus.loading) {
+      } else if (context.read<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading) {
         _position = _endPosition;
       }
     });
@@ -651,11 +577,7 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                 alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16.0),
-                  child: Shimmer.fromColors(
-                      baseColor: Colors.black,
-                      highlightColor: Colors.grey.shade100,
-                      enabled: true,
-                      child: widget.label),
+                  child: Shimmer.fromColors(baseColor: Colors.black, highlightColor: Colors.grey.shade100, enabled: true, child: widget.label),
                 ),
               ),
             ),
@@ -674,17 +596,10 @@ class _CustomSliderButtonState extends State<CustomSliderButton> {
                   child: Stack(
                 children: [
                   Center(
-                      child: (context
-                                      .watch<ServiceBloc>()
-                                      .state
-                                      .serviceUploadStatus ==
-                                  ServiceUploadStatus.success &&
-                              _position == _endPosition)
-                          ? Lottie.asset("assets/lottie/success.json",
-                              repeat: false)
+                      child: (context.watch<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.success && _position == _endPosition)
+                          ? Lottie.asset("assets/lottie/success.json", repeat: false)
                           : widget.icon),
-                  if (context.watch<ServiceBloc>().state.serviceUploadStatus ==
-                      ServiceUploadStatus.loading)
+                  if (context.watch<ServiceBloc>().state.serviceUploadStatus == ServiceUploadStatus.loading)
                     Align(
                       alignment: Alignment.center,
                       child: CircularProgressIndicator(

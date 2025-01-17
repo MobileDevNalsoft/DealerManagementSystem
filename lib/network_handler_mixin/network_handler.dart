@@ -6,8 +6,7 @@ mixin ConnectivityMixin<T extends StatefulWidget> on State<T> {
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   late bool _isConnected;
-  final StreamController<bool> _connectivityController =
-      StreamController<bool>.broadcast();
+  final StreamController<bool> _connectivityController = StreamController<bool>.broadcast();
 
   Stream<bool> get connectivityStream => _connectivityController.stream;
 
@@ -16,8 +15,7 @@ mixin ConnectivityMixin<T extends StatefulWidget> on State<T> {
     super.initState();
     _isConnected = true; // Assume connected initially
     _initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectivity);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectivity);
   }
 
   Future<void> _initConnectivity() async {

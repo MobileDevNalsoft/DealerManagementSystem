@@ -30,8 +30,7 @@ class QualityCheck extends StatefulWidget {
   State<QualityCheck> createState() => _QualityCheckState();
 }
 
-class _QualityCheckState extends State<QualityCheck>
-    with SingleTickerProviderStateMixin, ConnectivityMixin {
+class _QualityCheckState extends State<QualityCheck> with SingleTickerProviderStateMixin, ConnectivityMixin {
   TextEditingController rejectionController = TextEditingController();
   FocusNode rejectionFocus = FocusNode();
   late DraggableScrollableController draggableScrollableController;
@@ -52,9 +51,7 @@ class _QualityCheckState extends State<QualityCheck>
     _interactionBloc.state.mapMedia = {};
     // fetching images and comments for the jobCard Number
     // remove widget.jobCardNo for release version.
-    _interactionBloc.add(FetchVehicleMediaEvent(
-        jobCardNo: context.read<ServiceBloc>().state.service!.jobCardNo ??
-            widget.jobCardNo));
+    _interactionBloc.add(FetchVehicleMediaEvent(jobCardNo: context.read<ServiceBloc>().state.service!.jobCardNo ?? widget.jobCardNo));
     draggableScrollableController = DraggableScrollableController();
     draggableScrollableController.addListener(removeSheetOnBelowMin);
   }
@@ -62,21 +59,16 @@ class _QualityCheckState extends State<QualityCheck>
   //Closing the bottom sheet on moving it below the min pixels
   void removeSheetOnBelowMin() {
     if (draggableScrollableController.pixels < 190) {
-      _interactionBloc.add(ModifyVehicleInteractionStatus(
-          selectedBodyPart: "", isTapped: false));
+      _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
     }
   }
 
   Future loadSvgs() async {
     List<List<GeneralBodyPart>> svgResources = [];
-    svgResources.add(
-        await loadSvgImage(svgImage: 'assets/images/image.svg')); //generalParts
-    svgResources.add(await loadSvgImage(
-        svgImage: 'assets/images/image_accept.svg')); //acceptedParts
-    svgResources.add(await loadSvgImage(
-        svgImage: 'assets/images/image_reject.svg')); //rejectedParts
-    svgResources.add(await loadSvgImage(
-        svgImage: 'assets/images/image_pending.svg')); //pendingParts
+    svgResources.add(await loadSvgImage(svgImage: 'assets/images/image.svg')); //generalParts
+    svgResources.add(await loadSvgImage(svgImage: 'assets/images/image_accept.svg')); //acceptedParts
+    svgResources.add(await loadSvgImage(svgImage: 'assets/images/image_reject.svg')); //rejectedParts
+    svgResources.add(await loadSvgImage(svgImage: 'assets/images/image_pending.svg')); //pendingParts
     return svgResources;
   }
 
@@ -92,54 +84,31 @@ class _QualityCheckState extends State<QualityCheck>
             backgroundColor: Colors.black45,
             leadingWidth: size.width * 0.14,
             leading: Container(
-              margin: EdgeInsets.only(
-                  left: size.width * 0.045,
-                  top: isMobile ? 0 : size.height * 0.008,
-                  bottom: isMobile ? 0 : size.height * 0.008),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        blurStyle: BlurStyle.outer,
-                        spreadRadius: 0,
-                        color: Colors.orange.shade200,
-                        offset: const Offset(0, 0))
-                  ]),
+              margin: EdgeInsets.only(left: size.width * 0.045, top: isMobile ? 0 : size.height * 0.008, bottom: isMobile ? 0 : size.height * 0.008),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+              ]),
               child: Transform(
                 transform: Matrix4.translationValues(-3, 0, 0),
                 child: IconButton(
                     onPressed: () {
                       navigator.pop();
                     },
-                    icon: const Icon(Icons.arrow_back_rounded,
-                        color: Colors.white)),
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white)),
               ),
             ),
             title: Container(
                 alignment: Alignment.center,
                 height: size.height * 0.05,
                 width: isMobile ? size.width * 0.45 : size.width * 0.32,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.black,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10,
-                          blurStyle: BlurStyle.outer,
-                          spreadRadius: 0,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0))
-                    ]),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                  BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                ]),
                 child: const Center(
                   child: Text(
                     textAlign: TextAlign.center,
                     'Quality Check',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
                   ),
                 )),
             centerTitle: true,
@@ -149,13 +118,7 @@ class _QualityCheckState extends State<QualityCheck>
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10,
-                          spreadRadius: -5,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0))
-                    ]),
+                    boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
                 child: Switch(
                   value: false,
                   onChanged: (value) {
@@ -177,11 +140,7 @@ class _QualityCheckState extends State<QualityCheck>
                   width: MediaQuery.of(context).size.width,
                   decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                          colors: [
-                            Colors.black45,
-                            Color.fromARGB(40, 104, 103, 103),
-                            Colors.black45
-                          ],
+                          colors: [Colors.black45, Color.fromARGB(40, 104, 103, 103), Colors.black45],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: [0.1, 0.5, 1])),
@@ -190,13 +149,10 @@ class _QualityCheckState extends State<QualityCheck>
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Transform.scale(
-                            scale:
-                                context.watch<MultiBloc>().state.scaleFactor ??
-                                    1.3,
+                            scale: context.watch<MultiBloc>().state.scaleFactor ?? 1.3,
                             child: GestureDetector(
                               onScaleUpdate: (details) {
-                                _multiBloc
-                                    .add(ScaleVehicle(factor: details.scale));
+                                _multiBloc.add(ScaleVehicle(factor: details.scale));
                               },
                               // Canvas to build the car model.
                               child: BodyCanvas(
@@ -214,10 +170,7 @@ class _QualityCheckState extends State<QualityCheck>
                 ),
 
                 //Displaying the sheet only when any part is not tapped
-                if (!context
-                    .watch<VehiclePartsInteractionBloc>()
-                    .state
-                    .isTapped)
+                if (!context.watch<VehiclePartsInteractionBloc>().state.isTapped)
                   Positioned(
                     bottom: size.height * 0.1,
                     left: isMobile ? size.width * 0.38 : size.width * 0.455,
@@ -226,21 +179,15 @@ class _QualityCheckState extends State<QualityCheck>
                       child: GestureDetector(
                         onTap: () {
                           if (!isConnected()) {
-                            DMSCustomWidgets.DMSFlushbar(size, context,
-                                message:
-                                    'Please check the internet connectivity',
-                                icon: const Icon(Icons.error));
+                            DMSCustomWidgets.DMSFlushbar(size, context, message: 'Please check the internet connectivity', icon: const Icon(Icons.error));
                             return;
                           }
                           String message = "";
-                          for (var entry
-                              in _interactionBloc.state.mapMedia.entries) {
+                          for (var entry in _interactionBloc.state.mapMedia.entries) {
                             if (entry.value.isAccepted == null) {
                               message = "Please complete the quality check";
-                            } else if (entry.value.isAccepted == false &&
-                                entry.value.reasonForRejection!.isEmpty) {
-                              message =
-                                  'Please add rejection reasons for ${entry.key.toUpperCase()}';
+                            } else if (entry.value.isAccepted == false && entry.value.reasonForRejection!.isEmpty) {
+                              message = 'Please add rejection reasons for ${entry.key.toUpperCase()}';
                             }
                             if (message.isNotEmpty) {
                               DMSCustomWidgets.DMSFlushbar(
@@ -255,30 +202,19 @@ class _QualityCheckState extends State<QualityCheck>
                               return;
                             }
                           }
-                          _interactionBloc.add(SubmitQualityCheckStatusEvent(
-                              jobCardNo: widget.jobCardNo));
+                          _interactionBloc.add(SubmitQualityCheckStatusEvent(jobCardNo: widget.jobCardNo));
                         },
                         child: Container(
                             alignment: Alignment.center,
                             height: size.height * 0.045,
-                            width:
-                                isMobile ? size.width * 0.2 : size.width * 0.08,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.black,
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 10,
-                                      blurStyle: BlurStyle.outer,
-                                      spreadRadius: 0,
-                                      color: Colors.orange.shade200,
-                                      offset: const Offset(0, 0))
-                                ]),
+                            width: isMobile ? size.width * 0.2 : size.width * 0.08,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
+                              BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                            ]),
                             child: const Text(
                               textAlign: TextAlign.center,
                               'Save',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              style: TextStyle(color: Colors.white, fontSize: 16),
                             )),
                       ),
                     ),
@@ -289,17 +225,9 @@ class _QualityCheckState extends State<QualityCheck>
                   right: isMobile ? size.width * 0.05 : null,
                   left: isMobile ? null : size.width * 0.032,
                   child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 10,
-                              blurStyle: BlurStyle.outer,
-                              spreadRadius: 0,
-                              color: Colors.orange.shade200,
-                              offset: const Offset(0, 0))
-                        ]),
+                    decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(16), boxShadow: [
+                      BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                    ]),
                     height: size.height * 0.12,
                     width: isMobile ? size.width * 0.1 : size.width * 0.032,
                     child: Column(
@@ -311,20 +239,11 @@ class _QualityCheckState extends State<QualityCheck>
                             onPressed: () {
                               if (_multiBloc.state.scaleFactor == null) {
                                 _multiBloc.state.scaleFactor = 1.4;
-                                _multiBloc.add(ScaleVehicle(
-                                    factor: context
-                                        .read<MultiBloc>()
-                                        .state
-                                        .scaleFactor!));
+                                _multiBloc.add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                               } else {
                                 if (_multiBloc.state.scaleFactor! <= 1.8) {
-                                  _multiBloc.state.scaleFactor =
-                                      _multiBloc.state.scaleFactor! + 0.1;
-                                  _multiBloc.add(ScaleVehicle(
-                                      factor: context
-                                          .read<MultiBloc>()
-                                          .state
-                                          .scaleFactor!));
+                                  _multiBloc.state.scaleFactor = _multiBloc.state.scaleFactor! + 0.1;
+                                  _multiBloc.add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                                 }
                               }
                             },
@@ -337,20 +256,11 @@ class _QualityCheckState extends State<QualityCheck>
                           onPressed: () {
                             if (_multiBloc.state.scaleFactor == null) {
                               _multiBloc.state.scaleFactor = 1.3;
-                              _multiBloc.add(ScaleVehicle(
-                                  factor: context
-                                      .read<MultiBloc>()
-                                      .state
-                                      .scaleFactor!));
+                              _multiBloc.add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                             } else {
                               if (_multiBloc.state.scaleFactor! >= 1.3) {
-                                _multiBloc.state.scaleFactor =
-                                    _multiBloc.state.scaleFactor! - 0.1;
-                                _multiBloc.add(ScaleVehicle(
-                                    factor: context
-                                        .read<MultiBloc>()
-                                        .state
-                                        .scaleFactor!));
+                                _multiBloc.state.scaleFactor = _multiBloc.state.scaleFactor! - 0.1;
+                                _multiBloc.add(ScaleVehicle(factor: context.read<MultiBloc>().state.scaleFactor!));
                               }
                             }
                           },
@@ -368,141 +278,88 @@ class _QualityCheckState extends State<QualityCheck>
                   isMobile
                       ? Center(
                           child: Padding(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom),
+                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                             child: DraggableScrollableSheet(
                               controller: draggableScrollableController,
                               snap: true,
-                              snapAnimationDuration:
-                                  const Duration(milliseconds: 500),
+                              snapAnimationDuration: const Duration(milliseconds: 500),
                               shouldCloseOnMinExtent: true,
                               minChildSize: 0.25,
                               // Bottom sheet sizes
-                              maxChildSize: !_interactionBloc.state.mapMedia
-                                      .containsKey(context
-                                          .watch<VehiclePartsInteractionBloc>()
-                                          .state
-                                          .selectedBodyPart)
+                              maxChildSize: !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                                   ? 0.25
                                   : context
-                                                  .watch<
-                                                      VehiclePartsInteractionBloc>()
+                                                  .watch<VehiclePartsInteractionBloc>()
                                                   .state
-                                                  .mapMedia[context
-                                                      .read<
-                                                          VehiclePartsInteractionBloc>()
-                                                      .state
-                                                      .selectedBodyPart]!
+                                                  .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                   .isAccepted ==
                                               null ||
                                           context
-                                                  .watch<
-                                                      VehiclePartsInteractionBloc>()
+                                                  .watch<VehiclePartsInteractionBloc>()
                                                   .state
-                                                  .mapMedia[context
-                                                      .read<
-                                                          VehiclePartsInteractionBloc>()
-                                                      .state
-                                                      .selectedBodyPart]!
+                                                  .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                   .isAccepted ==
                                               true
                                       ? 0.5
                                       : 0.8,
-                              initialChildSize: !_interactionBloc.state.mapMedia
-                                      .containsKey(context
-                                          .watch<VehiclePartsInteractionBloc>()
-                                          .state
-                                          .selectedBodyPart)
-                                  ? 0.25
-                                  : context
-                                                  .watch<
-                                                      VehiclePartsInteractionBloc>()
-                                                  .state
-                                                  .mapMedia[context
-                                                      .read<
-                                                          VehiclePartsInteractionBloc>()
+                              initialChildSize:
+                                  !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
+                                      ? 0.25
+                                      : context
+                                                      .watch<VehiclePartsInteractionBloc>()
                                                       .state
-                                                      .selectedBodyPart]!
-                                                  .isAccepted ==
-                                              null ||
-                                          context
-                                                  .watch<
-                                                      VehiclePartsInteractionBloc>()
-                                                  .state
-                                                  .mapMedia[context
-                                                      .read<
-                                                          VehiclePartsInteractionBloc>()
+                                                      .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                      .isAccepted ==
+                                                  null ||
+                                              context
+                                                      .watch<VehiclePartsInteractionBloc>()
                                                       .state
-                                                      .selectedBodyPart]!
-                                                  .isAccepted ==
-                                              true
-                                      ? 0.5
-                                      : 0.7,
-                              builder: (BuildContext context,
-                                  ScrollController scrollController) {
+                                                      .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                      .isAccepted ==
+                                                  true
+                                          ? 0.5
+                                          : 0.7,
+                              builder: (BuildContext context, ScrollController scrollController) {
                                 return Align(
                                   alignment: Alignment.center,
                                   child: Container(
-                                    width: isMobile
-                                        ? size.width
-                                        : size.width * 0.5,
+                                    width: isMobile ? size.width : size.width * 0.5,
                                     decoration: const BoxDecoration(
                                         color: Color.fromRGBO(26, 26, 27, 1),
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(24),
-                                            topRight: Radius.circular(24))),
-                                    child: LayoutBuilder(
-                                        builder: (context, ParentSize) {
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                                    child: LayoutBuilder(builder: (context, ParentSize) {
                                       return CustomScrollView(
                                         controller: scrollController,
                                         slivers: [
                                           SliverToBoxAdapter(
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    Gap(ParentSize.maxWidth *
-                                                        0.455),
+                                                    Gap(ParentSize.maxWidth * 0.455),
                                                     Container(
-                                                      decoration:
-                                                          const BoxDecoration(
+                                                      decoration: const BoxDecoration(
                                                         color: Colors.grey,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    10)),
+                                                        borderRadius: BorderRadius.all(Radius.circular(10)),
                                                       ),
                                                       height: 4,
-                                                      width:
-                                                          ParentSize.maxWidth *
-                                                              0.1,
+                                                      width: ParentSize.maxWidth * 0.1,
                                                       padding: EdgeInsets.zero,
                                                     ),
                                                     const Spacer(),
                                                     Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
+                                                        alignment: Alignment.centerRight,
                                                         child: IconButton(
                                                           onPressed: () {
-                                                            _interactionBloc.add(
-                                                                ModifyVehicleInteractionStatus(
-                                                                    selectedBodyPart:
-                                                                        "",
-                                                                    isTapped:
-                                                                        false));
+                                                            _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
                                                           },
                                                           icon: const Icon(
                                                             Icons.cancel,
                                                             size: 28,
                                                           ),
-                                                          visualDensity:
-                                                              VisualDensity
-                                                                  .compact,
+                                                          visualDensity: VisualDensity.compact,
                                                         ))
                                                   ],
                                                 ),
@@ -519,426 +376,335 @@ class _QualityCheckState extends State<QualityCheck>
                                             ),
                                           ),
                                           // if no images and comments are present for the vehicle part
-                                          !_interactionBloc.state.mapMedia
-                                                  .containsKey(context
-                                                      .watch<
-                                                          VehiclePartsInteractionBloc>()
-                                                      .state
-                                                      .selectedBodyPart)
+                                          !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                                               ? const SliverToBoxAdapter(
                                                   child: Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
+                                                    padding: EdgeInsets.all(8.0),
                                                     child: Text(
                                                       "No data found",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white54),
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(color: Colors.white54),
                                                     ),
                                                   ),
                                                 )
-                                              : SliverList.list(
-                                                  addRepaintBoundaries: true,
-                                                  children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                    18.0),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                              : SliverList.list(addRepaintBoundaries: true, children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        const Gap(16),
+                                                        Row(
                                                           children: [
-                                                            const Gap(16),
-                                                            Row(
-                                                              children: [
-                                                                const Gap(8),
-                                                                Text(
-                                                                  context
-                                                                      .watch<
-                                                                          VehiclePartsInteractionBloc>()
-                                                                      .state
-                                                                      .selectedBodyPart!
-                                                                      .replaceAll(
-                                                                          '_',
-                                                                          ' ')
-                                                                      .toUpperCase(),
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          ParentSize.maxWidth *
-                                                                              0.042),
-                                                                ),
-                                                              ],
+                                                            const Gap(8),
+                                                            Text(
+                                                              context
+                                                                  .watch<VehiclePartsInteractionBloc>()
+                                                                  .state
+                                                                  .selectedBodyPart!
+                                                                  .replaceAll('_', ' ')
+                                                                  .toUpperCase(),
+                                                              style: TextStyle(
+                                                                  fontWeight: FontWeight.w600, color: Colors.white, fontSize: ParentSize.maxWidth * 0.042),
                                                             ),
-                                                            Row(
-                                                              children: [
-                                                                const Gap(8),
-                                                                const CircleAvatar(
-                                                                  radius: 6,
-                                                                  backgroundColor:
-                                                                      Color.fromRGBO(
-                                                                          145,
-                                                                          19,
-                                                                          19,
-                                                                          1),
-                                                                ),
-                                                                const Gap(8),
-                                                                Text(
-                                                                    context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart] ==
-                                                                            null
-                                                                        ? "No data"
-                                                                        : context
-                                                                            .watch<
-                                                                                VehiclePartsInteractionBloc>()
-                                                                            .state
-                                                                            .mapMedia[context
-                                                                                .watch<
-                                                                                    VehiclePartsInteractionBloc>()
-                                                                                .state
-                                                                                .selectedBodyPart]!
-                                                                            .comments!,
-                                                                    style: TextStyle(
-                                                                        color: const Color
-                                                                            .fromARGB(
-                                                                            255,
-                                                                            223,
-                                                                            220,
-                                                                            220),
-                                                                        fontSize:
-                                                                            ParentSize.maxWidth *
-                                                                                0.040)),
-                                                              ],
-                                                            ),
-                                                            const Gap(8.0),
-                                                            SizedBox(
-                                                              width: ParentSize
-                                                                      .maxWidth *
-                                                                  0.8,
-                                                              height: 128,
-
-                                                              // Images of the vehicle part
-                                                              child: GridView
-                                                                  .builder(
-                                                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                                                    crossAxisCount:
-                                                                        3,
-                                                                    crossAxisSpacing:
-                                                                        10,
-                                                                    mainAxisSpacing:
-                                                                        10),
-                                                                itemBuilder:
-                                                                    (context,
-                                                                        index) {
-                                                                  return ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            16),
-                                                                    child:
-                                                                        InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            useSafeArea:
-                                                                                true,
-                                                                            builder:
-                                                                                (context) {
-                                                                              return Stack(
-                                                                                children: [
-                                                                                  PhotoViewGallery.builder(
-                                                                                    allowImplicitScrolling: true,
-                                                                                    pageController: PageController(initialPage: index),
-                                                                                    backgroundDecoration: const BoxDecoration(
-                                                                                      color: Colors.transparent,
-                                                                                    ),
-                                                                                    pageSnapping: true,
-                                                                                    itemCount: context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images == null ? 0 : context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images!.length,
-                                                                                    builder: (BuildContext context, int index) {
-                                                                                      return PhotoViewGalleryPageOptions(
-                                                                                        disableGestures: false,
-                                                                                        maxScale: 1.5,
-                                                                                        filterQuality: FilterQuality.high,
-                                                                                        basePosition: Alignment.center,
-                                                                                        imageProvider: FileImage(
-                                                                                          File(context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images![index].path),
-                                                                                        ),
-                                                                                        initialScale: PhotoViewComputedScale.contained * 0.8,
-                                                                                        heroAttributes: PhotoViewHeroAttributes(tag: context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images![index].path),
-                                                                                      );
-                                                                                    },
-                                                                                  ),
-                                                                                  Positioned(
-                                                                                    top: 10,
-                                                                                    child: IconButton(
-                                                                                        onPressed: () {
-                                                                                          navigator.pop();
-                                                                                        },
-                                                                                        icon: const Icon(
-                                                                                          Icons.highlight_remove_rounded,
-                                                                                          color: Colors.white,
-                                                                                          size: 28,
-                                                                                        )),
-                                                                                  ),
-                                                                                ],
-                                                                              );
-                                                                            });
-                                                                      },
-                                                                      child: Image
-                                                                          .file(
-                                                                        File(context
-                                                                            .watch<VehiclePartsInteractionBloc>()
-                                                                            .state
-                                                                            .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
-                                                                            .images![index]
-                                                                            .path),
-                                                                        fit: BoxFit
-                                                                            .fitWidth,
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                },
-                                                                itemCount: context
-                                                                            .watch<
-                                                                                VehiclePartsInteractionBloc>()
-                                                                            .state
-                                                                            .mapMedia[context
-                                                                                .watch<
-                                                                                    VehiclePartsInteractionBloc>()
-                                                                                .state
-                                                                                .selectedBodyPart]!
-                                                                            .images ==
-                                                                        null
-                                                                    ? 0
-                                                                    : context
-                                                                        .watch<
-                                                                            VehiclePartsInteractionBloc>()
-                                                                        .state
-                                                                        .mapMedia[context
-                                                                            .watch<VehiclePartsInteractionBloc>()
-                                                                            .state
-                                                                            .selectedBodyPart]!
-                                                                        .images!
-                                                                        .length,
-                                                              ),
-                                                            ),
-                                                            Center(
-                                                              child: Builder(
-                                                                builder:
-                                                                    (context) {
-                                                                  if (_interactionBloc
-                                                                          .state
-                                                                          .mapMedia[_interactionBloc
-                                                                              .state
-                                                                              .selectedBodyPart]!
-                                                                          .isAccepted ==
-                                                                      null) {
-                                                                    sliderButtonController
-                                                                            .position =
-                                                                        Position
-                                                                            .middle;
-                                                                  } else if (_interactionBloc
-                                                                          .state
-                                                                          .mapMedia[_interactionBloc
-                                                                              .state
-                                                                              .selectedBodyPart]!
-                                                                          .isAccepted ==
-                                                                      true) {
-                                                                    sliderButtonController
-                                                                            .position =
-                                                                        Position
-                                                                            .right;
-                                                                  } else if (_interactionBloc
-                                                                          .state
-                                                                          .mapMedia[_interactionBloc
-                                                                              .state
-                                                                              .selectedBodyPart]!
-                                                                          .isAccepted ==
-                                                                      false) {
-                                                                    sliderButtonController
-                                                                            .position =
-                                                                        Position
-                                                                            .left;
-                                                                  } else {
-                                                                    sliderButtonController
-                                                                            .position =
-                                                                        Position
-                                                                            .left;
-                                                                  }
-                                                                  return CustomSliderButton(
-                                                                    leftLabel: Text(
-                                                                        "Reject"),
-                                                                    rightLabel:
-                                                                        Text(
-                                                                            "Accept"),
-                                                                    controller:
-                                                                        sliderButtonController,
-                                                                    onRightLabelReached:
-                                                                        () {
-                                                                      _interactionBloc.add(ModifyAcceptedEvent(
-                                                                          bodyPartName: _interactionBloc
-                                                                              .state
-                                                                              .selectedBodyPart!,
-                                                                          isAccepted:
-                                                                              true));
-                                                                    },
-                                                                    onLeftLabelReached:
-                                                                        () {
-                                                                      _interactionBloc.add(ModifyAcceptedEvent(
-                                                                          bodyPartName: _interactionBloc
-                                                                              .state
-                                                                              .selectedBodyPart!,
-                                                                          isAccepted:
-                                                                              false));
-                                                                    },
-                                                                    isMobile:
-                                                                        isMobile,
-                                                                    onNoStatus:
-                                                                        () {
-                                                                      _interactionBloc.add(ModifyAcceptedEvent(
-                                                                          bodyPartName: _interactionBloc
-                                                                              .state
-                                                                              .selectedBodyPart!,
-                                                                          isAccepted:
-                                                                              null));
-                                                                    },
-                                                                  );
-                                                                },
-                                                              ),
-                                                            ),
-                                                            const Gap(16),
-                                                            if (context
-                                                                        .read<
-                                                                            VehiclePartsInteractionBloc>()
-                                                                        .state
-                                                                        .mapMedia[
-                                                                    context
-                                                                        .read<
-                                                                            VehiclePartsInteractionBloc>()
-                                                                        .state
-                                                                        .selectedBodyPart] !=
-                                                                null)
-                                                              Builder(
-                                                                builder:
-                                                                    (context) {
-                                                                  if (_interactionBloc
-                                                                          .state
-                                                                          .mapMedia[context
-                                                                              .read<VehiclePartsInteractionBloc>()
-                                                                              .state
-                                                                              .selectedBodyPart]!
-                                                                          .isAccepted ==
-                                                                      false) {
-                                                                    rejectionController
-                                                                        .text = _interactionBloc
-                                                                            .state
-                                                                            .mapMedia[_interactionBloc.state.selectedBodyPart]!
-                                                                            .reasonForRejection ??
-                                                                        "";
-
-                                                                    return Column(
-                                                                      children: [
-                                                                        TextFormField(
-                                                                          controller:
-                                                                              rejectionController,
-                                                                          maxLines:
-                                                                              5,
-                                                                          style:
-                                                                              const TextStyle(color: Colors.white),
-                                                                          // onTap: () async {
-                                                                          // await Future.delayed(const Duration(milliseconds: 1000));
-                                                                          // scrollController.animateTo(180,
-                                                                          //     duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
-                                                                          // },
-                                                                          cursorColor:
-                                                                              Colors.white,
-                                                                          decoration: InputDecoration(
-                                                                              hintStyle: const TextStyle(fontSize: 14, color: Colors.white60),
-                                                                              fillColor: const Color.fromRGBO(38, 38, 40, 1),
-                                                                              filled: true,
-                                                                              contentPadding: const EdgeInsets.only(left: 16, top: 16),
-                                                                              hintText: "Reasons for rejection",
-                                                                              focusedBorder: OutlineInputBorder(
-                                                                                borderRadius: BorderRadius.circular(24.0),
-                                                                                borderSide: const BorderSide(
-                                                                                  color: Color.fromARGB(255, 145, 95, 22),
-                                                                                ),
-                                                                              ),
-                                                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
-                                                                          onChanged:
-                                                                              (value) {
-                                                                            _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection =
-                                                                                value;
-                                                                          },
-                                                                        ),
-                                                                        const Gap(
-                                                                            16),
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            if (context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.reasonForRejection == null ||
-                                                                                context.read<VehiclePartsInteractionBloc>().state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.reasonForRejection!.isEmpty) {
-                                                                              DMSCustomWidgets.DMSFlushbar(
-                                                                                size,
-                                                                                context,
-                                                                                message: "Please add rejection reasons",
-                                                                                icon: const Icon(
-                                                                                  Icons.error,
-                                                                                  color: Colors.white,
-                                                                                ),
-                                                                              );
-                                                                              return;
-                                                                            }
-                                                                            //bringing to intial status when needed
-                                                                            _interactionBloc.add(ModifyVehicleInteractionStatus(
-                                                                                selectedBodyPart: "",
-                                                                                isTapped: false));
-                                                                          },
-                                                                          child: Container(
-                                                                              alignment: Alignment.center,
-                                                                              height: 32,
-                                                                              width: ParentSize.maxWidth * 0.2,
-                                                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: [
-                                                                                BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                                                                              ]),
-                                                                              child: const Text(
-                                                                                textAlign: TextAlign.center,
-                                                                                'Done',
-                                                                                style: TextStyle(color: Colors.white, fontSize: 16),
-                                                                              )),
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  } else {
-                                                                    return const SizedBox();
-                                                                  }
-                                                                },
-                                                              ),
-                                                            if (_interactionBloc
-                                                                        .state
-                                                                        .mapMedia[
-                                                                    context
-                                                                        .read<
-                                                                            VehiclePartsInteractionBloc>()
-                                                                        .state
-                                                                        .selectedBodyPart] !=
-                                                                null)
-                                                              const SizedBox(
-                                                                height: 40,
-                                                              )
                                                           ],
                                                         ),
-                                                      ),
-                                                    ])
+                                                        Row(
+                                                          children: [
+                                                            const Gap(8),
+                                                            const CircleAvatar(
+                                                              radius: 6,
+                                                              backgroundColor: Color.fromRGBO(145, 19, 19, 1),
+                                                            ),
+                                                            const Gap(8),
+                                                            Text(
+                                                                context
+                                                                            .watch<VehiclePartsInteractionBloc>()
+                                                                            .state
+                                                                            .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart] ==
+                                                                        null
+                                                                    ? "No data"
+                                                                    : context
+                                                                        .watch<VehiclePartsInteractionBloc>()
+                                                                        .state
+                                                                        .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                        .comments!,
+                                                                style: TextStyle(
+                                                                    color: const Color.fromARGB(255, 223, 220, 220), fontSize: ParentSize.maxWidth * 0.040)),
+                                                          ],
+                                                        ),
+                                                        const Gap(8.0),
+                                                        SizedBox(
+                                                          width: ParentSize.maxWidth * 0.8,
+                                                          height: 128,
+
+                                                          // Images of the vehicle part
+                                                          child: GridView.builder(
+                                                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                                crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                                                            itemBuilder: (context, index) {
+                                                              return ClipRRect(
+                                                                borderRadius: BorderRadius.circular(16),
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    showDialog(
+                                                                        context: context,
+                                                                        useSafeArea: true,
+                                                                        builder: (context) {
+                                                                          return Stack(
+                                                                            children: [
+                                                                              PhotoViewGallery.builder(
+                                                                                allowImplicitScrolling: true,
+                                                                                pageController: PageController(initialPage: index),
+                                                                                backgroundDecoration: const BoxDecoration(
+                                                                                  color: Colors.transparent,
+                                                                                ),
+                                                                                pageSnapping: true,
+                                                                                itemCount: context
+                                                                                            .watch<VehiclePartsInteractionBloc>()
+                                                                                            .state
+                                                                                            .mapMedia[context
+                                                                                                .watch<VehiclePartsInteractionBloc>()
+                                                                                                .state
+                                                                                                .selectedBodyPart]!
+                                                                                            .images ==
+                                                                                        null
+                                                                                    ? 0
+                                                                                    : context
+                                                                                        .watch<VehiclePartsInteractionBloc>()
+                                                                                        .state
+                                                                                        .mapMedia[context
+                                                                                            .watch<VehiclePartsInteractionBloc>()
+                                                                                            .state
+                                                                                            .selectedBodyPart]!
+                                                                                        .images!
+                                                                                        .length,
+                                                                                builder: (BuildContext context, int index) {
+                                                                                  return PhotoViewGalleryPageOptions(
+                                                                                    disableGestures: false,
+                                                                                    maxScale: 1.5,
+                                                                                    filterQuality: FilterQuality.high,
+                                                                                    basePosition: Alignment.center,
+                                                                                    imageProvider: FileImage(
+                                                                                      File(context
+                                                                                          .watch<VehiclePartsInteractionBloc>()
+                                                                                          .state
+                                                                                          .mapMedia[context
+                                                                                              .watch<VehiclePartsInteractionBloc>()
+                                                                                              .state
+                                                                                              .selectedBodyPart]!
+                                                                                          .images![index]
+                                                                                          .path),
+                                                                                    ),
+                                                                                    initialScale: PhotoViewComputedScale.contained * 0.8,
+                                                                                    heroAttributes: PhotoViewHeroAttributes(
+                                                                                        tag: context
+                                                                                            .watch<VehiclePartsInteractionBloc>()
+                                                                                            .state
+                                                                                            .mapMedia[context
+                                                                                                .watch<VehiclePartsInteractionBloc>()
+                                                                                                .state
+                                                                                                .selectedBodyPart]!
+                                                                                            .images![index]
+                                                                                            .path),
+                                                                                  );
+                                                                                },
+                                                                              ),
+                                                                              Positioned(
+                                                                                top: 10,
+                                                                                child: IconButton(
+                                                                                    onPressed: () {
+                                                                                      navigator.pop();
+                                                                                    },
+                                                                                    icon: const Icon(
+                                                                                      Icons.highlight_remove_rounded,
+                                                                                      color: Colors.white,
+                                                                                      size: 28,
+                                                                                    )),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        });
+                                                                  },
+                                                                  child: Image.file(
+                                                                    File(context
+                                                                        .watch<VehiclePartsInteractionBloc>()
+                                                                        .state
+                                                                        .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                        .images![index]
+                                                                        .path),
+                                                                    fit: BoxFit.fitWidth,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                            itemCount: context
+                                                                        .watch<VehiclePartsInteractionBloc>()
+                                                                        .state
+                                                                        .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                        .images ==
+                                                                    null
+                                                                ? 0
+                                                                : context
+                                                                    .watch<VehiclePartsInteractionBloc>()
+                                                                    .state
+                                                                    .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                    .images!
+                                                                    .length,
+                                                          ),
+                                                        ),
+                                                        Center(
+                                                          child: Builder(
+                                                            builder: (context) {
+                                                              if (_interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted ==
+                                                                  null) {
+                                                                sliderButtonController.position = Position.middle;
+                                                              } else if (_interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted ==
+                                                                  true) {
+                                                                sliderButtonController.position = Position.right;
+                                                              } else if (_interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted ==
+                                                                  false) {
+                                                                sliderButtonController.position = Position.left;
+                                                              } else {
+                                                                sliderButtonController.position = Position.left;
+                                                              }
+                                                              return CustomSliderButton(
+                                                                leftLabel: Text("Reject"),
+                                                                rightLabel: Text("Accept"),
+                                                                controller: sliderButtonController,
+                                                                onRightLabelReached: () {
+                                                                  _interactionBloc.add(ModifyAcceptedEvent(
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: true));
+                                                                },
+                                                                onLeftLabelReached: () {
+                                                                  _interactionBloc.add(ModifyAcceptedEvent(
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: false));
+                                                                },
+                                                                isMobile: isMobile,
+                                                                onNoStatus: () {
+                                                                  _interactionBloc.add(ModifyAcceptedEvent(
+                                                                      bodyPartName: _interactionBloc.state.selectedBodyPart!, isAccepted: null));
+                                                                },
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                        const Gap(16),
+                                                        if (context
+                                                                .read<VehiclePartsInteractionBloc>()
+                                                                .state
+                                                                .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart] !=
+                                                            null)
+                                                          Builder(
+                                                            builder: (context) {
+                                                              if (_interactionBloc
+                                                                      .state
+                                                                      .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                      .isAccepted ==
+                                                                  false) {
+                                                                rejectionController.text = _interactionBloc
+                                                                        .state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection ??
+                                                                    "";
+
+                                                                return Column(
+                                                                  children: [
+                                                                    TextFormField(
+                                                                      controller: rejectionController,
+                                                                      maxLines: 5,
+                                                                      style: const TextStyle(color: Colors.white),
+                                                                      // onTap: () async {
+                                                                      // await Future.delayed(const Duration(milliseconds: 1000));
+                                                                      // scrollController.animateTo(180,
+                                                                      //     duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
+                                                                      // },
+                                                                      cursorColor: Colors.white,
+                                                                      decoration: InputDecoration(
+                                                                          hintStyle: const TextStyle(fontSize: 14, color: Colors.white60),
+                                                                          fillColor: const Color.fromRGBO(38, 38, 40, 1),
+                                                                          filled: true,
+                                                                          contentPadding: const EdgeInsets.only(left: 16, top: 16),
+                                                                          hintText: "Reasons for rejection",
+                                                                          focusedBorder: OutlineInputBorder(
+                                                                            borderRadius: BorderRadius.circular(24.0),
+                                                                            borderSide: const BorderSide(
+                                                                              color: Color.fromARGB(255, 145, 95, 22),
+                                                                            ),
+                                                                          ),
+                                                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
+                                                                      onChanged: (value) {
+                                                                        _interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart]!
+                                                                            .reasonForRejection = value;
+                                                                      },
+                                                                    ),
+                                                                    const Gap(16),
+                                                                    GestureDetector(
+                                                                      onTap: () {
+                                                                        if (context
+                                                                                    .read<VehiclePartsInteractionBloc>()
+                                                                                    .state
+                                                                                    .mapMedia[
+                                                                                        context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                                    .reasonForRejection ==
+                                                                                null ||
+                                                                            context
+                                                                                .read<VehiclePartsInteractionBloc>()
+                                                                                .state
+                                                                                .mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                                .reasonForRejection!
+                                                                                .isEmpty) {
+                                                                          DMSCustomWidgets.DMSFlushbar(
+                                                                            size,
+                                                                            context,
+                                                                            message: "Please add rejection reasons",
+                                                                            icon: const Icon(
+                                                                              Icons.error,
+                                                                              color: Colors.white,
+                                                                            ),
+                                                                          );
+                                                                          return;
+                                                                        }
+                                                                        //bringing to intial status when needed
+                                                                        _interactionBloc
+                                                                            .add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
+                                                                      },
+                                                                      child: Container(
+                                                                          alignment: Alignment.center,
+                                                                          height: 32,
+                                                                          width: ParentSize.maxWidth * 0.2,
+                                                                          decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                              color: Colors.black,
+                                                                              boxShadow: [
+                                                                                BoxShadow(
+                                                                                    blurRadius: 10,
+                                                                                    blurStyle: BlurStyle.outer,
+                                                                                    spreadRadius: 0,
+                                                                                    color: Colors.orange.shade200,
+                                                                                    offset: const Offset(0, 0))
+                                                                              ]),
+                                                                          child: const Text(
+                                                                            textAlign: TextAlign.center,
+                                                                            'Done',
+                                                                            style: TextStyle(color: Colors.white, fontSize: 16),
+                                                                          )),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              } else {
+                                                                return const SizedBox();
+                                                              }
+                                                            },
+                                                          ),
+                                                        if (_interactionBloc
+                                                                .state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart] !=
+                                                            null)
+                                                          const SizedBox(
+                                                            height: 40,
+                                                          )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ])
                                         ],
                                       );
                                     }),
@@ -956,10 +722,7 @@ class _QualityCheckState extends State<QualityCheck>
                                   .watch<VehiclePartsInteractionBloc>()
                                   .state
                                   .mapMedia
-                                  .containsKey(context
-                                      .read<VehiclePartsInteractionBloc>()
-                                      .state
-                                      .selectedBodyPart)
+                                  .containsKey(context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                               ? size.height * 0.08
                               : size.height * 0.16,
                           child: Container(
@@ -968,46 +731,22 @@ class _QualityCheckState extends State<QualityCheck>
                                     .watch<VehiclePartsInteractionBloc>()
                                     .state
                                     .mapMedia
-                                    .containsKey(context
-                                        .read<VehiclePartsInteractionBloc>()
-                                        .state
-                                        .selectedBodyPart)
-                                ? (_interactionBloc
-                                                .state
-                                                .mapMedia[context
-                                                    .read<
-                                                        VehiclePartsInteractionBloc>()
-                                                    .state
-                                                    .selectedBodyPart]!
-                                                .isAccepted ==
-                                            null ||
-                                        _interactionBloc
-                                                .state
-                                                .mapMedia[context
-                                                    .read<
-                                                        VehiclePartsInteractionBloc>()
-                                                    .state
-                                                    .selectedBodyPart]!
-                                                .isAccepted ==
-                                            true)
+                                    .containsKey(context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart)
+                                ? (_interactionBloc.state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.isAccepted == null ||
+                                        _interactionBloc.state.mapMedia[context.read<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.isAccepted == true)
                                     ? size.height * 0.42
                                     : size.height * 0.68
                                 : size.height * 0.16,
-                            decoration: const BoxDecoration(
-                                color: Color.fromRGBO(26, 26, 27, 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(24))),
+                            decoration: const BoxDecoration(color: Color.fromRGBO(26, 26, 27, 1), borderRadius: BorderRadius.all(Radius.circular(24))),
                             child: ListView(children: [
                               LayoutBuilder(builder: (context, size) {
                                 return Column(
                                   children: [
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Gap(32),
                                             const Text(
@@ -1021,71 +760,43 @@ class _QualityCheckState extends State<QualityCheck>
                                             ),
                                             // Spacer(),
                                             Align(
-                                                alignment:
-                                                    Alignment.centerRight,
+                                                alignment: Alignment.centerRight,
                                                 child: IconButton(
                                                   onPressed: () {
-                                                    _interactionBloc.add(
-                                                        ModifyVehicleInteractionStatus(
-                                                            selectedBodyPart:
-                                                                "",
-                                                            isTapped: false));
+                                                    _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: "", isTapped: false));
                                                   },
                                                   icon: const Icon(
                                                     Icons.cancel,
                                                     size: 28,
                                                   ),
-                                                  visualDensity:
-                                                      VisualDensity.compact,
+                                                  visualDensity: VisualDensity.compact,
                                                 ))
                                           ],
                                         ),
                                       ],
                                     ),
-                                    !_interactionBloc.state.mapMedia
-                                            .containsKey(context
-                                                .watch<
-                                                    VehiclePartsInteractionBloc>()
-                                                .state
-                                                .selectedBodyPart)
+                                    !_interactionBloc.state.mapMedia.containsKey(context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart)
                                         ? const Padding(
                                             padding: EdgeInsets.all(8.0),
                                             child: Text(
                                               "No data found",
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Colors.white54),
+                                              style: TextStyle(color: Colors.white54),
                                             ),
                                           )
                                         : Column(children: [
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 18.0),
+                                              padding: const EdgeInsets.symmetric(horizontal: 18.0),
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   const Gap(16),
                                                   Row(
                                                     children: [
                                                       const Gap(8),
                                                       Text(
-                                                        context
-                                                            .watch<
-                                                                VehiclePartsInteractionBloc>()
-                                                            .state
-                                                            .selectedBodyPart!
-                                                            .replaceAll(
-                                                                '_', ' ')
-                                                            .toUpperCase(),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: Colors.white,
-                                                            fontSize:
-                                                                size.maxWidth *
-                                                                    0.042),
+                                                        context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart!.replaceAll('_', ' ').toUpperCase(),
+                                                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: size.maxWidth * 0.042),
                                                       ),
                                                     ],
                                                   ),
@@ -1094,39 +805,22 @@ class _QualityCheckState extends State<QualityCheck>
                                                       const Gap(8),
                                                       const CircleAvatar(
                                                         radius: 6,
-                                                        backgroundColor:
-                                                            Color.fromRGBO(
-                                                                145, 19, 19, 1),
+                                                        backgroundColor: Color.fromRGBO(145, 19, 19, 1),
                                                       ),
                                                       const Gap(8),
                                                       Text(
-                                                          context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context
-                                                                      .watch<
-                                                                          VehiclePartsInteractionBloc>()
+                                                          context
+                                                                      .watch<VehiclePartsInteractionBloc>()
                                                                       .state
-                                                                      .selectedBodyPart] ==
+                                                                      .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart] ==
                                                                   null
                                                               ? "No data"
                                                               : context
-                                                                  .watch<
-                                                                      VehiclePartsInteractionBloc>()
+                                                                  .watch<VehiclePartsInteractionBloc>()
                                                                   .state
-                                                                  .mapMedia[context
-                                                                      .watch<
-                                                                          VehiclePartsInteractionBloc>()
-                                                                      .state
-                                                                      .selectedBodyPart]!
+                                                                  .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                   .comments!,
-                                                          style: TextStyle(
-                                                              color: const Color
-                                                                  .fromARGB(
-                                                                  255,
-                                                                  223,
-                                                                  220,
-                                                                  220),
-                                                              fontSize:
-                                                                  size.maxWidth *
-                                                                      0.040)),
+                                                          style: TextStyle(color: const Color.fromARGB(255, 223, 220, 220), fontSize: size.maxWidth * 0.040)),
                                                     ],
                                                   ),
                                                   const Gap(8.0),
@@ -1134,64 +828,70 @@ class _QualityCheckState extends State<QualityCheck>
                                                     width: size.maxWidth * 0.8,
                                                     height: 128,
                                                     child: GridView.builder(
-                                                      gridDelegate:
-                                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                                              crossAxisCount: 3,
-                                                              crossAxisSpacing:
-                                                                  10,
-                                                              mainAxisSpacing:
-                                                                  10),
-                                                      itemBuilder:
-                                                          (context, index) {
+                                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 3, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                                                      itemBuilder: (context, index) {
                                                         return ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(16),
+                                                          borderRadius: BorderRadius.circular(16),
                                                           child: InkWell(
                                                             onTap: () {
                                                               showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  useSafeArea:
-                                                                      true,
-                                                                  builder:
-                                                                      (context) {
+                                                                  context: context,
+                                                                  useSafeArea: true,
+                                                                  builder: (context) {
                                                                     return Stack(
                                                                       children: [
-                                                                        PhotoViewGallery
-                                                                            .builder(
-                                                                          allowImplicitScrolling:
-                                                                              true,
-                                                                          pageController:
-                                                                              PageController(initialPage: index),
-                                                                          backgroundDecoration:
-                                                                              const BoxDecoration(
-                                                                            color:
-                                                                                Colors.transparent,
+                                                                        PhotoViewGallery.builder(
+                                                                          allowImplicitScrolling: true,
+                                                                          pageController: PageController(initialPage: index),
+                                                                          backgroundDecoration: const BoxDecoration(
+                                                                            color: Colors.transparent,
                                                                           ),
-                                                                          pageSnapping:
-                                                                              true,
-                                                                          itemCount: context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images == null
+                                                                          pageSnapping: true,
+                                                                          itemCount: context
+                                                                                      .watch<VehiclePartsInteractionBloc>()
+                                                                                      .state
+                                                                                      .mapMedia[
+                                                                                          context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                                      .images ==
+                                                                                  null
                                                                               ? 0
-                                                                              : context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images!.length,
-                                                                          builder:
-                                                                              (BuildContext context, int index) {
+                                                                              : context
+                                                                                  .watch<VehiclePartsInteractionBloc>()
+                                                                                  .state
+                                                                                  .mapMedia[
+                                                                                      context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                                  .images!
+                                                                                  .length,
+                                                                          builder: (BuildContext context, int index) {
                                                                             return PhotoViewGalleryPageOptions(
                                                                               disableGestures: false,
                                                                               maxScale: 1.5,
                                                                               filterQuality: FilterQuality.high,
                                                                               basePosition: Alignment.center,
                                                                               imageProvider: FileImage(
-                                                                                File(context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images![index].path),
+                                                                                File(context
+                                                                                    .watch<VehiclePartsInteractionBloc>()
+                                                                                    .state
+                                                                                    .mapMedia[
+                                                                                        context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                                    .images![index]
+                                                                                    .path),
                                                                               ),
                                                                               initialScale: PhotoViewComputedScale.contained * 0.8,
-                                                                              heroAttributes: PhotoViewHeroAttributes(tag: context.watch<VehiclePartsInteractionBloc>().state.mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!.images![index].path),
+                                                                              heroAttributes: PhotoViewHeroAttributes(
+                                                                                  tag: context
+                                                                                      .watch<VehiclePartsInteractionBloc>()
+                                                                                      .state
+                                                                                      .mapMedia[
+                                                                                          context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                                      .images![index]
+                                                                                      .path),
                                                                             );
                                                                           },
                                                                         ),
                                                                         Positioned(
-                                                                          top:
-                                                                              10,
+                                                                          top: 10,
                                                                           child: IconButton(
                                                                               onPressed: () {
                                                                                 navigator.pop();
@@ -1208,88 +908,47 @@ class _QualityCheckState extends State<QualityCheck>
                                                             },
                                                             child: Image.file(
                                                               File(context
-                                                                  .watch<
-                                                                      VehiclePartsInteractionBloc>()
+                                                                  .watch<VehiclePartsInteractionBloc>()
                                                                   .state
-                                                                  .mapMedia[context
-                                                                      .watch<
-                                                                          VehiclePartsInteractionBloc>()
-                                                                      .state
-                                                                      .selectedBodyPart]!
-                                                                  .images![
-                                                                      index]
+                                                                  .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
+                                                                  .images![index]
                                                                   .path),
-                                                              fit: BoxFit
-                                                                  .fitWidth,
+                                                              fit: BoxFit.fitWidth,
                                                             ),
                                                           ),
                                                         );
                                                       },
                                                       itemCount: context
-                                                                  .watch<
-                                                                      VehiclePartsInteractionBloc>()
+                                                                  .watch<VehiclePartsInteractionBloc>()
                                                                   .state
-                                                                  .mapMedia[context
-                                                                      .watch<
-                                                                          VehiclePartsInteractionBloc>()
-                                                                      .state
-                                                                      .selectedBodyPart]!
+                                                                  .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                                   .images ==
                                                               null
                                                           ? 0
                                                           : context
-                                                              .watch<
-                                                                  VehiclePartsInteractionBloc>()
+                                                              .watch<VehiclePartsInteractionBloc>()
                                                               .state
-                                                              .mapMedia[context
-                                                                  .watch<
-                                                                      VehiclePartsInteractionBloc>()
-                                                                  .state
-                                                                  .selectedBodyPart]!
+                                                              .mapMedia[context.watch<VehiclePartsInteractionBloc>().state.selectedBodyPart]!
                                                               .images!
                                                               .length,
                                                     ),
                                                   ),
-                                                  BlocBuilder<
-                                                      VehiclePartsInteractionBloc,
-                                                      VehiclePartsInteractionBlocState>(
+                                                  BlocBuilder<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
                                                     builder: (context, state) {
                                                       // slider button
                                                       return CustomSliderButton(
-                                                        leftLabel:
-                                                            Text("Reject"),
-                                                        rightLabel:
-                                                            Text("Accept"),
-                                                        controller:
-                                                            sliderButtonController,
-                                                        onRightLabelReached:
-                                                            () {
-                                                          _interactionBloc.add(
-                                                              ModifyAcceptedEvent(
-                                                                  bodyPartName:
-                                                                      state
-                                                                          .selectedBodyPart!,
-                                                                  isAccepted:
-                                                                      true));
+                                                        leftLabel: Text("Reject"),
+                                                        rightLabel: Text("Accept"),
+                                                        controller: sliderButtonController,
+                                                        onRightLabelReached: () {
+                                                          _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: state.selectedBodyPart!, isAccepted: true));
                                                         },
                                                         onLeftLabelReached: () {
-                                                          _interactionBloc.add(
-                                                              ModifyAcceptedEvent(
-                                                                  bodyPartName:
-                                                                      state
-                                                                          .selectedBodyPart!,
-                                                                  isAccepted:
-                                                                      false));
+                                                          _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: state.selectedBodyPart!, isAccepted: false));
                                                         },
                                                         isMobile: isMobile,
                                                         onNoStatus: () {
-                                                          _interactionBloc.add(
-                                                              ModifyAcceptedEvent(
-                                                                  bodyPartName:
-                                                                      state
-                                                                          .selectedBodyPart!,
-                                                                  isAccepted:
-                                                                      null));
+                                                          _interactionBloc.add(ModifyAcceptedEvent(bodyPartName: state.selectedBodyPart!, isAccepted: null));
                                                         },
                                                       );
                                                       // CustomSliderButton1(
@@ -1332,140 +991,70 @@ class _QualityCheckState extends State<QualityCheck>
                                                     },
                                                   ),
                                                   const Gap(16),
-                                                  if (_interactionBloc
-                                                              .state.mapMedia[
-                                                          _interactionBloc.state
-                                                              .selectedBodyPart] !=
-                                                      null)
-                                                    BlocConsumer<
-                                                        VehiclePartsInteractionBloc,
-                                                        VehiclePartsInteractionBlocState>(
-                                                      listener:
-                                                          (context, state) {},
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                                .mapMedia[
-                                                                    _interactionBloc
-                                                                        .state
-                                                                        .selectedBodyPart]!
-                                                                .isAccepted ==
-                                                            false) {
+                                                  if (_interactionBloc.state.mapMedia[_interactionBloc.state.selectedBodyPart] != null)
+                                                    BlocConsumer<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
+                                                      listener: (context, state) {},
+                                                      builder: (context, state) {
+                                                        if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.isAccepted == false) {
                                                           rejectionController = TextEditingController(
                                                               text: _interactionBloc
-                                                                      .state
-                                                                      .mapMedia[_interactionBloc
-                                                                          .state
-                                                                          .selectedBodyPart]!
-                                                                      .reasonForRejection ??
+                                                                      .state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection ??
                                                                   "");
 
                                                           return Column(
                                                             children: [
                                                               TextFormField(
-                                                                controller:
-                                                                    rejectionController,
+                                                                controller: rejectionController,
                                                                 maxLines: 5,
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                                onTap:
-                                                                    () async {
-                                                                  rejectionFocus
-                                                                      .requestFocus();
-                                                                  await Future.delayed(
-                                                                      const Duration(
-                                                                          milliseconds:
-                                                                              1000));
+                                                                style: const TextStyle(color: Colors.white),
+                                                                onTap: () async {
+                                                                  rejectionFocus.requestFocus();
+                                                                  await Future.delayed(const Duration(milliseconds: 1000));
                                                                 },
-                                                                cursorColor:
-                                                                    Colors
-                                                                        .white,
-                                                                decoration:
-                                                                    InputDecoration(
-                                                                        hintStyle: const TextStyle(
-                                                                            fontSize:
-                                                                                14,
-                                                                            color: Colors
-                                                                                .white60),
-                                                                        fillColor: const Color
-                                                                            .fromRGBO(
-                                                                            38,
-                                                                            38,
-                                                                            40,
-                                                                            1),
-                                                                        filled:
-                                                                            true,
-                                                                        contentPadding: const EdgeInsets
-                                                                            .only(
-                                                                            left:
-                                                                                16,
-                                                                            top:
-                                                                                16),
-                                                                        hintText:
-                                                                            "Reasons for rejection",
-                                                                        focusedBorder:
-                                                                            OutlineInputBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(24.0),
-                                                                          borderSide:
-                                                                              const BorderSide(
-                                                                            color: Color.fromARGB(
-                                                                                255,
-                                                                                145,
-                                                                                95,
-                                                                                22),
-                                                                          ),
-                                                                        ),
-                                                                        border: OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(16))),
-                                                                onChanged:
-                                                                    (value) {
-                                                                  state
-                                                                      .mapMedia[_interactionBloc
-                                                                          .state
-                                                                          .selectedBodyPart]!
-                                                                      .reasonForRejection = value;
+                                                                cursorColor: Colors.white,
+                                                                decoration: InputDecoration(
+                                                                    hintStyle: const TextStyle(fontSize: 14, color: Colors.white60),
+                                                                    fillColor: const Color.fromRGBO(38, 38, 40, 1),
+                                                                    filled: true,
+                                                                    contentPadding: const EdgeInsets.only(left: 16, top: 16),
+                                                                    hintText: "Reasons for rejection",
+                                                                    focusedBorder: OutlineInputBorder(
+                                                                      borderRadius: BorderRadius.circular(24.0),
+                                                                      borderSide: const BorderSide(
+                                                                        color: Color.fromARGB(255, 145, 95, 22),
+                                                                      ),
+                                                                    ),
+                                                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
+                                                                onChanged: (value) {
+                                                                  state.mapMedia[_interactionBloc.state.selectedBodyPart]!.reasonForRejection = value;
                                                                 },
                                                               ),
                                                               const Gap(16),
                                                               GestureDetector(
                                                                 onTap: () {
-                                                                  _interactionBloc
-                                                                      .state
-                                                                      .selectedBodyPart = "";
-                                                                  _interactionBloc
-                                                                          .state
-                                                                          .isTapped =
-                                                                      false;
+                                                                  _interactionBloc.state.selectedBodyPart = "";
+                                                                  _interactionBloc.state.isTapped = false;
                                                                 },
-                                                                child:
-                                                                    Container(
-                                                                        alignment:
-                                                                            Alignment
-                                                                                .center,
-                                                                        height:
-                                                                            32,
-                                                                        width: size.maxWidth *
-                                                                            0.2,
-                                                                        decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.circular(
-                                                                                10),
-                                                                            color: Colors
-                                                                                .black,
-                                                                            boxShadow: [
-                                                                              BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
-                                                                            ]),
-                                                                        child:
-                                                                            const Text(
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          'Done',
-                                                                          style: TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 16),
-                                                                        )),
+                                                                child: Container(
+                                                                    alignment: Alignment.center,
+                                                                    height: 32,
+                                                                    width: size.maxWidth * 0.2,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(10),
+                                                                        color: Colors.black,
+                                                                        boxShadow: [
+                                                                          BoxShadow(
+                                                                              blurRadius: 10,
+                                                                              blurStyle: BlurStyle.outer,
+                                                                              spreadRadius: 0,
+                                                                              color: Colors.orange.shade200,
+                                                                              offset: const Offset(0, 0))
+                                                                        ]),
+                                                                    child: const Text(
+                                                                      textAlign: TextAlign.center,
+                                                                      'Done',
+                                                                      style: TextStyle(color: Colors.white, fontSize: 16),
+                                                                    )),
                                                               ),
                                                             ],
                                                           );
@@ -1488,19 +1077,13 @@ class _QualityCheckState extends State<QualityCheck>
                             ]),
                           ),
                         ),
-                BlocListener<VehiclePartsInteractionBloc,
-                    VehiclePartsInteractionBlocState>(
+                BlocListener<VehiclePartsInteractionBloc, VehiclePartsInteractionBlocState>(
                   listener: (context, state) {
                     switch (state.status) {
                       case VehiclePartsInteractionStatus.success:
-                        context.read<ServiceBloc>().add(
-                            GetInspectionDetails(jobCardNo: widget.jobCardNo));
-                        context.read<ServiceBloc>().add(GetJobCards(
-                            query: getIt<SharedPreferences>()
-                                .getStringList('locations')!
-                                .first));
-                        navigator.pushAndRemoveUntil(
-                            '/listOfJobCards', '/home');
+                        context.read<ServiceBloc>().add(GetInspectionDetails(jobCardNo: widget.jobCardNo));
+                        context.read<ServiceBloc>().add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
+                        navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                         navigator.push('/inspectionOut');
                       case VehiclePartsInteractionStatus.failure:
                         DMSCustomWidgets.DMSFlushbar(
@@ -1520,16 +1103,12 @@ class _QualityCheckState extends State<QualityCheck>
                 )
               ],
             ),
-            if (context.watch<VehiclePartsInteractionBloc>().state.status ==
-                VehiclePartsInteractionStatus.loading)
+            if (context.watch<VehiclePartsInteractionBloc>().state.status == VehiclePartsInteractionStatus.loading)
               Container(
                 color: Colors.transparent,
                 child: Center(
                     child: Lottie.asset('assets/lottie/car_loading.json',
-                        height:
-                            isMobile ? size.height * 0.5 : size.height * 0.32,
-                        width:
-                            isMobile ? size.width * 0.6 : size.width * 0.32)),
+                        height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
               )
           ],
         ));

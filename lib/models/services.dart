@@ -129,10 +129,8 @@ final class Service {
         scheduledDate: scheduledDate ?? this.scheduledDate,
         kms: kms ?? this.kms,
         bookingSource: bookingSource ?? this.bookingSource,
-        alternateContactPerson:
-            alternateContactPerson ?? this.alternateContactPerson,
-        alternatePersonContactNo:
-            alternatePersonContactNo ?? this.alternatePersonContactNo,
+        alternateContactPerson: alternateContactPerson ?? this.alternateContactPerson,
+        alternatePersonContactNo: alternatePersonContactNo ?? this.alternatePersonContactNo,
         salesPerson: salesPerson ?? this.salesPerson,
         bay: bay ?? this.bay,
         jobType: jobType ?? this.jobType,

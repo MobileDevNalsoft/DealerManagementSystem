@@ -21,8 +21,7 @@ class ListOfJobcards extends StatefulWidget {
   State<ListOfJobcards> createState() => _ListOfJobcardsState();
 }
 
-class _ListOfJobcardsState extends State<ListOfJobcards>
-    with ConnectivityMixin {
+class _ListOfJobcardsState extends State<ListOfJobcards> with ConnectivityMixin {
   late ServiceBloc _serviceBloc;
   PageController pageController = PageController();
 
@@ -38,8 +37,7 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
     _serviceBloc.state.getJobCardStatus = GetJobCardStatus.initial;
 
     // invoking getjob cards and getservice history to invoke bloc method to get data from db
-    _serviceBloc.add(GetJobCards(
-        query: getIt<SharedPreferences>().getStringList('locations')!.first));
+    _serviceBloc.add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
 
     // set default orientation to portrait up
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -54,17 +52,12 @@ class _ListOfJobcardsState extends State<ListOfJobcards>
       tag: 'listOfJobCards',
       transitionOnUserGestures: true,
       child: Scaffold(
-        extendBody:
-            false, // restricts the scaffold till above the bottom navigation bar in this case
-        appBar: DMSCustomWidgets.appBar(
-            size: size, isMobile: isMobile, title: 'List of JobCards'),
+        extendBody: false, // restricts the scaffold till above the bottom navigation bar in this case
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'List of JobCards'),
         body: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Colors.black45, Colors.black26, Colors.black45],
-                  stops: [0.1, 0.5, 1],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter),
+                  colors: [Colors.black45, Colors.black26, Colors.black45], stops: [0.1, 0.5, 1], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             ),
             child: const JobCardPage()),
       ),
@@ -78,8 +71,7 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
   FocusNode focusNode = FocusNode();
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final size = MediaQuery.of(context).size;
     bool isMobile = MediaQuery.of(context).size.shortestSide < 500;
 
@@ -87,8 +79,7 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
       onTap: () => focusNode.requestFocus(),
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: size.width * (isMobile ? 0.02 : 0.2)),
+        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.02 : 0.2)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -100,11 +91,8 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
                 padding: EdgeInsets.only(left: size.height * 0.01),
                 height: size.height * 0.06,
                 width: size.width * (isMobile ? 0.94 : 0.5),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        bottomLeft: Radius.circular(10)),
-                    color: Colors.white60),
+                decoration:
+                    const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)), color: Colors.white60),
                 child: TextFormField(
                   controller: controller,
                   focusNode: focusNode,
@@ -113,17 +101,12 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
                   onChanged: (value) {
                     controller.text = value;
                     // triggers search job cards events for the value entered in the search field
-                    context.mounted
-                        ? context
-                            .read<ServiceBloc>()
-                            .add(SearchJobCards(searchText: value))
-                        : null;
+                    context.mounted ? context.read<ServiceBloc>().add(SearchJobCards(searchText: value)) : null;
                   },
                   cursorColor: Colors.black,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintStyle: TextStyle(
-                        color: Colors.black38, fontSize: isMobile ? 14 : 17),
+                    hintStyle: TextStyle(color: Colors.black38, fontSize: isMobile ? 14 : 17),
                     hintText: 'Vehicle Registration Number',
                   ),
                 ),
@@ -133,11 +116,8 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
               height: size.height * (isMobile ? 0.06 : 0.05),
               width: size.width * (isMobile ? 0.14 : 0.08),
               margin: EdgeInsets.only(right: size.width * 0.01),
-              decoration: const BoxDecoration(
-                  color: Colors.black38,
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10))),
+              decoration:
+                  const BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
               child: const Icon(
                 Icons.search_rounded,
                 color: Colors.white60,
@@ -157,8 +137,7 @@ class SliverHeader extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return oldDelegate.maxExtent != maxExtent ||
-        oldDelegate.minExtent != minExtent;
+    return oldDelegate.maxExtent != maxExtent || oldDelegate.minExtent != minExtent;
   }
 }
 
@@ -175,14 +154,12 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
     path.lineTo(0, size.height - p1Diff);
 
     final controlPoint1 = Offset(size.width * 0.2, size.height);
-    final controlPoint2 =
-        Offset(size.width * 0.8, minSize + (minSize - size.height * 0.75) * 2);
+    final controlPoint2 = Offset(size.width * 0.8, minSize + (minSize - size.height * 0.75) * 2);
 
     final endPoint = Offset(size.width, minSize);
 
     // used to difine two arcs according to the two control points
-    path.cubicTo(controlPoint1.dx, controlPoint1.dy, controlPoint2.dx,
-        controlPoint2.dy, endPoint.dx, endPoint.dy);
+    path.cubicTo(controlPoint1.dx, controlPoint1.dy, controlPoint2.dx, controlPoint2.dy, endPoint.dx, endPoint.dy);
 
     path.lineTo(size.width, 0);
     path.close();
@@ -192,8 +169,7 @@ class BackgroundWaveClipper extends CustomClipper<Path> {
 
   // reclips the widgets based on difference between old instance and new instance
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
 }
 
 class TicketClipper extends CustomClipper<Path> {
@@ -222,8 +198,7 @@ class TicketClipper extends CustomClipper<Path> {
 
   // reclips the widgets based on difference between old instance and new instance
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) =>
-      oldClipper != this;
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => oldClipper != this;
 }
 
 class JobCardPage extends StatelessWidget {
@@ -281,21 +256,17 @@ class JobCardPage extends StatelessWidget {
                                   flex: 1,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Gap(size.height *
-                                          (isMobile ? 0.01 : 0.015)),
+                                      Gap(size.height * (isMobile ? 0.01 : 0.015)),
                                       Row(
                                         children: [
-                                          Gap(size.width *
-                                              (isMobile ? 0.055 : 0.08)),
+                                          Gap(size.width * (isMobile ? 0.055 : 0.08)),
                                           Expanded(
                                             flex: 2,
                                             child: Image.asset(
                                               'assets/images/job_card.png',
-                                              scale: size.width *
-                                                  (isMobile ? 0.05 : 0.015),
+                                              scale: size.width * (isMobile ? 0.05 : 0.015),
                                               color: Colors.black,
                                             ),
                                           ),
@@ -303,76 +274,47 @@ class JobCardPage extends StatelessWidget {
                                           Expanded(
                                             flex: 8,
                                             child: InkWell(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                                              borderRadius: BorderRadius.circular(20),
                                               radius: 100,
                                               splashColor: Colors.transparent,
-                                              customBorder:
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20)),
+                                              customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                               enableFeedback: true,
                                               onTap: () {
-                                                state.service = state
-                                                    .filteredJobCards![index];
-                                                getIt<NavigatorService>()
-                                                    .push('/jobCardDetails');
+                                                state.service = state.filteredJobCards![index];
+                                                getIt<NavigatorService>().push('/jobCardDetails');
                                               },
                                               child: Text(
-                                                state.getJobCardStatus ==
-                                                        GetJobCardStatus.success
-                                                    ? state
-                                                        .filteredJobCards![
-                                                            index]
-                                                        .jobCardNo!
-                                                    : 'JC-MAD-633',
+                                                state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards![index].jobCardNo! : 'JC-MAD-633',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
-                                                    fontSize:
-                                                        (isMobile ? 12 : 16),
+                                                    fontSize: (isMobile ? 12 : 16),
                                                     color: Colors.blue,
-                                                    decoration: TextDecoration
-                                                        .underline),
+                                                    decoration: TextDecoration.underline),
                                               ),
                                             ),
                                           )
                                         ],
                                       ),
-                                      Gap(size.width *
-                                          (isMobile ? 0.02 : 0.01)),
+                                      Gap(size.width * (isMobile ? 0.02 : 0.01)),
                                       Row(
                                         children: [
-                                          Gap(size.width *
-                                              (isMobile ? 0.055 : 0.08)),
+                                          Gap(size.width * (isMobile ? 0.055 : 0.08)),
                                           Expanded(
                                             flex: 2,
-                                            child: Image.asset(
-                                                'assets/images/registration_no.png',
-                                                scale: size.width *
-                                                    (isMobile ? 0.055 : 0.016)),
+                                            child: Image.asset('assets/images/registration_no.png', scale: size.width * (isMobile ? 0.055 : 0.016)),
                                           ),
                                           Gap(size.width * 0.006),
                                           Expanded(
                                             flex: 8,
                                             child: SizedBox(
-                                              width: size.width *
-                                                  (isMobile ? 0.28 : 0.16),
+                                              width: size.width * (isMobile ? 0.28 : 0.16),
                                               child: SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
+                                                scrollDirection: Axis.horizontal,
                                                 child: Text(
-                                                  state.getJobCardStatus ==
-                                                          GetJobCardStatus
-                                                              .success
-                                                      ? state
-                                                          .filteredJobCards![
-                                                              index]
-                                                          .registrationNo!
+                                                  state.getJobCardStatus == GetJobCardStatus.success
+                                                      ? state.filteredJobCards![index].registrationNo!
                                                       : 'TS09ED7884',
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          isMobile ? 13 : 17),
+                                                  style: TextStyle(fontSize: isMobile ? 13 : 17),
                                                 ),
                                               ),
                                             ),
@@ -387,34 +329,23 @@ class JobCardPage extends StatelessWidget {
                                   flex: 1,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Gap(size.height * 0.04),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Gap(size.width * 0.058),
                                           Expanded(
                                             flex: 2,
-                                            child: Image.asset(
-                                                'assets/images/status.png',
-                                                scale: size.width *
-                                                    (isMobile ? 0.058 : 0.016)),
+                                            child: Image.asset('assets/images/status.png', scale: size.width * (isMobile ? 0.058 : 0.016)),
                                           ),
                                           Gap(size.height * 0.006),
                                           Expanded(
                                             flex: 8,
                                             child: Text(
-                                              state.getJobCardStatus ==
-                                                      GetJobCardStatus.success
-                                                  ? state
-                                                      .filteredJobCards![index]
-                                                      .status!
-                                                  : 'Work in Progress',
-                                              style: TextStyle(
-                                                  fontSize: isMobile ? 13 : 17),
+                                              state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards![index].status! : 'Work in Progress',
+                                              style: TextStyle(fontSize: isMobile ? 13 : 17),
                                             ),
                                           ),
                                         ],
@@ -427,21 +358,17 @@ class JobCardPage extends StatelessWidget {
                             Container(
                               height: size.height * (isMobile ? 0.05 : 0.045),
                               width: size.width * (isMobile ? 0.93 : 0.79),
-                              margin:
-                                  EdgeInsets.only(bottom: size.height * 0.0025),
+                              margin: EdgeInsets.only(bottom: size.height * 0.0025),
                               decoration: BoxDecoration(
                                   color: Colors.orange.shade200,
-                                  borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10))),
+                                  borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     flex: 1,
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Gap(size.width * 0.01),
                                         Expanded(
@@ -449,31 +376,20 @@ class JobCardPage extends StatelessWidget {
                                           child: Image.asset(
                                             'assets/images/customer.png',
                                             alignment: Alignment.center,
-                                            scale: size.width *
-                                                (isMobile ? 0.06 : 0.018),
+                                            scale: size.width * (isMobile ? 0.06 : 0.018),
                                           ),
                                         ),
                                         Expanded(
                                           flex: 8,
                                           child: SizedBox(
-                                            width: size.width *
-                                                (isMobile ? 0.36 : 0.16),
+                                            width: size.width * (isMobile ? 0.36 : 0.16),
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
                                               child: Text(
-                                                state.getJobCardStatus ==
-                                                        GetJobCardStatus.success
-                                                    ? state
-                                                        .filteredJobCards![
-                                                            index]
-                                                        .customerName!
+                                                state.getJobCardStatus == GetJobCardStatus.success
+                                                    ? state.filteredJobCards![index].customerName!
                                                     : 'Customer Name',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        isMobile ? 13 : 17,
-                                                    fontWeight: FontWeight.bold,
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
+                                                style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                               ),
                                             ),
                                           ),
@@ -489,32 +405,20 @@ class JobCardPage extends StatelessWidget {
                                           flex: 2,
                                           child: Image.asset(
                                             'assets/images/call.png',
-                                            scale: size.width *
-                                                (isMobile ? 0.06 : 0.018),
+                                            scale: size.width * (isMobile ? 0.06 : 0.018),
                                           ),
                                         ),
                                         Expanded(
                                           flex: 8,
                                           child: SizedBox(
-                                            width: size.width *
-                                                (isMobile ? 0.25 : 0.08),
+                                            width: size.width * (isMobile ? 0.25 : 0.08),
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
                                               child: Text(
-                                                state.getJobCardStatus ==
-                                                        GetJobCardStatus.success
-                                                    ? state
-                                                            .filteredJobCards![
-                                                                index]
-                                                            .customerContact ??
-                                                        '-'
+                                                state.getJobCardStatus == GetJobCardStatus.success
+                                                    ? state.filteredJobCards![index].customerContact ?? '-'
                                                     : 'Contact Number',
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        isMobile ? 13 : 17,
-                                                    fontWeight: FontWeight.bold,
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
+                                                style: TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                               ),
                                             ),
                                           ),
@@ -530,13 +434,8 @@ class JobCardPage extends StatelessWidget {
                       ),
                     ),
                   ));
-            },
-                    childCount:
-                        state.getJobCardStatus == GetJobCardStatus.success
-                            ? state.filteredJobCards!.length
-                            : 7)),
-            if (state.getJobCardStatus == GetJobCardStatus.success &&
-                state.filteredJobCards!.isEmpty)
+            }, childCount: state.getJobCardStatus == GetJobCardStatus.success ? state.filteredJobCards!.length : 7)),
+            if (state.getJobCardStatus == GetJobCardStatus.success && state.filteredJobCards!.isEmpty)
               // used to create scroll effect even when the job cards are empty
               SliverToBoxAdapter(
                 child: Column(

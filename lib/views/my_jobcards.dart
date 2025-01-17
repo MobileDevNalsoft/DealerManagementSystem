@@ -79,13 +79,9 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                           navigator.pushAndRemoveUntil('/login', '/x');
                         },
                         buttonStyleData: ButtonStyleData(
-                          overlayColor:
-                              const WidgetStatePropertyAll(Colors.transparent),
+                          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                           decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)),
-                              color: Colors.transparent),
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)), color: Colors.transparent),
                           height: size.height * (isMobile ? 0.05 : 0.045),
                           width: size.width * 0.25,
                           padding: EdgeInsets.only(right: size.width * 0.04),
@@ -97,21 +93,12 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                             margin: EdgeInsets.only(
                               left: size.width * 0.045,
                             ),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.black,
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 10,
-                                      blurStyle: BlurStyle.outer,
-                                      spreadRadius: 0,
-                                      color: Colors.orange.shade200,
-                                      offset: const Offset(0, 0))
-                                ]),
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, boxShadow: [
+                              BoxShadow(blurRadius: 10, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.orange.shade200, offset: const Offset(0, 0))
+                            ]),
                             child: Transform(
                               transform: Matrix4.translationValues(0, 0, 0),
-                              child:
-                                  const Icon(Icons.person, color: Colors.white),
+                              child: const Icon(Icons.person, color: Colors.white),
                             ),
                           ),
                           iconSize: size.height * 0.025,
@@ -124,17 +111,14 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
                             ),
-                            offset: Offset(
-                                size.width * (isMobile ? 0.01 : 0.05), 0)),
+                            offset: Offset(size.width * (isMobile ? 0.01 : 0.05), 0)),
                         menuItemStyleData: MenuItemStyleData(
                           selectedMenuItemBuilder: (context, child) {
                             return Padding(
                               padding: EdgeInsets.only(left: size.width * 0.02),
                               child: Text(
                                 'Log out',
-                                style: TextStyle(
-                                    fontSize: (isMobile ? 13 : 15),
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: (isMobile ? 13 : 15), fontWeight: FontWeight.bold),
                               ),
                             );
                           },
@@ -151,10 +135,7 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
           width: size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors: [Colors.black45, Colors.black26, Colors.black45],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.1, 0.5, 1]),
+                colors: [Colors.black45, Colors.black26, Colors.black45], begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: [0.1, 0.5, 1]),
           ),
           child: FutureBuilder(
               future: Future.delayed(const Duration(milliseconds: 600)),
@@ -163,16 +144,10 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                   return BlocBuilder<ServiceBloc, ServiceState>(
                     builder: (context, state) {
                       return ListView.builder(
-                          itemCount: state.getMyJobCardsStatus ==
-                                  GetMyJobCardsStatus.success
-                              ? state.myJobCards!.length
-                              : 7,
+                          itemCount: state.getMyJobCardsStatus == GetMyJobCardsStatus.success ? state.myJobCards!.length : 7,
                           itemBuilder: (context, index) => Skeletonizer(
                               enableSwitchAnimation: true,
-                              enabled: state.getMyJobCardsStatus ==
-                                      GetMyJobCardsStatus.loading ||
-                                  state.getMyJobCardsStatus ==
-                                      GetMyJobCardsStatus.initial,
+                              enabled: state.getMyJobCardsStatus == GetMyJobCardsStatus.loading || state.getMyJobCardsStatus == GetMyJobCardsStatus.initial,
                               child: ClipShadowPath(
                                 clipper: TicketClipper(),
                                 shadow: const BoxShadow(
@@ -192,159 +167,94 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Gap(size.height *
-                                                  (isMobile ? 0.01 : 0.015)),
+                                              Gap(size.height * (isMobile ? 0.01 : 0.015)),
                                               Row(
                                                 children: [
-                                                  Gap(size.width *
-                                                      (isMobile
-                                                          ? 0.055
-                                                          : 0.08)),
+                                                  Gap(size.width * (isMobile ? 0.055 : 0.08)),
                                                   Image.asset(
                                                     'assets/images/job_card.png',
-                                                    scale: size.width *
-                                                        (isMobile
-                                                            ? 0.05
-                                                            : 0.015),
+                                                    scale: size.width * (isMobile ? 0.05 : 0.015),
                                                     color: Colors.black,
                                                   ),
                                                   Gap(size.width * 0.01),
                                                   InkWell(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
+                                                    borderRadius: BorderRadius.circular(20),
                                                     radius: 100,
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    customBorder:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)),
+                                                    splashColor: Colors.transparent,
+                                                    customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                                     enableFeedback: true,
                                                     onTap: () {
-                                                      state.service = state
-                                                          .myJobCards![index];
-                                                      navigator.push(
-                                                          '/jobCardDetails');
+                                                      state.service = state.myJobCards![index];
+                                                      navigator.push('/jobCardDetails');
                                                     },
                                                     child: Text(
-                                                      state.getMyJobCardsStatus ==
-                                                              GetMyJobCardsStatus
-                                                                  .success
-                                                          ? state
-                                                              .myJobCards![
-                                                                  index]
-                                                              .jobCardNo!
+                                                      state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                          ? state.myJobCards![index].jobCardNo!
                                                           : 'JC-MAD-633',
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: (isMobile
-                                                              ? 12
-                                                              : 16),
+                                                          fontWeight: FontWeight.w500,
+                                                          fontSize: (isMobile ? 12 : 16),
                                                           color: Colors.blue,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline),
+                                                          decoration: TextDecoration.underline),
                                                     ),
                                                   )
                                                 ],
                                               ),
-                                              Gap(size.width *
-                                                  (isMobile ? 0.03 : 0.02)),
+                                              Gap(size.width * (isMobile ? 0.03 : 0.02)),
                                               Row(
                                                 children: [
-                                                  Gap(size.width *
-                                                      (isMobile
-                                                          ? 0.055
-                                                          : 0.082)),
+                                                  Gap(size.width * (isMobile ? 0.055 : 0.082)),
                                                   Image.asset(
                                                     'assets/images/registration_no.png',
-                                                    scale: size.width *
-                                                        (isMobile
-                                                            ? 0.055
-                                                            : 0.016),
+                                                    scale: size.width * (isMobile ? 0.055 : 0.016),
                                                   ),
                                                   Gap(size.width * 0.01),
                                                   SizedBox(
-                                                    width: size.width *
-                                                        (isMobile
-                                                            ? 0.28
-                                                            : 0.25),
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
+                                                    width: size.width * (isMobile ? 0.28 : 0.25),
+                                                    child: SingleChildScrollView(
+                                                      scrollDirection: Axis.horizontal,
                                                       child: Text(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        state.getMyJobCardsStatus ==
-                                                                GetMyJobCardsStatus
-                                                                    .success
-                                                            ? state
-                                                                .myJobCards![
-                                                                    index]
-                                                                .registrationNo!
+                                                        textAlign: TextAlign.center,
+                                                        state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                            ? state.myJobCards![index].registrationNo!
                                                             : 'TS09ED7884',
-                                                        style: TextStyle(
-                                                            fontSize: isMobile
-                                                                ? 13
-                                                                : 17),
+                                                        style: TextStyle(fontSize: isMobile ? 13 : 17),
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
-                                              Gap(size.width *
-                                                  (isMobile ? 0.01 : 0.0016)),
+                                              Gap(size.width * (isMobile ? 0.01 : 0.0016)),
                                             ],
                                           ),
                                           Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Gap(size.height * 0.04),
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   Gap(size.width * 0.058),
                                                   Image.asset(
                                                     'assets/images/status.png',
-                                                    scale: size.width *
-                                                        (isMobile
-                                                            ? 0.058
-                                                            : 0.016),
+                                                    scale: size.width * (isMobile ? 0.058 : 0.016),
                                                   ),
                                                   Gap(size.width * 0.01),
                                                   Text(
-                                                    state.getMyJobCardsStatus ==
-                                                            GetMyJobCardsStatus
-                                                                .success
-                                                        ? state
-                                                            .myJobCards![index]
-                                                            .status!
+                                                    state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                        ? state.myJobCards![index].status!
                                                         : 'Work in Progress',
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            isMobile ? 13 : 17),
+                                                    style: TextStyle(fontSize: isMobile ? 13 : 17),
                                                   ),
                                                 ],
                                               ),
@@ -355,58 +265,33 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                                       Gap(size.height * (isMobile ? 0 : 0.01)),
                                       Container(
                                         height: size.height * 0.05,
-                                        width: size.width *
-                                            (isMobile ? 0.93 : 0.79),
-                                        margin: EdgeInsets.only(
-                                            bottom: size.height * 0.002),
+                                        width: size.width * (isMobile ? 0.93 : 0.79),
+                                        margin: EdgeInsets.only(bottom: size.height * 0.002),
                                         decoration: BoxDecoration(
                                             color: Colors.orange.shade200,
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(10),
-                                                    bottomRight:
-                                                        Radius.circular(10))),
+                                            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
-                                                Gap(size.width *
-                                                    (isMobile ? 0.01 : 0.03)),
+                                                Gap(size.width * (isMobile ? 0.01 : 0.03)),
                                                 Image.asset(
                                                   'assets/images/customer.png',
-                                                  scale: size.width *
-                                                      (isMobile ? 0.06 : 0.018),
+                                                  scale: size.width * (isMobile ? 0.06 : 0.018),
                                                 ),
-                                                Gap(size.width *
-                                                    (isMobile ? 0.01 : 0.02)),
+                                                Gap(size.width * (isMobile ? 0.01 : 0.02)),
                                                 SizedBox(
-                                                  width: size.width *
-                                                      (isMobile ? 0.36 : 0.33),
+                                                  width: size.width * (isMobile ? 0.36 : 0.33),
                                                   child: SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Text(
-                                                      state.getMyJobCardsStatus ==
-                                                              GetMyJobCardsStatus
-                                                                  .success
-                                                          ? state
-                                                              .myJobCards![
-                                                                  index]
-                                                              .customerName!
+                                                      state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                          ? state.myJobCards![index].customerName!
                                                           : 'Customer Name',
-                                                      style: TextStyle(
-                                                          fontSize: isMobile
-                                                              ? 13
-                                                              : 17,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
+                                                      style:
+                                                          TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                     ),
                                                   ),
                                                 ),
@@ -417,34 +302,19 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                                               children: [
                                                 Image.asset(
                                                   'assets/images/call.png',
-                                                  scale: size.width *
-                                                      (isMobile ? 0.06 : 0.018),
+                                                  scale: size.width * (isMobile ? 0.06 : 0.018),
                                                 ),
                                                 Gap(size.width * 0.01),
                                                 SizedBox(
-                                                  width: size.width *
-                                                      (isMobile ? 0.25 : 0.08),
+                                                  width: size.width * (isMobile ? 0.25 : 0.08),
                                                   child: SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Text(
-                                                      state.getMyJobCardsStatus ==
-                                                              GetMyJobCardsStatus
-                                                                  .success
-                                                          ? state
-                                                                  .myJobCards![
-                                                                      index]
-                                                                  .customerContact ??
-                                                              '-'
+                                                      state.getMyJobCardsStatus == GetMyJobCardsStatus.success
+                                                          ? state.myJobCards![index].customerContact ?? '-'
                                                           : 'Contact Number',
-                                                      style: TextStyle(
-                                                          fontSize: isMobile
-                                                              ? 13
-                                                              : 17,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
+                                                      style:
+                                                          TextStyle(fontSize: isMobile ? 13 : 17, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                     ),
                                                   ),
                                                 ),
@@ -462,8 +332,7 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                 }
                 return SizedBox(
                   child: ListView(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: size.width * (isMobile ? 0.03 : 0.1)),
+                    padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.1)),
                     shrinkWrap: true,
                     children: [1, 2, 3, 4, 5, 6]
                         .map((e) => ClipShadowPath(
@@ -476,8 +345,7 @@ class _MyJobcardsState extends State<MyJobcards> with TickerProviderStateMixin {
                                 spreadRadius: 1,
                               ),
                               child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: size.height * 0.006),
+                                margin: EdgeInsets.symmetric(vertical: size.height * 0.006),
                                 height: size.height * (isMobile ? 0.15 : 0.158),
                                 decoration: BoxDecoration(
                                   color: Colors.white,

@@ -25,8 +25,7 @@ class GatePass extends StatefulWidget {
 
 class _GatePassState extends State<GatePass> {
   // WidgetsToImageController to access widget
-  WidgetsToImageController widgetsToImageController =
-      WidgetsToImageController();
+  WidgetsToImageController widgetsToImageController = WidgetsToImageController();
   late Uint8List? bytes;
   late ServiceBloc _serviceBloc;
 
@@ -38,8 +37,7 @@ class _GatePassState extends State<GatePass> {
     _serviceBloc = context.read<ServiceBloc>();
     _serviceBloc.state.gatePassno = "";
     // fetching job card number
-    _serviceBloc
-        .add(GetGatePass(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
+    _serviceBloc.add(GetGatePass(jobCardNo: _serviceBloc.state.service!.jobCardNo!));
   }
 
   @override
@@ -51,17 +49,13 @@ class _GatePassState extends State<GatePass> {
     return PopScope(
       onPopInvoked: (didPop) {
         if (_serviceBloc.state.service!.status != 'Completed') {
-          _serviceBloc.add(GetJobCards(
-              query: getIt<SharedPreferences>()
-                  .getStringList('locations')!
-                  .first));
+          _serviceBloc.add(GetJobCards(query: getIt<SharedPreferences>().getStringList('locations')!.first));
           _serviceBloc.add(MoveStepperTo(step: 'Completed'));
         }
       },
       child: Scaffold(
           extendBody: false,
-          appBar: DMSCustomWidgets.appBar(
-              size: size, isMobile: isMobile, title: 'Gate Pass'),
+          appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Gate Pass'),
           body: Stack(
             children: [
               Container(
@@ -89,14 +83,12 @@ class _GatePassState extends State<GatePass> {
                             depth: 20,
                             edge: Edge.vertical,
                           ),
-                          shadow: const Shadow(
-                              color: Colors.black, blurRadius: 2.5),
+                          shadow: const Shadow(color: Colors.black, blurRadius: 2.5),
                           child: Container(
                             alignment: Alignment.center,
                             height: size.height * (isMobile ? 0.42 : 0.5),
                             width: size.width * (isMobile ? 0.8 : 0.72),
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
+                            decoration: const BoxDecoration(color: Colors.white),
                             child: Column(
                               children: [
                                 Gap(size.height * (isMobile ? 0.02 : 0.03)),
@@ -106,44 +98,27 @@ class _GatePassState extends State<GatePass> {
                                     if (!isMobile) Spacer(),
                                     Text(
                                       "Gate Pass",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: size.width *
-                                              (isMobile ? 0.06 : 0.05)),
+                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: size.width * (isMobile ? 0.06 : 0.05)),
                                     ),
                                     const Spacer(),
                                     Align(
                                         alignment: Alignment.topRight,
                                         child: IconButton(
                                           onPressed: () async {
-                                            await Future.delayed(const Duration(
-                                                milliseconds: 20));
-                                            _serviceBloc.add(
-                                                ModifyGatePassStatus(
-                                                    status: GatePassStatus
-                                                        .loading));
+                                            await Future.delayed(const Duration(milliseconds: 20));
+                                            _serviceBloc.add(ModifyGatePassStatus(status: GatePassStatus.loading));
 
                                             // Storing the image and sharing
-                                            final bytes =
-                                                await widgetsToImageController
-                                                    .capture();
-                                            final dir =
-                                                await getTemporaryDirectory();
-                                            final path =
-                                                '${dir.path}/gatepass_${_serviceBloc.state.gatePassno}.png';
+                                            final bytes = await widgetsToImageController.capture();
+                                            final dir = await getTemporaryDirectory();
+                                            final path = '${dir.path}/gatepass_${_serviceBloc.state.gatePassno}.png';
                                             final File file = File(path);
-                                            await file.writeAsBytes(
-                                                bytes as List<int>);
+                                            await file.writeAsBytes(bytes as List<int>);
                                             await Share.shareXFiles(
                                               [XFile(path)],
-                                              text:
-                                                  " gatepass_${_serviceBloc.state.gatePassno}",
+                                              text: " gatepass_${_serviceBloc.state.gatePassno}",
                                             );
-                                            _serviceBloc.add(
-                                                ModifyGatePassStatus(
-                                                    status: GatePassStatus
-                                                        .initial));
+                                            _serviceBloc.add(ModifyGatePassStatus(status: GatePassStatus.initial));
                                           },
                                           icon: Icon(
                                             Icons.ios_share_rounded,
@@ -152,43 +127,31 @@ class _GatePassState extends State<GatePass> {
                                           ),
                                           visualDensity: VisualDensity.compact,
                                         )),
-                                    Gap(size.height *
-                                        (isMobile ? 0.008 : 0.02)),
+                                    Gap(size.height * (isMobile ? 0.008 : 0.02)),
                                   ],
                                 ),
                                 Gap(size.height * (isMobile ? 0.01 : 0.01)),
                                 Container(
                                     decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(
-                                          217, 217, 217, 1),
+                                      color: const Color.fromRGBO(217, 217, 217, 1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: size.height * 0.005,
-                                        horizontal: size.width * 0.02),
-                                    child: Text(
-                                        _serviceBloc.state.gatePassno ?? "",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: (isMobile ? 14 : 18)))),
+                                    padding: EdgeInsets.symmetric(vertical: size.height * 0.005, horizontal: size.width * 0.02),
+                                    child: Text(_serviceBloc.state.gatePassno ?? "",
+                                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: (isMobile ? 14 : 18)))),
                                 Gap(size.height * 0.02),
                                 const DottedLine(),
                                 Gap(size.height * 0.02),
                                 Container(
                                   padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(
-                                          217, 217, 217, 1),
-                                      borderRadius: BorderRadius.circular(16)),
+                                  decoration: BoxDecoration(color: const Color.fromRGBO(217, 217, 217, 1), borderRadius: BorderRadius.circular(16)),
                                   child: QrImageView(
                                     backgroundColor: Colors.white,
                                     data: _serviceBloc.state.gatePassno ?? "",
                                     version: QrVersions.auto,
                                     size: size.width * 0.4,
                                     gapless: true,
-                                    embeddedImageStyle:
-                                        const QrEmbeddedImageStyle(
+                                    embeddedImageStyle: const QrEmbeddedImageStyle(
                                       size: Size(80, 80),
                                     ),
                                   ),
@@ -202,16 +165,12 @@ class _GatePassState extends State<GatePass> {
                   ),
                 ),
               ),
-              if (context.watch<ServiceBloc>().state.gatePassStatus ==
-                  GatePassStatus.loading)
+              if (context.watch<ServiceBloc>().state.gatePassStatus == GatePassStatus.loading)
                 Container(
                   color: Colors.blueGrey.withOpacity(0.25),
                   child: Center(
                       child: Lottie.asset('assets/lottie/car_loading.json',
-                          height:
-                              isMobile ? size.height * 0.5 : size.height * 0.32,
-                          width:
-                              isMobile ? size.width * 0.6 : size.width * 0.32)),
+                          height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
                 )
             ],
           )),
@@ -261,11 +220,9 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
 
     // Bottom or Vertical
     path.lineTo(0, size.height * 0.26);
-    path.quadraticBezierTo(
-        25, (size.height * 0.26) + 20, 0, size.height * 0.26 + 40);
+    path.quadraticBezierTo(25, (size.height * 0.26) + 20, 0, size.height * 0.26 + 40);
     path.lineTo(0, h - 30);
-    path.arcToPoint(Offset(30, h),
-        radius: const Radius.circular(-30), clockwise: false);
+    path.arcToPoint(Offset(30, h), radius: const Radius.circular(-30), clockwise: false);
     path.lineTo(40, h);
 
     x = 40;
@@ -281,17 +238,14 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
         x += i;
       }
       path.lineTo(w - 30, y);
-      path.arcToPoint(Offset(w, h - 30),
-          radius: const Radius.circular(30), clockwise: false);
+      path.arcToPoint(Offset(w, h - 30), radius: const Radius.circular(30), clockwise: false);
     }
 
     path.lineTo(w, size.height * 0.26 + 40);
-    path.quadraticBezierTo(
-        w - 25, (size.height * 0.26) + 20, w, size.height * 0.26);
+    path.quadraticBezierTo(w - 25, (size.height * 0.26) + 20, w, size.height * 0.26);
     // Top or Vertical
     path.lineTo(w, 30);
-    path.arcToPoint(Offset(w - 30, 0),
-        radius: const Radius.circular(30), clockwise: false);
+    path.arcToPoint(Offset(w - 30, 0), radius: const Radius.circular(30), clockwise: false);
 
     // path.lineTo(w / 2, 0);
     x = w - 30;
@@ -308,8 +262,7 @@ class RoundedEdgeClipper extends CustomClipper<Path> {
       }
       path.lineTo(30, 0);
     }
-    path.arcToPoint(const Offset(0, 30),
-        radius: const Radius.circular(30), clockwise: false);
+    path.arcToPoint(const Offset(0, 30), radius: const Radius.circular(30), clockwise: false);
 
     path.close();
     return path;

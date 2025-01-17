@@ -29,8 +29,7 @@ class VehicleExamination2 extends StatefulWidget {
   State<VehicleExamination2> createState() => _VehicleExamination2State();
 }
 
-class _VehicleExamination2State extends State<VehicleExamination2>
-    with ConnectivityMixin {
+class _VehicleExamination2State extends State<VehicleExamination2> with ConnectivityMixin {
   // related to UI when tapped on 3D model hotspot
   final PageController _pageController = PageController(initialPage: 0);
   final AutoScrollController _autoScrollController = AutoScrollController();
@@ -88,11 +87,7 @@ class _VehicleExamination2State extends State<VehicleExamination2>
           return Stack(
             children: [
               IgnorePointer(
-                ignoring: context
-                        .watch<VehiclePartsInteractionBloc2>()
-                        .state
-                        .status ==
-                    VehiclePartsInteractionStatus.loading,
+                ignoring: context.watch<VehiclePartsInteractionBloc2>().state.status == VehiclePartsInteractionStatus.loading,
                 child: Padding(
                   padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -100,14 +95,11 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color.fromRGBO(26, 26, 27, 1),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(size.width * 0.064),
-                          topRight: Radius.circular(size.width * 0.064)),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(size.width * 0.064), topRight: Radius.circular(size.width * 0.064)),
                     ),
                     height: size.height * 0.48,
                     width: size.width,
-                    child: BlocBuilder<VehiclePartsInteractionBloc2,
-                        VehiclePartsInteractionBlocState2>(
+                    child: BlocBuilder<VehiclePartsInteractionBloc2, VehiclePartsInteractionBlocState2>(
                       builder: (context, state) {
                         hotSpots = state.mapMedia.entries.toList();
                         return Column(
@@ -116,12 +108,10 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                             // Drag handle at the top
                             Center(
                               child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: size.height * 0.01),
+                                margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
                                 decoration: const BoxDecoration(
                                   color: Colors.grey,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
                                 ),
                                 height: 4,
                                 width: size.width * 0.1,
@@ -134,8 +124,7 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                               height: size.height * 0.064,
                               width: size.width * 0.98,
                               child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.circular(size.width * 0.14),
+                                borderRadius: BorderRadius.circular(size.width * 0.14),
                                 child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     controller: _autoScrollController,
@@ -146,66 +135,36 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                         index: hotspotIndex,
                                         child: InkWell(
                                           onTap: () {
-                                            _interactionBloc.add(
-                                                ModifyVehicleInteractionStatus(
-                                                    selectedBodyPart:
-                                                        (hotSpots.elementAt(
-                                                                hotspotIndex))
-                                                            .key,
-                                                    isTapped: _interactionBloc
-                                                        .state.isTapped));
-                                            _pageController
-                                                .jumpToPage(hotspotIndex);
-                                            _changeButtonColors(hotSpots
-                                                .elementAt(hotspotIndex)
-                                                .key);
-                                            state.vehicleExaminationPageIndex =
-                                                hotspotIndex;
+                                            _interactionBloc.add(ModifyVehicleInteractionStatus(
+                                                selectedBodyPart: (hotSpots.elementAt(hotspotIndex)).key, isTapped: _interactionBloc.state.isTapped));
+                                            _pageController.jumpToPage(hotspotIndex);
+                                            _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
+                                            state.vehicleExaminationPageIndex = hotspotIndex;
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        size.width * 16),
-                                                color:
-                                                    state.vehicleExaminationPageIndex ==
-                                                            hotspotIndex
-                                                        ? Colors.orange.shade200
-                                                        : Colors.white,
+                                                borderRadius: BorderRadius.circular(size.width * 16),
+                                                color: state.vehicleExaminationPageIndex == hotspotIndex ? Colors.orange.shade200 : Colors.white,
                                                 boxShadow: [
                                                   BoxShadow(
-                                                      blurRadius:
-                                                          state.vehicleExaminationPageIndex ==
-                                                                  hotspotIndex
-                                                              ? 0
-                                                              : 5,
-                                                      blurStyle:
-                                                          BlurStyle.outer,
+                                                      blurRadius: state.vehicleExaminationPageIndex == hotspotIndex ? 0 : 5,
+                                                      blurStyle: BlurStyle.outer,
                                                       spreadRadius: 0,
-                                                      color: Colors
-                                                          .orange.shade200,
-                                                      offset:
-                                                          const Offset(0, 0))
+                                                      color: Colors.orange.shade200,
+                                                      offset: const Offset(0, 0))
                                                 ]),
                                             margin: EdgeInsets.only(
                                                 top: size.width * 0.02,
                                                 bottom: size.width * 0.02,
                                                 right: size.width * 0.016,
-                                                left: hotspotIndex == 0
-                                                    ? size.width * 0.032
-                                                    : 0),
+                                                left: hotspotIndex == 0 ? size.width * 0.032 : 0),
                                             child: Center(
                                                 child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 Gap(size.width * 0.024),
                                                 Text(
-                                                  hotSpots
-                                                      .elementAt(hotspotIndex)
-                                                      .value
-                                                      .name
-                                                      .toString(),
+                                                  hotSpots.elementAt(hotspotIndex).value.name.toString(),
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w800,
                                                   ),
@@ -219,49 +178,28 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                         builder: (context) {
                                                           return PopScope(
                                                             canPop: true,
-                                                            onPopInvoked:
-                                                                (didPop) {
-                                                              _interactionBloc.add(
-                                                                  ModifyRenamingStatus(
-                                                                      renameStatus:
-                                                                          HotspotRenamingStatus
-                                                                              .initial));
+                                                            onPopInvoked: (didPop) {
+                                                              _interactionBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
                                                             },
                                                             child: AlertDialog(
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .white,
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10)),
-                                                                contentPadding:
-                                                                    EdgeInsets.only(
-                                                                        top: size.height *
-                                                                            0.01),
+                                                                backgroundColor: Colors.white,
+                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                                contentPadding: EdgeInsets.only(top: size.height * 0.01),
                                                                 content: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  mainAxisSize: MainAxisSize.min,
                                                                   children: [
                                                                     Padding(
-                                                                        padding:
-                                                                            EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
+                                                                        padding: EdgeInsets.symmetric(horizontal: size.width * (isMobile ? 0.03 : 0.02)),
                                                                         child: Theme(
-                                                                          data:
-                                                                              Theme.of(context).copyWith(),
-                                                                          child:
-                                                                              SizedBox(
-                                                                            height:
-                                                                                size.height * 0.05,
-                                                                            child:
-                                                                                Row(
+                                                                          data: Theme.of(context).copyWith(),
+                                                                          child: SizedBox(
+                                                                            height: size.height * 0.05,
+                                                                            child: Row(
                                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                                               children: [
-                                                                                context.watch<VehiclePartsInteractionBloc2>().state.renamingStatus == HotspotRenamingStatus.initial
+                                                                                context.watch<VehiclePartsInteractionBloc2>().state.renamingStatus ==
+                                                                                        HotspotRenamingStatus.initial
                                                                                     ? Text(
                                                                                         hotSpots.elementAt(hotspotIndex).value.name,
                                                                                         style: TextStyle(fontSize: isMobile ? 16 : 18),
@@ -269,7 +207,8 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                                     : Expanded(
                                                                                         child: TextFormField(
                                                                                           selectionControls: MaterialTextSelectionControls(),
-                                                                                          controller: TextEditingController(text: hotSpots.elementAt(hotspotIndex).value.name),
+                                                                                          controller: TextEditingController(
+                                                                                              text: hotSpots.elementAt(hotspotIndex).value.name),
                                                                                           showCursor: true,
                                                                                           autofocus: true,
                                                                                           cursorColor: Colors.black,
@@ -278,17 +217,20 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                                           decoration: InputDecoration(border: InputBorder.none),
                                                                                           onChanged: (value) async {
                                                                                             _interactionBloc.state.renamedValue = value;
-                                                                                            _interactionBloc.state.renamingStatus = HotspotRenamingStatus.hotspotRenamed;
+                                                                                            _interactionBloc.state.renamingStatus =
+                                                                                                HotspotRenamingStatus.hotspotRenamed;
                                                                                           },
                                                                                         ),
                                                                                       ),
                                                                                 Spacer(),
-                                                                                if (context.watch<VehiclePartsInteractionBloc2>().state.renamingStatus == HotspotRenamingStatus.initial)
+                                                                                if (context.watch<VehiclePartsInteractionBloc2>().state.renamingStatus ==
+                                                                                    HotspotRenamingStatus.initial)
                                                                                   Align(
                                                                                     alignment: Alignment.centerRight,
                                                                                     child: IconButton(
                                                                                         onPressed: () {
-                                                                                          _interactionBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.openTextField));
+                                                                                          _interactionBloc.add(ModifyRenamingStatus(
+                                                                                              renameStatus: HotspotRenamingStatus.openTextField));
                                                                                         },
                                                                                         icon: Icon(Icons.edit_rounded)),
                                                                                   )
@@ -296,33 +238,24 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                             ),
                                                                           ),
                                                                         )),
-                                                                    Gap(size.height *
-                                                                        0.01),
+                                                                    Gap(size.height * 0.01),
                                                                     Container(
-                                                                      height: size
-                                                                              .height *
-                                                                          0.05,
-                                                                      margin: EdgeInsets.all(
-                                                                          size.height *
-                                                                              0.001),
+                                                                      height: size.height * 0.05,
+                                                                      margin: EdgeInsets.all(size.height * 0.001),
                                                                       decoration: const BoxDecoration(
-                                                                          color: Colors
-                                                                              .black,
+                                                                          color: Colors.black,
                                                                           borderRadius: BorderRadius.only(
-                                                                              bottomLeft: Radius.circular(10),
-                                                                              bottomRight: Radius.circular(10))),
-                                                                      child:
-                                                                          Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
+                                                                              bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                         children: [
                                                                           Expanded(
-                                                                            child:
-                                                                                TextButton(
+                                                                            child: TextButton(
                                                                               onPressed: () {
                                                                                 _removeButton(hotSpots.elementAt(hotspotIndex).key);
                                                                                 int nextIndex = 0;
-                                                                                _interactionBloc.add(RemoveHotspotEvent(name: hotSpots.elementAt(hotspotIndex).key));
+                                                                                _interactionBloc
+                                                                                    .add(RemoveHotspotEvent(name: hotSpots.elementAt(hotspotIndex).key));
                                                                                 if (hotspotIndex == 0 && state.mapMedia.length > 1) {
                                                                                   nextIndex = 1;
                                                                                 }
@@ -331,7 +264,8 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                                   _autoScrollController.scrollToIndex(nextIndex);
                                                                                   state.vehicleExaminationPageIndex = hotspotIndex;
                                                                                   _changeButtonColors(hotSpots.elementAt(nextIndex).key);
-                                                                                  _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: hotSpots.elementAt(nextIndex).key, isTapped: true));
+                                                                                  _interactionBloc.add(ModifyVehicleInteractionStatus(
+                                                                                      selectedBodyPart: hotSpots.elementAt(nextIndex).key, isTapped: true));
                                                                                   _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: nextIndex));
                                                                                   Navigator.pop(context);
                                                                                   if (hotspotIndex == 0) {
@@ -339,7 +273,9 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                                   }
                                                                                 }
                                                                               },
-                                                                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
+                                                                              style: TextButton.styleFrom(
+                                                                                  fixedSize: Size(size.width * 0.3, size.height * 0.1),
+                                                                                  foregroundColor: Colors.white),
                                                                               child: Text(
                                                                                 'Delete',
                                                                                 style: TextStyle(fontSize: isMobile ? 14 : 18),
@@ -347,14 +283,11 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                             ),
                                                                           ),
                                                                           const VerticalDivider(
-                                                                            color:
-                                                                                Colors.white,
-                                                                            thickness:
-                                                                                0.5,
+                                                                            color: Colors.white,
+                                                                            thickness: 0.5,
                                                                           ),
                                                                           Expanded(
-                                                                            child:
-                                                                                TextButton(
+                                                                            child: TextButton(
                                                                               onPressed: () async {
                                                                                 if (state.vehicleExaminationPageIndex != hotspotIndex) {
                                                                                   _autoScrollController.scrollToIndex(hotspotIndex);
@@ -362,9 +295,11 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                                   state.vehicleExaminationPageIndex = hotspotIndex;
                                                                                   _changeButtonColors(hotSpots.elementAt(hotspotIndex).key);
                                                                                 }
-                                                                                if (_interactionBloc.state.renamingStatus == HotspotRenamingStatus.hotspotRenamed) {
+                                                                                if (_interactionBloc.state.renamingStatus ==
+                                                                                    HotspotRenamingStatus.hotspotRenamed) {
                                                                                   var value = hotSpots.elementAt(hotspotIndex).value;
-                                                                                  _interactionBloc.state.renamedValue = _interactionBloc.state.renamedValue!.trim().replaceAll(' ', '-');
+                                                                                  _interactionBloc.state.renamedValue =
+                                                                                      _interactionBloc.state.renamedValue!.trim().replaceAll(' ', '-');
                                                                                   // await webViewController
                                                                                   //     .runJavaScript(
                                                                                   //         'renameHotspot("${hotSpots.elementAt(hotspotIndex).key}","${_interactionBloc.state.renamedValue}")')
@@ -380,18 +315,24 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                                   //     _interactionBloc.state.renamedValue!;
                                                                                   // _interactionBloc.state.mapMedia.remove(hotSpots.elementAt(hotspotIndex).key);
                                                                                   // _interactionBloc.state.selectedGeneralBodyPart = _interactionBloc.state.renamedValue!;
-                                                                                  _interactionBloc.state.mapMedia[hotSpots.elementAt(hotspotIndex).key]!.name = _interactionBloc.state.renamedValue!;
-                                                                                  _interactionBloc.state.selectedBodyPart = hotSpots.elementAt(hotspotIndex).key;
+                                                                                  _interactionBloc.state.mapMedia[hotSpots.elementAt(hotspotIndex).key]!.name =
+                                                                                      _interactionBloc.state.renamedValue!;
+                                                                                  _interactionBloc.state.selectedBodyPart =
+                                                                                      hotSpots.elementAt(hotspotIndex).key;
                                                                                   _pageController.jumpToPage(hotspotIndex);
                                                                                   _autoScrollController.scrollToIndex(hotspotIndex);
                                                                                   _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
-                                                                                  _changeButtonColors(_interactionBloc.state.mapMedia.entries.elementAt(hotspotIndex).key);
-                                                                                  _interactionBloc.add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
+                                                                                  _changeButtonColors(
+                                                                                      _interactionBloc.state.mapMedia.entries.elementAt(hotspotIndex).key);
+                                                                                  _interactionBloc
+                                                                                      .add(ModifyRenamingStatus(renameStatus: HotspotRenamingStatus.initial));
                                                                                   _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: hotspotIndex));
                                                                                 }
                                                                                 Navigator.pop(context);
                                                                               },
-                                                                              style: TextButton.styleFrom(fixedSize: Size(size.width * 0.3, size.height * 0.1), foregroundColor: Colors.white),
+                                                                              style: TextButton.styleFrom(
+                                                                                  fixedSize: Size(size.width * 0.3, size.height * 0.1),
+                                                                                  foregroundColor: Colors.white),
                                                                               child: Text(
                                                                                 'Done',
                                                                                 style: TextStyle(fontSize: isMobile ? 14 : 18),
@@ -403,26 +344,15 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                                     )
                                                                   ],
                                                                 ),
-                                                                actionsPadding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                buttonPadding:
-                                                                    EdgeInsets
-                                                                        .zero),
+                                                                actionsPadding: EdgeInsets.zero,
+                                                                buttonPadding: EdgeInsets.zero),
                                                           );
                                                         });
                                                   },
-                                                  icon: Icon(hotSpots
-                                                              .elementAt(
-                                                                  hotspotIndex)
-                                                              .value
-                                                              .isUploaded ==
-                                                          false
-                                                      ? Icons.settings_rounded
-                                                      : Icons.done_rounded),
+                                                  icon: Icon(
+                                                      hotSpots.elementAt(hotspotIndex).value.isUploaded == false ? Icons.settings_rounded : Icons.done_rounded),
                                                   padding: EdgeInsets.zero,
-                                                  visualDensity:
-                                                      VisualDensity.compact,
+                                                  visualDensity: VisualDensity.compact,
                                                 )
                                               ],
                                             )),
@@ -438,21 +368,12 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                 controller: _pageController,
                                 physics: const ScrollPhysics(),
                                 onPageChanged: (value) {
-                                  _interactionBloc.add(
-                                      ModifyVehicleInteractionStatus(
-                                          selectedBodyPart:
-                                              hotSpots.elementAt(value).key,
-                                          isTapped:
-                                              _interactionBloc.state.isTapped));
-                                  _interactionBloc.add(
-                                      ModifyVehicleExaminationPageIndex(
-                                          index: value));
+                                  _interactionBloc.add(ModifyVehicleInteractionStatus(
+                                      selectedBodyPart: hotSpots.elementAt(value).key, isTapped: _interactionBloc.state.isTapped));
+                                  _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: value));
                                   _autoScrollController.scrollToIndex(value,
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      preferPosition: AutoScrollPosition.begin);
-                                  _changeButtonColors(
-                                      hotSpots.elementAt(value).key);
+                                      duration: const Duration(milliseconds: 500), preferPosition: AutoScrollPosition.begin);
+                                  _changeButtonColors(hotSpots.elementAt(value).key);
                                 },
                                 scrollDirection: Axis.horizontal,
                                 itemCount: state.mapMedia.length,
@@ -461,9 +382,7 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                   return Container(
                                     padding: EdgeInsets.zero,
                                     margin: EdgeInsets.zero,
-                                    width: isMobile
-                                        ? size.width * 0.9
-                                        : size.width * 0.32,
+                                    width: isMobile ? size.width * 0.9 : size.width * 0.32,
                                     // decoration: BoxDecoration(color: const Color.fromRGBO(26, 26, 27, 1), borderRadius: BorderRadius.circular(24), boxShadow: [
                                     //   BoxShadow(
                                     //     blurRadius: 6,
@@ -474,150 +393,74 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                     // ]),
 
                                     // elevation: 10,
-                                    child: LayoutBuilder(
-                                        builder: (context, constraints) {
+                                    child: LayoutBuilder(builder: (context, constraints) {
                                       return Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           const Gap(8),
                                           Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16),
+                                            padding: const EdgeInsets.symmetric(horizontal: 16),
                                             height: size.height * 0.15,
                                             //  width: size.width * 0.65,
                                             child: Stack(
                                               children: [
                                                 Skeletonizer(
-                                                  enabled: state
-                                                          .selectedBodyPart!
-                                                          .isEmpty ||
-                                                      !state.isTapped!,
+                                                  enabled: state.selectedBodyPart!.isEmpty || !state.isTapped!,
                                                   child: TextFormField(
                                                     // key: _formKey,
                                                     // focusNode: commentsFocus,
-                                                    controller:
-                                                        TextEditingController(
-                                                            text: state
-                                                                .mapMedia[state
-                                                                    .selectedBodyPart]!
-                                                                .comments),
+                                                    controller: TextEditingController(text: state.mapMedia[state.selectedBodyPart]!.comments),
                                                     // initialValue: state.mapMedia[context.watch<VehiclePartsInteractionBloc2>().state.selectedGeneralBodyPart]!.comments,
                                                     maxLines: 5,
                                                     cursorColor: Colors.white,
-                                                    style: const TextStyle(
-                                                        color: Colors.white),
+                                                    style: const TextStyle(color: Colors.white),
                                                     decoration: InputDecoration(
-                                                        hintStyle:
-                                                            const TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .white60),
-                                                        fillColor: const Color
-                                                            .fromRGBO(
-                                                            38, 38, 40, 1),
+                                                        hintStyle: const TextStyle(fontSize: 16, color: Colors.white60),
+                                                        fillColor: const Color.fromRGBO(38, 38, 40, 1),
                                                         filled: true,
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                left: 16,
-                                                                top: 16),
+                                                        contentPadding: const EdgeInsets.only(left: 16, top: 16),
                                                         hintText: "Comments",
-                                                        focusedBorder:
-                                                            OutlineInputBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      16.0),
-                                                          borderSide:
-                                                              const BorderSide(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    145,
-                                                                    95,
-                                                                    22),
+                                                        focusedBorder: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(16.0),
+                                                          borderSide: const BorderSide(
+                                                            color: Color.fromARGB(255, 145, 95, 22),
                                                           ),
                                                         ),
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16))),
+                                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
                                                     onChanged: (value) {
-                                                      _interactionBloc
-                                                          .add(AddCommentsEvent(
-                                                        name: _interactionBloc
-                                                            .state
-                                                            .selectedBodyPart!,
+                                                      _interactionBloc.add(AddCommentsEvent(
+                                                        name: _interactionBloc.state.selectedBodyPart!,
                                                         comments: value,
                                                       ));
                                                     },
                                                   ),
                                                 ),
                                                 Align(
-                                                  alignment:
-                                                      Alignment.bottomRight,
+                                                  alignment: Alignment.bottomRight,
                                                   child: IconButton(
-                                                      padding: isMobile
-                                                          ? EdgeInsets.zero
-                                                          : EdgeInsets.only(
-                                                              bottom:
-                                                                  size.height *
-                                                                      0.032),
+                                                      padding: isMobile ? EdgeInsets.zero : EdgeInsets.only(bottom: size.height * 0.032),
                                                       onPressed: () async {
                                                         // commentsFocus.unfocus();
-                                                        if (state
-                                                                .mapMedia[
-                                                                    _interactionBloc
-                                                                        .state
-                                                                        .selectedBodyPart]!
-                                                                .images!
-                                                                .length <
-                                                            3) {
-                                                          ImagePicker
-                                                              imagePicker =
-                                                              ImagePicker();
+                                                        if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.length < 3) {
+                                                          ImagePicker imagePicker = ImagePicker();
 
                                                           XFile? image =
-                                                              await imagePicker.pickImage(
-                                                                  source:
-                                                                      ImageSource
-                                                                          .camera,
-                                                                  preferredCameraDevice:
-                                                                      CameraDevice
-                                                                          .rear);
+                                                              await imagePicker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
                                                           if (image != null) {
-                                                            _interactionBloc.add(
-                                                                AddImageEvent(
-                                                                    name: _interactionBloc
-                                                                        .state
-                                                                        .selectedBodyPart!,
-                                                                    image:
-                                                                        image));
+                                                            _interactionBloc.add(AddImageEvent(name: _interactionBloc.state.selectedBodyPart!, image: image));
                                                           }
-                                                          print(
-                                                              'images ${hotSpots.elementAt(pageIndex).value.images}');
+                                                          print('images ${hotSpots.elementAt(pageIndex).value.images}');
                                                         }
                                                       },
                                                       icon: Stack(
-                                                        alignment:
-                                                            Alignment.center,
+                                                        alignment: Alignment.center,
                                                         children: [
                                                           const Icon(
-                                                            Icons
-                                                                .add_photo_alternate_rounded,
-                                                            color:
-                                                                Colors.white60,
+                                                            Icons.add_photo_alternate_rounded,
+                                                            color: Colors.white60,
                                                           ),
                                                           ColorFiltered(
-                                                            colorFilter:
-                                                                ColorFilter.mode(
-                                                                    Colors
-                                                                        .orange
-                                                                        .shade200,
-                                                                    BlendMode
-                                                                        .srcATop),
+                                                            colorFilter: ColorFilter.mode(Colors.orange.shade200, BlendMode.srcATop),
                                                             child: Lottie.asset(
                                                               "assets/lottie/highlight.json",
                                                               width: 50,
@@ -631,32 +474,10 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                             ),
                                           ),
                                           const Gap(8),
-                                          if (hotSpots
-                                                      .elementAt(pageIndex)
-                                                      .value
-                                                      .images !=
-                                                  null &&
-                                              hotSpots
-                                                      .elementAt(pageIndex)
-                                                      .value
-                                                      .images
-                                                      .length !=
-                                                  0)
+                                          if (hotSpots.elementAt(pageIndex).value.images != null && hotSpots.elementAt(pageIndex).value.images.length != 0)
                                             Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16.0),
-                                              height: hotSpots
-                                                              .elementAt(
-                                                                  pageIndex)
-                                                              .value
-                                                              .images ==
-                                                          null ||
-                                                      hotSpots
-                                                          .elementAt(pageIndex)
-                                                          .value
-                                                          .images!
-                                                          .isEmpty
+                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                              height: hotSpots.elementAt(pageIndex).value.images == null || hotSpots.elementAt(pageIndex).value.images!.isEmpty
                                                   ? 0
                                                   : isMobile
                                                       ? size.height * 0.14
@@ -667,100 +488,60 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                     .elementAt(pageIndex)
                                                     .value
                                                     .images
-                                                    .map<Widget>(
-                                                        (image) => Padding(
-                                                              padding: EdgeInsets
-                                                                  .all(constraints
-                                                                          .maxWidth *
-                                                                      0.014),
-                                                              child: Stack(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    // height: constraints.maxHeight*0.5,
-                                                                    width: constraints
-                                                                            .maxWidth *
-                                                                        0.28,
-                                                                    child:
-                                                                        ClipRRect(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              12),
-                                                                      child: Image
-                                                                          .file(
-                                                                        File(image
-                                                                            .path),
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                        // scale: size.width * 0.002,
-                                                                      ),
+                                                    .map<Widget>((image) => Padding(
+                                                          padding: EdgeInsets.all(constraints.maxWidth * 0.014),
+                                                          child: Stack(
+                                                            children: [
+                                                              SizedBox(
+                                                                // height: constraints.maxHeight*0.5,
+                                                                width: constraints.maxWidth * 0.28,
+                                                                child: ClipRRect(
+                                                                  borderRadius: BorderRadius.circular(12),
+                                                                  child: Image.file(
+                                                                    File(image.path),
+                                                                    fit: BoxFit.fill,
+                                                                    // scale: size.width * 0.002,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                top: -14,
+                                                                right: -14.0,
+                                                                child: IconButton(
+                                                                  onPressed: () {
+                                                                    if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images != null) {
+                                                                      _interactionBloc
+                                                                          .add(RemoveImageEvent(name: _interactionBloc.state.selectedBodyPart!, image: image));
+                                                                    }
+                                                                  },
+                                                                  icon: const CircleAvatar(
+                                                                    radius: 8,
+                                                                    backgroundColor: Colors.white,
+                                                                    child: Icon(
+                                                                      Icons.remove_circle_rounded,
+                                                                      color: Color.fromARGB(255, 167, 38, 38),
+                                                                      size: 16,
                                                                     ),
                                                                   ),
-                                                                  Positioned(
-                                                                    top: -14,
-                                                                    right:
-                                                                        -14.0,
-                                                                    child:
-                                                                        IconButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images !=
-                                                                            null) {
-                                                                          _interactionBloc.add(RemoveImageEvent(
-                                                                              name: _interactionBloc.state.selectedBodyPart!,
-                                                                              image: image));
-                                                                        }
-                                                                      },
-                                                                      icon:
-                                                                          const CircleAvatar(
-                                                                        radius:
-                                                                            8,
-                                                                        backgroundColor:
-                                                                            Colors.white,
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .remove_circle_rounded,
-                                                                          color: Color.fromARGB(
-                                                                              255,
-                                                                              167,
-                                                                              38,
-                                                                              38),
-                                                                          size:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ))
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ))
                                                     .toList(),
                                               ),
                                             ),
 
                                           Gap(size.height * 0.02),
-                                          if (state
-                                                      .mapMedia[_interactionBloc
-                                                          .state
-                                                          .selectedBodyPart]!
-                                                      .images !=
-                                                  null &&
-                                              state
-                                                  .mapMedia[_interactionBloc
-                                                      .state.selectedBodyPart]!
-                                                  .images!
-                                                  .isNotEmpty)
+                                          if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images != null &&
+                                              state.mapMedia[_interactionBloc.state.selectedBodyPart]!.images!.isNotEmpty)
                                             InkWell(
-                                              radius: isMobile
-                                                  ? size.width * 0.06
-                                                  : size.width * 0.024,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                                              radius: isMobile ? size.width * 0.06 : size.width * 0.024,
+                                              borderRadius: BorderRadius.circular(20),
                                               onTap: () {
                                                 commentsFocus.requestFocus();
                                                 if (!isConnected()) {
-                                                  DMSCustomWidgets.DMSFlushbar(
-                                                      size, context,
+                                                  DMSCustomWidgets.DMSFlushbar(size, context,
                                                       message: 'Looks like you'
                                                           're offline. Please check your connection and try again',
                                                       icon: const Icon(
@@ -770,18 +551,11 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                   return;
                                                 }
                                                 // commentsFocus.unfocus();
-                                                if (state
-                                                    .mapMedia[_interactionBloc
-                                                        .state
-                                                        .selectedBodyPart]!
-                                                    .comments!
-                                                    .trim()
-                                                    .isEmpty) {
+                                                if (state.mapMedia[_interactionBloc.state.selectedBodyPart]!.comments!.trim().isEmpty) {
                                                   DMSCustomWidgets.DMSFlushbar(
                                                     size,
                                                     context,
-                                                    message:
-                                                        "Please add comments",
+                                                    message: "Please add comments",
                                                     icon: const Icon(
                                                       Icons.error,
                                                       color: Colors.white,
@@ -789,20 +563,11 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                   );
                                                 } else {
                                                   //use service.jobcard number
-                                                  _interactionBloc.add(
-                                                      SubmitBodyPartVehicleMediaEvent(
-                                                    bodyPartName:
-                                                        _interactionBloc.state
-                                                            .selectedBodyPart!,
-                                                    serviceBookingNo:
-                                                        _serviceBloc
-                                                            .state
-                                                            .service!
-                                                            .serviceBookingNo!,
+                                                  _interactionBloc.add(SubmitBodyPartVehicleMediaEvent(
+                                                    bodyPartName: _interactionBloc.state.selectedBodyPart!,
+                                                    serviceBookingNo: _serviceBloc.state.service!.serviceBookingNo!,
                                                   ) as VehiclePartsInteractionBlocEvent2);
-                                                  if (hotSpots.last.key ==
-                                                      _interactionBloc.state
-                                                          .selectedBodyPart) {
+                                                  if (hotSpots.last.key == _interactionBloc.state.selectedBodyPart) {
                                                     Navigator.pop(context);
                                                   }
                                                 }
@@ -811,43 +576,20 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                                 child: Container(
                                                     alignment: Alignment.center,
                                                     height: size.height * 0.04,
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
+                                                    padding: const EdgeInsets.all(8.0),
                                                     // width: isMobile ? size.width * 0.2 : size.width * 0.08,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        color: Colors.black,
-                                                        boxShadow: const [
-                                                          BoxShadow(
-                                                              blurRadius: 8,
-                                                              blurStyle:
-                                                                  BlurStyle
-                                                                      .outer,
-                                                              spreadRadius: 0,
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      255,
-                                                                      204,
-                                                                      128,
-                                                                      1),
-                                                              offset:
-                                                                  Offset(0, 0))
-                                                        ]),
+                                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: const [
+                                                      BoxShadow(
+                                                          blurRadius: 8,
+                                                          blurStyle: BlurStyle.outer,
+                                                          spreadRadius: 0,
+                                                          color: Color.fromRGBO(255, 204, 128, 1),
+                                                          offset: Offset(0, 0))
+                                                    ]),
                                                     child: Text(
-                                                      (hotSpots.last.key !=
-                                                              _interactionBloc
-                                                                  .state
-                                                                  .selectedBodyPart)
-                                                          ? 'Upload'
-                                                          : " Upload & Save",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 14),
+                                                      (hotSpots.last.key != _interactionBloc.state.selectedBodyPart) ? 'Upload' : " Upload & Save",
+                                                      textAlign: TextAlign.center,
+                                                      style: const TextStyle(color: Colors.white, fontSize: 14),
                                                     )),
                                               ),
                                             ),
@@ -866,8 +608,7 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                   ),
                 ),
               ),
-              if (context.watch<VehiclePartsInteractionBloc2>().state.status ==
-                  VehiclePartsInteractionStatus.loading)
+              if (context.watch<VehiclePartsInteractionBloc2>().state.status == VehiclePartsInteractionStatus.loading)
                 Positioned(
                   left: 200,
                   top: 200,
@@ -902,23 +643,16 @@ class _VehicleExamination2State extends State<VehicleExamination2>
         Map<String, dynamic> data = jsonDecode(message.message);
 
         if (data["type"] == "hotspot-create") {
-          _interactionBloc.add(ModifyVehicleInteractionStatus(
-              selectedBodyPart: data["name"]!, isTapped: true));
-          _interactionBloc.add(AddHotspotEvent(
-              name: data["name"]!,
-              position: data["position"],
-              normal: data["normal"]));
+          _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
+          _interactionBloc.add(AddHotspotEvent(name: data["name"]!, position: data["position"], normal: data["normal"]));
         } else if (data["type"] == "hotspot-click") {
           Haptics.vibrate(HapticsType.light);
-          _interactionBloc.add(ModifyVehicleInteractionStatus(
-              selectedBodyPart: data["name"]!, isTapped: true));
+          _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: data["name"]!, isTapped: true));
         }
         // bottom sheet for diaplying hotspots, comments and images
         getBottomSheet(context, size, isMobile);
         await Future.delayed(Duration(milliseconds: 300));
-        index = _interactionBloc.state.mapMedia.entries
-            .toList()
-            .indexWhere((element) => element.key == data["name"]);
+        index = _interactionBloc.state.mapMedia.entries.toList().indexWhere((element) => element.key == data["name"]);
         _pageController.jumpToPage(index);
         _autoScrollController.scrollToIndex(index);
         _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: index));
@@ -927,46 +661,32 @@ class _VehicleExamination2State extends State<VehicleExamination2>
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: DMSCustomWidgets.appBar(
-            size: size,
-            isMobile: isMobile,
-            title: 'Vehicle Examination',
-            actions: [
-              Container(
-                margin: EdgeInsets.only(right: size.width * 0.024),
-                padding: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 10,
-                          spreadRadius: -5,
-                          color: Colors.orange.shade200,
-                          offset: const Offset(0, 0))
-                    ]),
-                child: Switch(
-                  value: true,
-                  onChanged: (value) {
-                    _interactionBloc.state.selectedBodyPart = "";
-                    _interactionBloc.state.isTapped = false;
-                    navigator.pushReplacement('/vehicleExamination');
-                  },
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor: Colors.black,
-                  trackOutlineColor: const WidgetStatePropertyAll(Colors.black),
-                ),
-              )
-            ]),
+        appBar: DMSCustomWidgets.appBar(size: size, isMobile: isMobile, title: 'Vehicle Examination', actions: [
+          Container(
+            margin: EdgeInsets.only(right: size.width * 0.024),
+            padding: EdgeInsets.zero,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [BoxShadow(blurRadius: 10, spreadRadius: -5, color: Colors.orange.shade200, offset: const Offset(0, 0))]),
+            child: Switch(
+              value: true,
+              onChanged: (value) {
+                _interactionBloc.state.selectedBodyPart = "";
+                _interactionBloc.state.isTapped = false;
+                navigator.pushReplacement('/vehicleExamination');
+              },
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: Colors.black,
+              trackOutlineColor: const WidgetStatePropertyAll(Colors.black),
+            ),
+          )
+        ]),
         body: Container(
           height: double.infinity,
           width: double.infinity,
           decoration: const BoxDecoration(
               gradient: LinearGradient(
-                  colors: [
-                    Colors.black45,
-                    Color.fromARGB(40, 104, 103, 103),
-                    Colors.black45
-                  ],
+                  colors: [Colors.black45, Color.fromARGB(40, 104, 103, 103), Colors.black45],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   stops: [0.1, 0.5, 1])),
@@ -1001,14 +721,10 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                               IntrinsicWidth(
                                 child: InkWell(
                                   onTap: () async {
-                                    List hotspotsData = _interactionBloc
-                                        .state.mapMedia.entries
-                                        .toList();
+                                    List hotspotsData = _interactionBloc.state.mapMedia.entries.toList();
                                     if (hotspotsData.isEmpty) {
-                                      DMSCustomWidgets.DMSFlushbar(
-                                          size, context,
-                                          message:
-                                              "Please add atleast one hotspot",
+                                      DMSCustomWidgets.DMSFlushbar(size, context,
+                                          message: "Please add atleast one hotspot",
                                           icon: Icon(
                                             Icons.error_rounded,
                                             color: Colors.white,
@@ -1018,62 +734,44 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                                     int elementIndex = 0;
                                     for (var e in hotspotsData) {
                                       if (e.value.isUploaded == false) {
-                                        DMSCustomWidgets.DMSFlushbar(
-                                            size, context,
-                                            message:
-                                                "Please upload ${e.value.name} data",
+                                        DMSCustomWidgets.DMSFlushbar(size, context,
+                                            message: "Please upload ${e.value.name} data",
                                             icon: Icon(
                                               Icons.error_rounded,
                                               color: Colors.white,
                                             ));
                                         getBottomSheet(context, size, isMobile);
                                         _changeButtonColors(e.key);
-                                        await Future.delayed(
-                                            Duration(milliseconds: 300));
-                                        _pageController
-                                            .jumpToPage(elementIndex);
-                                        _autoScrollController
-                                            .scrollToIndex(elementIndex);
-                                        _interactionBloc.add(
-                                            ModifyVehicleExaminationPageIndex(
-                                                index: elementIndex));
-                                        _interactionBloc.add(
-                                            ModifyVehicleInteractionStatus(
-                                                selectedBodyPart: e.key,
-                                                isTapped: true));
+                                        await Future.delayed(Duration(milliseconds: 300));
+                                        _pageController.jumpToPage(elementIndex);
+                                        _autoScrollController.scrollToIndex(elementIndex);
+                                        _interactionBloc.add(ModifyVehicleExaminationPageIndex(index: elementIndex));
+                                        _interactionBloc.add(ModifyVehicleInteractionStatus(selectedBodyPart: e.key, isTapped: true));
                                         return;
                                       }
                                       elementIndex++;
                                     }
                                     _interactionBloc.state.mapMedia = {};
-                                    navigator.pushAndRemoveUntil(
-                                        '/listOfJobCards', '/home');
+                                    navigator.pushAndRemoveUntil('/listOfJobCards', '/home');
                                   },
                                   child: Container(
                                       alignment: Alignment.center,
                                       height: size.height * 0.044,
                                       width: size.width * 0.24,
-                                      margin: EdgeInsets.only(
-                                          bottom: size.height * 0.16),
+                                      margin: EdgeInsets.only(bottom: size.height * 0.16),
                                       // padding:  EdgeInsets.symmetric(horizontal: size.width*0.036),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.black,
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                blurRadius: 8,
-                                                blurStyle: BlurStyle.outer,
-                                                spreadRadius: 0,
-                                                color: Color.fromRGBO(
-                                                    255, 204, 128, 1),
-                                                offset: Offset(0, 0))
-                                          ]),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black, boxShadow: const [
+                                        BoxShadow(
+                                            blurRadius: 8,
+                                            blurStyle: BlurStyle.outer,
+                                            spreadRadius: 0,
+                                            color: Color.fromRGBO(255, 204, 128, 1),
+                                            offset: Offset(0, 0))
+                                      ]),
                                       child: Text(
                                         'Save',
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 18),
+                                        style: const TextStyle(color: Colors.white, fontSize: 18),
                                       )),
                                 ),
                               ),
@@ -1081,16 +779,12 @@ class _VehicleExamination2State extends State<VehicleExamination2>
                           )
                         : const CircularProgressIndicator();
                   }),
-              if (context.watch<VehiclePartsInteractionBloc2>().state.status ==
-                  VehiclePartsInteractionStatus.loading)
+              if (context.watch<VehiclePartsInteractionBloc2>().state.status == VehiclePartsInteractionStatus.loading)
                 Container(
                   color: Colors.black54,
                   child: Center(
                       child: Lottie.asset('assets/lottie/car_loading.json',
-                          height:
-                              isMobile ? size.height * 0.5 : size.height * 0.32,
-                          width:
-                              isMobile ? size.width * 0.6 : size.width * 0.32)),
+                          height: isMobile ? size.height * 0.5 : size.height * 0.32, width: isMobile ? size.width * 0.6 : size.width * 0.32)),
                 )
             ],
           ),
